@@ -1,8 +1,9 @@
 {
 	"name": "qasm-language-support",
 	"description": "QASM language support client",
-	"author": "TBD",
-	"license": "TBD",
+	"author": "Isma Development Team",
+	"license": "MIT",
+	"publisher": "Isma Development Team",
 	"version": "0.0.1",
 	"repository": {
 		"type": "git",

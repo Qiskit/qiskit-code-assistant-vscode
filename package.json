@@ -1,10 +1,10 @@
 {
 	"name": "qasm-language-support",
 	"description": "QASM language support for Visual Studio Code",
-	"author": "TBD",
-	"license": "TBD",
+	"author": "Isma Development Team",
+	"license": "MIT",
 	"version": "0.0.1",
-	"publisher": "TBD",
+	"publisher": "Isma Development Team",
 	"repository": {
 		"type": "git",
 		"url": "https://github.ibm.com/IBMQuantum/qiskit-studio"
