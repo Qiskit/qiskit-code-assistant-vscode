@@ -1,8 +1,8 @@
 {
 	"name": "qasm-language-support",
 	"description": "QASM language support server",
-	"author": "TBD",
-	"license": "TBD",
+	"author": "Isma Development Team",
+	"license": "MIT",
 	"version": "0.0.1",
 	"engines": {
 		"node": "*"

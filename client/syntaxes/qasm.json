@@ -141,6 +141,6 @@
             "name": "comment"
         }
     ],
-    "scopeName": "source.tutu",
+    "scopeName": "source.qasm",
     "uuid": "ad87d2cd-8575-4afe-984e-9421a3788933"
 }
