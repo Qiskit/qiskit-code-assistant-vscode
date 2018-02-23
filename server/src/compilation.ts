@@ -9,32 +9,29 @@ import {
     TextDocument,
     TextDocumentPositionParams
 } from 'vscode-languageserver';
-import {
-    parse,
-    ParserError,
-    ParseErrorLevel
-} from './tools/parser';
+import { parse } from './tools/parser';
+import { ParserError, ParseErrorLevel } from './tools/parserModel';
 
 let symbols = [{
-        label: 'TuTu',
-        kind: CompletionItemKind.Text,
-        data: 1,
-        detail: 'The TuTu command',
-        documentation: 'This is the real TuTu command documentation blah blah blah'
-    },
-    {
-        label: 'miniTuTu',
-        kind: CompletionItemKind.Text,
-        data: 2,
-        detail: 'The mini TuTu command',
-        documentation: 'This is the mini command documentation blah blah blah'
-    }
+    label: 'OPENQASM',
+    kind: CompletionItemKind.Text,
+    data: 1,
+    detail: 'OPENQASM',
+    documentation: 'TBD ... blah blah blah'
+},
+{
+    label: 'include',
+    kind: CompletionItemKind.Text,
+    data: 2,
+    detail: 'include',
+    documentation: 'TBD ... blah blah blah'
+}
 ];
 
 export class CompilationTool {
     connection: IConnection;
 
-    constructor(public _connection: IConnection)  {
+    constructor(public _connection: IConnection) {
         this.connection = _connection;
     }
 
