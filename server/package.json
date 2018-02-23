@@ -1,0 +1,22 @@
+{
+	"name": "qasm-language-support",
+	"description": "QASM language support server",
+	"author": "TBD",
+	"license": "TBD",
+	"version": "0.0.1",
+	"engines": {
+		"node": "*"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.ibm.com/IBMQuantum/qiskit-studio"
+	},
+	"dependencies": {
+		"vscode-languageserver": "^3.5.0"
+	},
+	"scripts": {
+		"installServer": "installServerIntoExtension ../client ./package.json ./tsconfig.json",
+		"compile": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
+		"watch": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -w -p ."
+	}
+}

@@ -1,0 +1,77 @@
+{
+	"name": "qasm-language-support",
+	"description": "QASM language support client",
+	"author": "TBD",
+	"license": "TBD",
+	"version": "0.0.1",
+	"repository": {
+		"type": "git",
+		"url": "https://github.ibm.com/IBMQuantum/qiskit-studio"
+	},
+	"engines": {
+		"vscode": "^1.16.0"
+	},
+	"categories": [
+		"Languages",
+		"Snippets"
+	],
+	"activationEvents": [
+		"onLanguage:qasm-lang"
+	],
+	"main": "./out/src/extension",
+	"contributes": {
+		"configuration": {
+			"type": "object",
+			"title": "QASM configuration",
+			"properties": {
+				"qasmLang.maxNumberOfProblems": {
+					"scope": "resource",
+					"type": "number",
+					"default": 100,
+					"description": "Controls the maximum number of problems produced by the server."
+				},
+				"qasmLang.trace.server": {
+					"scope": "window",
+					"type": "string",
+					"enum": [
+						"off",
+						"messages",
+						"verbose"
+					],
+					"default": "off",
+					"description": "Traces the communication between VSCode and the language server."
+				}
+			}
+		},
+		"languages": [
+			{
+				"id": "qasm-lang",
+				"aliases": [
+					"QAsm"
+				],
+				"extensions": [
+					".qasm"
+				],
+				"configuration": "./qasm.configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "qasm-lang",
+				"scopeName": "source.qasm",
+				"path": "./syntaxes/qasm.json"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "tsc -p ./",
+		"compile": "tsc -p ./",
+		"watch": "tsc -w -p ./",
+		"update-vscode": "node ./node_modules/vscode/bin/install",
+		"postinstall": "node ./node_modules/vscode/bin/install"
+	},
+	"dependencies": {
+		"vscode": "^1.1.5",
+		"vscode-languageclient": "^3.5.0"
+	}
+}
