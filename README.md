@@ -20,6 +20,8 @@ TBD
 
 TBD
 
+It is recommended to read the document [extension-structure](docs/extension-structure.md), to know more details about the desing decisions around the qasm parser.
+
 ## Meta
 
 TBD
