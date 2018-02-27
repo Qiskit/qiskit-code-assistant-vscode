@@ -52,6 +52,52 @@
  **************************************************/
 %{
 
+var errors = [];
+
+function createLocation(firstPosition, lastPosition) {
+    return {
+        firstLine: firstPosition.first_line,
+        firstColumn: firstPosition.first_column,
+        lastLine: lastPosition.last_line,
+        lastColumn: lastPosition.last_column
+    };
+}
+
+function createErrorLocation(hash) {
+    return {
+        firstLine: hash.loc.first_line,
+        firstColumn: hash.loc.first_column,
+        lastLine: hash.loc.last_line,
+        lastColumn: hash.loc.last_column
+    };
+}
+
+function buildMainProgramNode(ibmDefinition, program) {
+    return {
+        type: 'MAIN-PROGRAM',
+        ibmDefinition: ibmDefinition, 
+        program: program
+    };
+}
+
+function buildIbmDefinitionNode(version, firstPosition, lastPosition) {
+    return {
+        type: 'IBM-DEFINITION',
+        version: version,
+        location: createLocation(firstPosition, lastPosition)
+    };
+}
+
+parser.parseError = function parseError(message, hash) {
+    errors.push({
+        message: message,
+        location: createErrorLocation(hash)
+    });
+};
+
+parser.init = function init() {
+    errors = [];
+};
 %}
 /**************************************************
  * Grammar
@@ -64,30 +110,23 @@
 
 StartProgram
     : MainProgram EOF 
-    { 
+    {
         return {
             asm: $1,
-            errors: []
+            errors: errors
         } 
     }
     ;
 
 MainProgram
-    : IbmDefinition { $$ = $1; }
-    | IbmDefinition Program { $$ = [$1, $2]; }
+    : IbmDefinition { $$ = buildMainProgramNode($1); }
+    | IbmDefinition Program { $$ = buildMainProgramNode($1, $2); }
     | Library 
     ;
 
 IbmDefinition
     : IBMQASM REAL ';' Include
-    | IBMQASM REAL ';'
-    {
-        $$ = [
-            { type: 'IBMQASM', value: $1, foo: @1 },
-            { type: 'REAL', value: $2, foo: @2 },
-            { type: ';', value: $3, foo: @3 },
-        ]
-    } 
+    | IBMQASM REAL ';' { $$ = buildIbmDefinitionNode($2, @1, @3); } 
     ;
 
 Include
@@ -105,6 +144,7 @@ Library
 
 Program
     : Statement { $$ = $1; }
+    | error Statement { $$ = $2; }
     | Program Statement
     ;
 
@@ -118,7 +158,7 @@ Statement
 
 Declaration
     : QRegDeclaration { $$ = $1 }
-    | CRegDeclaration
+    | CRegDeclaration { $$ = $1 }
     | GateDeclaration
     ;
 
@@ -126,6 +166,7 @@ QRegDeclaration
     : QREG ID '[' INT ']' ';' 
     {
         $$ = [
+            
             { type: 'QREG', value: $1, foo: @1 },
             { type: 'ID', value: $2, foo: @2 },
             { type: '[', value: $3, foo: @3 },
@@ -138,6 +179,16 @@ QRegDeclaration
 
 CRegDeclaration
     : CREG ID '[' INT ']' ';' 
+    {
+        $$ = [
+            { type: 'CREG', value: $1, foo: @1 },
+            { type: 'ID', value: $2, foo: @2 },
+            { type: '[', value: $3, foo: @3 },
+            { type: 'INT', value: $4, foo: @4 },
+            { type: ']', value: $5, foo: @5 },
+            { type: ';', value: $6, foo: @6 },
+        ]
+    }
     ;
 
 GateDeclaration

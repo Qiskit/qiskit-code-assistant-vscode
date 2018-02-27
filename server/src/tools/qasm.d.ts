@@ -1,3 +1,10 @@
-export as namespace parser;
+import { CompilationResult } from './parserModel';
 
-export function parse(input: string): any;
+// export as namespace parser;
+
+// export function parse(input: string): CompilationResult;
+
+export namespace parser {
+    export function parse(input: string): CompilationResult;
+    export function init(): void;
+}
