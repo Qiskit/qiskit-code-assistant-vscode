@@ -12,6 +12,12 @@ npm install
 npm run compile
 ```
 
+Jison is required to compile the parser grammar.
+
+```sh
+npm install jison -g
+```
+
 ## Usage example
 
 TBD
