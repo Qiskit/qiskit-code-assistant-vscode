@@ -1,6 +1,6 @@
 'use strict';
 
-import * as parserEngine from './qasmParserEngine';
+import * as parserEngine from './qasm';
 import { ParserError } from './parserModel';
 import { toParserError } from './qasmParserErrorsAdapter';
 
@@ -8,10 +8,10 @@ import { toParserError } from './qasmParserErrorsAdapter';
 // ParserErrors which are understood by the extension
 export function parse(input: string): ParserError[] {
     try {
-        parserEngine.parse(input);
-    } catch (e) {
-        console.log("Errors detected > " + JSON.stringify(e));
+        let output = parserEngine.parse(input);
 
+        console.log('Output > ' + JSON.stringify(output));
+    } catch (e) {
         return [toParserError(e)];
     }
 
