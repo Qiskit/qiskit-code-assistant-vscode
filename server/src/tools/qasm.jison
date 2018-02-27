@@ -96,6 +96,26 @@ function buildCregDeclarationNode(...childs) {
     return buildNonTerminalNode('CREG-DECLARATION', childs);
 }
 
+function buildGateDeclarationNode(...childs) {
+    return buildNonTerminalNode('GATE-DECLARATION', childs);
+}
+
+function buildGateListNode(...childs) {
+    return buildNonTerminalNode('GATE-LIST', childs);
+}
+
+function buildGateNode(...childs) {
+    return buildNonTerminalNode('GATE', childs);
+}
+
+function buildBitListNode(...childs) {
+    return buildNonTerminalNode('BIT-LIST', childs);
+}
+
+function buildBitNode(...childs) {
+    return buildNonTerminalNode('BIT', childs);
+}
+
 function buildProgramNode(...childs) {
     return buildNonTerminalNode('PROGRAM', childs);
 }
@@ -106,6 +126,10 @@ function buildStatementNode(...childs) {
 
 function buildDeclarationNode(...childs) {
     return buildNonTerminalNode('DECLARATION', childs);
+}
+
+function buildOpaqueNode(...childs) {
+    return buildNonTerminalNode('OPAQUE', childs);
 }
 
 function buildIbmQasmNode(value, location) {
@@ -235,18 +259,18 @@ CRegDeclaration
     ;
 
 GateDeclaration
-    : GATE Id GateScope BitList GateBody
-    | GATE Id GateScope '(' ')' BitList GateBody
-    | GATE Id GateScope '(' GateIdList ')' BitList GateBody
+    : GATE Id GateScope BitList GateBody { $$ = buildGateDeclarationNode($1, $2, $4, $5); }
+    | GATE Id GateScope '(' ')' BitList GateBody { $$ = buildGateDeclarationNode($1, $2, $6, $7); }
+    | GATE Id GateScope '(' GateIdList ')' BitList GateBody  { $$ = buildGateDeclarationNode($1, $2, $5, $7, $8); }
     ;
 
 GateIdList
-    : Gate 
-    | GateIdList ',' Gate
+    : Gate { $$ = buildGateNode($1); }
+    | GateIdList ',' Gate { $$ = buildGateListNode($1, $3); }
     ;
 
 Gate
-    : Id
+    : Id { $$ = buildIdentifierNode($1, @1); }
     ;
 
     // TODO: empty in the source ???
@@ -255,8 +279,8 @@ GateScope
     ;
 
 BitList
-    : Bit 
-    | BitList ',' Bit
+    : Bit { $$ = buildBitNode($1); }
+    | BitList ',' Bit { $$ = buildBitListNode($1, $3); }
     ;
 
 Bit
@@ -344,7 +368,7 @@ Primary
     ;
 
 Id
-    : ID
+    : ID { $$ = buildIdentifierNode($1, @1); } 
     ;
 
 PrimaryList
@@ -374,7 +398,7 @@ Reset
     ;
 
 Opaque
-    : OPAQUE Id GateScope BitList 
-    | OPAQUE Id GateScope '(' ')' BitList 
-    | OPAQUE Id GateScope '(' GateIdList ')' BitList 
+    : OPAQUE Id GateScope BitList { $$ = buildOpaqueNode($2, $4); }
+    | OPAQUE Id GateScope '(' ')' BitList { $$ = buildOpaqueNode($2, $6); }
+    | OPAQUE Id GateScope '(' GateIdList ')' BitList { $$ = buildOpaqueNode($2, $5, $7); }
     ;
