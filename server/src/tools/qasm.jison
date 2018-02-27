@@ -54,44 +54,84 @@
 
 var errors = [];
 
-function createLocation(firstPosition, lastPosition) {
+function toParserLocation(location) {
     return {
-        firstLine: firstPosition.first_line,
-        firstColumn: firstPosition.first_column,
-        lastLine: lastPosition.last_line,
-        lastColumn: lastPosition.last_column
+        firstLine: location.first_line,
+        lastLine: location.last_line,
+        firstColumn: location.first_column,
+        lastColumn: location.last_column
     };
 }
 
-function createErrorLocation(hash) {
+function buildNonTerminalNode(type, childs) {
     return {
-        firstLine: hash.loc.first_line,
-        firstColumn: hash.loc.first_column,
-        lastLine: hash.loc.last_line,
-        lastColumn: hash.loc.last_column
+        type: type,
+        terminal: false,
+        childs: childs
     };
 }
 
-function buildMainProgramNode(ibmDefinition, program) {
+function buildTerminalNode(type, value, location) {
     return {
-        type: 'MAIN-PROGRAM',
-        ibmDefinition: ibmDefinition, 
-        program: program
+        type: type,
+        terminal: true,
+        value: value, 
+        location: toParserLocation(location)
     };
 }
 
-function buildIbmDefinitionNode(version, firstPosition, lastPosition) {
-    return {
-        type: 'IBM-DEFINITION',
-        version: version,
-        location: createLocation(firstPosition, lastPosition)
-    };
+function buildMainProgramNode(...childs) {
+    return buildNonTerminalNode('MAIN-PROGRAM', childs);
+}
+
+function buildIbmDefinitionNode(...childs) {
+    return buildNonTerminalNode('IBM-DEFINITION', childs);
+}
+
+function buildQregDeclarationNode(...childs) {
+    return buildNonTerminalNode('QREG-DECLARATION', childs);
+}
+
+function buildCregDeclarationNode(...childs) {
+    return buildNonTerminalNode('CREG-DECLARATION', childs);
+}
+
+function buildProgramNode(...childs) {
+    return buildNonTerminalNode('PROGRAM', childs);
+}
+
+function buildStatementNode(...childs) {
+    return buildNonTerminalNode('STATEMENT', childs);
+}
+
+function buildDeclarationNode(...childs) {
+    return buildNonTerminalNode('DECLARATION', childs);
+}
+
+function buildIbmQasmNode(value, location) {
+    return buildTerminalNode('IBMQASM', value, location);
+}
+
+function buildRealNode(value, location) {
+    return buildTerminalNode('REAL', value, location);
+}
+
+function buildIncludeNode(value, location) {
+    return buildTerminalNode('INCLUDE', value, location);
+}
+
+function buildIdentifierNode(value, location) {
+    return buildTerminalNode('ID', value, location);
+}
+
+function buildIntegerNode(value, location) {
+    return buildTerminalNode('INT', value, location);
 }
 
 parser.parseError = function parseError(message, hash) {
     errors.push({
         message: message,
-        location: createErrorLocation(hash)
+        location: toParserLocation(hash.loc)
     });
 };
 
@@ -121,16 +161,27 @@ StartProgram
 MainProgram
     : IbmDefinition { $$ = buildMainProgramNode($1); }
     | IbmDefinition Program { $$ = buildMainProgramNode($1, $2); }
-    | Library 
+    | Library { $$ = buildMainProgramNode($1); }
     ;
 
 IbmDefinition
-    : IBMQASM REAL ';' Include
-    | IBMQASM REAL ';' { $$ = buildIbmDefinitionNode($2, @1, @3); } 
+    : IBMQASM REAL ';' Include 
+    { 
+        $$ = buildIbmDefinitionNode(
+            buildIbmQasmNode($1, @1),
+            buildRealNode($2, @2),
+            $4); 
+    }
+    | IBMQASM REAL ';' 
+    { 
+        $$ = buildIbmDefinitionNode(
+            buildIbmQasmNode($1, @1),
+            buildRealNode($2, @2)); 
+    } 
     ;
 
 Include
-    : 'include' 'QELIB.INC' ';' // TODO: Support include in parser
+    : 'include' 'QELIB.INC' ';' { $$ = buildIncludeNode($2, @2); } // TODO: Support include in parser
     ;
 
 Library
@@ -143,9 +194,10 @@ Library
     ;
 
 Program
-    : Statement { $$ = $1; }
-    | error Statement { $$ = $2; }
-    | Program Statement
+    : Statement { $$ = buildProgramNode($1); }
+    | error Statement { $$ = buildProgramNode($2); }
+    | Program Statement { $$ = buildProgramNode($1, $2); }
+    | Program error Statement { $$ = buildProgramNode($1, $3); }
     ;
 
 Statement
@@ -157,37 +209,28 @@ Statement
     ;
 
 Declaration
-    : QRegDeclaration { $$ = $1 }
-    | CRegDeclaration { $$ = $1 }
-    | GateDeclaration
+    : QRegDeclaration { $$ = $1; }
+    | CRegDeclaration { $$ = $1; }
+    | GateDeclaration { $$ = $1; }
     ;
 
 QRegDeclaration
     : QREG ID '[' INT ']' ';' 
     {
-        $$ = [
-            
-            { type: 'QREG', value: $1, foo: @1 },
-            { type: 'ID', value: $2, foo: @2 },
-            { type: '[', value: $3, foo: @3 },
-            { type: 'INT', value: $4, foo: @4 },
-            { type: ']', value: $5, foo: @5 },
-            { type: ';', value: $6, foo: @6 },
-        ]
+        $$ = buildQregDeclarationNode(
+            buildIdentifierNode($2, @2),
+            buildIntegerNode($4, @4)
+        );
     }
     ;
 
 CRegDeclaration
     : CREG ID '[' INT ']' ';' 
     {
-        $$ = [
-            { type: 'CREG', value: $1, foo: @1 },
-            { type: 'ID', value: $2, foo: @2 },
-            { type: '[', value: $3, foo: @3 },
-            { type: 'INT', value: $4, foo: @4 },
-            { type: ']', value: $5, foo: @5 },
-            { type: ';', value: $6, foo: @6 },
-        ]
+        $$ = buildCregDeclarationNode(
+            buildIdentifierNode($2, @2),
+            buildIntegerNode($4, @4)
+        );
     }
     ;
 
