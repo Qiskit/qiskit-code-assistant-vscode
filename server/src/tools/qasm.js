@@ -84,103 +84,441 @@ performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* actio
 var $0 = $$.length - 1;
 switch (yystate) {
 case 1:
-
-        return {
-            asm: $$[$0-1],
-            errors: errors
-        } 
-    
+ return buildCompilationResult(buildNonTerminalNode('PROGRAM', $$[$0-1])); 
 break;
 case 2: case 4:
- this.$ = buildMainProgramNode($$[$0]); 
+ this.$ = buildNonTerminalNode('MAIN-PROGRAM', $$[$0]); 
 break;
 case 3:
- this.$ = buildMainProgramNode($$[$0-1], $$[$0]); 
+ this.$ = buildNonTerminalNode('MAIN-PROGRAM', $$[$0-1], $$[$0]); 
 break;
 case 5:
  
-        this.$ = buildIbmDefinitionNode(
-            buildIbmQasmNode($$[$0-3], _$[$0-3]),
-            buildRealNode($$[$0-2], _$[$0-2]),
-            $$[$0]); 
+        this.$ = buildNonTerminalNode('IBM-DEFINITION',
+            buildTerminalNode('IBMQASM', $$[$0-3], _$[$0-3]),
+            buildTerminalNode('REAL', $$[$0-2], _$[$0-2]),
+            buildTerminalNode('PUNCT', $$[$0-1], _$[$0-1]),
+            buildNonTerminalNode('INCLUDE', $$[$0])
+        ); 
     
 break;
 case 6:
  
-        this.$ = buildIbmDefinitionNode(
-            buildIbmQasmNode($$[$0-2], _$[$0-2]),
-            buildRealNode($$[$0-1], _$[$0-1])); 
+        this.$ = buildNonTerminalNode('IBM-DEFINITION',
+            buildTerminalNode('IBMQASM', $$[$0-2], _$[$0-2]),
+            buildTerminalNode('REAL', $$[$0-1], _$[$0-1]),
+            buildTerminalNode('PUNCT', $$[$0], _$[$0])
+        ); 
     
 break;
 case 7:
- this.$ = buildIncludeNode($$[$0-1], _$[$0-1]); 
+ 
+        this.$ = buildNonTerminalNode('INCLUDE-DEFINITION', 
+            buildTerminalNode('INCLUDE', $$[$0-2], _$[$0-2]),
+            buildTerminalNode('LIB', $$[$0-1], _$[$0-1]),
+            buildTerminalNode('PUNCT', $$[$0], _$[$0])   
+        ); // TODO: Support include in parser
+    
 break;
-case 8: case 14: case 17: case 18: case 19:
- this.$ = $$[$0]; 
+case 8:
+ this.$ = buildNonTerminalNode('LIBRARY', $$[$0]); 
 break;
 case 9:
- 
-        this.$ = $$[$0-1]; 
-        this.$.push($$[$0]);
-      
+ this.$ = buildNonTerminalNode('LIBRARY', $$[$0-1], $$[$0]); 
 break;
 case 10: case 11:
- this.$ = buildProgramNode($$[$0]); 
+ this.$ = buildNonTerminalNode('PROGRAM', $$[$0]); 
 break;
 case 12:
- this.$ = buildProgramNode($$[$0-1], $$[$0]); 
+ this.$ = buildNonTerminalNode('PROGRAM', $$[$0-1], $$[$0]); 
 break;
 case 13:
- this.$ = buildProgramNode($$[$0-2], $$[$0]); 
+ this.$ = buildNonTerminalNode('PROGRAM', $$[$0-2], $$[$0]); 
+break;
+case 14:
+ this.$ = buildNonTerminalNode('STATEMENT', $$[$0]); 
+break;
+case 15: case 16:
+
+        this.$ = buildNonTerminalNode('STATEMENT', 
+            $$[$0-1],
+            buildTerminalNode('PUNCT', $$[$0], _$[$0])
+        );
+    
+break;
+case 17: case 18: case 19:
+ this.$ = buildNonTerminalNode('DECLARATION', $$[$0]); 
 break;
 case 20:
 
-        this.$ = buildQregDeclarationNode(
-            buildIdentifierNode($$[$0-4], _$[$0-4]),
-            buildIntegerNode($$[$0-2], _$[$0-2])
+        this.$ = buildNonTerminalNode('QREG-DECLARATION', 
+            buildTerminalNode('QREG', $$[$0-5], _$[$0-5]),
+            buildTerminalNode('ID', $$[$0-4], _$[$0-4]),
+            buildTerminalNode('PUNCT', $$[$0-3], _$[$0-3]),
+            buildTerminalNode('INT', $$[$0-2], _$[$0-2]),
+            buildTerminalNode('PUNCT', $$[$0-1], _$[$0-1]),
+            buildTerminalNode('PUNCT', $$[$0], _$[$0])
         );
     
 break;
 case 21:
 
-        this.$ = buildCregDeclarationNode(
-            buildIdentifierNode($$[$0-4], _$[$0-4]),
-            buildIntegerNode($$[$0-2], _$[$0-2])
+        this.$ = buildNonTerminalNode('CREG-DECLARATION',
+            buildTerminalNode('CREG', $$[$0-5], _$[$0-5]),
+            buildTerminalNode('ID', $$[$0-4], _$[$0-4]),
+            buildTerminalNode('PUNCT', $$[$0-3], _$[$0-3]),
+            buildTerminalNode('INT', $$[$0-2], _$[$0-2]),
+            buildTerminalNode('PUNCT', $$[$0-1], _$[$0-1]),
+            buildTerminalNode('PUNCT', $$[$0], _$[$0])
         );
     
 break;
 case 22:
- this.$ = buildGateDeclarationNode($$[$0-4], $$[$0-3], $$[$0-1], $$[$0]); 
+ 
+        this.$ = buildNonTerminalNode('GATE-DECLARATION',
+            buildTerminalNode('GATE', $$[$0-4], _$[$0-4]),
+            $$[$0-3],
+            $$[$0-2],
+            $$[$0-1],
+            $$[$0]
+        );
+    
 break;
 case 23:
- this.$ = buildGateDeclarationNode($$[$0-6], $$[$0-5], $$[$0-1], $$[$0]); 
+ 
+        this.$ = buildNonTerminalNode('GATE-DECLARATION',
+            buildTerminalNode('GATE', $$[$0-6], _$[$0-6]),
+            $$[$0-5],
+            $$[$0-4],
+            buildTerminalNode('PUNCT', $$[$0-3], _$[$0-3]),
+            buildTerminalNode('PUNCT', $$[$0-2], _$[$0-2]),
+            $$[$0-1],
+            $$[$0]
+        );
+    
 break;
 case 24:
- this.$ = buildGateDeclarationNode($$[$0-7], $$[$0-6], $$[$0-3], $$[$0-1], $$[$0]); 
+ 
+        this.$ = buildNonTerminalNode('GATE-DECLARATION',
+            buildTerminalNode('GATE', $$[$0-7], _$[$0-7]),
+            $$[$0-6],
+            $$[$0-5],
+            buildTerminalNode('PUNCT', $$[$0-4], _$[$0-4]),
+            $$[$0-3],
+            buildTerminalNode('PUNCT', $$[$0-2], _$[$0-2]),
+            $$[$0-1],
+            $$[$0]
+        );
+    
 break;
 case 25:
- this.$ = buildGateNode($$[$0]); 
+ this.$ = buildNonTerminalNode('GATE-ID-LIST', $$[$0]); 
 break;
 case 26:
- this.$ = buildGateListNode($$[$0-2], $$[$0]); 
+ this.$ = buildNonTerminalNode('GATE-ID-LIST', $$[$0-2], $$[$0]); 
 break;
-case 27: case 73:
- this.$ = buildIdentifierNode($$[$0], _$[$0]); 
+case 27:
+ this.$ = buildNonTerminalNode('GATE-ID', $$[$0]); 
 break;
 case 29:
- this.$ = buildBitNode($$[$0]); 
+ this.$ = buildNonTerminalNode('BITLIST', $$[$0]); 
 break;
 case 30:
- this.$ = buildBitListNode($$[$0-2], $$[$0]); 
+ this.$ = buildNonTerminalNode('BITLIST', $$[$0-2], $$[$0]); 
+break;
+case 31:
+ this.$ = buildNonTerminalNode('BIT', $$[$0]); 
+break;
+case 32:
+
+        this.$ = buildNonTerminalNode(
+            buildTerminalNode('PUNCT', $$[$0-2], _$[$0-2]),
+            $$[$0-1],
+            buildTerminalNode('PUNCT', $$[$0], _$[$0])
+        );
+    
+break;
+case 33:
+
+        this.$ = buildNonTerminalNode(
+            buildTerminalNode('PUNCT', $$[$0-1], _$[$0-1]),
+            buildTerminalNode('PUNCT', $$[$0], _$[$0])
+        );
+    
+break;
+case 34:
+ this.$ = buildNonTerminalNode('GATEOP-LIST', $$[$0]); 
+break;
+case 35:
+ this.$ = buildNonTerminalNode('GATEOP-LIST', $$[$0-1], $$[$0]); 
+break;
+case 36:
+
+        this.$ = buildNonTerminalNode('GATEOP',
+            buildTerminalNode('U', $$[$0-5], _$[$0-5]),
+            buildTerminalNode('PUNCT', $$[$0-4], _$[$0-4]),
+            $$[$0-3],
+            buildTerminalNode('PUNCT', $$[$0-2], _$[$0-2]),
+            $$[$0-1],
+            buildTerminalNode('PUNCT', $$[$0], _$[$0])
+        );
+    
+break;
+case 37:
+
+        this.$ = buildNonTerminalNode('GATEOP',
+            buildTerminalNode('CX', $$[$0-4], _$[$0-4]),
+            $$[$0-3],
+            buildTerminalNode('PUNCT', $$[$0-2], _$[$0-2]),
+            $$[$0-1],
+            buildTerminalNode('PUNCT', $$[$0], _$[$0])
+        );
+    
+break;
+case 38:
+
+        this.$ = buildNonTerminalNode('GATEOP',
+            $$[$0-2],
+            $$[$0-1],
+            buildTerminalNode('PUNCT', $$[$0], _$[$0])
+        );
+    
+break;
+case 39:
+
+        this.$ = buildNonTerminalNode('GATEOP',
+            $$[$0-4],
+            buildTerminalNode('PUNCT', $$[$0-3], _$[$0-3]),
+            buildTerminalNode('PUNCT', $$[$0-2], _$[$0-2]),
+            $$[$0-1],
+            buildTerminalNode('PUNCT', $$[$0], _$[$0])
+        );
+    
+break;
+case 40:
+
+        this.$ = buildNonTerminalNode('GATEOP',
+            $$[$0-5],
+            buildTerminalNode('PUNCT', $$[$0-4], _$[$0-4]),
+            $$[$0-3],
+            buildTerminalNode('PUNCT', $$[$0-2], _$[$0-2]),
+            $$[$0-1],
+            buildTerminalNode('PUNCT', $$[$0], _$[$0])
+        );
+    
+break;
+case 41:
+
+        this.$ = buildNonTerminalNode('GATEOP',
+            buildTerminalNode('BARRIER', $$[$0-2], _$[$0-2]),
+            $$[$0-1],
+            buildTerminalNode('PUNCT', $$[$0], _$[$0])
+        );
+    
+break;
+case 42:
+ this.$ = buildNonTerminalNode('EXPRESSION-LIST', $$[$0]); 
+break;
+case 43:
+ this.$ = buildNonTerminalNode('EXPRESSION-LIST', $$[$0-2], $$[$0]); 
+break;
+case 44: case 46: case 49:
+ this.$ = buildNonTerminalNode('EXPRESSION', $$[$0]); 
+break;
+case 45:
+ this.$ = buildNonTerminalNode('POW', $$[$0-2], $$[$0]); 
+break;
+case 47:
+ this.$ = buildNonTerminalNode('MULTIPLICATION', $$[$0-2], $$[$0]); 
+break;
+case 48:
+ this.$ = buildNonTerminalNode('DIVISION', $$[$0-2], $$[$0]); 
+break;
+case 50:
+ this.$ = buildNonTerminalNode('ADDITION', $$[$0-2], $$[$0]); 
+break;
+case 51:
+ this.$ = buildNonTerminalNode('SUBSTRACTION', $$[$0-2], $$[$0]); 
+break;
+case 52:
+ this.$ = buildNonTerminalNode('PREFIX', $$[$0]); 
+break;
+case 53: case 54:
+ 
+        this.$ = buildNonTerminalNode('PREFIX', 
+            buildTerminalNode('PUNCT', $$[$0-1], _$[$0-1]),
+            $$[$0]
+        ); 
+    
+break;
+case 55:
+ this.$ = buildNonTerminalNode('UNARY', buildTerminalNode('INT', $$[$0], _$[$0])); 
+break;
+case 56:
+ this.$ = buildNonTerminalNode('UNARY', buildTerminalNode('REAL', $$[$0], _$[$0])); 
+break;
+case 57:
+ this.$ = buildNonTerminalNode('UNARY', buildTerminalNode('PI', $$[$0], _$[$0])); 
+break;
+case 58:
+ this.$ = buildNonTerminalNode('UNARY', $$[$0]); 
+break;
+case 59:
+ 
+        this.$ = buildNonTerminalNode('UNARY', 
+            buildTerminalNode('PUNCT', $$[$0-2], _$[$0-2]),
+            $$[$0-1],
+            buildTerminalNode('PUNCT', $$[$0], _$[$0])
+        ); 
+    
+break;
+case 60:
+ 
+        this.$ = buildNonTerminalNode('UNARY', 
+            $$[$0-3],
+            buildTerminalNode('PUNCT', $$[$0-2], _$[$0-2]),
+            $$[$0-1],
+            buildTerminalNode('PUNCT', $$[$0], _$[$0])
+        ); 
+    
+break;
+case 61: case 62: case 63: case 64: case 65:
+ this.$ = buildNonTerminalNode('QOP', $$[$0]); 
+break;
+case 66:
+
+        this.$ = buildNonTerminalNode('UOP',
+            buildTerminalNode('U', $$[$0-5], _$[$0-5]),
+            buildTerminalNode('PUNCT', $$[$0-4], _$[$0-4]),
+            $$[$0-3],
+            buildTerminalNode('PUNCT', $$[$0-2], _$[$0-2]),
+            $$[$0-1],
+            buildTerminalNode('PUNCT', $$[$0], _$[$0])
+        );
+    
+break;
+case 67:
+
+        this.$ = buildNonTerminalNode('UOP',
+            buildTerminalNode('CX', $$[$0-3], _$[$0-3]),
+            $$[$0-2], 
+            buildTerminalNode('PUNCT', $$[$0-1], _$[$0-1]),
+            $$[$0]
+        );
+    
+break;
+case 68:
+ this.$ = buildNonTerminalNode('UOP', $$[$0-1], $$[$0]); 
+break;
+case 69:
+
+        this.$ = buildNonTerminalNode('UOP',
+            $$[$0-3],
+            buildTerminalNode('PUNCT', $$[$0-2], _$[$0-2]),
+            buildTerminalNode('PUNCT', $$[$0-1], _$[$0-1]),
+            $$[$0]
+        );
+    
+break;
+case 70:
+
+        this.$ = buildNonTerminalNode('UOP',
+            $$[$0-4],
+            buildTerminalNode('PUNCT', $$[$0-3], _$[$0-3]),
+            $$[$0-2],
+            buildTerminalNode('PUNCT', $$[$0-1], _$[$0-1]),
+            $$[$0]
+        );
+    
+break;
+case 71: case 72:
+ this.$ = buildNonTerminalNode('PRIMARY', $$[$0]); 
+break;
+case 73:
+ this.$ = buildTerminalNode('ID', $$[$0], _$[$0]); 
+break;
+case 74:
+ this.$ = buildNonTerminalNode('PRIMARY-LIST', $$[$0]); 
+break;
+case 75:
+ this.$ = buildNonTerminalNode('PRIMARY-LIST', $$[$0-2], $$[$0]); 
+break;
+case 76:
+ 
+        this.$ = buildNonTerminalNode('INDEXED-ID', 
+            buildTerminalNode('ID', $$[$0-3], _$[$0-3]),
+            buildTerminalNode('PUNCT', $$[$0-2], _$[$0-2]),
+            buildTerminalNode('INT', $$[$0-1], _$[$0-1]),
+            buildTerminalNode('PUNCT', $$[$0], _$[$0])
+        );
+    
+break;
+case 77:
+ 
+        this.$ = buildNonTerminalNode('BARRIER', 
+            buildTerminalNode('BARRIER', $$[$0-1], _$[$0-1]),
+            $$[$0]
+        );
+    
+break;
+case 78:
+
+        this.$ = buildNonTerminalNode('MEASURE-NODE',
+            buildTerminalNode('MEASURE', $$[$0-3], _$[$0-3]),
+            $$[$0-2],
+            buildTerminalNode('PUNCT', $$[$0-1], _$[$0-1]),
+            $$[$0]
+        );
+    
+break;
+case 79:
+ this.$ = buildNonTerminalNode('ID-LIST', $$[$0]); 
+break;
+case 80:
+ this.$ = buildNonTerminalNode('ID-LIST', $$[$0-2], $$[$0]); 
+break;
+case 81:
+ 
+        this.$ = buildNonTerminalNode('RESET-NODE',
+            buildTerminalNode('RESET', $$[$0-1], _$[$0-1]),
+            $$[$0]
+        );
+    
 break;
 case 82:
- this.$ = buildOpaqueNode($$[$0-2], $$[$0]); 
+ 
+        this.$ = buildNonTerminalNode('OPAQUE-NODE',
+            buildTerminalNode('OPAQUE', $$[$0-3], _$[$0-3]),
+            $$[$0-2], 
+            $$[$0-1],
+            $$[$0]
+        ); 
+    
 break;
 case 83:
- this.$ = buildOpaqueNode($$[$0-4], $$[$0]); 
+ 
+        this.$ = buildNonTerminalNode('OPAQUE-NODE',
+            buildTerminalNode('OPAQUE', $$[$0-5], _$[$0-5]),
+            $$[$0-4], 
+            $$[$0-3],
+            buildTerminalNode('PUNCT', $$[$0-2], _$[$0-2]),
+            buildTerminalNode('PUNCT', $$[$0-1], _$[$0-1]),
+            $$[$0]
+        ); 
+    
 break;
 case 84:
- this.$ = buildOpaqueNode($$[$0-5], $$[$0-2], $$[$0]); 
+ 
+        this.$ = buildNonTerminalNode('OPAQUE-NODE',
+            buildTerminalNode('OPAQUE', $$[$0-6], _$[$0-6]),
+            $$[$0-5], 
+            $$[$0-4],
+            buildTerminalNode('PUNCT', $$[$0-3], _$[$0-3]),
+            $$[$0-2],
+            buildTerminalNode('PUNCT', $$[$0-1], _$[$0-1]),
+            $$[$0]
+        ); 
+    
 break;
 }
 },
@@ -446,7 +784,7 @@ function toParserLocation(location) {
     };
 }
 
-function buildNonTerminalNode(type, childs) {
+function buildNonTerminalNode(type, ...childs) {
     return {
         type: type,
         terminal: false,
@@ -463,76 +801,11 @@ function buildTerminalNode(type, value, location) {
     };
 }
 
-function buildMainProgramNode(...childs) {
-    return buildNonTerminalNode('MAIN-PROGRAM', childs);
-}
-
-function buildIbmDefinitionNode(...childs) {
-    return buildNonTerminalNode('IBM-DEFINITION', childs);
-}
-
-function buildQregDeclarationNode(...childs) {
-    return buildNonTerminalNode('QREG-DECLARATION', childs);
-}
-
-function buildCregDeclarationNode(...childs) {
-    return buildNonTerminalNode('CREG-DECLARATION', childs);
-}
-
-function buildGateDeclarationNode(...childs) {
-    return buildNonTerminalNode('GATE-DECLARATION', childs);
-}
-
-function buildGateListNode(...childs) {
-    return buildNonTerminalNode('GATE-LIST', childs);
-}
-
-function buildGateNode(...childs) {
-    return buildNonTerminalNode('GATE', childs);
-}
-
-function buildBitListNode(...childs) {
-    return buildNonTerminalNode('BIT-LIST', childs);
-}
-
-function buildBitNode(...childs) {
-    return buildNonTerminalNode('BIT', childs);
-}
-
-function buildProgramNode(...childs) {
-    return buildNonTerminalNode('PROGRAM', childs);
-}
-
-function buildStatementNode(...childs) {
-    return buildNonTerminalNode('STATEMENT', childs);
-}
-
-function buildDeclarationNode(...childs) {
-    return buildNonTerminalNode('DECLARATION', childs);
-}
-
-function buildOpaqueNode(...childs) {
-    return buildNonTerminalNode('OPAQUE', childs);
-}
-
-function buildIbmQasmNode(value, location) {
-    return buildTerminalNode('IBMQASM', value, location);
-}
-
-function buildRealNode(value, location) {
-    return buildTerminalNode('REAL', value, location);
-}
-
-function buildIncludeNode(value, location) {
-    return buildTerminalNode('INCLUDE', value, location);
-}
-
-function buildIdentifierNode(value, location) {
-    return buildTerminalNode('ID', value, location);
-}
-
-function buildIntegerNode(value, location) {
-    return buildTerminalNode('INT', value, location);
+function buildCompilationResult(asmRootNode) {
+    return {
+        asm: asmRootNode,
+        errors: errors
+    };
 }
 
 parser.parseError = function parseError(message, hash) {
