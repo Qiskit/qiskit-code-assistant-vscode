@@ -155,9 +155,7 @@ Library
 
 Program
     : Statement { $$ = buildNonTerminalNode('PROGRAM', $1); }
-    | error Statement { $$ = buildNonTerminalNode('PROGRAM', $2); }
     | Program Statement { $$ = buildNonTerminalNode('PROGRAM', $1, $2); }
-    | Program error Statement { $$ = buildNonTerminalNode('PROGRAM', $1, $3); }
     ;
 
 Statement
@@ -178,6 +176,8 @@ Statement
     }
     // TODO: The user can define its own gates
     // | GateDefinition { console.log('Definition: %j', $1); }
+    | error ';'
+    | error '\n'
     ;
 
 Declaration
