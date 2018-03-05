@@ -1,5 +1,10 @@
 'use strict';
 
+export interface ParserResult {
+    ast: any,
+    errors: ParserError[]
+}
+
 export interface ParserError {
     line: number;
     start: number;
@@ -15,7 +20,7 @@ export enum ParseErrorLevel {
 
 export interface CompilationResult {
     ast: any,
-    errors: CompilationError[],
+    errors: CompilationError[]
 }
 
 export interface CompilationError {
