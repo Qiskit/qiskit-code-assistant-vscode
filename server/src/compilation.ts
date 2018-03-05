@@ -36,8 +36,8 @@ export class CompilationTool {
     }
 
     validateDocument(document: TextDocument): void {
-        let errors = parse(document.getText());
-        this.launchCompilationErrors(document, errors);
+        let result = parse(document.getText());
+        this.launchCompilationErrors(document, result.errors);
     }
 
     availableCompletions(_documentPosition: TextDocumentPositionParams): CompletionItem[] {
