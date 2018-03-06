@@ -12,11 +12,16 @@
 		"url": "https://github.ibm.com/IBMQuantum/qiskit-studio"
 	},
 	"dependencies": {
-		"vscode-languageserver": "^3.5.0"
+		"vscode-languageserver": "^3.5.0",
+		"antlr4ts": "0.4.1-alpha.0"
+	},
+	"devDependencies": {
+		"antlr4ts-cli": "^0.4.0-alpha.4"
 	},
 	"scripts": {
 		"installServer": "installServerIntoExtension ../client ./package.json ./tsconfig.json",
 		"compile": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
-		"watch": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -w -p ."
+		"watch": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -w -p .",
+		"antlr4ts": "antlr4ts -visitor src/antlr/Qasm.g4"
 	}
 }
