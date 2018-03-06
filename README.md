@@ -51,6 +51,14 @@ source <your-virtual-env>/bin/activate
 
 Some additional information can be found in this [link](https://www.digitalocean.com/community/tutorials/how-to-install-python-3-and-set-up-a-local-programming-environment-on-macos).
 
+## Interesting links
+
+### Visual Studio Code extensions
+
+* [Your first VS Code extension tutorial](https://code.visualstudio.com/docs/extensions/example-hello-world)
+* [How to create a language server?](https://code.visualstudio.com/docs/extensions/example-language-server)
+* [VS Code extension examples](https://code.visualstudio.com/docs/extensions/samples)
+
 ## Meta
 
 TBD
