@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
-		"noUnusedLocals": true,
+		"experimentalDecorators": true,
+		"noUnusedLocals": false,
 		"noUnusedParameters": true,
 		"noImplicitAny": true,
 		"noImplicitReturns": true,		

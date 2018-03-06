@@ -9,7 +9,7 @@ import {
     TextDocument,
     TextDocumentPositionParams
 } from 'vscode-languageserver';
-import { parse } from './tools/parser';
+import { parse } from './antlr/parser';
 import { ParserError, ParseErrorLevel } from './tools/parserModel';
 
 let symbols = [{
