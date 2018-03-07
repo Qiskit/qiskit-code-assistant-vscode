@@ -12,6 +12,7 @@ import { ProgramContext } from './QasmParser';
 import { StatementContext } from './QasmParser';
 import { DeclarationContext } from './QasmParser';
 import { QoperationContext } from './QasmParser';
+import { UnitaryOperationContext } from './QasmParser';
 import { QregDeclarationContext } from './QasmParser';
 import { CregDeclarationContext } from './QasmParser';
 import { GateDeclarationContext } from './QasmParser';
@@ -25,6 +26,10 @@ import { GateIdListContext } from './QasmParser';
 import { GateContext } from './QasmParser';
 import { ExpListContext } from './QasmParser';
 import { ExpressionContext } from './QasmParser';
+import { MultiplicativeExpressionContext } from './QasmParser';
+import { AdditiveExpressionContext } from './QasmParser';
+import { PrefixExpressionContext } from './QasmParser';
+import { UnaryContext } from './QasmParser';
 import { IdListContext } from './QasmParser';
 
 
@@ -131,6 +136,17 @@ export interface QasmListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitQoperation?: (ctx: QoperationContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.unitaryOperation`.
+	 * @param ctx the parse tree
+	 */
+	enterUnitaryOperation?: (ctx: UnitaryOperationContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.unitaryOperation`.
+	 * @param ctx the parse tree
+	 */
+	exitUnitaryOperation?: (ctx: UnitaryOperationContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `QasmParser.qregDeclaration`.
@@ -274,6 +290,50 @@ export interface QasmListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitExpression?: (ctx: ExpressionContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.multiplicativeExpression`.
+	 * @param ctx the parse tree
+	 */
+	enterMultiplicativeExpression?: (ctx: MultiplicativeExpressionContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.multiplicativeExpression`.
+	 * @param ctx the parse tree
+	 */
+	exitMultiplicativeExpression?: (ctx: MultiplicativeExpressionContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.additiveExpression`.
+	 * @param ctx the parse tree
+	 */
+	enterAdditiveExpression?: (ctx: AdditiveExpressionContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.additiveExpression`.
+	 * @param ctx the parse tree
+	 */
+	exitAdditiveExpression?: (ctx: AdditiveExpressionContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.prefixExpression`.
+	 * @param ctx the parse tree
+	 */
+	enterPrefixExpression?: (ctx: PrefixExpressionContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.prefixExpression`.
+	 * @param ctx the parse tree
+	 */
+	exitPrefixExpression?: (ctx: PrefixExpressionContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.unary`.
+	 * @param ctx the parse tree
+	 */
+	enterUnary?: (ctx: UnaryContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.unary`.
+	 * @param ctx the parse tree
+	 */
+	exitUnary?: (ctx: UnaryContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `QasmParser.idList`.

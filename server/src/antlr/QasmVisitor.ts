@@ -12,6 +12,7 @@ import { ProgramContext } from './QasmParser';
 import { StatementContext } from './QasmParser';
 import { DeclarationContext } from './QasmParser';
 import { QoperationContext } from './QasmParser';
+import { UnitaryOperationContext } from './QasmParser';
 import { QregDeclarationContext } from './QasmParser';
 import { CregDeclarationContext } from './QasmParser';
 import { GateDeclarationContext } from './QasmParser';
@@ -25,6 +26,10 @@ import { GateIdListContext } from './QasmParser';
 import { GateContext } from './QasmParser';
 import { ExpListContext } from './QasmParser';
 import { ExpressionContext } from './QasmParser';
+import { MultiplicativeExpressionContext } from './QasmParser';
+import { AdditiveExpressionContext } from './QasmParser';
+import { PrefixExpressionContext } from './QasmParser';
+import { UnaryContext } from './QasmParser';
 import { IdListContext } from './QasmParser';
 
 
@@ -98,6 +103,13 @@ export interface QasmVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitQoperation?: (ctx: QoperationContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.unitaryOperation`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitUnitaryOperation?: (ctx: UnitaryOperationContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `QasmParser.qregDeclaration`.
@@ -189,6 +201,34 @@ export interface QasmVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitExpression?: (ctx: ExpressionContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.multiplicativeExpression`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitMultiplicativeExpression?: (ctx: MultiplicativeExpressionContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.additiveExpression`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitAdditiveExpression?: (ctx: AdditiveExpressionContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.prefixExpression`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitPrefixExpression?: (ctx: PrefixExpressionContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.unary`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitUnary?: (ctx: UnaryContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `QasmParser.idList`.
