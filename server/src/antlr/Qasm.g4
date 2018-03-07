@@ -41,7 +41,32 @@ declaration
     ;
 
 qoperation
-    : 'qoperation';
+    : unitaryOperation;
+    // | opaque
+    // | measure
+    // | barrier
+    // | reset
+    // ;
+
+unitaryOperation
+    : 'unitary'
+    ;
+
+// opaque
+//     : 'opaque'
+//     ;
+
+// measure
+//     : 'measure'
+//     ;
+
+// barrier
+//     : 'barrier'
+//     ;
+
+// reset
+//     : 'reset'
+//     ;
 
 qregDeclaration
     : Qreg Id LeftBrace Int RightBrace Semi
@@ -104,7 +129,36 @@ expList
     ;
 
 expression 
-    : 'expression';
+    : multiplicativeExpression
+    | expression Pow multiplicativeExpression
+    ;
+
+multiplicativeExpression
+    : additiveExpression
+    | multiplicativeExpression Mult multiplicativeExpression
+    | multiplicativeExpression Div multiplicativeExpression
+    ;
+
+additiveExpression
+    : prefixExpression
+    | additiveExpression Sum additiveExpression
+    | additiveExpression Subs additiveExpression
+    ;
+
+prefixExpression
+    : unary
+    | Sum prefixExpression
+    | Subs prefixExpression
+    ;
+
+unary  
+    : Int
+    | Real
+    | Pi
+    | Id  // variable ref
+    | LeftParen expression RightParen
+    | Id LeftParen expression RightParen  // function ref
+    ;
 
 idList 
     : Id
@@ -138,6 +192,12 @@ LeftBrace: '[';
 RightBrace: ']';
 LeftParen: '(';
 RightParen: ')';
+Pow: '^';
+Mult: '*';
+Div: '/';
+Sum: '+';
+Subs: '-';
+Pi: 'pi';
 Gate: 'gate';
 GateId: 'u1' | 'u2' | 'u3';
 Id: [a-z][a-zA-Z0-9]*;
