@@ -17,10 +17,15 @@ import { CregDeclarationContext } from './QasmParser';
 import { GateDeclarationContext } from './QasmParser';
 import { GateScopeContext } from './QasmParser';
 import { BitListContext } from './QasmParser';
+import { BitContext } from './QasmParser';
 import { GateBodyContext } from './QasmParser';
+import { GateOpListContext } from './QasmParser';
+import { GateOpContext } from './QasmParser';
 import { GateIdListContext } from './QasmParser';
 import { GateContext } from './QasmParser';
-import { IdContext } from './QasmParser';
+import { ExpListContext } from './QasmParser';
+import { ExpressionContext } from './QasmParser';
+import { IdListContext } from './QasmParser';
 
 
 /**
@@ -130,11 +135,32 @@ export interface QasmVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitBitList?: (ctx: BitListContext) => Result;
 
 	/**
+	 * Visit a parse tree produced by `QasmParser.bit`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitBit?: (ctx: BitContext) => Result;
+
+	/**
 	 * Visit a parse tree produced by `QasmParser.gateBody`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	visitGateBody?: (ctx: GateBodyContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.gateOpList`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitGateOpList?: (ctx: GateOpListContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.gateOp`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitGateOp?: (ctx: GateOpContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `QasmParser.gateIdList`.
@@ -151,10 +177,24 @@ export interface QasmVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitGate?: (ctx: GateContext) => Result;
 
 	/**
-	 * Visit a parse tree produced by `QasmParser.id`.
+	 * Visit a parse tree produced by `QasmParser.expList`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	visitId?: (ctx: IdContext) => Result;
+	visitExpList?: (ctx: ExpListContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.expression`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitExpression?: (ctx: ExpressionContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.idList`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitIdList?: (ctx: IdListContext) => Result;
 }
 

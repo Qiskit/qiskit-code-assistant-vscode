@@ -44,11 +44,11 @@ qoperation
     : 'qoperation';
 
 qregDeclaration
-    : Qreg Id LeftBrac Int RightBrac Semi
+    : Qreg Id LeftBrace Int RightBrace Semi
     ;
 
 cregDeclaration
-    : Creg Id LeftBrac Int RightBrac Semi
+    : Creg Id LeftBrace Int RightBrace Semi
     ;
 
 gateDeclaration
@@ -58,13 +58,36 @@ gateDeclaration
     ;
 
 gateScope
-    : 'gateScope';
+    : // Epsilon
+    ; 
 
 bitList 
-    : 'bitList';
+    : bit
+    | bitList Comma bit
+    ;
+
+bit
+    : Id
+    ;
 
 gateBody
-    : 'gateBody';
+    : LeftCurlyBrace gateOpList RightCurlyBrace
+    ;
+
+gateOpList
+    : // Epsilon
+    | gateOp
+    | gateOpList gateOp
+    ;
+
+gateOp
+    : U LeftParen expList RightParen Id Semi
+    | Cx Id Comma Id Semi
+    | Id idList Semi
+    | Id LeftParen RightParen idList Semi
+    | Id LeftParen expList RightParen idList Semi
+    | Barrier idList Semi
+    ;
 
 gateIdList
     : gate
@@ -72,11 +95,20 @@ gateIdList
     ;
 
 gate
-    : id
+    : Id
     ;
 
-id
+expList
+    : expression
+    | expList Comma expression
+    ;
+
+expression 
+    : 'expression';
+
+idList 
     : Id
+    | idList Comma Id
     ;
 
 // terminals
@@ -100,8 +132,10 @@ Opaque: 'opaque';
 Assign: '->';
 Semi: ';';
 Comma: ',';
-LeftBrac: '[';
-RightBrac: ']';
+LeftCurlyBrace: '{';
+RightCurlyBrace: '}';
+LeftBrace: '[';
+RightBrace: ']';
 LeftParen: '(';
 RightParen: ')';
 Gate: 'gate';

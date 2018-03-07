@@ -20,6 +20,8 @@ function calculateCandidateKeywords(parser: QasmParser, caretPosition: number): 
     let core = new CodeCompletionCore(parser);
 
     core.ignoredTokens = new Set([
+        QasmLexer.LeftCurlyBrace, QasmLexer.RightCurlyBrace,
+        QasmLexer.LeftBrace, QasmLexer.RightBrace,
         QasmLexer.LeftParen, QasmLexer.RightParen,
         QasmLexer.Semi
     ]);

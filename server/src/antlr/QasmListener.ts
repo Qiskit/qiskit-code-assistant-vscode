@@ -17,10 +17,15 @@ import { CregDeclarationContext } from './QasmParser';
 import { GateDeclarationContext } from './QasmParser';
 import { GateScopeContext } from './QasmParser';
 import { BitListContext } from './QasmParser';
+import { BitContext } from './QasmParser';
 import { GateBodyContext } from './QasmParser';
+import { GateOpListContext } from './QasmParser';
+import { GateOpContext } from './QasmParser';
 import { GateIdListContext } from './QasmParser';
 import { GateContext } from './QasmParser';
-import { IdContext } from './QasmParser';
+import { ExpListContext } from './QasmParser';
+import { ExpressionContext } from './QasmParser';
+import { IdListContext } from './QasmParser';
 
 
 /**
@@ -183,6 +188,17 @@ export interface QasmListener extends ParseTreeListener {
 	exitBitList?: (ctx: BitListContext) => void;
 
 	/**
+	 * Enter a parse tree produced by `QasmParser.bit`.
+	 * @param ctx the parse tree
+	 */
+	enterBit?: (ctx: BitContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.bit`.
+	 * @param ctx the parse tree
+	 */
+	exitBit?: (ctx: BitContext) => void;
+
+	/**
 	 * Enter a parse tree produced by `QasmParser.gateBody`.
 	 * @param ctx the parse tree
 	 */
@@ -192,6 +208,28 @@ export interface QasmListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitGateBody?: (ctx: GateBodyContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.gateOpList`.
+	 * @param ctx the parse tree
+	 */
+	enterGateOpList?: (ctx: GateOpListContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.gateOpList`.
+	 * @param ctx the parse tree
+	 */
+	exitGateOpList?: (ctx: GateOpListContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.gateOp`.
+	 * @param ctx the parse tree
+	 */
+	enterGateOp?: (ctx: GateOpContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.gateOp`.
+	 * @param ctx the parse tree
+	 */
+	exitGateOp?: (ctx: GateOpContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `QasmParser.gateIdList`.
@@ -216,14 +254,36 @@ export interface QasmListener extends ParseTreeListener {
 	exitGate?: (ctx: GateContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParser.id`.
+	 * Enter a parse tree produced by `QasmParser.expList`.
 	 * @param ctx the parse tree
 	 */
-	enterId?: (ctx: IdContext) => void;
+	enterExpList?: (ctx: ExpListContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParser.id`.
+	 * Exit a parse tree produced by `QasmParser.expList`.
 	 * @param ctx the parse tree
 	 */
-	exitId?: (ctx: IdContext) => void;
+	exitExpList?: (ctx: ExpListContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.expression`.
+	 * @param ctx the parse tree
+	 */
+	enterExpression?: (ctx: ExpressionContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.expression`.
+	 * @param ctx the parse tree
+	 */
+	exitExpression?: (ctx: ExpressionContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.idList`.
+	 * @param ctx the parse tree
+	 */
+	enterIdList?: (ctx: IdListContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.idList`.
+	 * @param ctx the parse tree
+	 */
+	exitIdList?: (ctx: IdListContext) => void;
 }
 
