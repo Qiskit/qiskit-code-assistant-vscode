@@ -20,7 +20,8 @@ include
     ;
 
 library
-    : 'foo'
+    : declaration
+    | library declaration
     ;
 
 program
@@ -29,8 +30,53 @@ program
     ;
 
 statement
-    : Qreg Id LeftParen Int RightParen Semi
-    | Creg Id LeftParen Int RightParen Semi
+    : declaration
+    | qoperation
+    ;
+
+declaration
+    : qregDeclaration
+    | cregDeclaration
+    | gateDeclaration
+    ;
+
+qoperation
+    : 'qoperation';
+
+qregDeclaration
+    : Qreg Id LeftBrac Int RightBrac Semi
+    ;
+
+cregDeclaration
+    : Creg Id LeftBrac Int RightBrac Semi
+    ;
+
+gateDeclaration
+    : Gate GateId gateScope bitList gateBody
+    | Gate GateId gateScope LeftParen RightParen bitList gateBody
+    | Gate GateId gateScope LeftParen gateIdList RightParen bitList gateBody
+    ;
+
+gateScope
+    : 'gateScope';
+
+bitList 
+    : 'bitList';
+
+gateBody
+    : 'gateBody';
+
+gateIdList
+    : gate
+    | gateIdList Comma gate
+    ;
+
+gate
+    : id
+    ;
+
+id
+    : Id
     ;
 
 // terminals
@@ -41,11 +87,23 @@ WhiteSpace: [ \t\n\r] -> skip;
 Real: [0-9]+'.'[0-9]+;
 Int: [0-9]+;
 IbmQasm: 'OPENQASM' | 'IBMQASM';
-Qreg: 'qreg';
-Creg: 'creg';
 Include: 'include';
 Qelib: 'QELIB.INC';
-Id: [a-z][a-zA-Z0-9]*;
+Qreg: 'qreg';
+Creg: 'creg';
+U: 'U';
+Cx: 'CX';
+Measure: 'measure';
+Barrier: 'barrier';
+Reset: 'reset';
+Opaque: 'opaque';
+Assign: '->';
 Semi: ';';
-LeftParen: '[';
-RightParen: ']';
+Comma: ',';
+LeftBrac: '[';
+RightBrac: ']';
+LeftParen: '(';
+RightParen: ')';
+Gate: 'gate';
+GateId: 'u1' | 'u2' | 'u3';
+Id: [a-z][a-zA-Z0-9]*;

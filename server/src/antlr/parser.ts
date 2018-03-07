@@ -40,7 +40,7 @@ class ErrorListener implements ANTLRErrorListener<CommonToken> {
         _e: RecognitionException | undefined): void {
 
         this.errors.push({
-            line: line,
+            line: line - 1,
             start: charPositionInLine,
             end: charPositionInLine + 1,
             message: msg,

@@ -38,6 +38,14 @@ let symbols = [{
     type: 'Include'
 },
 {
+    label: 'QELIB.INC',
+    kind: CompletionItemKind.Text,
+    data: 11,
+    detail: 'Include',
+    documentation: 'References the QELIB.INC dependency.',
+    type: 'Qelib'
+},
+{
     label: 'qreg',
     kind: CompletionItemKind.Text,
     data: 20,
@@ -52,6 +60,86 @@ let symbols = [{
     detail: 'Classical register',
     documentation: 'This is the representation of a classical register.',
     type: 'Creg'
+},
+{
+    label: 'U',
+    kind: CompletionItemKind.Text,
+    data: 30,
+    detail: 'TBD',
+    documentation: 'TBD.',
+    type: 'U'
+},
+{
+    label: 'CX',
+    kind: CompletionItemKind.Text,
+    data: 31,
+    detail: 'TBD',
+    documentation: 'TBD.',
+    type: 'Cx'
+},
+{
+    label: 'measure',
+    kind: CompletionItemKind.Text,
+    data: 60,
+    detail: 'Measurement',
+    documentation: 'Measurement in the computational (standard) basis (Z).',
+    type: 'Measure'
+},
+{
+    label: 'barrier',
+    kind: CompletionItemKind.Text,
+    data: 61,
+    detail: 'Barrier',
+    documentation: 'The barrier prevents transformations across this source line.',
+    type: 'Barrier'
+},
+{
+    label: 'reset',
+    kind: CompletionItemKind.Text,
+    data: 62,
+    detail: 'Reset',
+    documentation: 'Prepare qubits in the |0> state.',
+    type: 'Reset'
+},
+{
+    label: 'opaque',
+    kind: CompletionItemKind.Text,
+    data: 63,
+    detail: 'Opaque',
+    documentation: 'TBD.',
+    type: 'Opaque'
+},
+{
+    label: 'gate',
+    kind: CompletionItemKind.Text,
+    data: 100,
+    detail: 'Gate declaration',
+    documentation: 'TBD.',
+    type: 'Gate'
+},
+{
+    label: 'u1',
+    kind: CompletionItemKind.Text,
+    data: 101,
+    detail: 'U1 gate',
+    documentation: 'The first physical gate of the Quantum Experience. It is a one parameter single-qubit phase gate with zero duration.\n\n[[1,0],[0,exp(1i*lambda)]]',
+    type: 'GateId'
+},
+{
+    label: 'u2',
+    kind: CompletionItemKind.Text,
+    data: 102,
+    detail: 'U2 gate',
+    documentation: 'The second physical gate of the Quantum Experience. It is a two parameter single-qubit gate with duration one unit of time.\n\n[[1/sqrt(2),-exp(1i*lambda)*1/sqrt(2)],[exp(1i*phi)*1/sqrt(2),exp(1i*lambda+1i*phi)*1/sqrt(2)]]',
+    type: 'GateId'
+},
+{
+    label: 'u3',
+    kind: CompletionItemKind.Text,
+    data: 103,
+    detail: 'U3 gate',
+    documentation: 'The third physical gate of the Quantum Experience. It is a three-parameter single-qubit gate with duration 2 units of gate time.\n\n[[cos(theta/2),-exp(1i*lambda)*sin(theta/2)],[exp(1i*phi)*sin(theta/2),exp(1i*lambda+1i*phi)*cos(theta/2)]]',
+    type: 'GateId'
 }
 ];
 
