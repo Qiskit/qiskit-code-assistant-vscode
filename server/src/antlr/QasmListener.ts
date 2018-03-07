@@ -10,6 +10,17 @@ import { IncludeContext } from './QasmParser';
 import { LibraryContext } from './QasmParser';
 import { ProgramContext } from './QasmParser';
 import { StatementContext } from './QasmParser';
+import { DeclarationContext } from './QasmParser';
+import { QoperationContext } from './QasmParser';
+import { QregDeclarationContext } from './QasmParser';
+import { CregDeclarationContext } from './QasmParser';
+import { GateDeclarationContext } from './QasmParser';
+import { GateScopeContext } from './QasmParser';
+import { BitListContext } from './QasmParser';
+import { GateBodyContext } from './QasmParser';
+import { GateIdListContext } from './QasmParser';
+import { GateContext } from './QasmParser';
+import { IdContext } from './QasmParser';
 
 
 /**
@@ -93,5 +104,126 @@ export interface QasmListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitStatement?: (ctx: StatementContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.declaration`.
+	 * @param ctx the parse tree
+	 */
+	enterDeclaration?: (ctx: DeclarationContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.declaration`.
+	 * @param ctx the parse tree
+	 */
+	exitDeclaration?: (ctx: DeclarationContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.qoperation`.
+	 * @param ctx the parse tree
+	 */
+	enterQoperation?: (ctx: QoperationContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.qoperation`.
+	 * @param ctx the parse tree
+	 */
+	exitQoperation?: (ctx: QoperationContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.qregDeclaration`.
+	 * @param ctx the parse tree
+	 */
+	enterQregDeclaration?: (ctx: QregDeclarationContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.qregDeclaration`.
+	 * @param ctx the parse tree
+	 */
+	exitQregDeclaration?: (ctx: QregDeclarationContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.cregDeclaration`.
+	 * @param ctx the parse tree
+	 */
+	enterCregDeclaration?: (ctx: CregDeclarationContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.cregDeclaration`.
+	 * @param ctx the parse tree
+	 */
+	exitCregDeclaration?: (ctx: CregDeclarationContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.gateDeclaration`.
+	 * @param ctx the parse tree
+	 */
+	enterGateDeclaration?: (ctx: GateDeclarationContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.gateDeclaration`.
+	 * @param ctx the parse tree
+	 */
+	exitGateDeclaration?: (ctx: GateDeclarationContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.gateScope`.
+	 * @param ctx the parse tree
+	 */
+	enterGateScope?: (ctx: GateScopeContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.gateScope`.
+	 * @param ctx the parse tree
+	 */
+	exitGateScope?: (ctx: GateScopeContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.bitList`.
+	 * @param ctx the parse tree
+	 */
+	enterBitList?: (ctx: BitListContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.bitList`.
+	 * @param ctx the parse tree
+	 */
+	exitBitList?: (ctx: BitListContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.gateBody`.
+	 * @param ctx the parse tree
+	 */
+	enterGateBody?: (ctx: GateBodyContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.gateBody`.
+	 * @param ctx the parse tree
+	 */
+	exitGateBody?: (ctx: GateBodyContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.gateIdList`.
+	 * @param ctx the parse tree
+	 */
+	enterGateIdList?: (ctx: GateIdListContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.gateIdList`.
+	 * @param ctx the parse tree
+	 */
+	exitGateIdList?: (ctx: GateIdListContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.gate`.
+	 * @param ctx the parse tree
+	 */
+	enterGate?: (ctx: GateContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.gate`.
+	 * @param ctx the parse tree
+	 */
+	exitGate?: (ctx: GateContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.id`.
+	 * @param ctx the parse tree
+	 */
+	enterId?: (ctx: IdContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.id`.
+	 * @param ctx the parse tree
+	 */
+	exitId?: (ctx: IdContext) => void;
 }
 

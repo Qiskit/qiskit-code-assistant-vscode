@@ -1,7 +1,5 @@
 grammar Qasm;
 
-// rules
-
 startProgram
     : mainProgram EOF
     ;
@@ -13,123 +11,48 @@ mainProgram
     ;
 
 ibmDefinition
-    : IBMQASM REAL ';' include
-    | IBMQASM REAL ';'
+    : IbmQasm Real Semi include
+    | IbmQasm Real Semi
     ;
 
 include
-    : INCLUDE QUELIB ';'
+    : Include Qelib Semi
     ;
 
-library 
+library
     : declaration
     | library declaration
     ;
 
 program
     : statement
-    | program statement;
+    | program statement
+    ;
 
 statement
     : declaration
-    | qOperation ';'
+    | qoperation Semi 
     ;
 
 declaration
-    : qRegDeclaration
-    | cRegDeclaration
+    : qRegDeclaration Semi
+    | cRegDeclaration Semi
     | gateDeclaration
     ;
 
 qRegDeclaration
-    : QREG id '[' INT ']' ';'
-    ;    
-
+    : Qreg Id LeftParen Int RightParen
+    ;
+    
 cRegDeclaration
-    : QREG id '[' INT ']' ';'
-    ;    
+    : Creg Id LeftParen Int RightParen
+    ;
 
 gateDeclaration
-    : GATE id gateScope bitList gateBody
-    | GATE id gateScope '(' ')' bitList gateBody
-    | GATE id gateScope '(' gateIdList ')' bitList gateBody
+    : 'gate'
     ;
 
-gateIdList
-    : id
-    | gateIdList ',' id
-    ;
-
-gate
-    : ID
-    ;
-
-gateScope
-    : // epsilon
-    ;
-
-bitList
-    : id
-    | bitList ',' id
-    ;
-
-gateBody
-    : '{' gateOpList '}'
-    | '{' '}'
-    ;
-
-gateOpList
-    : gateOp
-    | gateOpList gateOp
-    ;
-
-gateOp
-    : U '(' expList ')' id ';'
-    | CX id ',' id ';'
-    | id idList ';'
-    | id '(' ')' idList ';'
-    | id '(' expList ')' idList ';'
-    | BARRIER idList ';'
-    ;
-
-expList 
-    : expression
-    | expList ',' expression
-    ;
-
-expression
-    : multiplicativeExpression
-    | expression '^' multiplicativeExpression
-    ;
-
-multiplicativeExpression
-    : additiveExpression
-    | multiplicativeExpression '*' multiplicativeExpression
-    | multiplicativeExpression '/' multiplicativeExpression
-    ;
-
-additiveExpression
-    : prefixExpression
-    | additiveExpression '+' additiveExpression
-    | additiveExpression '-' additiveExpression
-    ;
-
-prefixExpression
-    : unary
-    | '+' prefixExpression
-    | '-' prefixExpression
-    ;
-
-unary
-    : INT
-    | REAL
-    | PI
-    | id
-    | '(' expression ')'
-    | id '(' expression ')'
-    ;
-
-qOperation
+qoperation
     : unitaryOperation
     | opaque
     | measure
@@ -138,71 +61,80 @@ qOperation
     ;
 
 unitaryOperation
-    : U '(' expList ')' primary ';'
-    | CX primary ',' primary
-    | id primaryList
-    | id '(' ')' primaryList
-    | id '(' expList ')' primaryList
+    : U LeftParen exprList RightParen primary 
+    | Cx primary Comma primary
+    | Id primaryList
+    | Id LeftParen RightParen primaryList
+    | Id LeftParen exprList RightParen primaryList
     ;
 
-primary 
-    : id
-    | indexedId
+opaque 
+    : Opaque Id gateScope bitList
+    | Opaque Id gateScope LeftParen RightParen bitList
+    | Opaque Id gateScope LeftParen gateIdList RightParen bitList
     ;
 
-id
-    : ID // need semantica analyzes to avoid identifiers longer than 31 characters
+measure 
+    : Measure primary Assign primary
+    ;
+
+barrier 
+    : Barrier primaryList
+    ;
+
+reset 
+    : Reset primary
+    ;
+
+exprList
+    : 'exprList'
     ;
 
 primaryList
     : primary
-    | primaryList ',' primary
+    | primaryList Comma primary
     ;
 
-indexedId
-    : id '[' INT ']'
+primary 
+    : 'primary'
     ;
 
-barrier
-    : BARRIER primaryList
+gateScope
+    : 'gateScope'
     ;
 
-measure
-    : MEASURE primary '->' primary
+bitList 
+    : 'gitList'
     ;
 
-idList
-    : id
-    | idList ',' id
-    ;
-
-reset   
-    : RESET primary;
-
-opaque 
-    : OPAQUE id gateScope bitList
-    | OPAQUE id gateScope '(' ')' bitList
-    | OPAQUE id gateScope '(' gateIdList ')' bitList
+gateIdList
+    : 'gateIdList'
     ;
 
 // terminals
 
-COMMENT: '//' ~[\r\n]* -> skip;
-WS: [ \t\n\r] -> skip;
-REAL: [0-9]+('.'[0-9]+)?;
-INT: [0-9]+;
-IBMQASM: 'IBMQASM' | 'OPENQASM';
-INCLUDE: 'include';
-QUELIB: '"qelib1.inc"';
-QREG: 'qreg';
-CREG: 'creg';
-CX: 'CX';
+Comment: '//' ~[\r\n]* -> skip;
+WhiteSpace: [ \t\n\r] -> skip;
+
+Real: [0-9]+'.'[0-9]+;
+Int: [0-9]+;
+IbmQasm: 'OPENQASM' | 'IBMQASM';
+Include: 'include';
+Qelib: 'QELIB.INC';
+Qreg: 'qreg';
+Creg: 'creg';
 U: 'U';
-MEASURE: 'measure';
-BARRIER: 'barrier';
-RESET: 'reset';
-OPAQUE: 'opaque';
-GATE: 'gate';
-PI: 'pi';
-ID: [a-z][a-zA-Z0-9]*;
+Cx: 'CX';
+Measure: 'measure';
+Barrier: 'barrier';
+Reset: 'reset';
+Opaque: 'opaque';
+Assign: '->';
+Semi: ';';
+Comma: ',';
+LeftBrac: '[';
+RightBrac: ']';
+LeftParen: '(';
+RightParen: ')';
+Id: [a-z][a-zA-Z0-9]*;
 
