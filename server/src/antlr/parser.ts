@@ -20,53 +20,10 @@ export function parse(input: string): ParserResult {
 
     let tree = parser.startProgram();
 
-    // given a parser candidates can be calculated wihtout launching previous rules!!!
-    let keywords = calculateCandidateKeywords(parser, 0);
-
     return {
         ast: tree,
         errors: errorListener.errors
     };
-
-
-    /*
-    var input = document.getElementById("code").value;
-        var chars = new antlr4.InputStream(input);
-        var lexer = new TodoLexer.todoLexer(chars);
-        var tokens  = new antlr4.CommonTokenStream(lexer);
-        var parser = new TodoParser.todoParser(tokens);
-        parser.buildParseTrees = true;
-        var errors = [];
-        var listener = new MyErrorListener(errors);
-        parser.removeErrorListeners();
-        parser.addErrorListener(listener);
-        var tree = parser.startProgram();
-        console.log("Parsed: "+ tree);
-        console.log(errors);
-    */
-
-    // parser.init();
-
-    // let compilationResult = parser.parse(input);
-
-    // return {
-    //     ast: compilationResult,
-    //     errors: compilationResult.errors.map((error) => {
-    //         return toParserError(error);
-    //     })
-    // }
-}
-
-function calculateCandidateKeywords(parser: QasmParser, caretPosition: number): string[] {
-    let core = new CodeCompletionCore(parser);
-    let candidates = core.collectCandidates(caretPosition);
-
-    let keywords: string[] = [];
-    for (let candidate of candidates.tokens) {
-        keywords.push(parser.vocabulary.getDisplayName(candidate[0]));
-    }
-
-    return keywords;
 }
 
 class ErrorListener implements ANTLRErrorListener<CommonToken> {

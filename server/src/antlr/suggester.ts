@@ -18,12 +18,33 @@ export function calculateSuggestionsFor(input: string): string[] {
 
 function calculateCandidateKeywords(parser: QasmParser, caretPosition: number): string[] {
     let core = new CodeCompletionCore(parser);
+
+    core.ignoredTokens = new Set([
+        QasmLexer.LeftParen, QasmLexer.RightParen,
+        QasmLexer.Semi
+    ]);
+
+    // core.preferredRules = new Set([QasmParser.RULE_statement]);
+
     let candidates = core.collectCandidates(caretPosition);
 
     let keywords: string[] = [];
     for (let candidate of candidates.tokens) {
-        keywords.push(parser.vocabulary.getDisplayName(candidate[0]));
+        keywords.push(parser.vocabulary.getSymbolicName(candidate[0]));
     }
 
-    return keywords;
+    let functionNames: string[] = [];
+    let variableNames: string[] = [];
+    for (let candidate of candidates.rules) {
+        console.log('Rule > ' + candidate);
+    }
+
+    let result: string[] = [];
+    result.push(...keywords);
+    result.push(...functionNames);
+    result.push(...variableNames);
+
+    console.log('Found ' + result);
+
+    return result;
 }
