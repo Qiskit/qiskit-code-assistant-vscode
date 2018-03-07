@@ -4,6 +4,7 @@
 import { ParseTreeVisitor } from 'antlr4ts/tree/ParseTreeVisitor';
 
 import { StartProgramContext } from './QasmParser';
+import { IbmDefinitionContext } from './QasmParser';
 
 
 /**
@@ -20,5 +21,12 @@ export interface QasmVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitStartProgram?: (ctx: StartProgramContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.ibmDefinition`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitIbmDefinition?: (ctx: IbmDefinitionContext) => Result;
 }
 

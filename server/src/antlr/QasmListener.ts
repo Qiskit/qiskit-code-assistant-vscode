@@ -4,6 +4,7 @@
 import { ParseTreeListener } from 'antlr4ts/tree/ParseTreeListener';
 
 import { StartProgramContext } from './QasmParser';
+import { IbmDefinitionContext } from './QasmParser';
 
 
 /**
@@ -21,5 +22,16 @@ export interface QasmListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitStartProgram?: (ctx: StartProgramContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.ibmDefinition`.
+	 * @param ctx the parse tree
+	 */
+	enterIbmDefinition?: (ctx: IbmDefinitionContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.ibmDefinition`.
+	 * @param ctx the parse tree
+	 */
+	exitIbmDefinition?: (ctx: IbmDefinitionContext) => void;
 }
 

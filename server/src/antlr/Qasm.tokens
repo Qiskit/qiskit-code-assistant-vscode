@@ -1,6 +1,6 @@
-T__0=1
-T__1=2
-T__2=3
-'OPENQASM'=1
-'2.0'=2
-';'=3
+COMMENT=1
+WS=2
+REAL=3
+IBMQASM=4
+END_LINE=5
+';'=5
