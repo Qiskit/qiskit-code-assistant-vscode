@@ -4,7 +4,12 @@
 import { ParseTreeVisitor } from 'antlr4ts/tree/ParseTreeVisitor';
 
 import { StartProgramContext } from './QasmParser';
+import { MainProgramContext } from './QasmParser';
 import { IbmDefinitionContext } from './QasmParser';
+import { IncludeContext } from './QasmParser';
+import { LibraryContext } from './QasmParser';
+import { ProgramContext } from './QasmParser';
+import { StatementContext } from './QasmParser';
 
 
 /**
@@ -23,10 +28,45 @@ export interface QasmVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitStartProgram?: (ctx: StartProgramContext) => Result;
 
 	/**
+	 * Visit a parse tree produced by `QasmParser.mainProgram`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitMainProgram?: (ctx: MainProgramContext) => Result;
+
+	/**
 	 * Visit a parse tree produced by `QasmParser.ibmDefinition`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	visitIbmDefinition?: (ctx: IbmDefinitionContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.include`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitInclude?: (ctx: IncludeContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.library`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitLibrary?: (ctx: LibraryContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.program`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitProgram?: (ctx: ProgramContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.statement`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitStatement?: (ctx: StatementContext) => Result;
 }
 

@@ -18,24 +18,40 @@ let symbols = [{
     kind: CompletionItemKind.Text,
     data: 1,
     detail: 'OPENQASM',
-    documentation: 'TBD ... blah blah blah',
-    type: 'IBMQASM'
+    documentation: 'Initial file descriptor.',
+    type: 'IbmQasm'
 },
 {
     label: 'IBMQASM',
     kind: CompletionItemKind.Text,
     data: 2,
     detail: 'OPENQASM',
-    documentation: 'TBD ... blah blah blah',
-    type: 'IBMQASM'
+    documentation: 'Initial file descriptor.',
+    type: 'IbmQasm'
 },
 {
     label: 'include',
     kind: CompletionItemKind.Text,
     data: 10,
-    detail: 'include',
-    documentation: 'TBD ... blah blah blah',
-    type: 'INCLUDE'
+    detail: 'Include',
+    documentation: 'Includes the selected library.',
+    type: 'Include'
+},
+{
+    label: 'qreg',
+    kind: CompletionItemKind.Text,
+    data: 20,
+    detail: 'Quantum register',
+    documentation: 'This is the representation of a quantum register.',
+    type: 'Qreg'
+},
+{
+    label: 'creg',
+    kind: CompletionItemKind.Text,
+    data: 21,
+    detail: 'Classical register',
+    documentation: 'This is the representation of a classical register.',
+    type: 'Creg'
 }
 ];
 
@@ -60,10 +76,22 @@ export class CompilationTool {
         }
 
         let textToCaret = this.currentDocument.getText().substring(0, this.currentDocument.offsetAt(_documentPosition.position));
-        
+
         let suggestions = suggester.calculateSuggestionsFor(textToCaret);
-        
-        return symbols.filter(symbol => suggestions.indexOf(symbol.type) > -1);
+
+        if (suggestions.length === 0) {
+            return [];
+        }
+
+        let isContainedInSuggestions = (symbol: any) => {
+            return suggestions.indexOf(symbol.type) > -1;
+        }
+
+        let result = symbols.filter(isContainedInSuggestions);
+
+        console.log('Filtered symbols > ' + result);
+
+        return result;
     }
 
     completionDetailsFor(item: CompletionItem): CompletionItem {

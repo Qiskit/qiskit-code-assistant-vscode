@@ -1,18 +1,51 @@
 grammar Qasm;
 
 startProgram
-    : ibmDefinition EOF
+    : mainProgram EOF
+    ;
+
+mainProgram
+    : ibmDefinition
+    | ibmDefinition program
+    | library
     ;
 
 ibmDefinition
-    : IBMQASM REAL END_LINE
+    : IbmQasm Real Semi include
+    | IbmQasm Real Semi
+    ;
+
+include
+    : Include Qelib Semi
+    ;
+
+library
+    : 'foo'
+    ;
+
+program
+    : statement
+    | program statement
+    ;
+
+statement
+    : Qreg Id LeftParen Int RightParen Semi
+    | Creg Id LeftParen Int RightParen Semi
     ;
 
 // terminals
 
-COMMENT: '//' ~[\r\n]* -> skip;
-WS: [ \t\n\r] -> skip;
+Comment: '//' ~[\r\n]* -> skip;
+WhiteSpace: [ \t\n\r] -> skip;
 
-REAL: [0-9]+('.'[0-9]+)?;
-IBMQASM: 'OPENQASM' | 'IBMQASM';
-END_LINE: ';';
+Real: [0-9]+'.'[0-9]+;
+Int: [0-9]+;
+IbmQasm: 'OPENQASM' | 'IBMQASM';
+Qreg: 'qreg';
+Creg: 'creg';
+Include: 'include';
+Qelib: 'QELIB.INC';
+Id: [a-z][a-zA-Z0-9]*;
+Semi: ';';
+LeftParen: '[';
+RightParen: ']';
