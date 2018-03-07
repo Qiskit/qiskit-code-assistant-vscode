@@ -13,7 +13,8 @@
 	},
 	"dependencies": {
 		"vscode-languageserver": "^3.5.0",
-		"antlr4ts": "0.4.1-alpha.0"
+		"antlr4ts": "^0.4.1-alpha.0",
+		"antlr4-c3": "^1.1.7"
 	},
 	"devDependencies": {
 		"antlr4ts-cli": "^0.4.0-alpha.4"
