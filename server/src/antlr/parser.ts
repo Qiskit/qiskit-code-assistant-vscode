@@ -2,36 +2,11 @@
 
 import { ANTLRInputStream, CommonTokenStream, ANTLRErrorListener, CommonToken, Token, Recognizer, RecognitionException } from 'antlr4ts';
 import { CodeCompletionCore } from 'antlr4-c3';
-// import { parser } from './qasm';
 import { ParserResult, ParserError, ParseErrorLevel } from '../tools/parserModel';
 import { QasmLexer } from './QasmLexer';
 import { QasmParser } from './QasmParser';
 import { Override } from 'antlr4ts/Decorators';
-// import { toParserError } from '../tools/qasmParserErrorsAdapter';
 
-class ErrorListener implements ANTLRErrorListener<CommonToken> {
-
-    errors: ParserError[] = [];
-
-    @Override
-    syntaxError<T extends Token>(
-        _recognizer: Recognizer<T, any>,
-        _offendingSymbol: T | undefined,
-        line: number,
-        charPositionInLine: number,
-        msg: string,
-        _e: RecognitionException | undefined): void {
-
-        this.errors.push({
-            line: line,
-            start: charPositionInLine,
-            end: charPositionInLine + 1,
-            message: msg,
-            level: ParseErrorLevel.ERROR
-        });
-    }
-    
-}
 // This function launches the parsing engine and transforms the errors into 
 // ParserErrors which are understood by the extension
 export function parse(input: string): ParserResult {
@@ -92,4 +67,28 @@ function calculateCandidateKeywords(parser: QasmParser, caretPosition: number): 
     }
 
     return keywords;
+}
+
+class ErrorListener implements ANTLRErrorListener<CommonToken> {
+
+    errors: ParserError[] = [];
+
+    @Override
+    syntaxError<T extends Token>(
+        _recognizer: Recognizer<T, any>,
+        _offendingSymbol: T | undefined,
+        line: number,
+        charPositionInLine: number,
+        msg: string,
+        _e: RecognitionException | undefined): void {
+
+        this.errors.push({
+            line: line,
+            start: charPositionInLine,
+            end: charPositionInLine + 1,
+            message: msg,
+            level: ParseErrorLevel.ERROR
+        });
+    }
+
 }

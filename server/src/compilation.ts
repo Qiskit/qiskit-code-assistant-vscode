@@ -10,6 +10,7 @@ import {
     TextDocumentPositionParams
 } from 'vscode-languageserver';
 import { parse } from './antlr/parser';
+import * as suggester from './antlr/suggester';
 import { ParserError, ParseErrorLevel } from './tools/parserModel';
 
 let symbols = [{
@@ -17,32 +18,52 @@ let symbols = [{
     kind: CompletionItemKind.Text,
     data: 1,
     detail: 'OPENQASM',
-    documentation: 'TBD ... blah blah blah'
+    documentation: 'TBD ... blah blah blah',
+    type: 'IBMQASM'
+},
+{
+    label: 'IBMQASM',
+    kind: CompletionItemKind.Text,
+    data: 2,
+    detail: 'OPENQASM',
+    documentation: 'TBD ... blah blah blah',
+    type: 'IBMQASM'
 },
 {
     label: 'include',
     kind: CompletionItemKind.Text,
-    data: 2,
+    data: 10,
     detail: 'include',
-    documentation: 'TBD ... blah blah blah'
+    documentation: 'TBD ... blah blah blah',
+    type: 'INCLUDE'
 }
 ];
 
 export class CompilationTool {
     connection: IConnection;
+    currentDocument: TextDocument = null;
 
     constructor(public _connection: IConnection) {
         this.connection = _connection;
     }
 
     validateDocument(document: TextDocument): void {
+        this.currentDocument = document;
+
         let result = parse(document.getText());
         this.launchCompilationErrors(document, result.errors);
     }
 
     availableCompletions(_documentPosition: TextDocumentPositionParams): CompletionItem[] {
-        // The available completions should be based in the actual state of the parser
-        return symbols;
+        if (this.currentDocument === null) {
+            return symbols;
+        }
+
+        let textToCaret = this.currentDocument.getText().substring(0, this.currentDocument.offsetAt(_documentPosition.position));
+        
+        let suggestions = suggester.calculateSuggestionsFor(textToCaret);
+        
+        return symbols.filter(symbol => suggestions.indexOf(symbol.type) > -1);
     }
 
     completionDetailsFor(item: CompletionItem): CompletionItem {
