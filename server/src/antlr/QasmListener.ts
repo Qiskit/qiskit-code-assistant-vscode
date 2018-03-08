@@ -13,6 +13,7 @@ import { StatementContext } from './QasmParser';
 import { DeclarationContext } from './QasmParser';
 import { QoperationContext } from './QasmParser';
 import { UnitaryOperationContext } from './QasmParser';
+import { OpaqueContext } from './QasmParser';
 import { PrimaryListContext } from './QasmParser';
 import { PrimaryContext } from './QasmParser';
 import { IndexedIdContext } from './QasmParser';
@@ -150,6 +151,17 @@ export interface QasmListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitUnitaryOperation?: (ctx: UnitaryOperationContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.opaque`.
+	 * @param ctx the parse tree
+	 */
+	enterOpaque?: (ctx: OpaqueContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.opaque`.
+	 * @param ctx the parse tree
+	 */
+	exitOpaque?: (ctx: OpaqueContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `QasmParser.primaryList`.
