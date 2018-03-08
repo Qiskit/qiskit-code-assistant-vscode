@@ -41,15 +41,16 @@ declaration
     ;
 
 qoperation
-    : unitaryOperation;
+    : unitaryOperation Semi
     // | opaque
     // | measure
     // | barrier
     // | reset
-    // ;
+    ;
 
 unitaryOperation
-    : 'unitary'
+    : U LeftParen expList RightParen primary 
+    | Cx primary Comma primary
     ;
 
 // opaque
@@ -67,6 +68,15 @@ unitaryOperation
 // reset
 //     : 'reset'
 //     ;
+
+primary 
+    : Id
+    | indexedId
+    ;
+
+indexedId
+    : Id LeftBrace Int RightBrace
+    ;
 
 qregDeclaration
     : Qreg Id LeftBrace Int RightBrace Semi

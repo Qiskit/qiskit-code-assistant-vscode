@@ -13,6 +13,8 @@ import { StatementContext } from './QasmParser';
 import { DeclarationContext } from './QasmParser';
 import { QoperationContext } from './QasmParser';
 import { UnitaryOperationContext } from './QasmParser';
+import { PrimaryContext } from './QasmParser';
+import { IndexedIdContext } from './QasmParser';
 import { QregDeclarationContext } from './QasmParser';
 import { CregDeclarationContext } from './QasmParser';
 import { GateDeclarationContext } from './QasmParser';
@@ -147,6 +149,28 @@ export interface QasmListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitUnitaryOperation?: (ctx: UnitaryOperationContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.primary`.
+	 * @param ctx the parse tree
+	 */
+	enterPrimary?: (ctx: PrimaryContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.primary`.
+	 * @param ctx the parse tree
+	 */
+	exitPrimary?: (ctx: PrimaryContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.indexedId`.
+	 * @param ctx the parse tree
+	 */
+	enterIndexedId?: (ctx: IndexedIdContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.indexedId`.
+	 * @param ctx the parse tree
+	 */
+	exitIndexedId?: (ctx: IndexedIdContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `QasmParser.qregDeclaration`.

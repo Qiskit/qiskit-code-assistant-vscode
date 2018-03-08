@@ -13,6 +13,8 @@ import { StatementContext } from './QasmParser';
 import { DeclarationContext } from './QasmParser';
 import { QoperationContext } from './QasmParser';
 import { UnitaryOperationContext } from './QasmParser';
+import { PrimaryContext } from './QasmParser';
+import { IndexedIdContext } from './QasmParser';
 import { QregDeclarationContext } from './QasmParser';
 import { CregDeclarationContext } from './QasmParser';
 import { GateDeclarationContext } from './QasmParser';
@@ -110,6 +112,20 @@ export interface QasmVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitUnitaryOperation?: (ctx: UnitaryOperationContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.primary`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitPrimary?: (ctx: PrimaryContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.indexedId`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitIndexedId?: (ctx: IndexedIdContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `QasmParser.qregDeclaration`.
