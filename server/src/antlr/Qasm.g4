@@ -51,6 +51,9 @@ qoperation
 unitaryOperation
     : U LeftParen expList RightParen primary 
     | Cx primary Comma primary
+    | Id primaryList
+    | Id LeftParen RightParen primaryList
+    | Id LeftParen expList RightParen primaryList
     ;
 
 // opaque
@@ -68,6 +71,11 @@ unitaryOperation
 // reset
 //     : 'reset'
 //     ;
+
+primaryList
+    : primary
+    | primaryList Comma primary
+    ;
 
 primary 
     : Id
