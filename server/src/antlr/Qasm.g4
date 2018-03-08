@@ -42,7 +42,7 @@ declaration
 
 qoperation
     : unitaryOperation Semi
-    // | opaque
+    | opaque Semi
     // | measure
     // | barrier
     // | reset
@@ -56,9 +56,11 @@ unitaryOperation
     | Id LeftParen expList RightParen primaryList
     ;
 
-// opaque
-//     : 'opaque'
-//     ;
+opaque
+    : Opaque Id gateScope bitList
+    | Opaque Id gateScope LeftParen RightParen bitList
+    | Opaque Id gateScope LeftParen gateIdList RightParen bitList
+    ;
 
 // measure
 //     : 'measure'
