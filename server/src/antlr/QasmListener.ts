@@ -15,6 +15,7 @@ import { QoperationContext } from './QasmParser';
 import { UnitaryOperationContext } from './QasmParser';
 import { OpaqueContext } from './QasmParser';
 import { MeasureContext } from './QasmParser';
+import { BarrierContext } from './QasmParser';
 import { PrimaryListContext } from './QasmParser';
 import { PrimaryContext } from './QasmParser';
 import { IndexedIdContext } from './QasmParser';
@@ -174,6 +175,17 @@ export interface QasmListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitMeasure?: (ctx: MeasureContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.barrier`.
+	 * @param ctx the parse tree
+	 */
+	enterBarrier?: (ctx: BarrierContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.barrier`.
+	 * @param ctx the parse tree
+	 */
+	exitBarrier?: (ctx: BarrierContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `QasmParser.primaryList`.
