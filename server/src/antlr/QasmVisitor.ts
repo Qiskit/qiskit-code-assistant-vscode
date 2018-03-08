@@ -16,6 +16,7 @@ import { UnitaryOperationContext } from './QasmParser';
 import { OpaqueContext } from './QasmParser';
 import { MeasureContext } from './QasmParser';
 import { BarrierContext } from './QasmParser';
+import { ResetOperationContext } from './QasmParser';
 import { PrimaryListContext } from './QasmParser';
 import { PrimaryContext } from './QasmParser';
 import { IndexedIdContext } from './QasmParser';
@@ -137,6 +138,13 @@ export interface QasmVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitBarrier?: (ctx: BarrierContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.resetOperation`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitResetOperation?: (ctx: ResetOperationContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `QasmParser.primaryList`.

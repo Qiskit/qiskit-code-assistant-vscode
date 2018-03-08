@@ -45,7 +45,7 @@ qoperation
     | opaque Semi
     | measure Semi
     | barrier Semi
-    // | reset
+    | resetOperation Semi
     ;
 
 unitaryOperation
@@ -70,9 +70,9 @@ barrier
     : Barrier primaryList
     ;
 
-// reset
-//     : 'reset'
-//     ;
+resetOperation
+    : Reset primary
+    ;
 
 primaryList
     : primary
