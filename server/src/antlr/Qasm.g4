@@ -97,9 +97,9 @@ cregDeclaration
     ;
 
 gateDeclaration
-    : Gate GateId gateScope bitList gateBody
-    | Gate GateId gateScope LeftParen RightParen bitList gateBody
-    | Gate GateId gateScope LeftParen gateIdList RightParen bitList gateBody
+    : Gate Id gateScope bitList gateBody
+    | Gate Id gateScope LeftParen RightParen bitList gateBody
+    | Gate Id gateScope LeftParen gateIdList RightParen bitList gateBody
     ;
 
 gateScope
@@ -219,5 +219,4 @@ Sum: '+';
 Subs: '-';
 Pi: 'pi';
 Gate: 'gate';
-GateId: 'u1' | 'u2' | 'u3';
 Id: [a-z][a-zA-Z0-9]*;
