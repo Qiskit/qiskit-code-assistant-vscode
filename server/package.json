@@ -27,7 +27,7 @@
 		"compile": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
 		"watch": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -w -p .",
 		"antlr4ts": "antlr4ts -visitor src/antlr/Qasm.g4",
-		"pretest": "tsc test/*.test.ts --module commonjs --target ES6 --experimentalDecorators",
+		"pretest": "antlr4ts -visitor src/antlr/Qasm.g4 && tsc test/*.test.ts --module commonjs --target ES6 --experimentalDecorators",
 		"test": "mocha"
 	}
 }
