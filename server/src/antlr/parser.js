@@ -16,6 +16,7 @@ const Decorators_1 = require("antlr4ts/Decorators");
 function parse(input) {
     let inputStream = new antlr4ts_1.ANTLRInputStream(input);
     let lexer = new QasmLexer_1.QasmLexer(inputStream);
+    lexer.removeErrorListener(antlr4ts_1.ConsoleErrorListener.INSTANCE);
     let tokenStream = new antlr4ts_1.CommonTokenStream(lexer);
     let parser = new QasmParser_1.QasmParser(tokenStream);
     let errorListener = new ErrorListener();

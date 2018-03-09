@@ -26,8 +26,7 @@ describe('A parse function', () => {
     });
 
     it('including a functions library will end without errors', () => {
-      let input =
-        `
+      let input = `
         OPENQASM 2.0;
         include QELIB.INC;
         `;
@@ -35,6 +34,39 @@ describe('A parse function', () => {
       let result = parse(input);
       doesNotContainErrors(result);
     });
-  })
+  });
+
+  describe('with an input from QX composer', () => {
+    it('will end without errors', () => {
+      let input = `
+        OPENQASM 2.0;
+        include QELIB.INC;
+
+        qreg q[5];
+        creg c[5];
+        
+        u1(pi) q[0];
+        x q[1];
+        x q[1];
+        cx q[1],q[0];
+        measure q[1] -> c[1];`;
+
+      let result = parse(input);
+      doesNotContainErrors(result);
+    });
+  });
+
+  describe('with a wrong q registry defined', () => {
+    it('will throw one error', () => {
+      let input = `
+        OPENQASM 2.0;
+        include QELIB.INC;
+
+        qreg q;`;
+
+      let result = parse(input);
+      assert.ok(result.errors[0].line === 4);
+    });
+  });
 
 });
