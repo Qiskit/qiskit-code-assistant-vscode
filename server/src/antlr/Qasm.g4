@@ -8,6 +8,7 @@ mainProgram
     : ibmDefinition
     | ibmDefinition program
     | library
+    | // Epsilon
     ;
 
 ibmDefinition
