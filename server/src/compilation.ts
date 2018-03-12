@@ -160,11 +160,12 @@ export class CompilationTool {
 
     availableCompletions(_documentPosition: TextDocumentPositionParams): CompletionItem[] {
         if (this.currentDocument === null) {
-            return symbols;
+            return [];
         }
 
         let textToCaret = this.currentDocument.getText().substring(0, this.currentDocument.offsetAt(_documentPosition.position));
 
+        let availableSymbols = suggester.availableSymbols();
         let suggestions = suggester.calculateSuggestionsFor(textToCaret);
 
         if (suggestions.length === 0) {
@@ -175,11 +176,15 @@ export class CompilationTool {
             return suggestions.indexOf(symbol.type) > -1;
         }
 
-        let result = symbols.filter(isContainedInSuggestions);
-
-        console.log('Filtered symbols > ' + result);
-
-        return result;
+        return symbols.filter(isContainedInSuggestions).map((symbol, index) => {
+            return {
+                label: symbol.label,
+                kind: CompletionItemKind.Text,
+                data: index,
+                detail: symbol.detail,
+                documentation: symbol.documentation   
+            };
+        });;
     }
 
     completionDetailsFor(item: CompletionItem): CompletionItem {

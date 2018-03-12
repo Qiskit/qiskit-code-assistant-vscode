@@ -4,5 +4,6 @@ export interface Symbol {
 
     label: string,
     detail: string,
-    documentation: string
+    documentation: string,
+    type: string
 }
