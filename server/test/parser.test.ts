@@ -59,6 +59,29 @@ describe('A parse function', () => {
       expect(result.errors.length).to.be.eq(0);
     });
 
+    it('will not accept gates definition with a barrier', () => {
+      let input = `
+        gate u1(lamda) q {
+          U(0,0,lambda) q;
+          barrier q;
+        }
+        `;
+      
+      let result = parse(input);
+      expect(result.errors.length).to.be.eq(1);
+      expect(result.errors[0].line).to.be.eq(3);
+    });
+
+    it('will accept a barrier outside a gate definition', () => {
+      let input = `
+        qreg q[5];
+        creg c[5];
+        barrier q[1];`;
+
+      let result = parse(input);
+      expect(result.errors.length).to.be.eq(0);
+    });
+
     it('will accept opaque definition', () => {
       let input = 'opaque foo(a, b, c) q;';
 
