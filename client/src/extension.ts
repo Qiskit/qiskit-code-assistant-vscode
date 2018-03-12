@@ -19,7 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     registerQiskitCommands(context);
 
-    let serverModule = context.asAbsolutePath(path.join('server', 'server.js'));
+    let serverModule = context.asAbsolutePath(path.join('server', 'src', 'server.js'));
     
     let debugOptions = {
         execArgv: ["--nolazy", "--inspect=6009"]

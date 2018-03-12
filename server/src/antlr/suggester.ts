@@ -4,6 +4,7 @@ import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts';
 import { CodeCompletionCore } from 'antlr4-c3';
 import { QasmLexer } from './QasmLexer';
 import { QasmParser } from './QasmParser';
+import { Symbol } from './model';
 
 export function calculateSuggestionsFor(input: string): string[] {
     let inputStream = new ANTLRInputStream(input);
@@ -14,6 +15,15 @@ export function calculateSuggestionsFor(input: string): string[] {
     parser.code();
 
     return calculateCandidateKeywords(parser, tokenStream.getTokens().length);
+}
+
+export function availableSymbols(): Symbol[] {
+    let inputStream = new ANTLRInputStream('');
+    let lexer = new QasmLexer(inputStream);
+    let tokenStream = new CommonTokenStream(lexer);
+    let parser = new QasmParser(tokenStream);
+
+    return symbols;
 }
 
 function calculateCandidateKeywords(parser: QasmParser, caretPosition: number): string[] {
@@ -50,3 +60,78 @@ function calculateCandidateKeywords(parser: QasmParser, caretPosition: number): 
 
     return result;
 }
+
+
+let symbols = [{
+    label: 'IBMQASM 2.0; ',
+    detail: 'TBD',
+    documentation: 'TBD',
+    type: 'QasmDescriptor'
+},
+{
+    label: 'OPENQASM 2.0; ',
+    detail: 'TBD',
+    documentation: 'TBD',
+    type: 'QasmDescriptor'
+},
+{
+    label: 'include "quelib1.inc";',
+    detail: 'Include',
+    documentation: 'Includes the selected library.',
+    type: 'Include'
+},
+{
+    label: 'qreg',
+    detail: 'Quantum register',
+    documentation: 'This is the representation of a quantum register.',
+    type: 'Qreg'
+},
+{
+    label: 'creg',
+    detail: 'Classical register',
+    documentation: 'This is the representation of a classical register.',
+    type: 'Creg'
+},
+{
+    label: 'U',
+    detail: 'TBD',
+    documentation: 'TBD.',
+    type: 'U'
+},
+{
+    label: 'CX',
+    detail: 'TBD',
+    documentation: 'TBD.',
+    type: 'Cx'
+},
+{
+    label: 'measure',
+    detail: 'Measurement',
+    documentation: 'Measurement in the computational (standard) basis (Z).',
+    type: 'Measure'
+},
+{
+    label: 'barrier',
+    detail: 'Barrier',
+    documentation: 'The barrier prevents transformations across this source line.',
+    type: 'Barrier'
+},
+{
+    label: 'reset',
+    detail: 'Reset',
+    documentation: 'Prepare qubits in the |0> state.',
+    type: 'Reset'
+},
+{
+    label: 'opaque',
+    detail: 'Opaque',
+    documentation: 'TBD.',
+    type: 'Opaque'
+},
+{
+    label: 'gate',
+    detail: 'Gate declaration',
+    documentation: 'TBD.',
+    type: 'Gate'
+}
+];
