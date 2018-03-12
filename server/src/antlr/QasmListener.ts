@@ -4,7 +4,8 @@
 import { ParseTreeListener } from 'antlr4ts/tree/ParseTreeListener';
 
 import { StartProgramContext } from './QasmParser';
-import { MainProgramContext } from './QasmParser';
+import { CodeContext } from './QasmParser';
+import { CleanContext } from './QasmParser';
 import { IbmDefinitionContext } from './QasmParser';
 import { IncludeContext } from './QasmParser';
 import { LibraryContext } from './QasmParser';
@@ -57,15 +58,26 @@ export interface QasmListener extends ParseTreeListener {
 	exitStartProgram?: (ctx: StartProgramContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParser.mainProgram`.
+	 * Enter a parse tree produced by `QasmParser.code`.
 	 * @param ctx the parse tree
 	 */
-	enterMainProgram?: (ctx: MainProgramContext) => void;
+	enterCode?: (ctx: CodeContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParser.mainProgram`.
+	 * Exit a parse tree produced by `QasmParser.code`.
 	 * @param ctx the parse tree
 	 */
-	exitMainProgram?: (ctx: MainProgramContext) => void;
+	exitCode?: (ctx: CodeContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParser.clean`.
+	 * @param ctx the parse tree
+	 */
+	enterClean?: (ctx: CleanContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParser.clean`.
+	 * @param ctx the parse tree
+	 */
+	exitClean?: (ctx: CleanContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `QasmParser.ibmDefinition`.

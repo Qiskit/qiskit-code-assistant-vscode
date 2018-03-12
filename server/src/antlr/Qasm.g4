@@ -1,14 +1,19 @@
 grammar Qasm;
 
 startProgram
-    : mainProgram EOF
+    : code EOF
     ;
 
-mainProgram
+code
     : ibmDefinition
     | ibmDefinition program
     | library
+    | clean
     | // Epsilon
+    ;
+
+clean  
+    : Clean
     ;
 
 ibmDefinition
@@ -198,6 +203,7 @@ Include: 'include';
 Qelib: 'QELIB.INC';
 Qreg: 'qreg';
 Creg: 'creg';
+Clean: 'clean';
 U: 'U';
 Cx: 'CX';
 Measure: 'measure';
