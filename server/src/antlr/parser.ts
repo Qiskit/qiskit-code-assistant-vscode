@@ -20,7 +20,7 @@ export function parse(input: string): ParserResult {
     let errorListener = new ErrorListener();
     parser.addErrorListener(errorListener);
 
-    let tree = parser.startProgram();
+    let tree = parser.code();
 
     return {
         ast: tree,

@@ -29,8 +29,50 @@ describe('A parse function', () => {
     it('including a functions library will end without errors', () => {
       let input = `
         OPENQASM 2.0;
-        include QELIB.INC;
+        include "quelib1.inc";
         `;
+
+      let result = parse(input);
+      expect(result.errors.length).to.be.eq(0);
+    });
+  });
+
+  describe('with sentences', () => {
+    it('will accept registers definition', () => {
+      let input = `
+        qreg q[5];
+        creg c[5];
+        `;
+
+      let result = parse(input);
+      expect(result.errors.length).to.be.eq(0);
+    });
+
+    it('will accept gates definition', () => {
+      let input = `
+        gate u1(lamda) q {
+          U(0,0,lambda) q;
+        }
+        `;
+
+      let result = parse(input);
+      expect(result.errors.length).to.be.eq(0);
+    });
+
+    it('will accept opaque definition', () => {
+      let input = 'opaque foo(a, b, c) q;';
+
+      let result = parse(input);
+      expect(result.errors.length).to.be.eq(0);
+    });
+
+    it('will accept expressions', () => {
+      let input = `
+        qreg q[5];
+        creg c[5];
+        cx q[1],q[0];
+        measure q[1] -> c[1];
+        reset q;`;
 
       let result = parse(input);
       expect(result.errors.length).to.be.eq(0);
@@ -41,7 +83,7 @@ describe('A parse function', () => {
     it('will end without errors', () => {
       let input = `
         OPENQASM 2.0;
-        include QELIB.INC;
+        include "quelib1.inc";
 
         qreg q[5];
         creg c[5];
@@ -61,11 +103,12 @@ describe('A parse function', () => {
     it('will throw one error', () => {
       let input = `
         OPENQASM 2.0;
-        include QELIB.INC;
+        include "quelib1.inc";
 
         qreg q;`;
 
       let result = parse(input);
+      expect(result.errors.length).to.be.eq(1);
       expect(result.errors[0].line).to.be.eq(4);
     });
   });
