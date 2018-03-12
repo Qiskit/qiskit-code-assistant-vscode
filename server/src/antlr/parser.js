@@ -21,7 +21,7 @@ function parse(input) {
     let parser = new QasmParser_1.QasmParser(tokenStream);
     let errorListener = new ErrorListener();
     parser.addErrorListener(errorListener);
-    let tree = parser.startProgram();
+    let tree = parser.code();
     return {
         ast: tree,
         errors: errorListener.errors

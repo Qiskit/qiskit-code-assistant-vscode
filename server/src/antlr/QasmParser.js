@@ -18,6 +18,7 @@ const ParserRuleContext_1 = require("antlr4ts/ParserRuleContext");
 const ParserATNSimulator_1 = require("antlr4ts/atn/ParserATNSimulator");
 const RecognitionException_1 = require("antlr4ts/RecognitionException");
 const RuleVersion_1 = require("antlr4ts/RuleVersion");
+const Token_1 = require("antlr4ts/Token");
 const VocabularyImpl_1 = require("antlr4ts/VocabularyImpl");
 const Utils = require("antlr4ts/misc/Utils");
 class QasmParser extends Parser_1.Parser {
@@ -31,16 +32,49 @@ class QasmParser extends Parser_1.Parser {
     get grammarFileName() { return "Qasm.g4"; }
     get ruleNames() { return QasmParser.ruleNames; }
     get serializedATN() { return QasmParser._serializedATN; }
-    startProgram() {
-        let _localctx = new StartProgramContext(this._ctx, this.state);
-        this.enterRule(_localctx, 0, QasmParser.RULE_startProgram);
+    code() {
+        let _localctx = new CodeContext(this._ctx, this.state);
+        this.enterRule(_localctx, 0, QasmParser.RULE_code);
         try {
-            this.enterOuterAlt(_localctx, 1);
-            {
-                this.state = 72;
-                this.code();
-                this.state = 73;
-                this.match(QasmParser.EOF);
+            this.state = 65;
+            this._errHandler.sync(this);
+            switch (this._input.LA(1)) {
+                case QasmParser.EOF:
+                case QasmParser.T__0:
+                case QasmParser.Qreg:
+                case QasmParser.Creg:
+                case QasmParser.Cx:
+                case QasmParser.Measure:
+                case QasmParser.Barrier:
+                case QasmParser.Reset:
+                case QasmParser.Opaque:
+                case QasmParser.Gate:
+                case QasmParser.Id:
+                    this.enterOuterAlt(_localctx, 1);
+                    {
+                        this.state = 60;
+                        this.sentences();
+                    }
+                    break;
+                case QasmParser.QasmDescriptor:
+                case QasmParser.Include:
+                    this.enterOuterAlt(_localctx, 2);
+                    {
+                        this.state = 61;
+                        this.headers();
+                        this.state = 62;
+                        this.sentences();
+                    }
+                    break;
+                case QasmParser.Clean:
+                    this.enterOuterAlt(_localctx, 3);
+                    {
+                        this.state = 64;
+                        this.clean();
+                    }
+                    break;
+                default:
+                    throw new NoViableAltException_1.NoViableAltException(this);
             }
         }
         catch (re) {
@@ -58,46 +92,74 @@ class QasmParser extends Parser_1.Parser {
         }
         return _localctx;
     }
-    code() {
-        let _localctx = new CodeContext(this._ctx, this.state);
-        this.enterRule(_localctx, 2, QasmParser.RULE_code);
+    headers() {
+        let _localctx = new HeadersContext(this._ctx, this.state);
+        this.enterRule(_localctx, 2, QasmParser.RULE_headers);
         try {
-            this.state = 82;
+            this.state = 71;
             this._errHandler.sync(this);
-            switch (this.interpreter.adaptivePredict(this._input, 0, this._ctx)) {
+            switch (this.interpreter.adaptivePredict(this._input, 1, this._ctx)) {
                 case 1:
                     this.enterOuterAlt(_localctx, 1);
                     {
-                        this.state = 75;
-                        this.ibmDefinition();
+                        this.state = 67;
+                        this.match(QasmParser.QasmDescriptor);
                     }
                     break;
                 case 2:
                     this.enterOuterAlt(_localctx, 2);
                     {
-                        this.state = 76;
-                        this.ibmDefinition();
-                        this.state = 77;
-                        this.program(0);
+                        this.state = 68;
+                        this.match(QasmParser.QasmDescriptor);
+                        this.state = 69;
+                        this.match(QasmParser.Include);
                     }
                     break;
                 case 3:
                     this.enterOuterAlt(_localctx, 3);
                     {
-                        this.state = 79;
-                        this.library(0);
+                        this.state = 70;
+                        this.match(QasmParser.Include);
                     }
                     break;
-                case 4:
-                    this.enterOuterAlt(_localctx, 4);
+            }
+        }
+        catch (re) {
+            if (re instanceof RecognitionException_1.RecognitionException) {
+                _localctx.exception = re;
+                this._errHandler.reportError(this, re);
+                this._errHandler.recover(this, re);
+            }
+            else {
+                throw re;
+            }
+        }
+        finally {
+            this.exitRule();
+        }
+        return _localctx;
+    }
+    sentences() {
+        let _localctx = new SentencesContext(this._ctx, this.state);
+        this.enterRule(_localctx, 4, QasmParser.RULE_sentences);
+        try {
+            this.state = 77;
+            this._errHandler.sync(this);
+            switch (this.interpreter.adaptivePredict(this._input, 2, this._ctx)) {
+                case 1:
+                    this.enterOuterAlt(_localctx, 1);
                     {
-                        this.state = 80;
-                        this.clean();
+                        this.state = 73;
+                        this.sentence();
                     }
                     break;
-                case 5:
-                    this.enterOuterAlt(_localctx, 5);
+                case 2:
+                    this.enterOuterAlt(_localctx, 2);
                     {
+                        this.state = 74;
+                        this.sentence();
+                        this.state = 75;
+                        this.sentences();
                     }
                     break;
             }
@@ -119,12 +181,14 @@ class QasmParser extends Parser_1.Parser {
     }
     clean() {
         let _localctx = new CleanContext(this._ctx, this.state);
-        this.enterRule(_localctx, 4, QasmParser.RULE_clean);
+        this.enterRule(_localctx, 6, QasmParser.RULE_clean);
         try {
             this.enterOuterAlt(_localctx, 1);
             {
-                this.state = 84;
+                this.state = 79;
                 this.match(QasmParser.Clean);
+                this.state = 80;
+                this.match(QasmParser.EOF);
             }
         }
         catch (re) {
@@ -142,230 +206,48 @@ class QasmParser extends Parser_1.Parser {
         }
         return _localctx;
     }
-    ibmDefinition() {
-        let _localctx = new IbmDefinitionContext(this._ctx, this.state);
-        this.enterRule(_localctx, 6, QasmParser.RULE_ibmDefinition);
+    sentence() {
+        let _localctx = new SentenceContext(this._ctx, this.state);
+        this.enterRule(_localctx, 8, QasmParser.RULE_sentence);
         try {
-            this.state = 93;
-            this._errHandler.sync(this);
-            switch (this.interpreter.adaptivePredict(this._input, 1, this._ctx)) {
-                case 1:
-                    this.enterOuterAlt(_localctx, 1);
-                    {
-                        this.state = 86;
-                        this.match(QasmParser.IbmQasm);
-                        this.state = 87;
-                        this.match(QasmParser.Real);
-                        this.state = 88;
-                        this.match(QasmParser.Semi);
-                        this.state = 89;
-                        this.include();
-                    }
-                    break;
-                case 2:
-                    this.enterOuterAlt(_localctx, 2);
-                    {
-                        this.state = 90;
-                        this.match(QasmParser.IbmQasm);
-                        this.state = 91;
-                        this.match(QasmParser.Real);
-                        this.state = 92;
-                        this.match(QasmParser.Semi);
-                    }
-                    break;
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.exitRule();
-        }
-        return _localctx;
-    }
-    include() {
-        let _localctx = new IncludeContext(this._ctx, this.state);
-        this.enterRule(_localctx, 8, QasmParser.RULE_include);
-        try {
-            this.enterOuterAlt(_localctx, 1);
-            {
-                this.state = 95;
-                this.match(QasmParser.Include);
-                this.state = 96;
-                this.match(QasmParser.Qelib);
-                this.state = 97;
-                this.match(QasmParser.Semi);
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.exitRule();
-        }
-        return _localctx;
-    }
-    library(_p) {
-        if (_p === undefined) {
-            _p = 0;
-        }
-        let _parentctx = this._ctx;
-        let _parentState = this.state;
-        let _localctx = new LibraryContext(this._ctx, _parentState);
-        let _prevctx = _localctx;
-        let _startState = 10;
-        this.enterRecursionRule(_localctx, 10, QasmParser.RULE_library, _p);
-        try {
-            let _alt;
-            this.enterOuterAlt(_localctx, 1);
-            {
-                {
-                    this.state = 100;
-                    this.declaration();
-                }
-                this._ctx._stop = this._input.tryLT(-1);
-                this.state = 106;
-                this._errHandler.sync(this);
-                _alt = this.interpreter.adaptivePredict(this._input, 2, this._ctx);
-                while (_alt !== 2 && _alt !== ATN_1.ATN.INVALID_ALT_NUMBER) {
-                    if (_alt === 1) {
-                        if (this._parseListeners != null)
-                            this.triggerExitRuleEvent();
-                        _prevctx = _localctx;
-                        {
-                            {
-                                _localctx = new LibraryContext(_parentctx, _parentState);
-                                this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_library);
-                                this.state = 102;
-                                if (!(this.precpred(this._ctx, 1)))
-                                    throw new FailedPredicateException_1.FailedPredicateException(this, "this.precpred(this._ctx, 1)");
-                                this.state = 103;
-                                this.declaration();
-                            }
-                        }
-                    }
-                    this.state = 108;
-                    this._errHandler.sync(this);
-                    _alt = this.interpreter.adaptivePredict(this._input, 2, this._ctx);
-                }
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.unrollRecursionContexts(_parentctx);
-        }
-        return _localctx;
-    }
-    program(_p) {
-        if (_p === undefined) {
-            _p = 0;
-        }
-        let _parentctx = this._ctx;
-        let _parentState = this.state;
-        let _localctx = new ProgramContext(this._ctx, _parentState);
-        let _prevctx = _localctx;
-        let _startState = 12;
-        this.enterRecursionRule(_localctx, 12, QasmParser.RULE_program, _p);
-        try {
-            let _alt;
-            this.enterOuterAlt(_localctx, 1);
-            {
-                {
-                    this.state = 110;
-                    this.statement();
-                }
-                this._ctx._stop = this._input.tryLT(-1);
-                this.state = 116;
-                this._errHandler.sync(this);
-                _alt = this.interpreter.adaptivePredict(this._input, 3, this._ctx);
-                while (_alt !== 2 && _alt !== ATN_1.ATN.INVALID_ALT_NUMBER) {
-                    if (_alt === 1) {
-                        if (this._parseListeners != null)
-                            this.triggerExitRuleEvent();
-                        _prevctx = _localctx;
-                        {
-                            {
-                                _localctx = new ProgramContext(_parentctx, _parentState);
-                                this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_program);
-                                this.state = 112;
-                                if (!(this.precpred(this._ctx, 1)))
-                                    throw new FailedPredicateException_1.FailedPredicateException(this, "this.precpred(this._ctx, 1)");
-                                this.state = 113;
-                                this.statement();
-                            }
-                        }
-                    }
-                    this.state = 118;
-                    this._errHandler.sync(this);
-                    _alt = this.interpreter.adaptivePredict(this._input, 3, this._ctx);
-                }
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.unrollRecursionContexts(_parentctx);
-        }
-        return _localctx;
-    }
-    statement() {
-        let _localctx = new StatementContext(this._ctx, this.state);
-        this.enterRule(_localctx, 14, QasmParser.RULE_statement);
-        try {
-            this.state = 121;
+            this.state = 88;
             this._errHandler.sync(this);
             switch (this._input.LA(1)) {
                 case QasmParser.Qreg:
                 case QasmParser.Creg:
+                case QasmParser.Opaque:
                 case QasmParser.Gate:
                     this.enterOuterAlt(_localctx, 1);
                     {
-                        this.state = 119;
-                        this.declaration();
+                        this.state = 82;
+                        this.definition();
                     }
                     break;
-                case QasmParser.U:
                 case QasmParser.Cx:
                 case QasmParser.Measure:
                 case QasmParser.Barrier:
                 case QasmParser.Reset:
-                case QasmParser.Opaque:
                 case QasmParser.Id:
                     this.enterOuterAlt(_localctx, 2);
                     {
-                        this.state = 120;
-                        this.qoperation();
+                        this.state = 83;
+                        this.expression();
+                    }
+                    break;
+                case QasmParser.T__0:
+                    this.enterOuterAlt(_localctx, 3);
+                    {
+                        this.state = 84;
+                        this.conditional();
+                        this.state = 85;
+                        this.expression();
+                    }
+                    break;
+                case QasmParser.EOF:
+                    this.enterOuterAlt(_localctx, 4);
+                    {
+                        this.state = 87;
+                        this.match(QasmParser.EOF);
                     }
                     break;
                 default:
@@ -387,32 +269,53 @@ class QasmParser extends Parser_1.Parser {
         }
         return _localctx;
     }
-    declaration() {
-        let _localctx = new DeclarationContext(this._ctx, this.state);
-        this.enterRule(_localctx, 16, QasmParser.RULE_declaration);
+    definition() {
+        let _localctx = new DefinitionContext(this._ctx, this.state);
+        this.enterRule(_localctx, 10, QasmParser.RULE_definition);
         try {
-            this.state = 126;
+            this.state = 104;
             this._errHandler.sync(this);
             switch (this._input.LA(1)) {
                 case QasmParser.Qreg:
                     this.enterOuterAlt(_localctx, 1);
                     {
-                        this.state = 123;
-                        this.qregDeclaration();
+                        this.state = 90;
+                        this.match(QasmParser.Qreg);
+                        this.state = 91;
+                        this.match(QasmParser.Id);
+                        this.state = 92;
+                        this.qLine();
+                        this.state = 93;
+                        this.match(QasmParser.Semi);
                     }
                     break;
                 case QasmParser.Creg:
                     this.enterOuterAlt(_localctx, 2);
                     {
-                        this.state = 124;
-                        this.cregDeclaration();
+                        this.state = 95;
+                        this.match(QasmParser.Creg);
+                        this.state = 96;
+                        this.match(QasmParser.Id);
+                        this.state = 97;
+                        this.qLine();
+                        this.state = 98;
+                        this.match(QasmParser.Semi);
                     }
                     break;
                 case QasmParser.Gate:
                     this.enterOuterAlt(_localctx, 3);
                     {
-                        this.state = 125;
-                        this.gateDeclaration();
+                        this.state = 100;
+                        this.gateDefinition();
+                    }
+                    break;
+                case QasmParser.Opaque:
+                    this.enterOuterAlt(_localctx, 4);
+                    {
+                        this.state = 101;
+                        this.opaqueDefinition();
+                        this.state = 102;
+                        this.match(QasmParser.Semi);
                     }
                     break;
                 default:
@@ -434,57 +337,55 @@ class QasmParser extends Parser_1.Parser {
         }
         return _localctx;
     }
-    qoperation() {
-        let _localctx = new QoperationContext(this._ctx, this.state);
-        this.enterRule(_localctx, 18, QasmParser.RULE_qoperation);
+    expression() {
+        let _localctx = new ExpressionContext(this._ctx, this.state);
+        this.enterRule(_localctx, 12, QasmParser.RULE_expression);
         try {
-            this.state = 143;
+            this.state = 121;
             this._errHandler.sync(this);
             switch (this._input.LA(1)) {
-                case QasmParser.U:
-                case QasmParser.Cx:
-                case QasmParser.Id:
+                case QasmParser.Measure:
                     this.enterOuterAlt(_localctx, 1);
                     {
-                        this.state = 128;
-                        this.unitaryOperation();
-                        this.state = 129;
+                        this.state = 106;
+                        this.measure();
+                        this.state = 107;
                         this.match(QasmParser.Semi);
                     }
                     break;
-                case QasmParser.Opaque:
+                case QasmParser.Id:
                     this.enterOuterAlt(_localctx, 2);
                     {
-                        this.state = 131;
-                        this.opaque();
-                        this.state = 132;
+                        this.state = 109;
+                        this.customArglist();
+                        this.state = 110;
                         this.match(QasmParser.Semi);
                     }
                     break;
-                case QasmParser.Measure:
+                case QasmParser.Cx:
                     this.enterOuterAlt(_localctx, 3);
                     {
-                        this.state = 134;
-                        this.measure();
-                        this.state = 135;
+                        this.state = 112;
+                        this.cxGate();
+                        this.state = 113;
                         this.match(QasmParser.Semi);
                     }
                     break;
                 case QasmParser.Barrier:
                     this.enterOuterAlt(_localctx, 4);
                     {
-                        this.state = 137;
-                        this.barrier();
-                        this.state = 138;
+                        this.state = 115;
+                        this.barrierGate();
+                        this.state = 116;
                         this.match(QasmParser.Semi);
                     }
                     break;
                 case QasmParser.Reset:
                     this.enterOuterAlt(_localctx, 5);
                     {
-                        this.state = 140;
-                        this.resetOperation();
-                        this.state = 141;
+                        this.state = 118;
+                        this.resetGate();
+                        this.state = 119;
                         this.match(QasmParser.Semi);
                     }
                     break;
@@ -507,76 +408,215 @@ class QasmParser extends Parser_1.Parser {
         }
         return _localctx;
     }
-    unitaryOperation() {
-        let _localctx = new UnitaryOperationContext(this._ctx, this.state);
-        this.enterRule(_localctx, 20, QasmParser.RULE_unitaryOperation);
+    conditional() {
+        let _localctx = new ConditionalContext(this._ctx, this.state);
+        this.enterRule(_localctx, 14, QasmParser.RULE_conditional);
         try {
-            this.state = 168;
+            this.enterOuterAlt(_localctx, 1);
+            {
+                this.state = 123;
+                this.match(QasmParser.T__0);
+            }
+        }
+        catch (re) {
+            if (re instanceof RecognitionException_1.RecognitionException) {
+                _localctx.exception = re;
+                this._errHandler.reportError(this, re);
+                this._errHandler.recover(this, re);
+            }
+            else {
+                throw re;
+            }
+        }
+        finally {
+            this.exitRule();
+        }
+        return _localctx;
+    }
+    qLine() {
+        let _localctx = new QLineContext(this._ctx, this.state);
+        this.enterRule(_localctx, 16, QasmParser.RULE_qLine);
+        try {
+            this.enterOuterAlt(_localctx, 1);
+            {
+                this.state = 125;
+                this.match(QasmParser.LeftBrace);
+                this.state = 126;
+                this.match(QasmParser.Int);
+                this.state = 127;
+                this.match(QasmParser.RightBrace);
+            }
+        }
+        catch (re) {
+            if (re instanceof RecognitionException_1.RecognitionException) {
+                _localctx.exception = re;
+                this._errHandler.reportError(this, re);
+                this._errHandler.recover(this, re);
+            }
+            else {
+                throw re;
+            }
+        }
+        finally {
+            this.exitRule();
+        }
+        return _localctx;
+    }
+    gateDefinition() {
+        let _localctx = new GateDefinitionContext(this._ctx, this.state);
+        this.enterRule(_localctx, 18, QasmParser.RULE_gateDefinition);
+        try {
+            this.enterOuterAlt(_localctx, 1);
+            {
+                this.state = 129;
+                this.match(QasmParser.Gate);
+                this.state = 130;
+                this.match(QasmParser.Id);
+                this.state = 131;
+                this.gateDefinitionArguments();
+            }
+        }
+        catch (re) {
+            if (re instanceof RecognitionException_1.RecognitionException) {
+                _localctx.exception = re;
+                this._errHandler.reportError(this, re);
+                this._errHandler.recover(this, re);
+            }
+            else {
+                throw re;
+            }
+        }
+        finally {
+            this.exitRule();
+        }
+        return _localctx;
+    }
+    opaqueDefinition() {
+        let _localctx = new OpaqueDefinitionContext(this._ctx, this.state);
+        this.enterRule(_localctx, 20, QasmParser.RULE_opaqueDefinition);
+        try {
+            this.enterOuterAlt(_localctx, 1);
+            {
+                this.state = 133;
+                this.match(QasmParser.Opaque);
+                this.state = 134;
+                this.match(QasmParser.Id);
+                this.state = 135;
+                this.opaqueDefinitionArguments();
+            }
+        }
+        catch (re) {
+            if (re instanceof RecognitionException_1.RecognitionException) {
+                _localctx.exception = re;
+                this._errHandler.reportError(this, re);
+                this._errHandler.recover(this, re);
+            }
+            else {
+                throw re;
+            }
+        }
+        finally {
+            this.exitRule();
+        }
+        return _localctx;
+    }
+    gateDefinitionArguments() {
+        let _localctx = new GateDefinitionArgumentsContext(this._ctx, this.state);
+        this.enterRule(_localctx, 22, QasmParser.RULE_gateDefinitionArguments);
+        try {
+            this.state = 174;
             this._errHandler.sync(this);
-            switch (this.interpreter.adaptivePredict(this._input, 7, this._ctx)) {
+            switch (this.interpreter.adaptivePredict(this._input, 6, this._ctx)) {
                 case 1:
                     this.enterOuterAlt(_localctx, 1);
                     {
-                        this.state = 145;
-                        this.match(QasmParser.U);
-                        this.state = 146;
-                        this.match(QasmParser.LeftParen);
-                        this.state = 147;
-                        this.expList(0);
-                        this.state = 148;
-                        this.match(QasmParser.RightParen);
-                        this.state = 149;
-                        this.primary();
+                        this.state = 137;
+                        this.paramsList();
+                        this.state = 138;
+                        this.match(QasmParser.LeftCurlyBrace);
+                        this.state = 139;
+                        this.body();
+                        this.state = 140;
+                        this.match(QasmParser.RightCurlyBrace);
                     }
                     break;
                 case 2:
                     this.enterOuterAlt(_localctx, 2);
                     {
-                        this.state = 151;
-                        this.match(QasmParser.Cx);
-                        this.state = 152;
-                        this.primary();
-                        this.state = 153;
-                        this.match(QasmParser.Comma);
-                        this.state = 154;
-                        this.primary();
+                        this.state = 142;
+                        this.match(QasmParser.LeftParen);
+                        this.state = 143;
+                        this.paramsList();
+                        this.state = 144;
+                        this.match(QasmParser.RightParen);
+                        this.state = 145;
+                        this.paramsList();
+                        this.state = 146;
+                        this.match(QasmParser.LeftCurlyBrace);
+                        this.state = 147;
+                        this.body();
+                        this.state = 148;
+                        this.match(QasmParser.RightCurlyBrace);
                     }
                     break;
                 case 3:
                     this.enterOuterAlt(_localctx, 3);
                     {
-                        this.state = 156;
-                        this.match(QasmParser.Id);
-                        this.state = 157;
-                        this.primaryList(0);
+                        this.state = 150;
+                        this.match(QasmParser.LeftParen);
+                        this.state = 151;
+                        this.paramsList();
+                        this.state = 152;
+                        this.match(QasmParser.RightParen);
+                        this.state = 153;
+                        this.paramsList();
+                        this.state = 154;
+                        this.match(QasmParser.LeftCurlyBrace);
+                        this.state = 155;
+                        this.match(QasmParser.RightCurlyBrace);
                     }
                     break;
                 case 4:
                     this.enterOuterAlt(_localctx, 4);
                     {
-                        this.state = 158;
-                        this.match(QasmParser.Id);
-                        this.state = 159;
+                        this.state = 157;
                         this.match(QasmParser.LeftParen);
-                        this.state = 160;
+                        this.state = 158;
                         this.match(QasmParser.RightParen);
+                        this.state = 159;
+                        this.paramsList();
+                        this.state = 160;
+                        this.match(QasmParser.LeftCurlyBrace);
                         this.state = 161;
-                        this.primaryList(0);
+                        this.match(QasmParser.RightCurlyBrace);
                     }
                     break;
                 case 5:
                     this.enterOuterAlt(_localctx, 5);
                     {
-                        this.state = 162;
-                        this.match(QasmParser.Id);
                         this.state = 163;
                         this.match(QasmParser.LeftParen);
                         this.state = 164;
-                        this.expList(0);
-                        this.state = 165;
                         this.match(QasmParser.RightParen);
+                        this.state = 165;
+                        this.paramsList();
                         this.state = 166;
-                        this.primaryList(0);
+                        this.match(QasmParser.LeftCurlyBrace);
+                        this.state = 167;
+                        this.body();
+                        this.state = 168;
+                        this.match(QasmParser.RightCurlyBrace);
+                    }
+                    break;
+                case 6:
+                    this.enterOuterAlt(_localctx, 6);
+                    {
+                        this.state = 170;
+                        this.paramsList();
+                        this.state = 171;
+                        this.match(QasmParser.LeftCurlyBrace);
+                        this.state = 172;
+                        this.match(QasmParser.RightCurlyBrace);
                     }
                     break;
             }
@@ -596,60 +636,75 @@ class QasmParser extends Parser_1.Parser {
         }
         return _localctx;
     }
-    opaque() {
-        let _localctx = new OpaqueContext(this._ctx, this.state);
-        this.enterRule(_localctx, 22, QasmParser.RULE_opaque);
+    opaqueDefinitionArguments() {
+        let _localctx = new OpaqueDefinitionArgumentsContext(this._ctx, this.state);
+        this.enterRule(_localctx, 24, QasmParser.RULE_opaqueDefinitionArguments);
         try {
-            this.state = 190;
+            this.state = 182;
+            this._errHandler.sync(this);
+            switch (this._input.LA(1)) {
+                case QasmParser.Id:
+                    this.enterOuterAlt(_localctx, 1);
+                    {
+                        this.state = 176;
+                        this.paramsList();
+                    }
+                    break;
+                case QasmParser.LeftParen:
+                    this.enterOuterAlt(_localctx, 2);
+                    {
+                        this.state = 177;
+                        this.match(QasmParser.LeftParen);
+                        this.state = 178;
+                        this.paramsList();
+                        this.state = 179;
+                        this.match(QasmParser.RightParen);
+                        this.state = 180;
+                        this.paramsList();
+                    }
+                    break;
+                default:
+                    throw new NoViableAltException_1.NoViableAltException(this);
+            }
+        }
+        catch (re) {
+            if (re instanceof RecognitionException_1.RecognitionException) {
+                _localctx.exception = re;
+                this._errHandler.reportError(this, re);
+                this._errHandler.recover(this, re);
+            }
+            else {
+                throw re;
+            }
+        }
+        finally {
+            this.exitRule();
+        }
+        return _localctx;
+    }
+    paramsList() {
+        let _localctx = new ParamsListContext(this._ctx, this.state);
+        this.enterRule(_localctx, 26, QasmParser.RULE_paramsList);
+        try {
+            this.state = 188;
             this._errHandler.sync(this);
             switch (this.interpreter.adaptivePredict(this._input, 8, this._ctx)) {
                 case 1:
                     this.enterOuterAlt(_localctx, 1);
                     {
-                        this.state = 170;
-                        this.match(QasmParser.Opaque);
-                        this.state = 171;
+                        this.state = 184;
                         this.match(QasmParser.Id);
-                        this.state = 172;
-                        this.gateScope();
-                        this.state = 173;
-                        this.bitList(0);
                     }
                     break;
                 case 2:
                     this.enterOuterAlt(_localctx, 2);
                     {
-                        this.state = 175;
-                        this.match(QasmParser.Opaque);
-                        this.state = 176;
-                        this.match(QasmParser.Id);
-                        this.state = 177;
-                        this.gateScope();
-                        this.state = 178;
-                        this.match(QasmParser.LeftParen);
-                        this.state = 179;
-                        this.match(QasmParser.RightParen);
-                        this.state = 180;
-                        this.bitList(0);
-                    }
-                    break;
-                case 3:
-                    this.enterOuterAlt(_localctx, 3);
-                    {
-                        this.state = 182;
-                        this.match(QasmParser.Opaque);
-                        this.state = 183;
-                        this.match(QasmParser.Id);
-                        this.state = 184;
-                        this.gateScope();
                         this.state = 185;
-                        this.match(QasmParser.LeftParen);
+                        this.match(QasmParser.Id);
                         this.state = 186;
-                        this.gateIdList(0);
+                        this.match(QasmParser.Comma);
                         this.state = 187;
-                        this.match(QasmParser.RightParen);
-                        this.state = 188;
-                        this.bitList(0);
+                        this.paramsList();
                     }
                     break;
             }
@@ -669,136 +724,29 @@ class QasmParser extends Parser_1.Parser {
         }
         return _localctx;
     }
-    measure() {
-        let _localctx = new MeasureContext(this._ctx, this.state);
-        this.enterRule(_localctx, 24, QasmParser.RULE_measure);
+    body() {
+        let _localctx = new BodyContext(this._ctx, this.state);
+        this.enterRule(_localctx, 28, QasmParser.RULE_body);
         try {
-            this.enterOuterAlt(_localctx, 1);
-            {
-                this.state = 192;
-                this.match(QasmParser.Measure);
-                this.state = 193;
-                this.primary();
-                this.state = 194;
-                this.match(QasmParser.Assign);
-                this.state = 195;
-                this.primary();
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.exitRule();
-        }
-        return _localctx;
-    }
-    barrier() {
-        let _localctx = new BarrierContext(this._ctx, this.state);
-        this.enterRule(_localctx, 26, QasmParser.RULE_barrier);
-        try {
-            this.enterOuterAlt(_localctx, 1);
-            {
-                this.state = 197;
-                this.match(QasmParser.Barrier);
-                this.state = 198;
-                this.primaryList(0);
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.exitRule();
-        }
-        return _localctx;
-    }
-    resetOperation() {
-        let _localctx = new ResetOperationContext(this._ctx, this.state);
-        this.enterRule(_localctx, 28, QasmParser.RULE_resetOperation);
-        try {
-            this.enterOuterAlt(_localctx, 1);
-            {
-                this.state = 200;
-                this.match(QasmParser.Reset);
-                this.state = 201;
-                this.primary();
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.exitRule();
-        }
-        return _localctx;
-    }
-    primaryList(_p) {
-        if (_p === undefined) {
-            _p = 0;
-        }
-        let _parentctx = this._ctx;
-        let _parentState = this.state;
-        let _localctx = new PrimaryListContext(this._ctx, _parentState);
-        let _prevctx = _localctx;
-        let _startState = 30;
-        this.enterRecursionRule(_localctx, 30, QasmParser.RULE_primaryList, _p);
-        try {
-            let _alt;
-            this.enterOuterAlt(_localctx, 1);
-            {
-                {
-                    this.state = 204;
-                    this.primary();
-                }
-                this._ctx._stop = this._input.tryLT(-1);
-                this.state = 211;
-                this._errHandler.sync(this);
-                _alt = this.interpreter.adaptivePredict(this._input, 9, this._ctx);
-                while (_alt !== 2 && _alt !== ATN_1.ATN.INVALID_ALT_NUMBER) {
-                    if (_alt === 1) {
-                        if (this._parseListeners != null)
-                            this.triggerExitRuleEvent();
-                        _prevctx = _localctx;
-                        {
-                            {
-                                _localctx = new PrimaryListContext(_parentctx, _parentState);
-                                this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_primaryList);
-                                this.state = 206;
-                                if (!(this.precpred(this._ctx, 1)))
-                                    throw new FailedPredicateException_1.FailedPredicateException(this, "this.precpred(this._ctx, 1)");
-                                this.state = 207;
-                                this.match(QasmParser.Comma);
-                                this.state = 208;
-                                this.primary();
-                            }
-                        }
+            this.state = 194;
+            this._errHandler.sync(this);
+            switch (this.interpreter.adaptivePredict(this._input, 9, this._ctx)) {
+                case 1:
+                    this.enterOuterAlt(_localctx, 1);
+                    {
+                        this.state = 190;
+                        this.bodyExpression();
                     }
-                    this.state = 213;
-                    this._errHandler.sync(this);
-                    _alt = this.interpreter.adaptivePredict(this._input, 9, this._ctx);
-                }
+                    break;
+                case 2:
+                    this.enterOuterAlt(_localctx, 2);
+                    {
+                        this.state = 191;
+                        this.bodyExpression();
+                        this.state = 192;
+                        this.body();
+                    }
+                    break;
             }
         }
         catch (re) {
@@ -812,209 +760,71 @@ class QasmParser extends Parser_1.Parser {
             }
         }
         finally {
-            this.unrollRecursionContexts(_parentctx);
+            this.exitRule();
         }
         return _localctx;
     }
-    primary() {
-        let _localctx = new PrimaryContext(this._ctx, this.state);
-        this.enterRule(_localctx, 32, QasmParser.RULE_primary);
+    bodyExpression() {
+        let _localctx = new BodyExpressionContext(this._ctx, this.state);
+        this.enterRule(_localctx, 30, QasmParser.RULE_bodyExpression);
         try {
-            this.state = 216;
+            this.state = 218;
             this._errHandler.sync(this);
             switch (this.interpreter.adaptivePredict(this._input, 10, this._ctx)) {
                 case 1:
                     this.enterOuterAlt(_localctx, 1);
                     {
-                        this.state = 214;
-                        this.match(QasmParser.Id);
+                        this.state = 196;
+                        this.match(QasmParser.Cx);
+                        this.state = 197;
+                        this.paramsList();
+                        this.state = 198;
+                        this.match(QasmParser.Semi);
                     }
                     break;
                 case 2:
                     this.enterOuterAlt(_localctx, 2);
                     {
-                        this.state = 215;
-                        this.indexedId();
-                    }
-                    break;
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.exitRule();
-        }
-        return _localctx;
-    }
-    indexedId() {
-        let _localctx = new IndexedIdContext(this._ctx, this.state);
-        this.enterRule(_localctx, 34, QasmParser.RULE_indexedId);
-        try {
-            this.enterOuterAlt(_localctx, 1);
-            {
-                this.state = 218;
-                this.match(QasmParser.Id);
-                this.state = 219;
-                this.match(QasmParser.LeftBrace);
-                this.state = 220;
-                this.match(QasmParser.Int);
-                this.state = 221;
-                this.match(QasmParser.RightBrace);
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.exitRule();
-        }
-        return _localctx;
-    }
-    qregDeclaration() {
-        let _localctx = new QregDeclarationContext(this._ctx, this.state);
-        this.enterRule(_localctx, 36, QasmParser.RULE_qregDeclaration);
-        try {
-            this.enterOuterAlt(_localctx, 1);
-            {
-                this.state = 223;
-                this.match(QasmParser.Qreg);
-                this.state = 224;
-                this.match(QasmParser.Id);
-                this.state = 225;
-                this.match(QasmParser.LeftBrace);
-                this.state = 226;
-                this.match(QasmParser.Int);
-                this.state = 227;
-                this.match(QasmParser.RightBrace);
-                this.state = 228;
-                this.match(QasmParser.Semi);
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.exitRule();
-        }
-        return _localctx;
-    }
-    cregDeclaration() {
-        let _localctx = new CregDeclarationContext(this._ctx, this.state);
-        this.enterRule(_localctx, 38, QasmParser.RULE_cregDeclaration);
-        try {
-            this.enterOuterAlt(_localctx, 1);
-            {
-                this.state = 230;
-                this.match(QasmParser.Creg);
-                this.state = 231;
-                this.match(QasmParser.Id);
-                this.state = 232;
-                this.match(QasmParser.LeftBrace);
-                this.state = 233;
-                this.match(QasmParser.Int);
-                this.state = 234;
-                this.match(QasmParser.RightBrace);
-                this.state = 235;
-                this.match(QasmParser.Semi);
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.exitRule();
-        }
-        return _localctx;
-    }
-    gateDeclaration() {
-        let _localctx = new GateDeclarationContext(this._ctx, this.state);
-        this.enterRule(_localctx, 40, QasmParser.RULE_gateDeclaration);
-        try {
-            this.state = 260;
-            this._errHandler.sync(this);
-            switch (this.interpreter.adaptivePredict(this._input, 11, this._ctx)) {
-                case 1:
-                    this.enterOuterAlt(_localctx, 1);
-                    {
-                        this.state = 237;
-                        this.match(QasmParser.Gate);
-                        this.state = 238;
-                        this.match(QasmParser.Id);
-                        this.state = 239;
-                        this.gateScope();
-                        this.state = 240;
-                        this.bitList(0);
-                        this.state = 241;
-                        this.gateBody();
-                    }
-                    break;
-                case 2:
-                    this.enterOuterAlt(_localctx, 2);
-                    {
-                        this.state = 243;
-                        this.match(QasmParser.Gate);
-                        this.state = 244;
-                        this.match(QasmParser.Id);
-                        this.state = 245;
-                        this.gateScope();
-                        this.state = 246;
+                        this.state = 200;
+                        this.match(QasmParser.U);
+                        this.state = 201;
                         this.match(QasmParser.LeftParen);
-                        this.state = 247;
+                        this.state = 202;
+                        this.paramsListBody(0);
+                        this.state = 203;
                         this.match(QasmParser.RightParen);
-                        this.state = 248;
-                        this.bitList(0);
-                        this.state = 249;
-                        this.gateBody();
+                        this.state = 204;
+                        this.paramsList();
+                        this.state = 205;
+                        this.match(QasmParser.Semi);
                     }
                     break;
                 case 3:
                     this.enterOuterAlt(_localctx, 3);
                     {
-                        this.state = 251;
-                        this.match(QasmParser.Gate);
-                        this.state = 252;
+                        this.state = 207;
                         this.match(QasmParser.Id);
-                        this.state = 253;
-                        this.gateScope();
-                        this.state = 254;
+                        this.state = 208;
+                        this.paramsList();
+                        this.state = 209;
+                        this.match(QasmParser.Semi);
+                    }
+                    break;
+                case 4:
+                    this.enterOuterAlt(_localctx, 4);
+                    {
+                        this.state = 211;
+                        this.match(QasmParser.Id);
+                        this.state = 212;
                         this.match(QasmParser.LeftParen);
-                        this.state = 255;
-                        this.gateIdList(0);
-                        this.state = 256;
+                        this.state = 213;
+                        this.paramsListBody(0);
+                        this.state = 214;
                         this.match(QasmParser.RightParen);
-                        this.state = 257;
-                        this.bitList(0);
-                        this.state = 258;
-                        this.gateBody();
+                        this.state = 215;
+                        this.paramsList();
+                        this.state = 216;
+                        this.match(QasmParser.Semi);
                     }
                     break;
             }
@@ -1034,51 +844,28 @@ class QasmParser extends Parser_1.Parser {
         }
         return _localctx;
     }
-    gateScope() {
-        let _localctx = new GateScopeContext(this._ctx, this.state);
-        this.enterRule(_localctx, 42, QasmParser.RULE_gateScope);
-        try {
-            this.enterOuterAlt(_localctx, 1);
-            {
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.exitRule();
-        }
-        return _localctx;
-    }
-    bitList(_p) {
+    paramsListBody(_p) {
         if (_p === undefined) {
             _p = 0;
         }
         let _parentctx = this._ctx;
         let _parentState = this.state;
-        let _localctx = new BitListContext(this._ctx, _parentState);
+        let _localctx = new ParamsListBodyContext(this._ctx, _parentState);
         let _prevctx = _localctx;
-        let _startState = 44;
-        this.enterRecursionRule(_localctx, 44, QasmParser.RULE_bitList, _p);
+        let _startState = 32;
+        this.enterRecursionRule(_localctx, 32, QasmParser.RULE_paramsListBody, _p);
         try {
             let _alt;
             this.enterOuterAlt(_localctx, 1);
             {
                 {
-                    this.state = 265;
-                    this.bit();
+                    this.state = 221;
+                    this.exp(0);
                 }
                 this._ctx._stop = this._input.tryLT(-1);
-                this.state = 272;
+                this.state = 228;
                 this._errHandler.sync(this);
-                _alt = this.interpreter.adaptivePredict(this._input, 12, this._ctx);
+                _alt = this.interpreter.adaptivePredict(this._input, 11, this._ctx);
                 while (_alt !== 2 && _alt !== ATN_1.ATN.INVALID_ALT_NUMBER) {
                     if (_alt === 1) {
                         if (this._parseListeners != null)
@@ -1086,21 +873,21 @@ class QasmParser extends Parser_1.Parser {
                         _prevctx = _localctx;
                         {
                             {
-                                _localctx = new BitListContext(_parentctx, _parentState);
-                                this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_bitList);
-                                this.state = 267;
+                                _localctx = new ParamsListBodyContext(_parentctx, _parentState);
+                                this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_paramsListBody);
+                                this.state = 223;
                                 if (!(this.precpred(this._ctx, 1)))
                                     throw new FailedPredicateException_1.FailedPredicateException(this, "this.precpred(this._ctx, 1)");
-                                this.state = 268;
+                                this.state = 224;
                                 this.match(QasmParser.Comma);
-                                this.state = 269;
-                                this.bit();
+                                this.state = 225;
+                                this.exp(0);
                             }
                         }
                     }
-                    this.state = 274;
+                    this.state = 230;
                     this._errHandler.sync(this);
-                    _alt = this.interpreter.adaptivePredict(this._input, 12, this._ctx);
+                    _alt = this.interpreter.adaptivePredict(this._input, 11, this._ctx);
                 }
             }
         }
@@ -1119,90 +906,87 @@ class QasmParser extends Parser_1.Parser {
         }
         return _localctx;
     }
-    bit() {
-        let _localctx = new BitContext(this._ctx, this.state);
-        this.enterRule(_localctx, 46, QasmParser.RULE_bit);
-        try {
-            this.enterOuterAlt(_localctx, 1);
-            {
-                this.state = 275;
-                this.match(QasmParser.Id);
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.exitRule();
-        }
-        return _localctx;
-    }
-    gateBody() {
-        let _localctx = new GateBodyContext(this._ctx, this.state);
-        this.enterRule(_localctx, 48, QasmParser.RULE_gateBody);
-        try {
-            this.enterOuterAlt(_localctx, 1);
-            {
-                this.state = 277;
-                this.match(QasmParser.LeftCurlyBrace);
-                this.state = 278;
-                this.gateOpList(0);
-                this.state = 279;
-                this.match(QasmParser.RightCurlyBrace);
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.exitRule();
-        }
-        return _localctx;
-    }
-    gateOpList(_p) {
+    exp(_p) {
         if (_p === undefined) {
             _p = 0;
         }
         let _parentctx = this._ctx;
         let _parentState = this.state;
-        let _localctx = new GateOpListContext(this._ctx, _parentState);
+        let _localctx = new ExpContext(this._ctx, _parentState);
         let _prevctx = _localctx;
-        let _startState = 50;
-        this.enterRecursionRule(_localctx, 50, QasmParser.RULE_gateOpList, _p);
+        let _startState = 34;
+        this.enterRecursionRule(_localctx, 34, QasmParser.RULE_exp, _p);
         try {
             let _alt;
             this.enterOuterAlt(_localctx, 1);
             {
-                this.state = 283;
+                this.state = 247;
                 this._errHandler.sync(this);
-                switch (this.interpreter.adaptivePredict(this._input, 13, this._ctx)) {
-                    case 1:
+                switch (this._input.LA(1)) {
+                    case QasmParser.Int:
                         {
+                            this.state = 232;
+                            this.match(QasmParser.Int);
                         }
                         break;
-                    case 2:
+                    case QasmParser.Real:
                         {
-                            this.state = 282;
-                            this.gateOp();
+                            this.state = 233;
+                            this.match(QasmParser.Real);
                         }
                         break;
+                    case QasmParser.Pi:
+                        {
+                            this.state = 234;
+                            this.match(QasmParser.Pi);
+                        }
+                        break;
+                    case QasmParser.Id:
+                        {
+                            this.state = 235;
+                            this.match(QasmParser.Id);
+                        }
+                        break;
+                    case QasmParser.Sin:
+                    case QasmParser.Cos:
+                    case QasmParser.Tan:
+                    case QasmParser.Exp:
+                    case QasmParser.Ln:
+                    case QasmParser.Sqrt:
+                        {
+                            this.state = 236;
+                            this.unaryOp();
+                            this.state = 237;
+                            this.match(QasmParser.LeftParen);
+                            this.state = 238;
+                            this.exp(0);
+                            this.state = 239;
+                            this.match(QasmParser.RightParen);
+                        }
+                        break;
+                    case QasmParser.Subs:
+                        {
+                            this.state = 241;
+                            this.match(QasmParser.Subs);
+                            this.state = 242;
+                            this.exp(7);
+                        }
+                        break;
+                    case QasmParser.LeftParen:
+                        {
+                            this.state = 243;
+                            this.match(QasmParser.LeftParen);
+                            this.state = 244;
+                            this.exp(0);
+                            this.state = 245;
+                            this.match(QasmParser.RightParen);
+                        }
+                        break;
+                    default:
+                        throw new NoViableAltException_1.NoViableAltException(this);
                 }
                 this._ctx._stop = this._input.tryLT(-1);
-                this.state = 289;
+                this.state = 266;
                 this._errHandler.sync(this);
                 _alt = this.interpreter.adaptivePredict(this._input, 14, this._ctx);
                 while (_alt !== 2 && _alt !== ATN_1.ATN.INVALID_ALT_NUMBER) {
@@ -1211,18 +995,78 @@ class QasmParser extends Parser_1.Parser {
                             this.triggerExitRuleEvent();
                         _prevctx = _localctx;
                         {
-                            {
-                                _localctx = new GateOpListContext(_parentctx, _parentState);
-                                this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_gateOpList);
-                                this.state = 285;
-                                if (!(this.precpred(this._ctx, 1)))
-                                    throw new FailedPredicateException_1.FailedPredicateException(this, "this.precpred(this._ctx, 1)");
-                                this.state = 286;
-                                this.gateOp();
+                            this.state = 264;
+                            this._errHandler.sync(this);
+                            switch (this.interpreter.adaptivePredict(this._input, 13, this._ctx)) {
+                                case 1:
+                                    {
+                                        _localctx = new ExpContext(_parentctx, _parentState);
+                                        this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_exp);
+                                        this.state = 249;
+                                        if (!(this.precpred(this._ctx, 5)))
+                                            throw new FailedPredicateException_1.FailedPredicateException(this, "this.precpred(this._ctx, 5)");
+                                        this.state = 250;
+                                        this.match(QasmParser.Sum);
+                                        this.state = 251;
+                                        this.exp(6);
+                                    }
+                                    break;
+                                case 2:
+                                    {
+                                        _localctx = new ExpContext(_parentctx, _parentState);
+                                        this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_exp);
+                                        this.state = 252;
+                                        if (!(this.precpred(this._ctx, 4)))
+                                            throw new FailedPredicateException_1.FailedPredicateException(this, "this.precpred(this._ctx, 4)");
+                                        this.state = 253;
+                                        this.match(QasmParser.Subs);
+                                        this.state = 254;
+                                        this.exp(5);
+                                    }
+                                    break;
+                                case 3:
+                                    {
+                                        _localctx = new ExpContext(_parentctx, _parentState);
+                                        this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_exp);
+                                        this.state = 255;
+                                        if (!(this.precpred(this._ctx, 3)))
+                                            throw new FailedPredicateException_1.FailedPredicateException(this, "this.precpred(this._ctx, 3)");
+                                        this.state = 256;
+                                        this.match(QasmParser.Mult);
+                                        this.state = 257;
+                                        this.exp(4);
+                                    }
+                                    break;
+                                case 4:
+                                    {
+                                        _localctx = new ExpContext(_parentctx, _parentState);
+                                        this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_exp);
+                                        this.state = 258;
+                                        if (!(this.precpred(this._ctx, 2)))
+                                            throw new FailedPredicateException_1.FailedPredicateException(this, "this.precpred(this._ctx, 2)");
+                                        this.state = 259;
+                                        this.match(QasmParser.Div);
+                                        this.state = 260;
+                                        this.exp(3);
+                                    }
+                                    break;
+                                case 5:
+                                    {
+                                        _localctx = new ExpContext(_parentctx, _parentState);
+                                        this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_exp);
+                                        this.state = 261;
+                                        if (!(this.precpred(this._ctx, 1)))
+                                            throw new FailedPredicateException_1.FailedPredicateException(this, "this.precpred(this._ctx, 1)");
+                                        this.state = 262;
+                                        this.match(QasmParser.Pow);
+                                        this.state = 263;
+                                        this.exp(2);
+                                    }
+                                    break;
                             }
                         }
                     }
-                    this.state = 291;
+                    this.state = 268;
                     this._errHandler.sync(this);
                     _alt = this.interpreter.adaptivePredict(this._input, 14, this._ctx);
                 }
@@ -1243,97 +1087,73 @@ class QasmParser extends Parser_1.Parser {
         }
         return _localctx;
     }
-    gateOp() {
-        let _localctx = new GateOpContext(this._ctx, this.state);
-        this.enterRule(_localctx, 52, QasmParser.RULE_gateOp);
+    unaryOp() {
+        let _localctx = new UnaryOpContext(this._ctx, this.state);
+        this.enterRule(_localctx, 36, QasmParser.RULE_unaryOp);
+        let _la;
         try {
-            this.state = 325;
+            this.enterOuterAlt(_localctx, 1);
+            {
+                this.state = 269;
+                _la = this._input.LA(1);
+                if (!((((_la) & ~0x1F) === 0 && ((1 << _la) & ((1 << QasmParser.Sin) | (1 << QasmParser.Cos) | (1 << QasmParser.Tan) | (1 << QasmParser.Exp) | (1 << QasmParser.Ln) | (1 << QasmParser.Sqrt))) !== 0))) {
+                    this._errHandler.recoverInline(this);
+                }
+                else {
+                    if (this._input.LA(1) === Token_1.Token.EOF) {
+                        this.matchedEOF = true;
+                    }
+                    this._errHandler.reportMatch(this);
+                    this.consume();
+                }
+            }
+        }
+        catch (re) {
+            if (re instanceof RecognitionException_1.RecognitionException) {
+                _localctx.exception = re;
+                this._errHandler.reportError(this, re);
+                this._errHandler.recover(this, re);
+            }
+            else {
+                throw re;
+            }
+        }
+        finally {
+            this.exitRule();
+        }
+        return _localctx;
+    }
+    measure() {
+        let _localctx = new MeasureContext(this._ctx, this.state);
+        this.enterRule(_localctx, 38, QasmParser.RULE_measure);
+        try {
+            this.state = 280;
             this._errHandler.sync(this);
             switch (this.interpreter.adaptivePredict(this._input, 15, this._ctx)) {
                 case 1:
                     this.enterOuterAlt(_localctx, 1);
                     {
-                        this.state = 292;
-                        this.match(QasmParser.U);
-                        this.state = 293;
-                        this.match(QasmParser.LeftParen);
-                        this.state = 294;
-                        this.expList(0);
-                        this.state = 295;
-                        this.match(QasmParser.RightParen);
-                        this.state = 296;
-                        this.match(QasmParser.Id);
-                        this.state = 297;
-                        this.match(QasmParser.Semi);
+                        this.state = 271;
+                        this.match(QasmParser.Measure);
+                        this.state = 272;
+                        this.qubit();
+                        this.state = 273;
+                        this.match(QasmParser.Assign);
+                        this.state = 274;
+                        this.cbit();
                     }
                     break;
                 case 2:
                     this.enterOuterAlt(_localctx, 2);
                     {
-                        this.state = 299;
-                        this.match(QasmParser.Cx);
-                        this.state = 300;
+                        this.state = 276;
+                        this.match(QasmParser.Measure);
+                        this.state = 277;
                         this.match(QasmParser.Id);
-                        this.state = 301;
-                        this.match(QasmParser.Comma);
-                        this.state = 302;
+                        this.state = 278;
+                        this.match(QasmParser.Assign);
+                        this.state = 279;
                         this.match(QasmParser.Id);
-                        this.state = 303;
-                        this.match(QasmParser.Semi);
-                    }
-                    break;
-                case 3:
-                    this.enterOuterAlt(_localctx, 3);
-                    {
-                        this.state = 304;
-                        this.match(QasmParser.Id);
-                        this.state = 305;
-                        this.idList(0);
-                        this.state = 306;
-                        this.match(QasmParser.Semi);
-                    }
-                    break;
-                case 4:
-                    this.enterOuterAlt(_localctx, 4);
-                    {
-                        this.state = 308;
-                        this.match(QasmParser.Id);
-                        this.state = 309;
-                        this.match(QasmParser.LeftParen);
-                        this.state = 310;
-                        this.match(QasmParser.RightParen);
-                        this.state = 311;
-                        this.idList(0);
-                        this.state = 312;
-                        this.match(QasmParser.Semi);
-                    }
-                    break;
-                case 5:
-                    this.enterOuterAlt(_localctx, 5);
-                    {
-                        this.state = 314;
-                        this.match(QasmParser.Id);
-                        this.state = 315;
-                        this.match(QasmParser.LeftParen);
-                        this.state = 316;
-                        this.expList(0);
-                        this.state = 317;
-                        this.match(QasmParser.RightParen);
-                        this.state = 318;
-                        this.idList(0);
-                        this.state = 319;
-                        this.match(QasmParser.Semi);
-                    }
-                    break;
-                case 6:
-                    this.enterOuterAlt(_localctx, 6);
-                    {
-                        this.state = 321;
-                        this.match(QasmParser.Barrier);
-                        this.state = 322;
-                        this.idList(0);
-                        this.state = 323;
-                        this.match(QasmParser.Semi);
                     }
                     break;
             }
@@ -1353,76 +1173,16 @@ class QasmParser extends Parser_1.Parser {
         }
         return _localctx;
     }
-    gateIdList(_p) {
-        if (_p === undefined) {
-            _p = 0;
-        }
-        let _parentctx = this._ctx;
-        let _parentState = this.state;
-        let _localctx = new GateIdListContext(this._ctx, _parentState);
-        let _prevctx = _localctx;
-        let _startState = 54;
-        this.enterRecursionRule(_localctx, 54, QasmParser.RULE_gateIdList, _p);
-        try {
-            let _alt;
-            this.enterOuterAlt(_localctx, 1);
-            {
-                {
-                    this.state = 328;
-                    this.gate();
-                }
-                this._ctx._stop = this._input.tryLT(-1);
-                this.state = 335;
-                this._errHandler.sync(this);
-                _alt = this.interpreter.adaptivePredict(this._input, 16, this._ctx);
-                while (_alt !== 2 && _alt !== ATN_1.ATN.INVALID_ALT_NUMBER) {
-                    if (_alt === 1) {
-                        if (this._parseListeners != null)
-                            this.triggerExitRuleEvent();
-                        _prevctx = _localctx;
-                        {
-                            {
-                                _localctx = new GateIdListContext(_parentctx, _parentState);
-                                this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_gateIdList);
-                                this.state = 330;
-                                if (!(this.precpred(this._ctx, 1)))
-                                    throw new FailedPredicateException_1.FailedPredicateException(this, "this.precpred(this._ctx, 1)");
-                                this.state = 331;
-                                this.match(QasmParser.Comma);
-                                this.state = 332;
-                                this.gate();
-                            }
-                        }
-                    }
-                    this.state = 337;
-                    this._errHandler.sync(this);
-                    _alt = this.interpreter.adaptivePredict(this._input, 16, this._ctx);
-                }
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.unrollRecursionContexts(_parentctx);
-        }
-        return _localctx;
-    }
-    gate() {
-        let _localctx = new GateContext(this._ctx, this.state);
-        this.enterRule(_localctx, 56, QasmParser.RULE_gate);
+    qubit() {
+        let _localctx = new QubitContext(this._ctx, this.state);
+        this.enterRule(_localctx, 40, QasmParser.RULE_qubit);
         try {
             this.enterOuterAlt(_localctx, 1);
             {
-                this.state = 338;
+                this.state = 282;
                 this.match(QasmParser.Id);
+                this.state = 283;
+                this.qLine();
             }
         }
         catch (re) {
@@ -1440,26 +1200,101 @@ class QasmParser extends Parser_1.Parser {
         }
         return _localctx;
     }
-    expList(_p) {
+    cbit() {
+        let _localctx = new CbitContext(this._ctx, this.state);
+        this.enterRule(_localctx, 42, QasmParser.RULE_cbit);
+        try {
+            this.enterOuterAlt(_localctx, 1);
+            {
+                this.state = 285;
+                this.match(QasmParser.Id);
+                this.state = 286;
+                this.qLine();
+            }
+        }
+        catch (re) {
+            if (re instanceof RecognitionException_1.RecognitionException) {
+                _localctx.exception = re;
+                this._errHandler.reportError(this, re);
+                this._errHandler.recover(this, re);
+            }
+            else {
+                throw re;
+            }
+        }
+        finally {
+            this.exitRule();
+        }
+        return _localctx;
+    }
+    customArglist() {
+        let _localctx = new CustomArglistContext(this._ctx, this.state);
+        this.enterRule(_localctx, 44, QasmParser.RULE_customArglist);
+        try {
+            this.state = 296;
+            this._errHandler.sync(this);
+            switch (this.interpreter.adaptivePredict(this._input, 16, this._ctx)) {
+                case 1:
+                    this.enterOuterAlt(_localctx, 1);
+                    {
+                        this.state = 288;
+                        this.match(QasmParser.Id);
+                        this.state = 289;
+                        this.match(QasmParser.LeftParen);
+                        this.state = 290;
+                        this.paramsListNumber(0);
+                        this.state = 291;
+                        this.match(QasmParser.RightParen);
+                        this.state = 292;
+                        this.qubitAndQregList();
+                    }
+                    break;
+                case 2:
+                    this.enterOuterAlt(_localctx, 2);
+                    {
+                        this.state = 294;
+                        this.match(QasmParser.Id);
+                        this.state = 295;
+                        this.qubitAndQregList();
+                    }
+                    break;
+            }
+        }
+        catch (re) {
+            if (re instanceof RecognitionException_1.RecognitionException) {
+                _localctx.exception = re;
+                this._errHandler.reportError(this, re);
+                this._errHandler.recover(this, re);
+            }
+            else {
+                throw re;
+            }
+        }
+        finally {
+            this.exitRule();
+        }
+        return _localctx;
+    }
+    paramsListNumber(_p) {
         if (_p === undefined) {
             _p = 0;
         }
         let _parentctx = this._ctx;
         let _parentState = this.state;
-        let _localctx = new ExpListContext(this._ctx, _parentState);
+        let _localctx = new ParamsListNumberContext(this._ctx, _parentState);
         let _prevctx = _localctx;
-        let _startState = 58;
-        this.enterRecursionRule(_localctx, 58, QasmParser.RULE_expList, _p);
+        let _startState = 46;
+        this.enterRecursionRule(_localctx, 46, QasmParser.RULE_paramsListNumber, _p);
         try {
             let _alt;
             this.enterOuterAlt(_localctx, 1);
             {
                 {
-                    this.state = 341;
-                    this.expression(0);
+                    this.state = 299;
+                    this.exp(0);
                 }
                 this._ctx._stop = this._input.tryLT(-1);
-                this.state = 348;
+                this.state = 306;
                 this._errHandler.sync(this);
                 _alt = this.interpreter.adaptivePredict(this._input, 17, this._ctx);
                 while (_alt !== 2 && _alt !== ATN_1.ATN.INVALID_ALT_NUMBER) {
@@ -1469,19 +1304,19 @@ class QasmParser extends Parser_1.Parser {
                         _prevctx = _localctx;
                         {
                             {
-                                _localctx = new ExpListContext(_parentctx, _parentState);
-                                this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_expList);
-                                this.state = 343;
+                                _localctx = new ParamsListNumberContext(_parentctx, _parentState);
+                                this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_paramsListNumber);
+                                this.state = 301;
                                 if (!(this.precpred(this._ctx, 1)))
                                     throw new FailedPredicateException_1.FailedPredicateException(this, "this.precpred(this._ctx, 1)");
-                                this.state = 344;
+                                this.state = 302;
                                 this.match(QasmParser.Comma);
-                                this.state = 345;
-                                this.expression(0);
+                                this.state = 303;
+                                this.exp(0);
                             }
                         }
                     }
-                    this.state = 350;
+                    this.state = 308;
                     this._errHandler.sync(this);
                     _alt = this.interpreter.adaptivePredict(this._input, 17, this._ctx);
                 }
@@ -1502,342 +1337,29 @@ class QasmParser extends Parser_1.Parser {
         }
         return _localctx;
     }
-    expression(_p) {
-        if (_p === undefined) {
-            _p = 0;
-        }
-        let _parentctx = this._ctx;
-        let _parentState = this.state;
-        let _localctx = new ExpressionContext(this._ctx, _parentState);
-        let _prevctx = _localctx;
-        let _startState = 60;
-        this.enterRecursionRule(_localctx, 60, QasmParser.RULE_expression, _p);
+    qubitAndQregList() {
+        let _localctx = new QubitAndQregListContext(this._ctx, this.state);
+        this.enterRule(_localctx, 48, QasmParser.RULE_qubitAndQregList);
         try {
-            let _alt;
-            this.enterOuterAlt(_localctx, 1);
-            {
-                {
-                    this.state = 352;
-                    this.multiplicativeExpression(0);
-                }
-                this._ctx._stop = this._input.tryLT(-1);
-                this.state = 359;
-                this._errHandler.sync(this);
-                _alt = this.interpreter.adaptivePredict(this._input, 18, this._ctx);
-                while (_alt !== 2 && _alt !== ATN_1.ATN.INVALID_ALT_NUMBER) {
-                    if (_alt === 1) {
-                        if (this._parseListeners != null)
-                            this.triggerExitRuleEvent();
-                        _prevctx = _localctx;
-                        {
-                            {
-                                _localctx = new ExpressionContext(_parentctx, _parentState);
-                                this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_expression);
-                                this.state = 354;
-                                if (!(this.precpred(this._ctx, 1)))
-                                    throw new FailedPredicateException_1.FailedPredicateException(this, "this.precpred(this._ctx, 1)");
-                                this.state = 355;
-                                this.match(QasmParser.Pow);
-                                this.state = 356;
-                                this.multiplicativeExpression(0);
-                            }
-                        }
-                    }
-                    this.state = 361;
-                    this._errHandler.sync(this);
-                    _alt = this.interpreter.adaptivePredict(this._input, 18, this._ctx);
-                }
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.unrollRecursionContexts(_parentctx);
-        }
-        return _localctx;
-    }
-    multiplicativeExpression(_p) {
-        if (_p === undefined) {
-            _p = 0;
-        }
-        let _parentctx = this._ctx;
-        let _parentState = this.state;
-        let _localctx = new MultiplicativeExpressionContext(this._ctx, _parentState);
-        let _prevctx = _localctx;
-        let _startState = 62;
-        this.enterRecursionRule(_localctx, 62, QasmParser.RULE_multiplicativeExpression, _p);
-        try {
-            let _alt;
-            this.enterOuterAlt(_localctx, 1);
-            {
-                {
-                    this.state = 363;
-                    this.additiveExpression(0);
-                }
-                this._ctx._stop = this._input.tryLT(-1);
-                this.state = 373;
-                this._errHandler.sync(this);
-                _alt = this.interpreter.adaptivePredict(this._input, 20, this._ctx);
-                while (_alt !== 2 && _alt !== ATN_1.ATN.INVALID_ALT_NUMBER) {
-                    if (_alt === 1) {
-                        if (this._parseListeners != null)
-                            this.triggerExitRuleEvent();
-                        _prevctx = _localctx;
-                        {
-                            this.state = 371;
-                            this._errHandler.sync(this);
-                            switch (this.interpreter.adaptivePredict(this._input, 19, this._ctx)) {
-                                case 1:
-                                    {
-                                        _localctx = new MultiplicativeExpressionContext(_parentctx, _parentState);
-                                        this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_multiplicativeExpression);
-                                        this.state = 365;
-                                        if (!(this.precpred(this._ctx, 2)))
-                                            throw new FailedPredicateException_1.FailedPredicateException(this, "this.precpred(this._ctx, 2)");
-                                        this.state = 366;
-                                        this.match(QasmParser.Mult);
-                                        this.state = 367;
-                                        this.multiplicativeExpression(3);
-                                    }
-                                    break;
-                                case 2:
-                                    {
-                                        _localctx = new MultiplicativeExpressionContext(_parentctx, _parentState);
-                                        this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_multiplicativeExpression);
-                                        this.state = 368;
-                                        if (!(this.precpred(this._ctx, 1)))
-                                            throw new FailedPredicateException_1.FailedPredicateException(this, "this.precpred(this._ctx, 1)");
-                                        this.state = 369;
-                                        this.match(QasmParser.Div);
-                                        this.state = 370;
-                                        this.multiplicativeExpression(2);
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                    this.state = 375;
-                    this._errHandler.sync(this);
-                    _alt = this.interpreter.adaptivePredict(this._input, 20, this._ctx);
-                }
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.unrollRecursionContexts(_parentctx);
-        }
-        return _localctx;
-    }
-    additiveExpression(_p) {
-        if (_p === undefined) {
-            _p = 0;
-        }
-        let _parentctx = this._ctx;
-        let _parentState = this.state;
-        let _localctx = new AdditiveExpressionContext(this._ctx, _parentState);
-        let _prevctx = _localctx;
-        let _startState = 64;
-        this.enterRecursionRule(_localctx, 64, QasmParser.RULE_additiveExpression, _p);
-        try {
-            let _alt;
-            this.enterOuterAlt(_localctx, 1);
-            {
-                {
-                    this.state = 377;
-                    this.prefixExpression();
-                }
-                this._ctx._stop = this._input.tryLT(-1);
-                this.state = 387;
-                this._errHandler.sync(this);
-                _alt = this.interpreter.adaptivePredict(this._input, 22, this._ctx);
-                while (_alt !== 2 && _alt !== ATN_1.ATN.INVALID_ALT_NUMBER) {
-                    if (_alt === 1) {
-                        if (this._parseListeners != null)
-                            this.triggerExitRuleEvent();
-                        _prevctx = _localctx;
-                        {
-                            this.state = 385;
-                            this._errHandler.sync(this);
-                            switch (this.interpreter.adaptivePredict(this._input, 21, this._ctx)) {
-                                case 1:
-                                    {
-                                        _localctx = new AdditiveExpressionContext(_parentctx, _parentState);
-                                        this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_additiveExpression);
-                                        this.state = 379;
-                                        if (!(this.precpred(this._ctx, 2)))
-                                            throw new FailedPredicateException_1.FailedPredicateException(this, "this.precpred(this._ctx, 2)");
-                                        this.state = 380;
-                                        this.match(QasmParser.Sum);
-                                        this.state = 381;
-                                        this.additiveExpression(3);
-                                    }
-                                    break;
-                                case 2:
-                                    {
-                                        _localctx = new AdditiveExpressionContext(_parentctx, _parentState);
-                                        this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_additiveExpression);
-                                        this.state = 382;
-                                        if (!(this.precpred(this._ctx, 1)))
-                                            throw new FailedPredicateException_1.FailedPredicateException(this, "this.precpred(this._ctx, 1)");
-                                        this.state = 383;
-                                        this.match(QasmParser.Subs);
-                                        this.state = 384;
-                                        this.additiveExpression(2);
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                    this.state = 389;
-                    this._errHandler.sync(this);
-                    _alt = this.interpreter.adaptivePredict(this._input, 22, this._ctx);
-                }
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.unrollRecursionContexts(_parentctx);
-        }
-        return _localctx;
-    }
-    prefixExpression() {
-        let _localctx = new PrefixExpressionContext(this._ctx, this.state);
-        this.enterRule(_localctx, 66, QasmParser.RULE_prefixExpression);
-        try {
-            this.state = 395;
+            this.state = 314;
             this._errHandler.sync(this);
-            switch (this._input.LA(1)) {
-                case QasmParser.Real:
-                case QasmParser.Int:
-                case QasmParser.LeftParen:
-                case QasmParser.Pi:
-                case QasmParser.Id:
-                    this.enterOuterAlt(_localctx, 1);
-                    {
-                        this.state = 390;
-                        this.unary();
-                    }
-                    break;
-                case QasmParser.Sum:
-                    this.enterOuterAlt(_localctx, 2);
-                    {
-                        this.state = 391;
-                        this.match(QasmParser.Sum);
-                        this.state = 392;
-                        this.prefixExpression();
-                    }
-                    break;
-                case QasmParser.Subs:
-                    this.enterOuterAlt(_localctx, 3);
-                    {
-                        this.state = 393;
-                        this.match(QasmParser.Subs);
-                        this.state = 394;
-                        this.prefixExpression();
-                    }
-                    break;
-                default:
-                    throw new NoViableAltException_1.NoViableAltException(this);
-            }
-        }
-        catch (re) {
-            if (re instanceof RecognitionException_1.RecognitionException) {
-                _localctx.exception = re;
-                this._errHandler.reportError(this, re);
-                this._errHandler.recover(this, re);
-            }
-            else {
-                throw re;
-            }
-        }
-        finally {
-            this.exitRule();
-        }
-        return _localctx;
-    }
-    unary() {
-        let _localctx = new UnaryContext(this._ctx, this.state);
-        this.enterRule(_localctx, 68, QasmParser.RULE_unary);
-        try {
-            this.state = 410;
-            this._errHandler.sync(this);
-            switch (this.interpreter.adaptivePredict(this._input, 24, this._ctx)) {
+            switch (this.interpreter.adaptivePredict(this._input, 18, this._ctx)) {
                 case 1:
                     this.enterOuterAlt(_localctx, 1);
                     {
-                        this.state = 397;
-                        this.match(QasmParser.Int);
+                        this.state = 309;
+                        this.qbitOrQreg();
                     }
                     break;
                 case 2:
                     this.enterOuterAlt(_localctx, 2);
                     {
-                        this.state = 398;
-                        this.match(QasmParser.Real);
-                    }
-                    break;
-                case 3:
-                    this.enterOuterAlt(_localctx, 3);
-                    {
-                        this.state = 399;
-                        this.match(QasmParser.Pi);
-                    }
-                    break;
-                case 4:
-                    this.enterOuterAlt(_localctx, 4);
-                    {
-                        this.state = 400;
-                        this.match(QasmParser.Id);
-                    }
-                    break;
-                case 5:
-                    this.enterOuterAlt(_localctx, 5);
-                    {
-                        this.state = 401;
-                        this.match(QasmParser.LeftParen);
-                        this.state = 402;
-                        this.expression(0);
-                        this.state = 403;
-                        this.match(QasmParser.RightParen);
-                    }
-                    break;
-                case 6:
-                    this.enterOuterAlt(_localctx, 6);
-                    {
-                        this.state = 405;
-                        this.match(QasmParser.Id);
-                        this.state = 406;
-                        this.match(QasmParser.LeftParen);
-                        this.state = 407;
-                        this.expression(0);
-                        this.state = 408;
-                        this.match(QasmParser.RightParen);
+                        this.state = 310;
+                        this.qbitOrQreg();
+                        this.state = 311;
+                        this.match(QasmParser.Comma);
+                        this.state = 312;
+                        this.qubitAndQregList();
                     }
                     break;
             }
@@ -1857,51 +1379,29 @@ class QasmParser extends Parser_1.Parser {
         }
         return _localctx;
     }
-    idList(_p) {
-        if (_p === undefined) {
-            _p = 0;
-        }
-        let _parentctx = this._ctx;
-        let _parentState = this.state;
-        let _localctx = new IdListContext(this._ctx, _parentState);
-        let _prevctx = _localctx;
-        let _startState = 70;
-        this.enterRecursionRule(_localctx, 70, QasmParser.RULE_idList, _p);
+    qbitOrQreg() {
+        let _localctx = new QbitOrQregContext(this._ctx, this.state);
+        this.enterRule(_localctx, 50, QasmParser.RULE_qbitOrQreg);
         try {
-            let _alt;
-            this.enterOuterAlt(_localctx, 1);
-            {
-                {
-                    this.state = 413;
-                    this.match(QasmParser.Id);
-                }
-                this._ctx._stop = this._input.tryLT(-1);
-                this.state = 420;
-                this._errHandler.sync(this);
-                _alt = this.interpreter.adaptivePredict(this._input, 25, this._ctx);
-                while (_alt !== 2 && _alt !== ATN_1.ATN.INVALID_ALT_NUMBER) {
-                    if (_alt === 1) {
-                        if (this._parseListeners != null)
-                            this.triggerExitRuleEvent();
-                        _prevctx = _localctx;
-                        {
-                            {
-                                _localctx = new IdListContext(_parentctx, _parentState);
-                                this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_idList);
-                                this.state = 415;
-                                if (!(this.precpred(this._ctx, 1)))
-                                    throw new FailedPredicateException_1.FailedPredicateException(this, "this.precpred(this._ctx, 1)");
-                                this.state = 416;
-                                this.match(QasmParser.Comma);
-                                this.state = 417;
-                                this.match(QasmParser.Id);
-                            }
-                        }
+            this.state = 319;
+            this._errHandler.sync(this);
+            switch (this.interpreter.adaptivePredict(this._input, 19, this._ctx)) {
+                case 1:
+                    this.enterOuterAlt(_localctx, 1);
+                    {
+                        this.state = 316;
+                        this.match(QasmParser.Id);
                     }
-                    this.state = 422;
-                    this._errHandler.sync(this);
-                    _alt = this.interpreter.adaptivePredict(this._input, 25, this._ctx);
-                }
+                    break;
+                case 2:
+                    this.enterOuterAlt(_localctx, 2);
+                    {
+                        this.state = 317;
+                        this.match(QasmParser.Id);
+                        this.state = 318;
+                        this.qLine();
+                    }
+                    break;
             }
         }
         catch (re) {
@@ -1915,114 +1415,199 @@ class QasmParser extends Parser_1.Parser {
             }
         }
         finally {
-            this.unrollRecursionContexts(_parentctx);
+            this.exitRule();
+        }
+        return _localctx;
+    }
+    cxGate() {
+        let _localctx = new CxGateContext(this._ctx, this.state);
+        this.enterRule(_localctx, 52, QasmParser.RULE_cxGate);
+        try {
+            this.enterOuterAlt(_localctx, 1);
+            {
+                this.state = 321;
+                this.match(QasmParser.Cx);
+                this.state = 322;
+                this.qubitAndQregList();
+            }
+        }
+        catch (re) {
+            if (re instanceof RecognitionException_1.RecognitionException) {
+                _localctx.exception = re;
+                this._errHandler.reportError(this, re);
+                this._errHandler.recover(this, re);
+            }
+            else {
+                throw re;
+            }
+        }
+        finally {
+            this.exitRule();
+        }
+        return _localctx;
+    }
+    barrierGate() {
+        let _localctx = new BarrierGateContext(this._ctx, this.state);
+        this.enterRule(_localctx, 54, QasmParser.RULE_barrierGate);
+        try {
+            this.state = 328;
+            this._errHandler.sync(this);
+            switch (this.interpreter.adaptivePredict(this._input, 20, this._ctx)) {
+                case 1:
+                    this.enterOuterAlt(_localctx, 1);
+                    {
+                        this.state = 324;
+                        this.match(QasmParser.Barrier);
+                        this.state = 325;
+                        this.match(QasmParser.Id);
+                    }
+                    break;
+                case 2:
+                    this.enterOuterAlt(_localctx, 2);
+                    {
+                        this.state = 326;
+                        this.match(QasmParser.Barrier);
+                        this.state = 327;
+                        this.qubitList();
+                    }
+                    break;
+            }
+        }
+        catch (re) {
+            if (re instanceof RecognitionException_1.RecognitionException) {
+                _localctx.exception = re;
+                this._errHandler.reportError(this, re);
+                this._errHandler.recover(this, re);
+            }
+            else {
+                throw re;
+            }
+        }
+        finally {
+            this.exitRule();
+        }
+        return _localctx;
+    }
+    qubitList() {
+        let _localctx = new QubitListContext(this._ctx, this.state);
+        this.enterRule(_localctx, 56, QasmParser.RULE_qubitList);
+        try {
+            this.state = 335;
+            this._errHandler.sync(this);
+            switch (this.interpreter.adaptivePredict(this._input, 21, this._ctx)) {
+                case 1:
+                    this.enterOuterAlt(_localctx, 1);
+                    {
+                        this.state = 330;
+                        this.qubit();
+                    }
+                    break;
+                case 2:
+                    this.enterOuterAlt(_localctx, 2);
+                    {
+                        this.state = 331;
+                        this.qubit();
+                        this.state = 332;
+                        this.match(QasmParser.Comma);
+                        this.state = 333;
+                        this.qubitList();
+                    }
+                    break;
+            }
+        }
+        catch (re) {
+            if (re instanceof RecognitionException_1.RecognitionException) {
+                _localctx.exception = re;
+                this._errHandler.reportError(this, re);
+                this._errHandler.recover(this, re);
+            }
+            else {
+                throw re;
+            }
+        }
+        finally {
+            this.exitRule();
+        }
+        return _localctx;
+    }
+    resetGate() {
+        let _localctx = new ResetGateContext(this._ctx, this.state);
+        this.enterRule(_localctx, 58, QasmParser.RULE_resetGate);
+        try {
+            this.state = 341;
+            this._errHandler.sync(this);
+            switch (this.interpreter.adaptivePredict(this._input, 22, this._ctx)) {
+                case 1:
+                    this.enterOuterAlt(_localctx, 1);
+                    {
+                        this.state = 337;
+                        this.match(QasmParser.Reset);
+                        this.state = 338;
+                        this.match(QasmParser.Id);
+                    }
+                    break;
+                case 2:
+                    this.enterOuterAlt(_localctx, 2);
+                    {
+                        this.state = 339;
+                        this.match(QasmParser.Reset);
+                        this.state = 340;
+                        this.qubit();
+                    }
+                    break;
+            }
+        }
+        catch (re) {
+            if (re instanceof RecognitionException_1.RecognitionException) {
+                _localctx.exception = re;
+                this._errHandler.reportError(this, re);
+                this._errHandler.recover(this, re);
+            }
+            else {
+                throw re;
+            }
+        }
+        finally {
+            this.exitRule();
         }
         return _localctx;
     }
     sempred(_localctx, ruleIndex, predIndex) {
         switch (ruleIndex) {
-            case 5:
-                return this.library_sempred(_localctx, predIndex);
-            case 6:
-                return this.program_sempred(_localctx, predIndex);
-            case 15:
-                return this.primaryList_sempred(_localctx, predIndex);
-            case 22:
-                return this.bitList_sempred(_localctx, predIndex);
-            case 25:
-                return this.gateOpList_sempred(_localctx, predIndex);
-            case 27:
-                return this.gateIdList_sempred(_localctx, predIndex);
-            case 29:
-                return this.expList_sempred(_localctx, predIndex);
-            case 30:
-                return this.expression_sempred(_localctx, predIndex);
-            case 31:
-                return this.multiplicativeExpression_sempred(_localctx, predIndex);
-            case 32:
-                return this.additiveExpression_sempred(_localctx, predIndex);
-            case 35:
-                return this.idList_sempred(_localctx, predIndex);
+            case 16:
+                return this.paramsListBody_sempred(_localctx, predIndex);
+            case 17:
+                return this.exp_sempred(_localctx, predIndex);
+            case 23:
+                return this.paramsListNumber_sempred(_localctx, predIndex);
         }
         return true;
     }
-    library_sempred(_localctx, predIndex) {
+    paramsListBody_sempred(_localctx, predIndex) {
         switch (predIndex) {
             case 0:
                 return this.precpred(this._ctx, 1);
         }
         return true;
     }
-    program_sempred(_localctx, predIndex) {
+    exp_sempred(_localctx, predIndex) {
         switch (predIndex) {
             case 1:
-                return this.precpred(this._ctx, 1);
-        }
-        return true;
-    }
-    primaryList_sempred(_localctx, predIndex) {
-        switch (predIndex) {
+                return this.precpred(this._ctx, 5);
             case 2:
-                return this.precpred(this._ctx, 1);
-        }
-        return true;
-    }
-    bitList_sempred(_localctx, predIndex) {
-        switch (predIndex) {
+                return this.precpred(this._ctx, 4);
             case 3:
-                return this.precpred(this._ctx, 1);
-        }
-        return true;
-    }
-    gateOpList_sempred(_localctx, predIndex) {
-        switch (predIndex) {
+                return this.precpred(this._ctx, 3);
             case 4:
-                return this.precpred(this._ctx, 1);
-        }
-        return true;
-    }
-    gateIdList_sempred(_localctx, predIndex) {
-        switch (predIndex) {
+                return this.precpred(this._ctx, 2);
             case 5:
                 return this.precpred(this._ctx, 1);
         }
         return true;
     }
-    expList_sempred(_localctx, predIndex) {
+    paramsListNumber_sempred(_localctx, predIndex) {
         switch (predIndex) {
             case 6:
-                return this.precpred(this._ctx, 1);
-        }
-        return true;
-    }
-    expression_sempred(_localctx, predIndex) {
-        switch (predIndex) {
-            case 7:
-                return this.precpred(this._ctx, 1);
-        }
-        return true;
-    }
-    multiplicativeExpression_sempred(_localctx, predIndex) {
-        switch (predIndex) {
-            case 8:
-                return this.precpred(this._ctx, 2);
-            case 9:
-                return this.precpred(this._ctx, 1);
-        }
-        return true;
-    }
-    additiveExpression_sempred(_localctx, predIndex) {
-        switch (predIndex) {
-            case 10:
-                return this.precpred(this._ctx, 2);
-            case 11:
-                return this.precpred(this._ctx, 1);
-        }
-        return true;
-    }
-    idList_sempred(_localctx, predIndex) {
-        switch (predIndex) {
-            case 12:
                 return this.precpred(this._ctx, 1);
         }
         return true;
@@ -2034,293 +1619,259 @@ class QasmParser extends Parser_1.Parser {
         return QasmParser.__ATN;
     }
 }
-QasmParser.Comment = 1;
-QasmParser.WhiteSpace = 2;
-QasmParser.Real = 3;
-QasmParser.Int = 4;
-QasmParser.IbmQasm = 5;
-QasmParser.Include = 6;
-QasmParser.Qelib = 7;
-QasmParser.Qreg = 8;
-QasmParser.Creg = 9;
-QasmParser.Clean = 10;
-QasmParser.U = 11;
-QasmParser.Cx = 12;
-QasmParser.Measure = 13;
-QasmParser.Barrier = 14;
-QasmParser.Reset = 15;
-QasmParser.Opaque = 16;
-QasmParser.Assign = 17;
-QasmParser.Semi = 18;
-QasmParser.Comma = 19;
-QasmParser.LeftCurlyBrace = 20;
-QasmParser.RightCurlyBrace = 21;
-QasmParser.LeftBrace = 22;
-QasmParser.RightBrace = 23;
-QasmParser.LeftParen = 24;
-QasmParser.RightParen = 25;
-QasmParser.Pow = 26;
-QasmParser.Mult = 27;
-QasmParser.Div = 28;
-QasmParser.Sum = 29;
-QasmParser.Subs = 30;
-QasmParser.Pi = 31;
-QasmParser.Gate = 32;
-QasmParser.Id = 33;
-QasmParser.RULE_startProgram = 0;
-QasmParser.RULE_code = 1;
-QasmParser.RULE_clean = 2;
-QasmParser.RULE_ibmDefinition = 3;
-QasmParser.RULE_include = 4;
-QasmParser.RULE_library = 5;
-QasmParser.RULE_program = 6;
-QasmParser.RULE_statement = 7;
-QasmParser.RULE_declaration = 8;
-QasmParser.RULE_qoperation = 9;
-QasmParser.RULE_unitaryOperation = 10;
-QasmParser.RULE_opaque = 11;
-QasmParser.RULE_measure = 12;
-QasmParser.RULE_barrier = 13;
-QasmParser.RULE_resetOperation = 14;
-QasmParser.RULE_primaryList = 15;
-QasmParser.RULE_primary = 16;
-QasmParser.RULE_indexedId = 17;
-QasmParser.RULE_qregDeclaration = 18;
-QasmParser.RULE_cregDeclaration = 19;
-QasmParser.RULE_gateDeclaration = 20;
-QasmParser.RULE_gateScope = 21;
-QasmParser.RULE_bitList = 22;
-QasmParser.RULE_bit = 23;
-QasmParser.RULE_gateBody = 24;
-QasmParser.RULE_gateOpList = 25;
-QasmParser.RULE_gateOp = 26;
-QasmParser.RULE_gateIdList = 27;
-QasmParser.RULE_gate = 28;
-QasmParser.RULE_expList = 29;
-QasmParser.RULE_expression = 30;
-QasmParser.RULE_multiplicativeExpression = 31;
-QasmParser.RULE_additiveExpression = 32;
-QasmParser.RULE_prefixExpression = 33;
-QasmParser.RULE_unary = 34;
-QasmParser.RULE_idList = 35;
+QasmParser.T__0 = 1;
+QasmParser.Comment = 2;
+QasmParser.WhiteSpace = 3;
+QasmParser.Real = 4;
+QasmParser.Int = 5;
+QasmParser.QasmDescriptor = 6;
+QasmParser.Include = 7;
+QasmParser.Qelib = 8;
+QasmParser.Qreg = 9;
+QasmParser.Creg = 10;
+QasmParser.Clean = 11;
+QasmParser.U = 12;
+QasmParser.Cx = 13;
+QasmParser.Sin = 14;
+QasmParser.Cos = 15;
+QasmParser.Tan = 16;
+QasmParser.Exp = 17;
+QasmParser.Ln = 18;
+QasmParser.Sqrt = 19;
+QasmParser.Measure = 20;
+QasmParser.Barrier = 21;
+QasmParser.Reset = 22;
+QasmParser.Opaque = 23;
+QasmParser.Assign = 24;
+QasmParser.Semi = 25;
+QasmParser.Comma = 26;
+QasmParser.LeftCurlyBrace = 27;
+QasmParser.RightCurlyBrace = 28;
+QasmParser.LeftBrace = 29;
+QasmParser.RightBrace = 30;
+QasmParser.LeftParen = 31;
+QasmParser.RightParen = 32;
+QasmParser.Pow = 33;
+QasmParser.Mult = 34;
+QasmParser.Div = 35;
+QasmParser.Sum = 36;
+QasmParser.Subs = 37;
+QasmParser.Pi = 38;
+QasmParser.Gate = 39;
+QasmParser.Id = 40;
+QasmParser.RULE_code = 0;
+QasmParser.RULE_headers = 1;
+QasmParser.RULE_sentences = 2;
+QasmParser.RULE_clean = 3;
+QasmParser.RULE_sentence = 4;
+QasmParser.RULE_definition = 5;
+QasmParser.RULE_expression = 6;
+QasmParser.RULE_conditional = 7;
+QasmParser.RULE_qLine = 8;
+QasmParser.RULE_gateDefinition = 9;
+QasmParser.RULE_opaqueDefinition = 10;
+QasmParser.RULE_gateDefinitionArguments = 11;
+QasmParser.RULE_opaqueDefinitionArguments = 12;
+QasmParser.RULE_paramsList = 13;
+QasmParser.RULE_body = 14;
+QasmParser.RULE_bodyExpression = 15;
+QasmParser.RULE_paramsListBody = 16;
+QasmParser.RULE_exp = 17;
+QasmParser.RULE_unaryOp = 18;
+QasmParser.RULE_measure = 19;
+QasmParser.RULE_qubit = 20;
+QasmParser.RULE_cbit = 21;
+QasmParser.RULE_customArglist = 22;
+QasmParser.RULE_paramsListNumber = 23;
+QasmParser.RULE_qubitAndQregList = 24;
+QasmParser.RULE_qbitOrQreg = 25;
+QasmParser.RULE_cxGate = 26;
+QasmParser.RULE_barrierGate = 27;
+QasmParser.RULE_qubitList = 28;
+QasmParser.RULE_resetGate = 29;
 QasmParser.ruleNames = [
-    "startProgram", "code", "clean", "ibmDefinition", "include", "library",
-    "program", "statement", "declaration", "qoperation", "unitaryOperation",
-    "opaque", "measure", "barrier", "resetOperation", "primaryList", "primary",
-    "indexedId", "qregDeclaration", "cregDeclaration", "gateDeclaration",
-    "gateScope", "bitList", "bit", "gateBody", "gateOpList", "gateOp", "gateIdList",
-    "gate", "expList", "expression", "multiplicativeExpression", "additiveExpression",
-    "prefixExpression", "unary", "idList"
+    "code", "headers", "sentences", "clean", "sentence", "definition", "expression",
+    "conditional", "qLine", "gateDefinition", "opaqueDefinition", "gateDefinitionArguments",
+    "opaqueDefinitionArguments", "paramsList", "body", "bodyExpression", "paramsListBody",
+    "exp", "unaryOp", "measure", "qubit", "cbit", "customArglist", "paramsListNumber",
+    "qubitAndQregList", "qbitOrQreg", "cxGate", "barrierGate", "qubitList",
+    "resetGate"
 ];
 QasmParser._LITERAL_NAMES = [
-    undefined, undefined, undefined, undefined, undefined, undefined, "'include'",
-    "'QELIB.INC'", "'qreg'", "'creg'", "'clean'", "'U'", "'CX'", "'measure'",
-    "'barrier'", "'reset'", "'opaque'", "'->'", "';'", "','", "'{'", "'}'",
-    "'['", "']'", "'('", "')'", "'^'", "'*'", "'/'", "'+'", "'-'", "'pi'",
-    "'gate'"
+    undefined, "'conditional'", undefined, undefined, undefined, undefined,
+    undefined, "'include \"quelib1.inc\";'", "'QELIB.INC'", "'qreg'", "'creg'",
+    "'clean'", "'U'", "'CX'", "'sin'", "'cos'", "'tan'", "'exp'", "'ln'",
+    "'sqrt'", "'measure'", "'barrier'", "'reset'", "'opaque'", "'->'", "';'",
+    "','", "'{'", "'}'", "'['", "']'", "'('", "')'", "'^'", "'*'", "'/'",
+    "'+'", "'-'", "'pi'", "'gate'"
 ];
 QasmParser._SYMBOLIC_NAMES = [
-    undefined, "Comment", "WhiteSpace", "Real", "Int", "IbmQasm", "Include",
-    "Qelib", "Qreg", "Creg", "Clean", "U", "Cx", "Measure", "Barrier", "Reset",
-    "Opaque", "Assign", "Semi", "Comma", "LeftCurlyBrace", "RightCurlyBrace",
-    "LeftBrace", "RightBrace", "LeftParen", "RightParen", "Pow", "Mult", "Div",
-    "Sum", "Subs", "Pi", "Gate", "Id"
+    undefined, undefined, "Comment", "WhiteSpace", "Real", "Int", "QasmDescriptor",
+    "Include", "Qelib", "Qreg", "Creg", "Clean", "U", "Cx", "Sin", "Cos",
+    "Tan", "Exp", "Ln", "Sqrt", "Measure", "Barrier", "Reset", "Opaque", "Assign",
+    "Semi", "Comma", "LeftCurlyBrace", "RightCurlyBrace", "LeftBrace", "RightBrace",
+    "LeftParen", "RightParen", "Pow", "Mult", "Div", "Sum", "Subs", "Pi",
+    "Gate", "Id"
 ];
 QasmParser.VOCABULARY = new VocabularyImpl_1.VocabularyImpl(QasmParser._LITERAL_NAMES, QasmParser._SYMBOLIC_NAMES, []);
-QasmParser._serializedATN = "\x03\uAF6F\u8320\u479D\uB75C\u4880\u1605\u191C\uAB37\x03#\u01AA\x04\x02" +
+QasmParser._serializedATN = "\x03\uAF6F\u8320\u479D\uB75C\u4880\u1605\u191C\uAB37\x03*\u015A\x04\x02" +
     "\t\x02\x04\x03\t\x03\x04\x04\t\x04\x04\x05\t\x05\x04\x06\t\x06\x04\x07" +
     "\t\x07\x04\b\t\b\x04\t\t\t\x04\n\t\n\x04\v\t\v\x04\f\t\f\x04\r\t\r\x04" +
     "\x0E\t\x0E\x04\x0F\t\x0F\x04\x10\t\x10\x04\x11\t\x11\x04\x12\t\x12\x04" +
     "\x13\t\x13\x04\x14\t\x14\x04\x15\t\x15\x04\x16\t\x16\x04\x17\t\x17\x04" +
     "\x18\t\x18\x04\x19\t\x19\x04\x1A\t\x1A\x04\x1B\t\x1B\x04\x1C\t\x1C\x04" +
-    "\x1D\t\x1D\x04\x1E\t\x1E\x04\x1F\t\x1F\x04 \t \x04!\t!\x04\"\t\"\x04#" +
-    "\t#\x04$\t$\x04%\t%\x03\x02\x03\x02\x03\x02\x03\x03\x03\x03\x03\x03\x03" +
-    "\x03\x03\x03\x03\x03\x03\x03\x05\x03U\n\x03\x03\x04\x03\x04\x03\x05\x03" +
-    "\x05\x03\x05\x03\x05\x03\x05\x03\x05\x03\x05\x05\x05`\n\x05\x03\x06\x03" +
-    "\x06\x03\x06\x03\x06\x03\x07\x03\x07\x03\x07\x03\x07\x03\x07\x07\x07k" +
-    "\n\x07\f\x07\x0E\x07n\v\x07\x03\b\x03\b\x03\b\x03\b\x03\b\x07\bu\n\b\f" +
-    "\b\x0E\bx\v\b\x03\t\x03\t\x05\t|\n\t\x03\n\x03\n\x03\n\x05\n\x81\n\n\x03" +
-    "\v\x03\v\x03\v\x03\v\x03\v\x03\v\x03\v\x03\v\x03\v\x03\v\x03\v\x03\v\x03" +
-    "\v\x03\v\x03\v\x05\v\x92\n\v\x03\f\x03\f\x03\f\x03\f\x03\f\x03\f\x03\f" +
-    "\x03\f\x03\f\x03\f\x03\f\x03\f\x03\f\x03\f\x03\f\x03\f\x03\f\x03\f\x03" +
-    "\f\x03\f\x03\f\x03\f\x03\f\x05\f\xAB\n\f\x03\r\x03\r\x03\r\x03\r\x03\r" +
-    "\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03" +
-    "\r\x03\r\x03\r\x03\r\x05\r\xC1\n\r\x03\x0E\x03\x0E\x03\x0E\x03\x0E\x03" +
-    "\x0E\x03\x0F\x03\x0F\x03\x0F\x03\x10\x03\x10\x03\x10\x03\x11\x03\x11\x03" +
-    "\x11\x03\x11\x03\x11\x03\x11\x07\x11\xD4\n\x11\f\x11\x0E\x11\xD7\v\x11" +
-    "\x03\x12\x03\x12\x05\x12\xDB\n\x12\x03\x13\x03\x13\x03\x13\x03\x13\x03" +
-    "\x13\x03\x14\x03\x14\x03\x14\x03\x14\x03\x14\x03\x14\x03\x14\x03\x15\x03" +
-    "\x15\x03\x15\x03\x15\x03\x15\x03\x15\x03\x15\x03\x16\x03\x16\x03\x16\x03" +
-    "\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03" +
-    "\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03\x16\x03" +
-    "\x16\x03\x16\x05\x16\u0107\n\x16\x03\x17\x03\x17\x03\x18\x03\x18\x03\x18" +
-    "\x03\x18\x03\x18\x03\x18\x07\x18\u0111\n\x18\f\x18\x0E\x18\u0114\v\x18" +
-    "\x03\x19\x03\x19\x03\x1A\x03\x1A\x03\x1A\x03\x1A\x03\x1B\x03\x1B\x05\x1B" +
-    "\u011E\n\x1B\x03\x1B\x03\x1B\x07\x1B\u0122\n\x1B\f\x1B\x0E\x1B\u0125\v" +
-    "\x1B\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03" +
-    "\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03" +
-    "\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03" +
-    "\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x03\x1C\x05\x1C\u0148\n\x1C" +
-    "\x03\x1D\x03\x1D\x03\x1D\x03\x1D\x03\x1D\x03\x1D\x07\x1D\u0150\n\x1D\f" +
-    "\x1D\x0E\x1D\u0153\v\x1D\x03\x1E\x03\x1E\x03\x1F\x03\x1F\x03\x1F\x03\x1F" +
-    "\x03\x1F\x03\x1F\x07\x1F\u015D\n\x1F\f\x1F\x0E\x1F\u0160\v\x1F\x03 \x03" +
-    " \x03 \x03 \x03 \x03 \x07 \u0168\n \f \x0E \u016B\v \x03!\x03!\x03!\x03" +
-    "!\x03!\x03!\x03!\x03!\x03!\x07!\u0176\n!\f!\x0E!\u0179\v!\x03\"\x03\"" +
-    "\x03\"\x03\"\x03\"\x03\"\x03\"\x03\"\x03\"\x07\"\u0184\n\"\f\"\x0E\"\u0187" +
-    "\v\"\x03#\x03#\x03#\x03#\x03#\x05#\u018E\n#\x03$\x03$\x03$\x03$\x03$\x03" +
-    "$\x03$\x03$\x03$\x03$\x03$\x03$\x03$\x05$\u019D\n$\x03%\x03%\x03%\x03" +
-    "%\x03%\x03%\x07%\u01A5\n%\f%\x0E%\u01A8\v%\x03%\x02\x02\r\f\x0E .48<>" +
-    "@BH&\x02\x02\x04\x02\x06\x02\b\x02\n\x02\f\x02\x0E\x02\x10\x02\x12\x02" +
-    "\x14\x02\x16\x02\x18\x02\x1A\x02\x1C\x02\x1E\x02 \x02\"\x02$\x02&\x02" +
-    "(\x02*\x02,\x02.\x020\x022\x024\x026\x028\x02:\x02<\x02>\x02@\x02B\x02" +
-    "D\x02F\x02H\x02\x02\x02\u01B4\x02J\x03\x02\x02\x02\x04T\x03\x02\x02\x02" +
-    "\x06V\x03\x02\x02\x02\b_\x03\x02\x02\x02\na\x03\x02\x02\x02\fe\x03\x02" +
-    "\x02\x02\x0Eo\x03\x02\x02\x02\x10{\x03\x02\x02\x02\x12\x80\x03\x02\x02" +
-    "\x02\x14\x91\x03\x02\x02\x02\x16\xAA\x03\x02\x02\x02\x18\xC0\x03\x02\x02" +
-    "\x02\x1A\xC2\x03\x02\x02\x02\x1C\xC7\x03\x02\x02\x02\x1E\xCA\x03\x02\x02" +
-    "\x02 \xCD\x03\x02\x02\x02\"\xDA\x03\x02\x02\x02$\xDC\x03\x02\x02\x02&" +
-    "\xE1\x03\x02\x02\x02(\xE8\x03\x02\x02\x02*\u0106\x03\x02\x02\x02,\u0108" +
-    "\x03\x02\x02\x02.\u010A\x03\x02\x02\x020\u0115\x03\x02\x02\x022\u0117" +
-    "\x03\x02\x02\x024\u011D\x03\x02\x02\x026\u0147\x03\x02\x02\x028\u0149" +
-    "\x03\x02\x02\x02:\u0154\x03\x02\x02\x02<\u0156\x03\x02\x02\x02>\u0161" +
-    "\x03\x02\x02\x02@\u016C\x03\x02\x02\x02B\u017A\x03\x02\x02\x02D\u018D" +
-    "\x03\x02\x02\x02F\u019C\x03\x02\x02\x02H\u019E\x03\x02\x02\x02JK\x05\x04" +
-    "\x03\x02KL\x07\x02\x02\x03L\x03\x03\x02\x02\x02MU\x05\b\x05\x02NO\x05" +
-    "\b\x05\x02OP\x05\x0E\b\x02PU\x03\x02\x02\x02QU\x05\f\x07\x02RU\x05\x06" +
-    "\x04\x02SU\x03\x02\x02\x02TM\x03\x02\x02\x02TN\x03\x02\x02\x02TQ\x03\x02" +
-    "\x02\x02TR\x03\x02\x02\x02TS\x03\x02\x02\x02U\x05\x03\x02\x02\x02VW\x07" +
-    "\f\x02\x02W\x07\x03\x02\x02\x02XY\x07\x07\x02\x02YZ\x07\x05\x02\x02Z[" +
-    "\x07\x14\x02\x02[`\x05\n\x06\x02\\]\x07\x07\x02\x02]^\x07\x05\x02\x02" +
-    "^`\x07\x14\x02\x02_X\x03\x02\x02\x02_\\\x03\x02\x02\x02`\t\x03\x02\x02" +
-    "\x02ab\x07\b\x02\x02bc\x07\t\x02\x02cd\x07\x14\x02\x02d\v\x03\x02\x02" +
-    "\x02ef\b\x07\x01\x02fg\x05\x12\n\x02gl\x03\x02\x02\x02hi\f\x03\x02\x02" +
-    "ik\x05\x12\n\x02jh\x03\x02\x02\x02kn\x03\x02\x02\x02lj\x03\x02\x02\x02" +
-    "lm\x03\x02\x02\x02m\r\x03\x02\x02\x02nl\x03\x02\x02\x02op\b\b\x01\x02" +
-    "pq\x05\x10\t\x02qv\x03\x02\x02\x02rs\f\x03\x02\x02su\x05\x10\t\x02tr\x03" +
-    "\x02\x02\x02ux\x03\x02\x02\x02vt\x03\x02\x02\x02vw\x03\x02\x02\x02w\x0F" +
-    "\x03\x02\x02\x02xv\x03\x02\x02\x02y|\x05\x12\n\x02z|\x05\x14\v\x02{y\x03" +
-    "\x02\x02\x02{z\x03\x02\x02\x02|\x11\x03\x02\x02\x02}\x81\x05&\x14\x02" +
-    "~\x81\x05(\x15\x02\x7F\x81\x05*\x16\x02\x80}\x03\x02\x02\x02\x80~\x03" +
-    "\x02\x02\x02\x80\x7F\x03\x02\x02\x02\x81\x13\x03\x02\x02\x02\x82\x83\x05" +
-    "\x16\f\x02\x83\x84\x07\x14\x02\x02\x84\x92\x03\x02\x02\x02\x85\x86\x05" +
-    "\x18\r\x02\x86\x87\x07\x14\x02\x02\x87\x92\x03\x02\x02\x02\x88\x89\x05" +
-    "\x1A\x0E\x02\x89\x8A\x07\x14\x02\x02\x8A\x92\x03\x02\x02\x02\x8B\x8C\x05" +
-    "\x1C\x0F\x02\x8C\x8D\x07\x14\x02\x02\x8D\x92\x03\x02\x02\x02\x8E\x8F\x05" +
-    "\x1E\x10\x02\x8F\x90\x07\x14\x02\x02\x90\x92\x03\x02\x02\x02\x91\x82\x03" +
-    "\x02\x02\x02\x91\x85\x03\x02\x02\x02\x91\x88\x03\x02\x02\x02\x91\x8B\x03" +
-    "\x02\x02\x02\x91\x8E\x03\x02\x02\x02\x92\x15\x03\x02\x02\x02\x93\x94\x07" +
-    "\r\x02\x02\x94\x95\x07\x1A\x02\x02\x95\x96\x05<\x1F\x02\x96\x97\x07\x1B" +
-    "\x02\x02\x97\x98\x05\"\x12\x02\x98\xAB\x03\x02\x02\x02\x99\x9A\x07\x0E" +
-    "\x02\x02\x9A\x9B\x05\"\x12\x02\x9B\x9C\x07\x15\x02\x02\x9C\x9D\x05\"\x12" +
-    "\x02\x9D\xAB\x03\x02\x02\x02\x9E\x9F\x07#\x02\x02\x9F\xAB\x05 \x11\x02" +
-    "\xA0\xA1\x07#\x02\x02\xA1\xA2\x07\x1A\x02\x02\xA2\xA3\x07\x1B\x02\x02" +
-    "\xA3\xAB\x05 \x11\x02\xA4\xA5\x07#\x02\x02\xA5\xA6\x07\x1A\x02\x02\xA6" +
-    "\xA7\x05<\x1F\x02\xA7\xA8\x07\x1B\x02\x02\xA8\xA9\x05 \x11\x02\xA9\xAB" +
-    "\x03\x02\x02\x02\xAA\x93\x03\x02\x02\x02\xAA\x99\x03\x02\x02\x02\xAA\x9E" +
-    "\x03\x02\x02\x02\xAA\xA0\x03\x02\x02\x02\xAA\xA4\x03\x02\x02\x02\xAB\x17" +
-    "\x03\x02\x02\x02\xAC\xAD\x07\x12\x02\x02\xAD\xAE\x07#\x02\x02\xAE\xAF" +
-    "\x05,\x17\x02\xAF\xB0\x05.\x18\x02\xB0\xC1\x03\x02\x02\x02\xB1\xB2\x07" +
-    "\x12\x02\x02\xB2\xB3\x07#\x02\x02\xB3\xB4\x05,\x17\x02\xB4\xB5\x07\x1A" +
-    "\x02\x02\xB5\xB6\x07\x1B\x02\x02\xB6\xB7\x05.\x18\x02\xB7\xC1\x03\x02" +
-    "\x02\x02\xB8\xB9\x07\x12\x02\x02\xB9\xBA\x07#\x02\x02\xBA\xBB\x05,\x17" +
-    "\x02\xBB\xBC\x07\x1A\x02\x02\xBC\xBD\x058\x1D\x02\xBD\xBE\x07\x1B\x02" +
-    "\x02\xBE\xBF\x05.\x18\x02\xBF\xC1\x03\x02\x02\x02\xC0\xAC\x03\x02\x02" +
-    "\x02\xC0\xB1\x03\x02\x02\x02\xC0\xB8\x03\x02\x02\x02\xC1\x19\x03\x02\x02" +
-    "\x02\xC2\xC3\x07\x0F\x02\x02\xC3\xC4\x05\"\x12\x02\xC4\xC5\x07\x13\x02" +
-    "\x02\xC5\xC6\x05\"\x12\x02\xC6\x1B\x03\x02\x02\x02\xC7\xC8\x07\x10\x02" +
-    "\x02\xC8\xC9\x05 \x11\x02\xC9\x1D\x03\x02\x02\x02\xCA\xCB\x07\x11\x02" +
-    "\x02\xCB\xCC\x05\"\x12\x02\xCC\x1F\x03\x02\x02\x02\xCD\xCE\b\x11\x01\x02" +
-    "\xCE\xCF\x05\"\x12\x02\xCF\xD5\x03\x02\x02\x02\xD0\xD1\f\x03\x02\x02\xD1" +
-    "\xD2\x07\x15\x02\x02\xD2\xD4\x05\"\x12\x02\xD3\xD0\x03\x02\x02\x02\xD4" +
-    "\xD7\x03\x02\x02\x02\xD5\xD3\x03\x02\x02\x02\xD5\xD6\x03\x02\x02\x02\xD6" +
-    "!\x03\x02\x02\x02\xD7\xD5\x03\x02\x02\x02\xD8\xDB\x07#\x02\x02\xD9\xDB" +
-    "\x05$\x13\x02\xDA\xD8\x03\x02\x02\x02\xDA\xD9\x03\x02\x02\x02\xDB#\x03" +
-    "\x02\x02\x02\xDC\xDD\x07#\x02\x02\xDD\xDE\x07\x18\x02\x02\xDE\xDF\x07" +
-    "\x06\x02\x02\xDF\xE0\x07\x19\x02\x02\xE0%\x03\x02\x02\x02\xE1\xE2\x07" +
-    "\n\x02\x02\xE2\xE3\x07#\x02\x02\xE3\xE4\x07\x18\x02\x02\xE4\xE5\x07\x06" +
-    "\x02\x02\xE5\xE6\x07\x19\x02\x02\xE6\xE7\x07\x14\x02\x02\xE7\'\x03\x02" +
-    "\x02\x02\xE8\xE9\x07\v\x02\x02\xE9\xEA\x07#\x02\x02\xEA\xEB\x07\x18\x02" +
-    "\x02\xEB\xEC\x07\x06\x02\x02\xEC\xED\x07\x19\x02\x02\xED\xEE\x07\x14\x02" +
-    "\x02\xEE)\x03\x02\x02\x02\xEF\xF0\x07\"\x02\x02\xF0\xF1\x07#\x02\x02\xF1" +
-    "\xF2\x05,\x17\x02\xF2\xF3\x05.\x18\x02\xF3\xF4\x052\x1A\x02\xF4\u0107" +
-    "\x03\x02\x02\x02\xF5\xF6\x07\"\x02\x02\xF6\xF7\x07#\x02\x02\xF7\xF8\x05" +
-    ",\x17\x02\xF8\xF9\x07\x1A\x02\x02\xF9\xFA\x07\x1B\x02\x02\xFA\xFB\x05" +
-    ".\x18\x02\xFB\xFC\x052\x1A\x02\xFC\u0107\x03\x02\x02\x02\xFD\xFE\x07\"" +
-    "\x02\x02\xFE\xFF\x07#\x02\x02\xFF\u0100\x05,\x17\x02\u0100\u0101\x07\x1A" +
-    "\x02\x02\u0101\u0102\x058\x1D\x02\u0102\u0103\x07\x1B\x02\x02\u0103\u0104" +
-    "\x05.\x18\x02\u0104\u0105\x052\x1A\x02\u0105\u0107\x03\x02\x02\x02\u0106" +
-    "\xEF\x03\x02\x02\x02\u0106\xF5\x03\x02\x02\x02\u0106\xFD\x03\x02\x02\x02" +
-    "\u0107+\x03\x02\x02\x02\u0108\u0109\x03\x02\x02\x02\u0109-\x03\x02\x02" +
-    "\x02\u010A\u010B\b\x18\x01\x02\u010B\u010C\x050\x19\x02\u010C\u0112\x03" +
-    "\x02\x02\x02\u010D\u010E\f\x03\x02\x02\u010E\u010F\x07\x15\x02\x02\u010F" +
-    "\u0111\x050\x19\x02\u0110\u010D\x03\x02\x02\x02\u0111\u0114\x03\x02\x02" +
-    "\x02\u0112\u0110\x03\x02\x02\x02\u0112\u0113\x03\x02\x02\x02\u0113/\x03" +
-    "\x02\x02\x02\u0114\u0112\x03\x02\x02\x02\u0115\u0116\x07#\x02\x02\u0116" +
-    "1\x03\x02\x02\x02\u0117\u0118\x07\x16\x02\x02\u0118\u0119\x054\x1B\x02" +
-    "\u0119\u011A\x07\x17\x02\x02\u011A3\x03\x02\x02\x02\u011B\u011E\b\x1B" +
-    "\x01\x02\u011C\u011E\x056\x1C\x02\u011D\u011B\x03\x02\x02\x02\u011D\u011C" +
-    "\x03\x02\x02\x02\u011E\u0123\x03\x02\x02\x02\u011F\u0120\f\x03\x02\x02" +
-    "\u0120\u0122\x056\x1C\x02\u0121\u011F\x03\x02\x02\x02\u0122\u0125\x03" +
-    "\x02\x02\x02\u0123\u0121\x03\x02\x02\x02\u0123\u0124\x03\x02\x02\x02\u0124" +
-    "5\x03\x02\x02\x02\u0125\u0123\x03\x02\x02\x02\u0126\u0127\x07\r\x02\x02" +
-    "\u0127\u0128\x07\x1A\x02\x02\u0128\u0129\x05<\x1F\x02\u0129\u012A\x07" +
-    "\x1B\x02\x02\u012A\u012B\x07#\x02\x02\u012B\u012C\x07\x14\x02\x02\u012C" +
-    "\u0148\x03\x02\x02\x02\u012D\u012E\x07\x0E\x02\x02\u012E\u012F\x07#\x02" +
-    "\x02\u012F\u0130\x07\x15\x02\x02\u0130\u0131\x07#\x02\x02\u0131\u0148" +
-    "\x07\x14\x02\x02\u0132\u0133\x07#\x02\x02\u0133\u0134\x05H%\x02\u0134" +
-    "\u0135\x07\x14\x02\x02\u0135\u0148\x03\x02\x02\x02\u0136\u0137\x07#\x02" +
-    "\x02\u0137\u0138\x07\x1A\x02\x02\u0138\u0139\x07\x1B\x02\x02\u0139\u013A" +
-    "\x05H%\x02\u013A\u013B\x07\x14\x02\x02\u013B\u0148\x03\x02\x02\x02\u013C" +
-    "\u013D\x07#\x02\x02\u013D\u013E\x07\x1A\x02\x02\u013E\u013F\x05<\x1F\x02" +
-    "\u013F\u0140\x07\x1B\x02\x02\u0140\u0141\x05H%\x02\u0141\u0142\x07\x14" +
-    "\x02\x02\u0142\u0148\x03\x02\x02\x02\u0143\u0144\x07\x10\x02\x02\u0144" +
-    "\u0145\x05H%\x02\u0145\u0146\x07\x14\x02\x02\u0146\u0148\x03\x02\x02\x02" +
-    "\u0147\u0126\x03\x02\x02\x02\u0147\u012D\x03\x02\x02\x02\u0147\u0132\x03" +
-    "\x02\x02\x02\u0147\u0136\x03\x02\x02\x02\u0147\u013C\x03\x02\x02\x02\u0147" +
-    "\u0143\x03\x02\x02\x02\u01487\x03\x02\x02\x02\u0149\u014A\b\x1D\x01\x02" +
-    "\u014A\u014B\x05:\x1E\x02\u014B\u0151\x03\x02\x02\x02\u014C\u014D\f\x03" +
-    "\x02\x02\u014D\u014E\x07\x15\x02\x02\u014E\u0150\x05:\x1E\x02\u014F\u014C" +
-    "\x03\x02\x02\x02\u0150\u0153\x03\x02\x02\x02\u0151\u014F\x03\x02\x02\x02" +
-    "\u0151\u0152\x03\x02\x02\x02\u01529\x03\x02\x02\x02\u0153\u0151\x03\x02" +
-    "\x02\x02\u0154\u0155\x07#\x02\x02\u0155;\x03\x02\x02\x02\u0156\u0157\b" +
-    "\x1F\x01\x02\u0157\u0158\x05> \x02\u0158\u015E\x03\x02\x02\x02\u0159\u015A" +
-    "\f\x03\x02\x02\u015A\u015B\x07\x15\x02\x02\u015B\u015D\x05> \x02\u015C" +
-    "\u0159\x03\x02\x02\x02\u015D\u0160\x03\x02\x02\x02\u015E\u015C\x03\x02" +
-    "\x02\x02\u015E\u015F\x03\x02\x02\x02\u015F=\x03\x02\x02\x02\u0160\u015E" +
-    "\x03\x02\x02\x02\u0161\u0162\b \x01\x02\u0162\u0163\x05@!\x02\u0163\u0169" +
-    "\x03\x02\x02\x02\u0164\u0165\f\x03\x02\x02\u0165\u0166\x07\x1C\x02\x02" +
-    "\u0166\u0168\x05@!\x02\u0167\u0164\x03\x02\x02\x02\u0168\u016B\x03\x02" +
-    "\x02\x02\u0169\u0167\x03\x02\x02\x02\u0169\u016A\x03\x02\x02\x02\u016A" +
-    "?\x03\x02\x02\x02\u016B\u0169\x03\x02\x02\x02\u016C\u016D\b!\x01\x02\u016D" +
-    "\u016E\x05B\"\x02\u016E\u0177\x03\x02\x02\x02\u016F\u0170\f\x04\x02\x02" +
-    "\u0170\u0171\x07\x1D\x02\x02\u0171\u0176\x05@!\x05\u0172\u0173\f\x03\x02" +
-    "\x02\u0173\u0174\x07\x1E\x02\x02\u0174\u0176\x05@!\x04\u0175\u016F\x03" +
-    "\x02\x02\x02\u0175\u0172\x03\x02\x02\x02\u0176\u0179\x03\x02\x02\x02\u0177" +
-    "\u0175\x03\x02\x02\x02\u0177\u0178\x03\x02\x02\x02\u0178A\x03\x02\x02" +
-    "\x02\u0179\u0177\x03\x02\x02\x02\u017A\u017B\b\"\x01\x02\u017B\u017C\x05" +
-    "D#\x02\u017C\u0185\x03\x02\x02\x02\u017D\u017E\f\x04\x02\x02\u017E\u017F" +
-    "\x07\x1F\x02\x02\u017F\u0184\x05B\"\x05\u0180\u0181\f\x03\x02\x02\u0181" +
-    "\u0182\x07 \x02\x02\u0182\u0184\x05B\"\x04\u0183\u017D\x03\x02\x02\x02" +
-    "\u0183\u0180\x03\x02\x02\x02\u0184\u0187\x03\x02\x02\x02\u0185\u0183\x03" +
-    "\x02\x02\x02\u0185\u0186\x03\x02\x02\x02\u0186C\x03\x02\x02\x02\u0187" +
-    "\u0185\x03\x02\x02\x02\u0188\u018E\x05F$\x02\u0189\u018A\x07\x1F\x02\x02" +
-    "\u018A\u018E\x05D#\x02\u018B\u018C\x07 \x02\x02\u018C\u018E\x05D#\x02" +
-    "\u018D\u0188\x03\x02\x02\x02\u018D\u0189\x03\x02\x02\x02\u018D\u018B\x03" +
-    "\x02\x02\x02\u018EE\x03\x02\x02\x02\u018F\u019D\x07\x06\x02\x02\u0190" +
-    "\u019D\x07\x05\x02\x02\u0191\u019D\x07!\x02\x02\u0192\u019D\x07#\x02\x02" +
-    "\u0193\u0194\x07\x1A\x02\x02\u0194\u0195\x05> \x02\u0195\u0196\x07\x1B" +
-    "\x02\x02\u0196\u019D\x03\x02\x02\x02\u0197\u0198\x07#\x02\x02\u0198\u0199" +
-    "\x07\x1A\x02\x02\u0199\u019A\x05> \x02\u019A\u019B\x07\x1B\x02\x02\u019B" +
-    "\u019D\x03\x02\x02\x02\u019C\u018F\x03\x02\x02\x02\u019C\u0190\x03\x02" +
-    "\x02\x02\u019C\u0191\x03\x02\x02\x02\u019C\u0192\x03\x02\x02\x02\u019C" +
-    "\u0193\x03\x02\x02\x02\u019C\u0197\x03\x02\x02\x02\u019DG\x03\x02\x02" +
-    "\x02\u019E\u019F\b%\x01\x02\u019F\u01A0\x07#\x02\x02\u01A0\u01A6\x03\x02" +
-    "\x02\x02\u01A1\u01A2\f\x03\x02\x02\u01A2\u01A3\x07\x15\x02\x02\u01A3\u01A5" +
-    "\x07#\x02\x02\u01A4\u01A1\x03\x02\x02\x02\u01A5\u01A8\x03\x02\x02\x02" +
-    "\u01A6\u01A4\x03\x02\x02\x02\u01A6\u01A7\x03\x02\x02\x02\u01A7I\x03\x02" +
-    "\x02\x02\u01A8\u01A6\x03\x02\x02\x02\x1CT_lv{\x80\x91\xAA\xC0\xD5\xDA" +
-    "\u0106\u0112\u011D\u0123\u0147\u0151\u015E\u0169\u0175\u0177\u0183\u0185" +
-    "\u018D\u019C\u01A6";
+    "\x1D\t\x1D\x04\x1E\t\x1E\x04\x1F\t\x1F\x03\x02\x03\x02\x03\x02\x03\x02" +
+    "\x03\x02\x05\x02D\n\x02\x03\x03\x03\x03\x03\x03\x03\x03\x05\x03J\n\x03" +
+    "\x03\x04\x03\x04\x03\x04\x03\x04\x05\x04P\n\x04\x03\x05\x03\x05\x03\x05" +
+    "\x03\x06\x03\x06\x03\x06\x03\x06\x03\x06\x03\x06\x05\x06[\n\x06\x03\x07" +
+    "\x03\x07\x03\x07\x03\x07\x03\x07\x03\x07\x03\x07\x03\x07\x03\x07\x03\x07" +
+    "\x03\x07\x03\x07\x03\x07\x03\x07\x05\x07k\n\x07\x03\b\x03\b\x03\b\x03" +
+    "\b\x03\b\x03\b\x03\b\x03\b\x03\b\x03\b\x03\b\x03\b\x03\b\x03\b\x03\b\x05" +
+    "\b|\n\b\x03\t\x03\t\x03\n\x03\n\x03\n\x03\n\x03\v\x03\v\x03\v\x03\v\x03" +
+    "\f\x03\f\x03\f\x03\f\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03" +
+    "\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03" +
+    "\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03" +
+    "\r\x03\r\x03\r\x03\r\x03\r\x05\r\xB1\n\r\x03\x0E\x03\x0E\x03\x0E\x03\x0E" +
+    "\x03\x0E\x03\x0E\x05\x0E\xB9\n\x0E\x03\x0F\x03\x0F\x03\x0F\x03\x0F\x05" +
+    "\x0F\xBF\n\x0F\x03\x10\x03\x10\x03\x10\x03\x10\x05\x10\xC5\n\x10\x03\x11" +
+    "\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11" +
+    "\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11" +
+    "\x03\x11\x03\x11\x03\x11\x05\x11\xDD\n\x11\x03\x12\x03\x12\x03\x12\x03" +
+    "\x12\x03\x12\x03\x12\x07\x12\xE5\n\x12\f\x12\x0E\x12\xE8\v\x12\x03\x13" +
+    "\x03\x13\x03\x13\x03\x13\x03\x13\x03\x13\x03\x13\x03\x13\x03\x13\x03\x13" +
+    "\x03\x13\x03\x13\x03\x13\x03\x13\x03\x13\x03\x13\x05\x13\xFA\n\x13\x03" +
+    "\x13\x03\x13\x03\x13\x03\x13\x03\x13\x03\x13\x03\x13\x03\x13\x03\x13\x03" +
+    "\x13\x03\x13\x03\x13\x03\x13\x03\x13\x03\x13\x07\x13\u010B\n\x13\f\x13" +
+    "\x0E\x13\u010E\v\x13\x03\x14\x03\x14\x03\x15\x03\x15\x03\x15\x03\x15\x03" +
+    "\x15\x03\x15\x03\x15\x03\x15\x03\x15\x05\x15\u011B\n\x15\x03\x16\x03\x16" +
+    "\x03\x16\x03\x17\x03\x17\x03\x17\x03\x18\x03\x18\x03\x18\x03\x18\x03\x18" +
+    "\x03\x18\x03\x18\x03\x18\x05\x18\u012B\n\x18\x03\x19\x03\x19\x03\x19\x03" +
+    "\x19\x03\x19\x03\x19\x07\x19\u0133\n\x19\f\x19\x0E\x19\u0136\v\x19\x03" +
+    "\x1A\x03\x1A\x03\x1A\x03\x1A\x03\x1A\x05\x1A\u013D\n\x1A\x03\x1B\x03\x1B" +
+    "\x03\x1B\x05\x1B\u0142\n\x1B\x03\x1C\x03\x1C\x03\x1C\x03\x1D\x03\x1D\x03" +
+    "\x1D\x03\x1D\x05\x1D\u014B\n\x1D\x03\x1E\x03\x1E\x03\x1E\x03\x1E\x03\x1E" +
+    "\x05\x1E\u0152\n\x1E\x03\x1F\x03\x1F\x03\x1F\x03\x1F\x05\x1F\u0158\n\x1F" +
+    "\x03\x1F\x02\x02\x05\"$0 \x02\x02\x04\x02\x06\x02\b\x02\n\x02\f\x02\x0E" +
+    "\x02\x10\x02\x12\x02\x14\x02\x16\x02\x18\x02\x1A\x02\x1C\x02\x1E\x02 " +
+    "\x02\"\x02$\x02&\x02(\x02*\x02,\x02.\x020\x022\x024\x026\x028\x02:\x02" +
+    "<\x02\x02\x03\x03\x02\x10\x15\u0169\x02C\x03\x02\x02\x02\x04I\x03\x02" +
+    "\x02\x02\x06O\x03\x02\x02\x02\bQ\x03\x02\x02\x02\nZ\x03\x02\x02\x02\f" +
+    "j\x03\x02\x02\x02\x0E{\x03\x02\x02\x02\x10}\x03\x02\x02\x02\x12\x7F\x03" +
+    "\x02\x02\x02\x14\x83\x03\x02\x02\x02\x16\x87\x03\x02\x02\x02\x18\xB0\x03" +
+    "\x02\x02\x02\x1A\xB8\x03\x02\x02\x02\x1C\xBE\x03\x02\x02\x02\x1E\xC4\x03" +
+    "\x02\x02\x02 \xDC\x03\x02\x02\x02\"\xDE\x03\x02\x02\x02$\xF9\x03\x02\x02" +
+    "\x02&\u010F\x03\x02\x02\x02(\u011A\x03\x02\x02\x02*\u011C\x03\x02\x02" +
+    "\x02,\u011F\x03\x02\x02\x02.\u012A\x03\x02\x02\x020\u012C\x03\x02\x02" +
+    "\x022\u013C\x03\x02\x02\x024\u0141\x03\x02\x02\x026\u0143\x03\x02\x02" +
+    "\x028\u014A\x03\x02\x02\x02:\u0151\x03\x02\x02\x02<\u0157\x03\x02\x02" +
+    "\x02>D\x05\x06\x04\x02?@\x05\x04\x03\x02@A\x05\x06\x04\x02AD\x03\x02\x02" +
+    "\x02BD\x05\b\x05\x02C>\x03\x02\x02\x02C?\x03\x02\x02\x02CB\x03\x02\x02" +
+    "\x02D\x03\x03\x02\x02\x02EJ\x07\b\x02\x02FG\x07\b\x02\x02GJ\x07\t\x02" +
+    "\x02HJ\x07\t\x02\x02IE\x03\x02\x02\x02IF\x03\x02\x02\x02IH\x03\x02\x02" +
+    "\x02J\x05\x03\x02\x02\x02KP\x05\n\x06\x02LM\x05\n\x06\x02MN\x05\x06\x04" +
+    "\x02NP\x03\x02\x02\x02OK\x03\x02\x02\x02OL\x03\x02\x02\x02P\x07\x03\x02" +
+    "\x02\x02QR\x07\r\x02\x02RS\x07\x02\x02\x03S\t\x03\x02\x02\x02T[\x05\f" +
+    "\x07\x02U[\x05\x0E\b\x02VW\x05\x10\t\x02WX\x05\x0E\b\x02X[\x03\x02\x02" +
+    "\x02Y[\x07\x02\x02\x03ZT\x03\x02\x02\x02ZU\x03\x02\x02\x02ZV\x03\x02\x02" +
+    "\x02ZY\x03\x02\x02\x02[\v\x03\x02\x02\x02\\]\x07\v\x02\x02]^\x07*\x02" +
+    "\x02^_\x05\x12\n\x02_`\x07\x1B\x02\x02`k\x03\x02\x02\x02ab\x07\f\x02\x02" +
+    "bc\x07*\x02\x02cd\x05\x12\n\x02de\x07\x1B\x02\x02ek\x03\x02\x02\x02fk" +
+    "\x05\x14\v\x02gh\x05\x16\f\x02hi\x07\x1B\x02\x02ik\x03\x02\x02\x02j\\" +
+    "\x03\x02\x02\x02ja\x03\x02\x02\x02jf\x03\x02\x02\x02jg\x03\x02\x02\x02" +
+    "k\r\x03\x02\x02\x02lm\x05(\x15\x02mn\x07\x1B\x02\x02n|\x03\x02\x02\x02" +
+    "op\x05.\x18\x02pq\x07\x1B\x02\x02q|\x03\x02\x02\x02rs\x056\x1C\x02st\x07" +
+    "\x1B\x02\x02t|\x03\x02\x02\x02uv\x058\x1D\x02vw\x07\x1B\x02\x02w|\x03" +
+    "\x02\x02\x02xy\x05<\x1F\x02yz\x07\x1B\x02\x02z|\x03\x02\x02\x02{l\x03" +
+    "\x02\x02\x02{o\x03\x02\x02\x02{r\x03\x02\x02\x02{u\x03\x02\x02\x02{x\x03" +
+    "\x02\x02\x02|\x0F\x03\x02\x02\x02}~\x07\x03\x02\x02~\x11\x03\x02\x02\x02" +
+    "\x7F\x80\x07\x1F\x02\x02\x80\x81\x07\x07\x02\x02\x81\x82\x07 \x02\x02" +
+    "\x82\x13\x03\x02\x02\x02\x83\x84\x07)\x02\x02\x84\x85\x07*\x02\x02\x85" +
+    "\x86\x05\x18\r\x02\x86\x15\x03\x02\x02\x02\x87\x88\x07\x19\x02\x02\x88" +
+    "\x89\x07*\x02\x02\x89\x8A\x05\x1A\x0E\x02\x8A\x17\x03\x02\x02\x02\x8B" +
+    "\x8C\x05\x1C\x0F\x02\x8C\x8D\x07\x1D\x02\x02\x8D\x8E\x05\x1E\x10\x02\x8E" +
+    "\x8F\x07\x1E\x02\x02\x8F\xB1\x03\x02\x02\x02\x90\x91\x07!\x02\x02\x91" +
+    "\x92\x05\x1C\x0F\x02\x92\x93\x07\"\x02\x02\x93\x94\x05\x1C\x0F\x02\x94" +
+    "\x95\x07\x1D\x02\x02\x95\x96\x05\x1E\x10\x02\x96\x97\x07\x1E\x02\x02\x97" +
+    "\xB1\x03\x02\x02\x02\x98\x99\x07!\x02\x02\x99\x9A\x05\x1C\x0F\x02\x9A" +
+    "\x9B\x07\"\x02\x02\x9B\x9C\x05\x1C\x0F\x02\x9C\x9D\x07\x1D\x02\x02\x9D" +
+    "\x9E\x07\x1E\x02\x02\x9E\xB1\x03\x02\x02\x02\x9F\xA0\x07!\x02\x02\xA0" +
+    "\xA1\x07\"\x02\x02\xA1\xA2\x05\x1C\x0F\x02\xA2\xA3\x07\x1D\x02\x02\xA3" +
+    "\xA4\x07\x1E\x02\x02\xA4\xB1\x03\x02\x02\x02\xA5\xA6\x07!\x02\x02\xA6" +
+    "\xA7\x07\"\x02\x02\xA7\xA8\x05\x1C\x0F\x02\xA8\xA9\x07\x1D\x02\x02\xA9" +
+    "\xAA\x05\x1E\x10\x02\xAA\xAB\x07\x1E\x02\x02\xAB\xB1\x03\x02\x02\x02\xAC" +
+    "\xAD\x05\x1C\x0F\x02\xAD\xAE\x07\x1D\x02\x02\xAE\xAF\x07\x1E\x02\x02\xAF" +
+    "\xB1\x03\x02\x02\x02\xB0\x8B\x03\x02\x02\x02\xB0\x90\x03\x02\x02\x02\xB0" +
+    "\x98\x03\x02\x02\x02\xB0\x9F\x03\x02\x02\x02\xB0\xA5\x03\x02\x02\x02\xB0" +
+    "\xAC\x03\x02\x02\x02\xB1\x19\x03\x02\x02\x02\xB2\xB9\x05\x1C\x0F\x02\xB3" +
+    "\xB4\x07!\x02\x02\xB4\xB5\x05\x1C\x0F\x02\xB5\xB6\x07\"\x02\x02\xB6\xB7" +
+    "\x05\x1C\x0F\x02\xB7\xB9\x03\x02\x02\x02\xB8\xB2\x03\x02\x02\x02\xB8\xB3" +
+    "\x03\x02\x02\x02\xB9\x1B\x03\x02\x02\x02\xBA\xBF\x07*\x02\x02\xBB\xBC" +
+    "\x07*\x02\x02\xBC\xBD\x07\x1C\x02\x02\xBD\xBF\x05\x1C\x0F\x02\xBE\xBA" +
+    "\x03\x02\x02\x02\xBE\xBB\x03\x02\x02\x02\xBF\x1D\x03\x02\x02\x02\xC0\xC5" +
+    "\x05 \x11\x02\xC1\xC2\x05 \x11\x02\xC2\xC3\x05\x1E\x10\x02\xC3\xC5\x03" +
+    "\x02\x02\x02\xC4\xC0\x03\x02\x02\x02\xC4\xC1\x03\x02\x02\x02\xC5\x1F\x03" +
+    "\x02\x02\x02\xC6\xC7\x07\x0F\x02\x02\xC7\xC8\x05\x1C\x0F\x02\xC8\xC9\x07" +
+    "\x1B\x02\x02\xC9\xDD\x03\x02\x02\x02\xCA\xCB\x07\x0E\x02\x02\xCB\xCC\x07" +
+    "!\x02\x02\xCC\xCD\x05\"\x12\x02\xCD\xCE\x07\"\x02\x02\xCE\xCF\x05\x1C" +
+    "\x0F\x02\xCF\xD0\x07\x1B\x02\x02\xD0\xDD\x03\x02\x02\x02\xD1\xD2\x07*" +
+    "\x02\x02\xD2\xD3\x05\x1C\x0F\x02\xD3\xD4\x07\x1B\x02\x02\xD4\xDD\x03\x02" +
+    "\x02\x02\xD5\xD6\x07*\x02\x02\xD6\xD7\x07!\x02\x02\xD7\xD8\x05\"\x12\x02" +
+    "\xD8\xD9\x07\"\x02\x02\xD9\xDA\x05\x1C\x0F\x02\xDA\xDB\x07\x1B\x02\x02" +
+    "\xDB\xDD\x03\x02\x02\x02\xDC\xC6\x03\x02\x02\x02\xDC\xCA\x03\x02\x02\x02" +
+    "\xDC\xD1\x03\x02\x02\x02\xDC\xD5\x03\x02\x02\x02\xDD!\x03\x02\x02\x02" +
+    "\xDE\xDF\b\x12\x01\x02\xDF\xE0\x05$\x13\x02\xE0\xE6\x03\x02\x02\x02\xE1" +
+    "\xE2\f\x03\x02\x02\xE2\xE3\x07\x1C\x02\x02\xE3\xE5\x05$\x13\x02\xE4\xE1" +
+    "\x03\x02\x02\x02\xE5\xE8\x03\x02\x02\x02\xE6\xE4\x03\x02\x02\x02\xE6\xE7" +
+    "\x03\x02\x02\x02\xE7#\x03\x02\x02\x02\xE8\xE6\x03\x02\x02\x02\xE9\xEA" +
+    "\b\x13\x01\x02\xEA\xFA\x07\x07\x02\x02\xEB\xFA\x07\x06\x02\x02\xEC\xFA" +
+    "\x07(\x02\x02\xED\xFA\x07*\x02\x02\xEE\xEF\x05&\x14\x02\xEF\xF0\x07!\x02" +
+    "\x02\xF0\xF1\x05$\x13\x02\xF1\xF2\x07\"\x02\x02\xF2\xFA\x03\x02\x02\x02" +
+    "\xF3\xF4\x07\'\x02\x02\xF4\xFA\x05$\x13\t\xF5\xF6\x07!\x02\x02\xF6\xF7" +
+    "\x05$\x13\x02\xF7\xF8\x07\"\x02\x02\xF8\xFA\x03\x02\x02\x02\xF9\xE9\x03" +
+    "\x02\x02\x02\xF9\xEB\x03\x02\x02\x02\xF9\xEC\x03\x02\x02\x02\xF9\xED\x03" +
+    "\x02\x02\x02\xF9\xEE\x03\x02\x02\x02\xF9\xF3\x03\x02\x02\x02\xF9\xF5\x03" +
+    "\x02\x02\x02\xFA\u010C\x03\x02\x02\x02\xFB\xFC\f\x07\x02\x02\xFC\xFD\x07" +
+    "&\x02\x02\xFD\u010B\x05$\x13\b\xFE\xFF\f\x06\x02\x02\xFF\u0100\x07\'\x02" +
+    "\x02\u0100\u010B\x05$\x13\x07\u0101\u0102\f\x05\x02\x02\u0102\u0103\x07" +
+    "$\x02\x02\u0103\u010B\x05$\x13\x06\u0104\u0105\f\x04\x02\x02\u0105\u0106" +
+    "\x07%\x02\x02\u0106\u010B\x05$\x13\x05\u0107\u0108\f\x03\x02\x02\u0108" +
+    "\u0109\x07#\x02\x02\u0109\u010B\x05$\x13\x04\u010A\xFB\x03\x02\x02\x02" +
+    "\u010A\xFE\x03\x02\x02\x02\u010A\u0101\x03\x02\x02\x02\u010A\u0104\x03" +
+    "\x02\x02\x02\u010A\u0107\x03\x02\x02\x02\u010B\u010E\x03\x02\x02\x02\u010C" +
+    "\u010A\x03\x02\x02\x02\u010C\u010D\x03\x02\x02\x02\u010D%\x03\x02\x02" +
+    "\x02\u010E\u010C\x03\x02\x02\x02\u010F\u0110\t\x02\x02\x02\u0110\'\x03" +
+    "\x02\x02\x02\u0111\u0112\x07\x16\x02\x02\u0112\u0113\x05*\x16\x02\u0113" +
+    "\u0114\x07\x1A\x02\x02\u0114\u0115\x05,\x17\x02\u0115\u011B\x03\x02\x02" +
+    "\x02\u0116\u0117\x07\x16\x02\x02\u0117\u0118\x07*\x02\x02\u0118\u0119" +
+    "\x07\x1A\x02\x02\u0119\u011B\x07*\x02\x02\u011A\u0111\x03\x02\x02\x02" +
+    "\u011A\u0116\x03\x02\x02\x02\u011B)\x03\x02\x02\x02\u011C\u011D\x07*\x02" +
+    "\x02\u011D\u011E\x05\x12\n\x02\u011E+\x03\x02\x02\x02\u011F\u0120\x07" +
+    "*\x02\x02\u0120\u0121\x05\x12\n\x02\u0121-\x03\x02\x02\x02\u0122\u0123" +
+    "\x07*\x02\x02\u0123\u0124\x07!\x02\x02\u0124\u0125\x050\x19\x02\u0125" +
+    "\u0126\x07\"\x02\x02\u0126\u0127\x052\x1A\x02\u0127\u012B\x03\x02\x02" +
+    "\x02\u0128\u0129\x07*\x02\x02\u0129\u012B\x052\x1A\x02\u012A\u0122\x03" +
+    "\x02\x02\x02\u012A\u0128\x03\x02\x02\x02\u012B/\x03\x02\x02\x02\u012C" +
+    "\u012D\b\x19\x01\x02\u012D\u012E\x05$\x13\x02\u012E\u0134\x03\x02\x02" +
+    "\x02\u012F\u0130\f\x03\x02\x02\u0130\u0131\x07\x1C\x02\x02\u0131\u0133" +
+    "\x05$\x13\x02\u0132\u012F\x03\x02\x02\x02\u0133\u0136\x03\x02\x02\x02" +
+    "\u0134\u0132\x03\x02\x02\x02\u0134\u0135\x03\x02\x02\x02\u01351\x03\x02" +
+    "\x02\x02\u0136\u0134\x03\x02\x02\x02\u0137\u013D\x054\x1B\x02\u0138\u0139" +
+    "\x054\x1B\x02\u0139\u013A\x07\x1C\x02\x02\u013A\u013B\x052\x1A\x02\u013B" +
+    "\u013D\x03\x02\x02\x02\u013C\u0137\x03\x02\x02\x02\u013C\u0138\x03\x02" +
+    "\x02\x02\u013D3\x03\x02\x02\x02\u013E\u0142\x07*\x02\x02\u013F\u0140\x07" +
+    "*\x02\x02\u0140\u0142\x05\x12\n\x02\u0141\u013E\x03\x02\x02\x02\u0141" +
+    "\u013F\x03\x02\x02\x02\u01425\x03\x02\x02\x02\u0143\u0144\x07\x0F\x02" +
+    "\x02\u0144\u0145\x052\x1A\x02\u01457\x03\x02\x02\x02\u0146\u0147\x07\x17" +
+    "\x02\x02\u0147\u014B\x07*\x02\x02\u0148\u0149\x07\x17\x02\x02\u0149\u014B" +
+    "\x05:\x1E\x02\u014A\u0146\x03\x02\x02\x02\u014A\u0148\x03\x02\x02\x02" +
+    "\u014B9\x03\x02\x02\x02\u014C\u0152\x05*\x16\x02\u014D\u014E\x05*\x16" +
+    "\x02\u014E\u014F\x07\x1C\x02\x02\u014F\u0150\x05:\x1E\x02\u0150\u0152" +
+    "\x03\x02\x02\x02\u0151\u014C\x03\x02\x02\x02\u0151\u014D\x03\x02\x02\x02" +
+    "\u0152;\x03\x02\x02\x02\u0153\u0154\x07\x18\x02\x02\u0154\u0158\x07*\x02" +
+    "\x02\u0155\u0156\x07\x18\x02\x02\u0156\u0158\x05*\x16\x02\u0157\u0153" +
+    "\x03\x02\x02\x02\u0157\u0155\x03\x02\x02\x02\u0158=\x03\x02\x02\x02\x19" +
+    "CIOZj{\xB0\xB8\xBE\xC4\xDC\xE6\xF9\u010A\u010C\u011A\u012A\u0134\u013C" +
+    "\u0141\u014A\u0151\u0157";
 __decorate([
     Decorators_2.Override,
     Decorators_1.NotNull
@@ -2336,162 +1887,104 @@ __decorate([
 ], QasmParser.prototype, "serializedATN", null);
 __decorate([
     RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "startProgram", null);
+], QasmParser.prototype, "code", null);
 __decorate([
     RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "code", null);
+], QasmParser.prototype, "headers", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "sentences", null);
 __decorate([
     RuleVersion_1.RuleVersion(0)
 ], QasmParser.prototype, "clean", null);
 __decorate([
     RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "ibmDefinition", null);
+], QasmParser.prototype, "sentence", null);
 __decorate([
     RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "include", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "library", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "program", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "statement", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "declaration", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "qoperation", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "unitaryOperation", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "opaque", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "measure", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "barrier", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "resetOperation", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "primaryList", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "primary", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "indexedId", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "qregDeclaration", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "cregDeclaration", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "gateDeclaration", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "gateScope", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "bitList", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "bit", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "gateBody", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "gateOpList", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "gateOp", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "gateIdList", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "gate", null);
-__decorate([
-    RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "expList", null);
+], QasmParser.prototype, "definition", null);
 __decorate([
     RuleVersion_1.RuleVersion(0)
 ], QasmParser.prototype, "expression", null);
 __decorate([
     RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "multiplicativeExpression", null);
+], QasmParser.prototype, "conditional", null);
 __decorate([
     RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "additiveExpression", null);
+], QasmParser.prototype, "qLine", null);
 __decorate([
     RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "prefixExpression", null);
+], QasmParser.prototype, "gateDefinition", null);
 __decorate([
     RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "unary", null);
+], QasmParser.prototype, "opaqueDefinition", null);
 __decorate([
     RuleVersion_1.RuleVersion(0)
-], QasmParser.prototype, "idList", null);
+], QasmParser.prototype, "gateDefinitionArguments", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "opaqueDefinitionArguments", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "paramsList", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "body", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "bodyExpression", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "paramsListBody", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "exp", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "unaryOp", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "measure", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "qubit", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "cbit", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "customArglist", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "paramsListNumber", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "qubitAndQregList", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "qbitOrQreg", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "cxGate", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "barrierGate", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "qubitList", null);
+__decorate([
+    RuleVersion_1.RuleVersion(0)
+], QasmParser.prototype, "resetGate", null);
 exports.QasmParser = QasmParser;
-class StartProgramContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    code() {
-        return this.getRuleContext(0, CodeContext);
-    }
-    EOF() { return this.getToken(QasmParser.EOF, 0); }
-    get ruleIndex() { return QasmParser.RULE_startProgram; }
-    enterRule(listener) {
-        if (listener.enterStartProgram)
-            listener.enterStartProgram(this);
-    }
-    exitRule(listener) {
-        if (listener.exitStartProgram)
-            listener.exitStartProgram(this);
-    }
-    accept(visitor) {
-        if (visitor.visitStartProgram)
-            return visitor.visitStartProgram(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], StartProgramContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], StartProgramContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], StartProgramContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], StartProgramContext.prototype, "accept", null);
-exports.StartProgramContext = StartProgramContext;
 class CodeContext extends ParserRuleContext_1.ParserRuleContext {
     constructor(parent, invokingState) {
         super(parent, invokingState);
     }
-    ibmDefinition() {
-        return this.tryGetRuleContext(0, IbmDefinitionContext);
+    sentences() {
+        return this.tryGetRuleContext(0, SentencesContext);
     }
-    program() {
-        return this.tryGetRuleContext(0, ProgramContext);
-    }
-    library() {
-        return this.tryGetRuleContext(0, LibraryContext);
+    headers() {
+        return this.tryGetRuleContext(0, HeadersContext);
     }
     clean() {
         return this.tryGetRuleContext(0, CleanContext);
@@ -2525,11 +2018,86 @@ __decorate([
     Decorators_2.Override
 ], CodeContext.prototype, "accept", null);
 exports.CodeContext = CodeContext;
+class HeadersContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    QasmDescriptor() { return this.tryGetToken(QasmParser.QasmDescriptor, 0); }
+    Include() { return this.tryGetToken(QasmParser.Include, 0); }
+    get ruleIndex() { return QasmParser.RULE_headers; }
+    enterRule(listener) {
+        if (listener.enterHeaders)
+            listener.enterHeaders(this);
+    }
+    exitRule(listener) {
+        if (listener.exitHeaders)
+            listener.exitHeaders(this);
+    }
+    accept(visitor) {
+        if (visitor.visitHeaders)
+            return visitor.visitHeaders(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], HeadersContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], HeadersContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], HeadersContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], HeadersContext.prototype, "accept", null);
+exports.HeadersContext = HeadersContext;
+class SentencesContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    sentence() {
+        return this.getRuleContext(0, SentenceContext);
+    }
+    sentences() {
+        return this.tryGetRuleContext(0, SentencesContext);
+    }
+    get ruleIndex() { return QasmParser.RULE_sentences; }
+    enterRule(listener) {
+        if (listener.enterSentences)
+            listener.enterSentences(this);
+    }
+    exitRule(listener) {
+        if (listener.exitSentences)
+            listener.exitSentences(this);
+    }
+    accept(visitor) {
+        if (visitor.visitSentences)
+            return visitor.visitSentences(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], SentencesContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], SentencesContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], SentencesContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], SentencesContext.prototype, "accept", null);
+exports.SentencesContext = SentencesContext;
 class CleanContext extends ParserRuleContext_1.ParserRuleContext {
     constructor(parent, invokingState) {
         super(parent, invokingState);
     }
     Clean() { return this.getToken(QasmParser.Clean, 0); }
+    EOF() { return this.getToken(QasmParser.EOF, 0); }
     get ruleIndex() { return QasmParser.RULE_clean; }
     enterRule(listener) {
         if (listener.enterClean)
@@ -2559,1109 +2127,115 @@ __decorate([
     Decorators_2.Override
 ], CleanContext.prototype, "accept", null);
 exports.CleanContext = CleanContext;
-class IbmDefinitionContext extends ParserRuleContext_1.ParserRuleContext {
+class SentenceContext extends ParserRuleContext_1.ParserRuleContext {
     constructor(parent, invokingState) {
         super(parent, invokingState);
     }
-    IbmQasm() { return this.getToken(QasmParser.IbmQasm, 0); }
-    Real() { return this.getToken(QasmParser.Real, 0); }
-    Semi() { return this.getToken(QasmParser.Semi, 0); }
-    include() {
-        return this.tryGetRuleContext(0, IncludeContext);
-    }
-    get ruleIndex() { return QasmParser.RULE_ibmDefinition; }
-    enterRule(listener) {
-        if (listener.enterIbmDefinition)
-            listener.enterIbmDefinition(this);
-    }
-    exitRule(listener) {
-        if (listener.exitIbmDefinition)
-            listener.exitIbmDefinition(this);
-    }
-    accept(visitor) {
-        if (visitor.visitIbmDefinition)
-            return visitor.visitIbmDefinition(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], IbmDefinitionContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], IbmDefinitionContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], IbmDefinitionContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], IbmDefinitionContext.prototype, "accept", null);
-exports.IbmDefinitionContext = IbmDefinitionContext;
-class IncludeContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    Include() { return this.getToken(QasmParser.Include, 0); }
-    Qelib() { return this.getToken(QasmParser.Qelib, 0); }
-    Semi() { return this.getToken(QasmParser.Semi, 0); }
-    get ruleIndex() { return QasmParser.RULE_include; }
-    enterRule(listener) {
-        if (listener.enterInclude)
-            listener.enterInclude(this);
-    }
-    exitRule(listener) {
-        if (listener.exitInclude)
-            listener.exitInclude(this);
-    }
-    accept(visitor) {
-        if (visitor.visitInclude)
-            return visitor.visitInclude(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], IncludeContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], IncludeContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], IncludeContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], IncludeContext.prototype, "accept", null);
-exports.IncludeContext = IncludeContext;
-class LibraryContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    declaration() {
-        return this.getRuleContext(0, DeclarationContext);
-    }
-    library() {
-        return this.tryGetRuleContext(0, LibraryContext);
-    }
-    get ruleIndex() { return QasmParser.RULE_library; }
-    enterRule(listener) {
-        if (listener.enterLibrary)
-            listener.enterLibrary(this);
-    }
-    exitRule(listener) {
-        if (listener.exitLibrary)
-            listener.exitLibrary(this);
-    }
-    accept(visitor) {
-        if (visitor.visitLibrary)
-            return visitor.visitLibrary(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], LibraryContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], LibraryContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], LibraryContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], LibraryContext.prototype, "accept", null);
-exports.LibraryContext = LibraryContext;
-class ProgramContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    statement() {
-        return this.getRuleContext(0, StatementContext);
-    }
-    program() {
-        return this.tryGetRuleContext(0, ProgramContext);
-    }
-    get ruleIndex() { return QasmParser.RULE_program; }
-    enterRule(listener) {
-        if (listener.enterProgram)
-            listener.enterProgram(this);
-    }
-    exitRule(listener) {
-        if (listener.exitProgram)
-            listener.exitProgram(this);
-    }
-    accept(visitor) {
-        if (visitor.visitProgram)
-            return visitor.visitProgram(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], ProgramContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], ProgramContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], ProgramContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], ProgramContext.prototype, "accept", null);
-exports.ProgramContext = ProgramContext;
-class StatementContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    declaration() {
-        return this.tryGetRuleContext(0, DeclarationContext);
-    }
-    qoperation() {
-        return this.tryGetRuleContext(0, QoperationContext);
-    }
-    get ruleIndex() { return QasmParser.RULE_statement; }
-    enterRule(listener) {
-        if (listener.enterStatement)
-            listener.enterStatement(this);
-    }
-    exitRule(listener) {
-        if (listener.exitStatement)
-            listener.exitStatement(this);
-    }
-    accept(visitor) {
-        if (visitor.visitStatement)
-            return visitor.visitStatement(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], StatementContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], StatementContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], StatementContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], StatementContext.prototype, "accept", null);
-exports.StatementContext = StatementContext;
-class DeclarationContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    qregDeclaration() {
-        return this.tryGetRuleContext(0, QregDeclarationContext);
-    }
-    cregDeclaration() {
-        return this.tryGetRuleContext(0, CregDeclarationContext);
-    }
-    gateDeclaration() {
-        return this.tryGetRuleContext(0, GateDeclarationContext);
-    }
-    get ruleIndex() { return QasmParser.RULE_declaration; }
-    enterRule(listener) {
-        if (listener.enterDeclaration)
-            listener.enterDeclaration(this);
-    }
-    exitRule(listener) {
-        if (listener.exitDeclaration)
-            listener.exitDeclaration(this);
-    }
-    accept(visitor) {
-        if (visitor.visitDeclaration)
-            return visitor.visitDeclaration(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], DeclarationContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], DeclarationContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], DeclarationContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], DeclarationContext.prototype, "accept", null);
-exports.DeclarationContext = DeclarationContext;
-class QoperationContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    unitaryOperation() {
-        return this.tryGetRuleContext(0, UnitaryOperationContext);
-    }
-    Semi() { return this.getToken(QasmParser.Semi, 0); }
-    opaque() {
-        return this.tryGetRuleContext(0, OpaqueContext);
-    }
-    measure() {
-        return this.tryGetRuleContext(0, MeasureContext);
-    }
-    barrier() {
-        return this.tryGetRuleContext(0, BarrierContext);
-    }
-    resetOperation() {
-        return this.tryGetRuleContext(0, ResetOperationContext);
-    }
-    get ruleIndex() { return QasmParser.RULE_qoperation; }
-    enterRule(listener) {
-        if (listener.enterQoperation)
-            listener.enterQoperation(this);
-    }
-    exitRule(listener) {
-        if (listener.exitQoperation)
-            listener.exitQoperation(this);
-    }
-    accept(visitor) {
-        if (visitor.visitQoperation)
-            return visitor.visitQoperation(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], QoperationContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], QoperationContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], QoperationContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], QoperationContext.prototype, "accept", null);
-exports.QoperationContext = QoperationContext;
-class UnitaryOperationContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    U() { return this.tryGetToken(QasmParser.U, 0); }
-    LeftParen() { return this.tryGetToken(QasmParser.LeftParen, 0); }
-    expList() {
-        return this.tryGetRuleContext(0, ExpListContext);
-    }
-    RightParen() { return this.tryGetToken(QasmParser.RightParen, 0); }
-    primary(i) {
-        if (i === undefined) {
-            return this.getRuleContexts(PrimaryContext);
-        }
-        else {
-            return this.getRuleContext(i, PrimaryContext);
-        }
-    }
-    Cx() { return this.tryGetToken(QasmParser.Cx, 0); }
-    Comma() { return this.tryGetToken(QasmParser.Comma, 0); }
-    Id() { return this.tryGetToken(QasmParser.Id, 0); }
-    primaryList() {
-        return this.tryGetRuleContext(0, PrimaryListContext);
-    }
-    get ruleIndex() { return QasmParser.RULE_unitaryOperation; }
-    enterRule(listener) {
-        if (listener.enterUnitaryOperation)
-            listener.enterUnitaryOperation(this);
-    }
-    exitRule(listener) {
-        if (listener.exitUnitaryOperation)
-            listener.exitUnitaryOperation(this);
-    }
-    accept(visitor) {
-        if (visitor.visitUnitaryOperation)
-            return visitor.visitUnitaryOperation(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], UnitaryOperationContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], UnitaryOperationContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], UnitaryOperationContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], UnitaryOperationContext.prototype, "accept", null);
-exports.UnitaryOperationContext = UnitaryOperationContext;
-class OpaqueContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    Opaque() { return this.getToken(QasmParser.Opaque, 0); }
-    Id() { return this.getToken(QasmParser.Id, 0); }
-    gateScope() {
-        return this.getRuleContext(0, GateScopeContext);
-    }
-    bitList() {
-        return this.getRuleContext(0, BitListContext);
-    }
-    LeftParen() { return this.tryGetToken(QasmParser.LeftParen, 0); }
-    RightParen() { return this.tryGetToken(QasmParser.RightParen, 0); }
-    gateIdList() {
-        return this.tryGetRuleContext(0, GateIdListContext);
-    }
-    get ruleIndex() { return QasmParser.RULE_opaque; }
-    enterRule(listener) {
-        if (listener.enterOpaque)
-            listener.enterOpaque(this);
-    }
-    exitRule(listener) {
-        if (listener.exitOpaque)
-            listener.exitOpaque(this);
-    }
-    accept(visitor) {
-        if (visitor.visitOpaque)
-            return visitor.visitOpaque(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], OpaqueContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], OpaqueContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], OpaqueContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], OpaqueContext.prototype, "accept", null);
-exports.OpaqueContext = OpaqueContext;
-class MeasureContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    Measure() { return this.getToken(QasmParser.Measure, 0); }
-    primary(i) {
-        if (i === undefined) {
-            return this.getRuleContexts(PrimaryContext);
-        }
-        else {
-            return this.getRuleContext(i, PrimaryContext);
-        }
-    }
-    Assign() { return this.getToken(QasmParser.Assign, 0); }
-    get ruleIndex() { return QasmParser.RULE_measure; }
-    enterRule(listener) {
-        if (listener.enterMeasure)
-            listener.enterMeasure(this);
-    }
-    exitRule(listener) {
-        if (listener.exitMeasure)
-            listener.exitMeasure(this);
-    }
-    accept(visitor) {
-        if (visitor.visitMeasure)
-            return visitor.visitMeasure(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], MeasureContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], MeasureContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], MeasureContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], MeasureContext.prototype, "accept", null);
-exports.MeasureContext = MeasureContext;
-class BarrierContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    Barrier() { return this.getToken(QasmParser.Barrier, 0); }
-    primaryList() {
-        return this.getRuleContext(0, PrimaryListContext);
-    }
-    get ruleIndex() { return QasmParser.RULE_barrier; }
-    enterRule(listener) {
-        if (listener.enterBarrier)
-            listener.enterBarrier(this);
-    }
-    exitRule(listener) {
-        if (listener.exitBarrier)
-            listener.exitBarrier(this);
-    }
-    accept(visitor) {
-        if (visitor.visitBarrier)
-            return visitor.visitBarrier(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], BarrierContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], BarrierContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], BarrierContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], BarrierContext.prototype, "accept", null);
-exports.BarrierContext = BarrierContext;
-class ResetOperationContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    Reset() { return this.getToken(QasmParser.Reset, 0); }
-    primary() {
-        return this.getRuleContext(0, PrimaryContext);
-    }
-    get ruleIndex() { return QasmParser.RULE_resetOperation; }
-    enterRule(listener) {
-        if (listener.enterResetOperation)
-            listener.enterResetOperation(this);
-    }
-    exitRule(listener) {
-        if (listener.exitResetOperation)
-            listener.exitResetOperation(this);
-    }
-    accept(visitor) {
-        if (visitor.visitResetOperation)
-            return visitor.visitResetOperation(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], ResetOperationContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], ResetOperationContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], ResetOperationContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], ResetOperationContext.prototype, "accept", null);
-exports.ResetOperationContext = ResetOperationContext;
-class PrimaryListContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    primary() {
-        return this.getRuleContext(0, PrimaryContext);
-    }
-    primaryList() {
-        return this.tryGetRuleContext(0, PrimaryListContext);
-    }
-    Comma() { return this.tryGetToken(QasmParser.Comma, 0); }
-    get ruleIndex() { return QasmParser.RULE_primaryList; }
-    enterRule(listener) {
-        if (listener.enterPrimaryList)
-            listener.enterPrimaryList(this);
-    }
-    exitRule(listener) {
-        if (listener.exitPrimaryList)
-            listener.exitPrimaryList(this);
-    }
-    accept(visitor) {
-        if (visitor.visitPrimaryList)
-            return visitor.visitPrimaryList(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], PrimaryListContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], PrimaryListContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], PrimaryListContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], PrimaryListContext.prototype, "accept", null);
-exports.PrimaryListContext = PrimaryListContext;
-class PrimaryContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    Id() { return this.tryGetToken(QasmParser.Id, 0); }
-    indexedId() {
-        return this.tryGetRuleContext(0, IndexedIdContext);
-    }
-    get ruleIndex() { return QasmParser.RULE_primary; }
-    enterRule(listener) {
-        if (listener.enterPrimary)
-            listener.enterPrimary(this);
-    }
-    exitRule(listener) {
-        if (listener.exitPrimary)
-            listener.exitPrimary(this);
-    }
-    accept(visitor) {
-        if (visitor.visitPrimary)
-            return visitor.visitPrimary(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], PrimaryContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], PrimaryContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], PrimaryContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], PrimaryContext.prototype, "accept", null);
-exports.PrimaryContext = PrimaryContext;
-class IndexedIdContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    Id() { return this.getToken(QasmParser.Id, 0); }
-    LeftBrace() { return this.getToken(QasmParser.LeftBrace, 0); }
-    Int() { return this.getToken(QasmParser.Int, 0); }
-    RightBrace() { return this.getToken(QasmParser.RightBrace, 0); }
-    get ruleIndex() { return QasmParser.RULE_indexedId; }
-    enterRule(listener) {
-        if (listener.enterIndexedId)
-            listener.enterIndexedId(this);
-    }
-    exitRule(listener) {
-        if (listener.exitIndexedId)
-            listener.exitIndexedId(this);
-    }
-    accept(visitor) {
-        if (visitor.visitIndexedId)
-            return visitor.visitIndexedId(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], IndexedIdContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], IndexedIdContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], IndexedIdContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], IndexedIdContext.prototype, "accept", null);
-exports.IndexedIdContext = IndexedIdContext;
-class QregDeclarationContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    Qreg() { return this.getToken(QasmParser.Qreg, 0); }
-    Id() { return this.getToken(QasmParser.Id, 0); }
-    LeftBrace() { return this.getToken(QasmParser.LeftBrace, 0); }
-    Int() { return this.getToken(QasmParser.Int, 0); }
-    RightBrace() { return this.getToken(QasmParser.RightBrace, 0); }
-    Semi() { return this.getToken(QasmParser.Semi, 0); }
-    get ruleIndex() { return QasmParser.RULE_qregDeclaration; }
-    enterRule(listener) {
-        if (listener.enterQregDeclaration)
-            listener.enterQregDeclaration(this);
-    }
-    exitRule(listener) {
-        if (listener.exitQregDeclaration)
-            listener.exitQregDeclaration(this);
-    }
-    accept(visitor) {
-        if (visitor.visitQregDeclaration)
-            return visitor.visitQregDeclaration(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], QregDeclarationContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], QregDeclarationContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], QregDeclarationContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], QregDeclarationContext.prototype, "accept", null);
-exports.QregDeclarationContext = QregDeclarationContext;
-class CregDeclarationContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    Creg() { return this.getToken(QasmParser.Creg, 0); }
-    Id() { return this.getToken(QasmParser.Id, 0); }
-    LeftBrace() { return this.getToken(QasmParser.LeftBrace, 0); }
-    Int() { return this.getToken(QasmParser.Int, 0); }
-    RightBrace() { return this.getToken(QasmParser.RightBrace, 0); }
-    Semi() { return this.getToken(QasmParser.Semi, 0); }
-    get ruleIndex() { return QasmParser.RULE_cregDeclaration; }
-    enterRule(listener) {
-        if (listener.enterCregDeclaration)
-            listener.enterCregDeclaration(this);
-    }
-    exitRule(listener) {
-        if (listener.exitCregDeclaration)
-            listener.exitCregDeclaration(this);
-    }
-    accept(visitor) {
-        if (visitor.visitCregDeclaration)
-            return visitor.visitCregDeclaration(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], CregDeclarationContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], CregDeclarationContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], CregDeclarationContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], CregDeclarationContext.prototype, "accept", null);
-exports.CregDeclarationContext = CregDeclarationContext;
-class GateDeclarationContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    Gate() { return this.getToken(QasmParser.Gate, 0); }
-    Id() { return this.getToken(QasmParser.Id, 0); }
-    gateScope() {
-        return this.getRuleContext(0, GateScopeContext);
-    }
-    bitList() {
-        return this.getRuleContext(0, BitListContext);
-    }
-    gateBody() {
-        return this.getRuleContext(0, GateBodyContext);
-    }
-    LeftParen() { return this.tryGetToken(QasmParser.LeftParen, 0); }
-    RightParen() { return this.tryGetToken(QasmParser.RightParen, 0); }
-    gateIdList() {
-        return this.tryGetRuleContext(0, GateIdListContext);
-    }
-    get ruleIndex() { return QasmParser.RULE_gateDeclaration; }
-    enterRule(listener) {
-        if (listener.enterGateDeclaration)
-            listener.enterGateDeclaration(this);
-    }
-    exitRule(listener) {
-        if (listener.exitGateDeclaration)
-            listener.exitGateDeclaration(this);
-    }
-    accept(visitor) {
-        if (visitor.visitGateDeclaration)
-            return visitor.visitGateDeclaration(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], GateDeclarationContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], GateDeclarationContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], GateDeclarationContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], GateDeclarationContext.prototype, "accept", null);
-exports.GateDeclarationContext = GateDeclarationContext;
-class GateScopeContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    get ruleIndex() { return QasmParser.RULE_gateScope; }
-    enterRule(listener) {
-        if (listener.enterGateScope)
-            listener.enterGateScope(this);
-    }
-    exitRule(listener) {
-        if (listener.exitGateScope)
-            listener.exitGateScope(this);
-    }
-    accept(visitor) {
-        if (visitor.visitGateScope)
-            return visitor.visitGateScope(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], GateScopeContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], GateScopeContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], GateScopeContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], GateScopeContext.prototype, "accept", null);
-exports.GateScopeContext = GateScopeContext;
-class BitListContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    bit() {
-        return this.getRuleContext(0, BitContext);
-    }
-    bitList() {
-        return this.tryGetRuleContext(0, BitListContext);
-    }
-    Comma() { return this.tryGetToken(QasmParser.Comma, 0); }
-    get ruleIndex() { return QasmParser.RULE_bitList; }
-    enterRule(listener) {
-        if (listener.enterBitList)
-            listener.enterBitList(this);
-    }
-    exitRule(listener) {
-        if (listener.exitBitList)
-            listener.exitBitList(this);
-    }
-    accept(visitor) {
-        if (visitor.visitBitList)
-            return visitor.visitBitList(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], BitListContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], BitListContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], BitListContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], BitListContext.prototype, "accept", null);
-exports.BitListContext = BitListContext;
-class BitContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    Id() { return this.getToken(QasmParser.Id, 0); }
-    get ruleIndex() { return QasmParser.RULE_bit; }
-    enterRule(listener) {
-        if (listener.enterBit)
-            listener.enterBit(this);
-    }
-    exitRule(listener) {
-        if (listener.exitBit)
-            listener.exitBit(this);
-    }
-    accept(visitor) {
-        if (visitor.visitBit)
-            return visitor.visitBit(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], BitContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], BitContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], BitContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], BitContext.prototype, "accept", null);
-exports.BitContext = BitContext;
-class GateBodyContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    LeftCurlyBrace() { return this.getToken(QasmParser.LeftCurlyBrace, 0); }
-    gateOpList() {
-        return this.getRuleContext(0, GateOpListContext);
-    }
-    RightCurlyBrace() { return this.getToken(QasmParser.RightCurlyBrace, 0); }
-    get ruleIndex() { return QasmParser.RULE_gateBody; }
-    enterRule(listener) {
-        if (listener.enterGateBody)
-            listener.enterGateBody(this);
-    }
-    exitRule(listener) {
-        if (listener.exitGateBody)
-            listener.exitGateBody(this);
-    }
-    accept(visitor) {
-        if (visitor.visitGateBody)
-            return visitor.visitGateBody(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], GateBodyContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], GateBodyContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], GateBodyContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], GateBodyContext.prototype, "accept", null);
-exports.GateBodyContext = GateBodyContext;
-class GateOpListContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    gateOp() {
-        return this.tryGetRuleContext(0, GateOpContext);
-    }
-    gateOpList() {
-        return this.tryGetRuleContext(0, GateOpListContext);
-    }
-    get ruleIndex() { return QasmParser.RULE_gateOpList; }
-    enterRule(listener) {
-        if (listener.enterGateOpList)
-            listener.enterGateOpList(this);
-    }
-    exitRule(listener) {
-        if (listener.exitGateOpList)
-            listener.exitGateOpList(this);
-    }
-    accept(visitor) {
-        if (visitor.visitGateOpList)
-            return visitor.visitGateOpList(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], GateOpListContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], GateOpListContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], GateOpListContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], GateOpListContext.prototype, "accept", null);
-exports.GateOpListContext = GateOpListContext;
-class GateOpContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    U() { return this.tryGetToken(QasmParser.U, 0); }
-    LeftParen() { return this.tryGetToken(QasmParser.LeftParen, 0); }
-    expList() {
-        return this.tryGetRuleContext(0, ExpListContext);
-    }
-    RightParen() { return this.tryGetToken(QasmParser.RightParen, 0); }
-    Id(i) {
-        if (i === undefined) {
-            return this.getTokens(QasmParser.Id);
-        }
-        else {
-            return this.getToken(QasmParser.Id, i);
-        }
-    }
-    Semi() { return this.getToken(QasmParser.Semi, 0); }
-    Cx() { return this.tryGetToken(QasmParser.Cx, 0); }
-    Comma() { return this.tryGetToken(QasmParser.Comma, 0); }
-    idList() {
-        return this.tryGetRuleContext(0, IdListContext);
-    }
-    Barrier() { return this.tryGetToken(QasmParser.Barrier, 0); }
-    get ruleIndex() { return QasmParser.RULE_gateOp; }
-    enterRule(listener) {
-        if (listener.enterGateOp)
-            listener.enterGateOp(this);
-    }
-    exitRule(listener) {
-        if (listener.exitGateOp)
-            listener.exitGateOp(this);
-    }
-    accept(visitor) {
-        if (visitor.visitGateOp)
-            return visitor.visitGateOp(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], GateOpContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], GateOpContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], GateOpContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], GateOpContext.prototype, "accept", null);
-exports.GateOpContext = GateOpContext;
-class GateIdListContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    gate() {
-        return this.getRuleContext(0, GateContext);
-    }
-    gateIdList() {
-        return this.tryGetRuleContext(0, GateIdListContext);
-    }
-    Comma() { return this.tryGetToken(QasmParser.Comma, 0); }
-    get ruleIndex() { return QasmParser.RULE_gateIdList; }
-    enterRule(listener) {
-        if (listener.enterGateIdList)
-            listener.enterGateIdList(this);
-    }
-    exitRule(listener) {
-        if (listener.exitGateIdList)
-            listener.exitGateIdList(this);
-    }
-    accept(visitor) {
-        if (visitor.visitGateIdList)
-            return visitor.visitGateIdList(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], GateIdListContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], GateIdListContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], GateIdListContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], GateIdListContext.prototype, "accept", null);
-exports.GateIdListContext = GateIdListContext;
-class GateContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    Id() { return this.getToken(QasmParser.Id, 0); }
-    get ruleIndex() { return QasmParser.RULE_gate; }
-    enterRule(listener) {
-        if (listener.enterGate)
-            listener.enterGate(this);
-    }
-    exitRule(listener) {
-        if (listener.exitGate)
-            listener.exitGate(this);
-    }
-    accept(visitor) {
-        if (visitor.visitGate)
-            return visitor.visitGate(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], GateContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], GateContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], GateContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], GateContext.prototype, "accept", null);
-exports.GateContext = GateContext;
-class ExpListContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    expression() {
-        return this.getRuleContext(0, ExpressionContext);
-    }
-    expList() {
-        return this.tryGetRuleContext(0, ExpListContext);
-    }
-    Comma() { return this.tryGetToken(QasmParser.Comma, 0); }
-    get ruleIndex() { return QasmParser.RULE_expList; }
-    enterRule(listener) {
-        if (listener.enterExpList)
-            listener.enterExpList(this);
-    }
-    exitRule(listener) {
-        if (listener.exitExpList)
-            listener.exitExpList(this);
-    }
-    accept(visitor) {
-        if (visitor.visitExpList)
-            return visitor.visitExpList(this);
-        else
-            return visitor.visitChildren(this);
-    }
-}
-__decorate([
-    Decorators_2.Override
-], ExpListContext.prototype, "ruleIndex", null);
-__decorate([
-    Decorators_2.Override
-], ExpListContext.prototype, "enterRule", null);
-__decorate([
-    Decorators_2.Override
-], ExpListContext.prototype, "exitRule", null);
-__decorate([
-    Decorators_2.Override
-], ExpListContext.prototype, "accept", null);
-exports.ExpListContext = ExpListContext;
-class ExpressionContext extends ParserRuleContext_1.ParserRuleContext {
-    constructor(parent, invokingState) {
-        super(parent, invokingState);
-    }
-    multiplicativeExpression() {
-        return this.getRuleContext(0, MultiplicativeExpressionContext);
+    definition() {
+        return this.tryGetRuleContext(0, DefinitionContext);
     }
     expression() {
         return this.tryGetRuleContext(0, ExpressionContext);
     }
-    Pow() { return this.tryGetToken(QasmParser.Pow, 0); }
+    conditional() {
+        return this.tryGetRuleContext(0, ConditionalContext);
+    }
+    EOF() { return this.tryGetToken(QasmParser.EOF, 0); }
+    get ruleIndex() { return QasmParser.RULE_sentence; }
+    enterRule(listener) {
+        if (listener.enterSentence)
+            listener.enterSentence(this);
+    }
+    exitRule(listener) {
+        if (listener.exitSentence)
+            listener.exitSentence(this);
+    }
+    accept(visitor) {
+        if (visitor.visitSentence)
+            return visitor.visitSentence(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], SentenceContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], SentenceContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], SentenceContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], SentenceContext.prototype, "accept", null);
+exports.SentenceContext = SentenceContext;
+class DefinitionContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    Qreg() { return this.tryGetToken(QasmParser.Qreg, 0); }
+    Id() { return this.tryGetToken(QasmParser.Id, 0); }
+    qLine() {
+        return this.tryGetRuleContext(0, QLineContext);
+    }
+    Semi() { return this.tryGetToken(QasmParser.Semi, 0); }
+    Creg() { return this.tryGetToken(QasmParser.Creg, 0); }
+    gateDefinition() {
+        return this.tryGetRuleContext(0, GateDefinitionContext);
+    }
+    opaqueDefinition() {
+        return this.tryGetRuleContext(0, OpaqueDefinitionContext);
+    }
+    get ruleIndex() { return QasmParser.RULE_definition; }
+    enterRule(listener) {
+        if (listener.enterDefinition)
+            listener.enterDefinition(this);
+    }
+    exitRule(listener) {
+        if (listener.exitDefinition)
+            listener.exitDefinition(this);
+    }
+    accept(visitor) {
+        if (visitor.visitDefinition)
+            return visitor.visitDefinition(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], DefinitionContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], DefinitionContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], DefinitionContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], DefinitionContext.prototype, "accept", null);
+exports.DefinitionContext = DefinitionContext;
+class ExpressionContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    measure() {
+        return this.tryGetRuleContext(0, MeasureContext);
+    }
+    Semi() { return this.getToken(QasmParser.Semi, 0); }
+    customArglist() {
+        return this.tryGetRuleContext(0, CustomArglistContext);
+    }
+    cxGate() {
+        return this.tryGetRuleContext(0, CxGateContext);
+    }
+    barrierGate() {
+        return this.tryGetRuleContext(0, BarrierGateContext);
+    }
+    resetGate() {
+        return this.tryGetRuleContext(0, ResetGateContext);
+    }
     get ruleIndex() { return QasmParser.RULE_expression; }
     enterRule(listener) {
         if (listener.enterExpression)
@@ -3691,140 +2265,405 @@ __decorate([
     Decorators_2.Override
 ], ExpressionContext.prototype, "accept", null);
 exports.ExpressionContext = ExpressionContext;
-class MultiplicativeExpressionContext extends ParserRuleContext_1.ParserRuleContext {
+class ConditionalContext extends ParserRuleContext_1.ParserRuleContext {
     constructor(parent, invokingState) {
         super(parent, invokingState);
     }
-    additiveExpression() {
-        return this.tryGetRuleContext(0, AdditiveExpressionContext);
+    get ruleIndex() { return QasmParser.RULE_conditional; }
+    enterRule(listener) {
+        if (listener.enterConditional)
+            listener.enterConditional(this);
     }
-    multiplicativeExpression(i) {
+    exitRule(listener) {
+        if (listener.exitConditional)
+            listener.exitConditional(this);
+    }
+    accept(visitor) {
+        if (visitor.visitConditional)
+            return visitor.visitConditional(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], ConditionalContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], ConditionalContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], ConditionalContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], ConditionalContext.prototype, "accept", null);
+exports.ConditionalContext = ConditionalContext;
+class QLineContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    LeftBrace() { return this.getToken(QasmParser.LeftBrace, 0); }
+    Int() { return this.getToken(QasmParser.Int, 0); }
+    RightBrace() { return this.getToken(QasmParser.RightBrace, 0); }
+    get ruleIndex() { return QasmParser.RULE_qLine; }
+    enterRule(listener) {
+        if (listener.enterQLine)
+            listener.enterQLine(this);
+    }
+    exitRule(listener) {
+        if (listener.exitQLine)
+            listener.exitQLine(this);
+    }
+    accept(visitor) {
+        if (visitor.visitQLine)
+            return visitor.visitQLine(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], QLineContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], QLineContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], QLineContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], QLineContext.prototype, "accept", null);
+exports.QLineContext = QLineContext;
+class GateDefinitionContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    Gate() { return this.getToken(QasmParser.Gate, 0); }
+    Id() { return this.getToken(QasmParser.Id, 0); }
+    gateDefinitionArguments() {
+        return this.getRuleContext(0, GateDefinitionArgumentsContext);
+    }
+    get ruleIndex() { return QasmParser.RULE_gateDefinition; }
+    enterRule(listener) {
+        if (listener.enterGateDefinition)
+            listener.enterGateDefinition(this);
+    }
+    exitRule(listener) {
+        if (listener.exitGateDefinition)
+            listener.exitGateDefinition(this);
+    }
+    accept(visitor) {
+        if (visitor.visitGateDefinition)
+            return visitor.visitGateDefinition(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], GateDefinitionContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], GateDefinitionContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], GateDefinitionContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], GateDefinitionContext.prototype, "accept", null);
+exports.GateDefinitionContext = GateDefinitionContext;
+class OpaqueDefinitionContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    Opaque() { return this.getToken(QasmParser.Opaque, 0); }
+    Id() { return this.getToken(QasmParser.Id, 0); }
+    opaqueDefinitionArguments() {
+        return this.getRuleContext(0, OpaqueDefinitionArgumentsContext);
+    }
+    get ruleIndex() { return QasmParser.RULE_opaqueDefinition; }
+    enterRule(listener) {
+        if (listener.enterOpaqueDefinition)
+            listener.enterOpaqueDefinition(this);
+    }
+    exitRule(listener) {
+        if (listener.exitOpaqueDefinition)
+            listener.exitOpaqueDefinition(this);
+    }
+    accept(visitor) {
+        if (visitor.visitOpaqueDefinition)
+            return visitor.visitOpaqueDefinition(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], OpaqueDefinitionContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], OpaqueDefinitionContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], OpaqueDefinitionContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], OpaqueDefinitionContext.prototype, "accept", null);
+exports.OpaqueDefinitionContext = OpaqueDefinitionContext;
+class GateDefinitionArgumentsContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    paramsList(i) {
         if (i === undefined) {
-            return this.getRuleContexts(MultiplicativeExpressionContext);
+            return this.getRuleContexts(ParamsListContext);
         }
         else {
-            return this.getRuleContext(i, MultiplicativeExpressionContext);
+            return this.getRuleContext(i, ParamsListContext);
         }
     }
-    Mult() { return this.tryGetToken(QasmParser.Mult, 0); }
-    Div() { return this.tryGetToken(QasmParser.Div, 0); }
-    get ruleIndex() { return QasmParser.RULE_multiplicativeExpression; }
+    LeftCurlyBrace() { return this.getToken(QasmParser.LeftCurlyBrace, 0); }
+    body() {
+        return this.tryGetRuleContext(0, BodyContext);
+    }
+    RightCurlyBrace() { return this.getToken(QasmParser.RightCurlyBrace, 0); }
+    LeftParen() { return this.tryGetToken(QasmParser.LeftParen, 0); }
+    RightParen() { return this.tryGetToken(QasmParser.RightParen, 0); }
+    get ruleIndex() { return QasmParser.RULE_gateDefinitionArguments; }
     enterRule(listener) {
-        if (listener.enterMultiplicativeExpression)
-            listener.enterMultiplicativeExpression(this);
+        if (listener.enterGateDefinitionArguments)
+            listener.enterGateDefinitionArguments(this);
     }
     exitRule(listener) {
-        if (listener.exitMultiplicativeExpression)
-            listener.exitMultiplicativeExpression(this);
+        if (listener.exitGateDefinitionArguments)
+            listener.exitGateDefinitionArguments(this);
     }
     accept(visitor) {
-        if (visitor.visitMultiplicativeExpression)
-            return visitor.visitMultiplicativeExpression(this);
+        if (visitor.visitGateDefinitionArguments)
+            return visitor.visitGateDefinitionArguments(this);
         else
             return visitor.visitChildren(this);
     }
 }
 __decorate([
     Decorators_2.Override
-], MultiplicativeExpressionContext.prototype, "ruleIndex", null);
+], GateDefinitionArgumentsContext.prototype, "ruleIndex", null);
 __decorate([
     Decorators_2.Override
-], MultiplicativeExpressionContext.prototype, "enterRule", null);
+], GateDefinitionArgumentsContext.prototype, "enterRule", null);
 __decorate([
     Decorators_2.Override
-], MultiplicativeExpressionContext.prototype, "exitRule", null);
+], GateDefinitionArgumentsContext.prototype, "exitRule", null);
 __decorate([
     Decorators_2.Override
-], MultiplicativeExpressionContext.prototype, "accept", null);
-exports.MultiplicativeExpressionContext = MultiplicativeExpressionContext;
-class AdditiveExpressionContext extends ParserRuleContext_1.ParserRuleContext {
+], GateDefinitionArgumentsContext.prototype, "accept", null);
+exports.GateDefinitionArgumentsContext = GateDefinitionArgumentsContext;
+class OpaqueDefinitionArgumentsContext extends ParserRuleContext_1.ParserRuleContext {
     constructor(parent, invokingState) {
         super(parent, invokingState);
     }
-    prefixExpression() {
-        return this.tryGetRuleContext(0, PrefixExpressionContext);
-    }
-    additiveExpression(i) {
+    paramsList(i) {
         if (i === undefined) {
-            return this.getRuleContexts(AdditiveExpressionContext);
+            return this.getRuleContexts(ParamsListContext);
         }
         else {
-            return this.getRuleContext(i, AdditiveExpressionContext);
+            return this.getRuleContext(i, ParamsListContext);
         }
     }
-    Sum() { return this.tryGetToken(QasmParser.Sum, 0); }
-    Subs() { return this.tryGetToken(QasmParser.Subs, 0); }
-    get ruleIndex() { return QasmParser.RULE_additiveExpression; }
+    LeftParen() { return this.tryGetToken(QasmParser.LeftParen, 0); }
+    RightParen() { return this.tryGetToken(QasmParser.RightParen, 0); }
+    get ruleIndex() { return QasmParser.RULE_opaqueDefinitionArguments; }
     enterRule(listener) {
-        if (listener.enterAdditiveExpression)
-            listener.enterAdditiveExpression(this);
+        if (listener.enterOpaqueDefinitionArguments)
+            listener.enterOpaqueDefinitionArguments(this);
     }
     exitRule(listener) {
-        if (listener.exitAdditiveExpression)
-            listener.exitAdditiveExpression(this);
+        if (listener.exitOpaqueDefinitionArguments)
+            listener.exitOpaqueDefinitionArguments(this);
     }
     accept(visitor) {
-        if (visitor.visitAdditiveExpression)
-            return visitor.visitAdditiveExpression(this);
+        if (visitor.visitOpaqueDefinitionArguments)
+            return visitor.visitOpaqueDefinitionArguments(this);
         else
             return visitor.visitChildren(this);
     }
 }
 __decorate([
     Decorators_2.Override
-], AdditiveExpressionContext.prototype, "ruleIndex", null);
+], OpaqueDefinitionArgumentsContext.prototype, "ruleIndex", null);
 __decorate([
     Decorators_2.Override
-], AdditiveExpressionContext.prototype, "enterRule", null);
+], OpaqueDefinitionArgumentsContext.prototype, "enterRule", null);
 __decorate([
     Decorators_2.Override
-], AdditiveExpressionContext.prototype, "exitRule", null);
+], OpaqueDefinitionArgumentsContext.prototype, "exitRule", null);
 __decorate([
     Decorators_2.Override
-], AdditiveExpressionContext.prototype, "accept", null);
-exports.AdditiveExpressionContext = AdditiveExpressionContext;
-class PrefixExpressionContext extends ParserRuleContext_1.ParserRuleContext {
+], OpaqueDefinitionArgumentsContext.prototype, "accept", null);
+exports.OpaqueDefinitionArgumentsContext = OpaqueDefinitionArgumentsContext;
+class ParamsListContext extends ParserRuleContext_1.ParserRuleContext {
     constructor(parent, invokingState) {
         super(parent, invokingState);
     }
-    unary() {
-        return this.tryGetRuleContext(0, UnaryContext);
+    Id() { return this.getToken(QasmParser.Id, 0); }
+    Comma() { return this.tryGetToken(QasmParser.Comma, 0); }
+    paramsList() {
+        return this.tryGetRuleContext(0, ParamsListContext);
     }
-    Sum() { return this.tryGetToken(QasmParser.Sum, 0); }
-    prefixExpression() {
-        return this.tryGetRuleContext(0, PrefixExpressionContext);
-    }
-    Subs() { return this.tryGetToken(QasmParser.Subs, 0); }
-    get ruleIndex() { return QasmParser.RULE_prefixExpression; }
+    get ruleIndex() { return QasmParser.RULE_paramsList; }
     enterRule(listener) {
-        if (listener.enterPrefixExpression)
-            listener.enterPrefixExpression(this);
+        if (listener.enterParamsList)
+            listener.enterParamsList(this);
     }
     exitRule(listener) {
-        if (listener.exitPrefixExpression)
-            listener.exitPrefixExpression(this);
+        if (listener.exitParamsList)
+            listener.exitParamsList(this);
     }
     accept(visitor) {
-        if (visitor.visitPrefixExpression)
-            return visitor.visitPrefixExpression(this);
+        if (visitor.visitParamsList)
+            return visitor.visitParamsList(this);
         else
             return visitor.visitChildren(this);
     }
 }
 __decorate([
     Decorators_2.Override
-], PrefixExpressionContext.prototype, "ruleIndex", null);
+], ParamsListContext.prototype, "ruleIndex", null);
 __decorate([
     Decorators_2.Override
-], PrefixExpressionContext.prototype, "enterRule", null);
+], ParamsListContext.prototype, "enterRule", null);
 __decorate([
     Decorators_2.Override
-], PrefixExpressionContext.prototype, "exitRule", null);
+], ParamsListContext.prototype, "exitRule", null);
 __decorate([
     Decorators_2.Override
-], PrefixExpressionContext.prototype, "accept", null);
-exports.PrefixExpressionContext = PrefixExpressionContext;
-class UnaryContext extends ParserRuleContext_1.ParserRuleContext {
+], ParamsListContext.prototype, "accept", null);
+exports.ParamsListContext = ParamsListContext;
+class BodyContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    bodyExpression() {
+        return this.getRuleContext(0, BodyExpressionContext);
+    }
+    body() {
+        return this.tryGetRuleContext(0, BodyContext);
+    }
+    get ruleIndex() { return QasmParser.RULE_body; }
+    enterRule(listener) {
+        if (listener.enterBody)
+            listener.enterBody(this);
+    }
+    exitRule(listener) {
+        if (listener.exitBody)
+            listener.exitBody(this);
+    }
+    accept(visitor) {
+        if (visitor.visitBody)
+            return visitor.visitBody(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], BodyContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], BodyContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], BodyContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], BodyContext.prototype, "accept", null);
+exports.BodyContext = BodyContext;
+class BodyExpressionContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    Cx() { return this.tryGetToken(QasmParser.Cx, 0); }
+    paramsList() {
+        return this.getRuleContext(0, ParamsListContext);
+    }
+    Semi() { return this.getToken(QasmParser.Semi, 0); }
+    U() { return this.tryGetToken(QasmParser.U, 0); }
+    LeftParen() { return this.tryGetToken(QasmParser.LeftParen, 0); }
+    paramsListBody() {
+        return this.tryGetRuleContext(0, ParamsListBodyContext);
+    }
+    RightParen() { return this.tryGetToken(QasmParser.RightParen, 0); }
+    Id() { return this.tryGetToken(QasmParser.Id, 0); }
+    get ruleIndex() { return QasmParser.RULE_bodyExpression; }
+    enterRule(listener) {
+        if (listener.enterBodyExpression)
+            listener.enterBodyExpression(this);
+    }
+    exitRule(listener) {
+        if (listener.exitBodyExpression)
+            listener.exitBodyExpression(this);
+    }
+    accept(visitor) {
+        if (visitor.visitBodyExpression)
+            return visitor.visitBodyExpression(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], BodyExpressionContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], BodyExpressionContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], BodyExpressionContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], BodyExpressionContext.prototype, "accept", null);
+exports.BodyExpressionContext = BodyExpressionContext;
+class ParamsListBodyContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    exp() {
+        return this.getRuleContext(0, ExpContext);
+    }
+    paramsListBody() {
+        return this.tryGetRuleContext(0, ParamsListBodyContext);
+    }
+    Comma() { return this.tryGetToken(QasmParser.Comma, 0); }
+    get ruleIndex() { return QasmParser.RULE_paramsListBody; }
+    enterRule(listener) {
+        if (listener.enterParamsListBody)
+            listener.enterParamsListBody(this);
+    }
+    exitRule(listener) {
+        if (listener.exitParamsListBody)
+            listener.exitParamsListBody(this);
+    }
+    accept(visitor) {
+        if (visitor.visitParamsListBody)
+            return visitor.visitParamsListBody(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], ParamsListBodyContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], ParamsListBodyContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], ParamsListBodyContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], ParamsListBodyContext.prototype, "accept", null);
+exports.ParamsListBodyContext = ParamsListBodyContext;
+class ExpContext extends ParserRuleContext_1.ParserRuleContext {
     constructor(parent, invokingState) {
         super(parent, invokingState);
     }
@@ -3832,75 +2671,519 @@ class UnaryContext extends ParserRuleContext_1.ParserRuleContext {
     Real() { return this.tryGetToken(QasmParser.Real, 0); }
     Pi() { return this.tryGetToken(QasmParser.Pi, 0); }
     Id() { return this.tryGetToken(QasmParser.Id, 0); }
+    unaryOp() {
+        return this.tryGetRuleContext(0, UnaryOpContext);
+    }
     LeftParen() { return this.tryGetToken(QasmParser.LeftParen, 0); }
-    expression() {
-        return this.tryGetRuleContext(0, ExpressionContext);
+    exp(i) {
+        if (i === undefined) {
+            return this.getRuleContexts(ExpContext);
+        }
+        else {
+            return this.getRuleContext(i, ExpContext);
+        }
     }
     RightParen() { return this.tryGetToken(QasmParser.RightParen, 0); }
-    get ruleIndex() { return QasmParser.RULE_unary; }
+    get ruleIndex() { return QasmParser.RULE_exp; }
     enterRule(listener) {
-        if (listener.enterUnary)
-            listener.enterUnary(this);
+        if (listener.enterExp)
+            listener.enterExp(this);
     }
     exitRule(listener) {
-        if (listener.exitUnary)
-            listener.exitUnary(this);
+        if (listener.exitExp)
+            listener.exitExp(this);
     }
     accept(visitor) {
-        if (visitor.visitUnary)
-            return visitor.visitUnary(this);
+        if (visitor.visitExp)
+            return visitor.visitExp(this);
         else
             return visitor.visitChildren(this);
     }
 }
 __decorate([
     Decorators_2.Override
-], UnaryContext.prototype, "ruleIndex", null);
+], ExpContext.prototype, "ruleIndex", null);
 __decorate([
     Decorators_2.Override
-], UnaryContext.prototype, "enterRule", null);
+], ExpContext.prototype, "enterRule", null);
 __decorate([
     Decorators_2.Override
-], UnaryContext.prototype, "exitRule", null);
+], ExpContext.prototype, "exitRule", null);
 __decorate([
     Decorators_2.Override
-], UnaryContext.prototype, "accept", null);
-exports.UnaryContext = UnaryContext;
-class IdListContext extends ParserRuleContext_1.ParserRuleContext {
+], ExpContext.prototype, "accept", null);
+exports.ExpContext = ExpContext;
+class UnaryOpContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    Sin() { return this.tryGetToken(QasmParser.Sin, 0); }
+    Cos() { return this.tryGetToken(QasmParser.Cos, 0); }
+    Tan() { return this.tryGetToken(QasmParser.Tan, 0); }
+    Exp() { return this.tryGetToken(QasmParser.Exp, 0); }
+    Ln() { return this.tryGetToken(QasmParser.Ln, 0); }
+    Sqrt() { return this.tryGetToken(QasmParser.Sqrt, 0); }
+    get ruleIndex() { return QasmParser.RULE_unaryOp; }
+    enterRule(listener) {
+        if (listener.enterUnaryOp)
+            listener.enterUnaryOp(this);
+    }
+    exitRule(listener) {
+        if (listener.exitUnaryOp)
+            listener.exitUnaryOp(this);
+    }
+    accept(visitor) {
+        if (visitor.visitUnaryOp)
+            return visitor.visitUnaryOp(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], UnaryOpContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], UnaryOpContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], UnaryOpContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], UnaryOpContext.prototype, "accept", null);
+exports.UnaryOpContext = UnaryOpContext;
+class MeasureContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    Measure() { return this.getToken(QasmParser.Measure, 0); }
+    qubit() {
+        return this.tryGetRuleContext(0, QubitContext);
+    }
+    Assign() { return this.getToken(QasmParser.Assign, 0); }
+    cbit() {
+        return this.tryGetRuleContext(0, CbitContext);
+    }
+    Id(i) {
+        if (i === undefined) {
+            return this.getTokens(QasmParser.Id);
+        }
+        else {
+            return this.getToken(QasmParser.Id, i);
+        }
+    }
+    get ruleIndex() { return QasmParser.RULE_measure; }
+    enterRule(listener) {
+        if (listener.enterMeasure)
+            listener.enterMeasure(this);
+    }
+    exitRule(listener) {
+        if (listener.exitMeasure)
+            listener.exitMeasure(this);
+    }
+    accept(visitor) {
+        if (visitor.visitMeasure)
+            return visitor.visitMeasure(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], MeasureContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], MeasureContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], MeasureContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], MeasureContext.prototype, "accept", null);
+exports.MeasureContext = MeasureContext;
+class QubitContext extends ParserRuleContext_1.ParserRuleContext {
     constructor(parent, invokingState) {
         super(parent, invokingState);
     }
     Id() { return this.getToken(QasmParser.Id, 0); }
-    idList() {
-        return this.tryGetRuleContext(0, IdListContext);
+    qLine() {
+        return this.getRuleContext(0, QLineContext);
     }
-    Comma() { return this.tryGetToken(QasmParser.Comma, 0); }
-    get ruleIndex() { return QasmParser.RULE_idList; }
+    get ruleIndex() { return QasmParser.RULE_qubit; }
     enterRule(listener) {
-        if (listener.enterIdList)
-            listener.enterIdList(this);
+        if (listener.enterQubit)
+            listener.enterQubit(this);
     }
     exitRule(listener) {
-        if (listener.exitIdList)
-            listener.exitIdList(this);
+        if (listener.exitQubit)
+            listener.exitQubit(this);
     }
     accept(visitor) {
-        if (visitor.visitIdList)
-            return visitor.visitIdList(this);
+        if (visitor.visitQubit)
+            return visitor.visitQubit(this);
         else
             return visitor.visitChildren(this);
     }
 }
 __decorate([
     Decorators_2.Override
-], IdListContext.prototype, "ruleIndex", null);
+], QubitContext.prototype, "ruleIndex", null);
 __decorate([
     Decorators_2.Override
-], IdListContext.prototype, "enterRule", null);
+], QubitContext.prototype, "enterRule", null);
 __decorate([
     Decorators_2.Override
-], IdListContext.prototype, "exitRule", null);
+], QubitContext.prototype, "exitRule", null);
 __decorate([
     Decorators_2.Override
-], IdListContext.prototype, "accept", null);
-exports.IdListContext = IdListContext;
+], QubitContext.prototype, "accept", null);
+exports.QubitContext = QubitContext;
+class CbitContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    Id() { return this.getToken(QasmParser.Id, 0); }
+    qLine() {
+        return this.getRuleContext(0, QLineContext);
+    }
+    get ruleIndex() { return QasmParser.RULE_cbit; }
+    enterRule(listener) {
+        if (listener.enterCbit)
+            listener.enterCbit(this);
+    }
+    exitRule(listener) {
+        if (listener.exitCbit)
+            listener.exitCbit(this);
+    }
+    accept(visitor) {
+        if (visitor.visitCbit)
+            return visitor.visitCbit(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], CbitContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], CbitContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], CbitContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], CbitContext.prototype, "accept", null);
+exports.CbitContext = CbitContext;
+class CustomArglistContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    Id() { return this.getToken(QasmParser.Id, 0); }
+    LeftParen() { return this.tryGetToken(QasmParser.LeftParen, 0); }
+    paramsListNumber() {
+        return this.tryGetRuleContext(0, ParamsListNumberContext);
+    }
+    RightParen() { return this.tryGetToken(QasmParser.RightParen, 0); }
+    qubitAndQregList() {
+        return this.getRuleContext(0, QubitAndQregListContext);
+    }
+    get ruleIndex() { return QasmParser.RULE_customArglist; }
+    enterRule(listener) {
+        if (listener.enterCustomArglist)
+            listener.enterCustomArglist(this);
+    }
+    exitRule(listener) {
+        if (listener.exitCustomArglist)
+            listener.exitCustomArglist(this);
+    }
+    accept(visitor) {
+        if (visitor.visitCustomArglist)
+            return visitor.visitCustomArglist(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], CustomArglistContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], CustomArglistContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], CustomArglistContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], CustomArglistContext.prototype, "accept", null);
+exports.CustomArglistContext = CustomArglistContext;
+class ParamsListNumberContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    exp() {
+        return this.getRuleContext(0, ExpContext);
+    }
+    paramsListNumber() {
+        return this.tryGetRuleContext(0, ParamsListNumberContext);
+    }
+    Comma() { return this.tryGetToken(QasmParser.Comma, 0); }
+    get ruleIndex() { return QasmParser.RULE_paramsListNumber; }
+    enterRule(listener) {
+        if (listener.enterParamsListNumber)
+            listener.enterParamsListNumber(this);
+    }
+    exitRule(listener) {
+        if (listener.exitParamsListNumber)
+            listener.exitParamsListNumber(this);
+    }
+    accept(visitor) {
+        if (visitor.visitParamsListNumber)
+            return visitor.visitParamsListNumber(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], ParamsListNumberContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], ParamsListNumberContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], ParamsListNumberContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], ParamsListNumberContext.prototype, "accept", null);
+exports.ParamsListNumberContext = ParamsListNumberContext;
+class QubitAndQregListContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    qbitOrQreg() {
+        return this.getRuleContext(0, QbitOrQregContext);
+    }
+    Comma() { return this.tryGetToken(QasmParser.Comma, 0); }
+    qubitAndQregList() {
+        return this.tryGetRuleContext(0, QubitAndQregListContext);
+    }
+    get ruleIndex() { return QasmParser.RULE_qubitAndQregList; }
+    enterRule(listener) {
+        if (listener.enterQubitAndQregList)
+            listener.enterQubitAndQregList(this);
+    }
+    exitRule(listener) {
+        if (listener.exitQubitAndQregList)
+            listener.exitQubitAndQregList(this);
+    }
+    accept(visitor) {
+        if (visitor.visitQubitAndQregList)
+            return visitor.visitQubitAndQregList(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], QubitAndQregListContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], QubitAndQregListContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], QubitAndQregListContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], QubitAndQregListContext.prototype, "accept", null);
+exports.QubitAndQregListContext = QubitAndQregListContext;
+class QbitOrQregContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    Id() { return this.getToken(QasmParser.Id, 0); }
+    qLine() {
+        return this.tryGetRuleContext(0, QLineContext);
+    }
+    get ruleIndex() { return QasmParser.RULE_qbitOrQreg; }
+    enterRule(listener) {
+        if (listener.enterQbitOrQreg)
+            listener.enterQbitOrQreg(this);
+    }
+    exitRule(listener) {
+        if (listener.exitQbitOrQreg)
+            listener.exitQbitOrQreg(this);
+    }
+    accept(visitor) {
+        if (visitor.visitQbitOrQreg)
+            return visitor.visitQbitOrQreg(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], QbitOrQregContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], QbitOrQregContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], QbitOrQregContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], QbitOrQregContext.prototype, "accept", null);
+exports.QbitOrQregContext = QbitOrQregContext;
+class CxGateContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    Cx() { return this.getToken(QasmParser.Cx, 0); }
+    qubitAndQregList() {
+        return this.getRuleContext(0, QubitAndQregListContext);
+    }
+    get ruleIndex() { return QasmParser.RULE_cxGate; }
+    enterRule(listener) {
+        if (listener.enterCxGate)
+            listener.enterCxGate(this);
+    }
+    exitRule(listener) {
+        if (listener.exitCxGate)
+            listener.exitCxGate(this);
+    }
+    accept(visitor) {
+        if (visitor.visitCxGate)
+            return visitor.visitCxGate(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], CxGateContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], CxGateContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], CxGateContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], CxGateContext.prototype, "accept", null);
+exports.CxGateContext = CxGateContext;
+class BarrierGateContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    Barrier() { return this.getToken(QasmParser.Barrier, 0); }
+    Id() { return this.tryGetToken(QasmParser.Id, 0); }
+    qubitList() {
+        return this.tryGetRuleContext(0, QubitListContext);
+    }
+    get ruleIndex() { return QasmParser.RULE_barrierGate; }
+    enterRule(listener) {
+        if (listener.enterBarrierGate)
+            listener.enterBarrierGate(this);
+    }
+    exitRule(listener) {
+        if (listener.exitBarrierGate)
+            listener.exitBarrierGate(this);
+    }
+    accept(visitor) {
+        if (visitor.visitBarrierGate)
+            return visitor.visitBarrierGate(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], BarrierGateContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], BarrierGateContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], BarrierGateContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], BarrierGateContext.prototype, "accept", null);
+exports.BarrierGateContext = BarrierGateContext;
+class QubitListContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    qubit() {
+        return this.getRuleContext(0, QubitContext);
+    }
+    Comma() { return this.tryGetToken(QasmParser.Comma, 0); }
+    qubitList() {
+        return this.tryGetRuleContext(0, QubitListContext);
+    }
+    get ruleIndex() { return QasmParser.RULE_qubitList; }
+    enterRule(listener) {
+        if (listener.enterQubitList)
+            listener.enterQubitList(this);
+    }
+    exitRule(listener) {
+        if (listener.exitQubitList)
+            listener.exitQubitList(this);
+    }
+    accept(visitor) {
+        if (visitor.visitQubitList)
+            return visitor.visitQubitList(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], QubitListContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], QubitListContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], QubitListContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], QubitListContext.prototype, "accept", null);
+exports.QubitListContext = QubitListContext;
+class ResetGateContext extends ParserRuleContext_1.ParserRuleContext {
+    constructor(parent, invokingState) {
+        super(parent, invokingState);
+    }
+    Reset() { return this.getToken(QasmParser.Reset, 0); }
+    Id() { return this.tryGetToken(QasmParser.Id, 0); }
+    qubit() {
+        return this.tryGetRuleContext(0, QubitContext);
+    }
+    get ruleIndex() { return QasmParser.RULE_resetGate; }
+    enterRule(listener) {
+        if (listener.enterResetGate)
+            listener.enterResetGate(this);
+    }
+    exitRule(listener) {
+        if (listener.exitResetGate)
+            listener.exitResetGate(this);
+    }
+    accept(visitor) {
+        if (visitor.visitResetGate)
+            return visitor.visitResetGate(this);
+        else
+            return visitor.visitChildren(this);
+    }
+}
+__decorate([
+    Decorators_2.Override
+], ResetGateContext.prototype, "ruleIndex", null);
+__decorate([
+    Decorators_2.Override
+], ResetGateContext.prototype, "enterRule", null);
+__decorate([
+    Decorators_2.Override
+], ResetGateContext.prototype, "exitRule", null);
+__decorate([
+    Decorators_2.Override
+], ResetGateContext.prototype, "accept", null);
+exports.ResetGateContext = ResetGateContext;

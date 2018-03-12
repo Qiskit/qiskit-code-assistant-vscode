@@ -1,194 +1,172 @@
 grammar Qasm;
 
-startProgram
-    : code EOF
+code
+    : sentences
+    | headers sentences
+    | clean
     ;
 
-code
-    : ibmDefinition
-    | ibmDefinition program
-    | library
-    | clean
-    | // Epsilon
+headers
+    : QasmDescriptor
+    | QasmDescriptor Include
+    | Include
+    ;
+
+sentences
+    : sentence
+    | sentence sentences
     ;
 
 clean  
-    : Clean
+    : Clean EOF
     ;
 
-ibmDefinition
-    : IbmQasm Real Semi include
-    | IbmQasm Real Semi
+sentence
+    : definition
+    | expression
+    | conditional expression
+    | EOF
     ;
 
-include
-    : Include Qelib Semi
+definition
+    : Qreg Id qLine Semi
+    | Creg Id qLine Semi
+    | gateDefinition
+    | opaqueDefinition Semi
     ;
 
-library
-    : declaration
-    | library declaration
+expression
+    : measure Semi
+    | customArglist Semi
+    | cxGate Semi
+    | barrierGate Semi
+    | resetGate Semi
     ;
 
-program
-    : statement
-    | program statement
+conditional: 'conditional';
+
+qLine: 
+    LeftBrace Int RightBrace
     ;
 
-statement
-    : declaration
-    | qoperation
+gateDefinition: 
+    Gate Id gateDefinitionArguments
     ;
 
-declaration
-    : qregDeclaration
-    | cregDeclaration
-    | gateDeclaration
+opaqueDefinition
+    : Opaque Id opaqueDefinitionArguments
     ;
 
-qoperation
-    : unitaryOperation Semi
-    | opaque Semi
-    | measure Semi
-    | barrier Semi
-    | resetOperation Semi
+gateDefinitionArguments
+    : paramsList LeftCurlyBrace body RightCurlyBrace
+    | LeftParen paramsList RightParen paramsList LeftCurlyBrace body RightCurlyBrace
+    | LeftParen paramsList RightParen paramsList LeftCurlyBrace RightCurlyBrace
+    | LeftParen RightParen paramsList LeftCurlyBrace RightCurlyBrace
+    | LeftParen RightParen paramsList LeftCurlyBrace body RightCurlyBrace
+    | paramsList LeftCurlyBrace RightCurlyBrace
     ;
 
-unitaryOperation
-    : U LeftParen expList RightParen primary 
-    | Cx primary Comma primary
-    | Id primaryList
-    | Id LeftParen RightParen primaryList
-    | Id LeftParen expList RightParen primaryList
-    ;
-
-opaque
-    : Opaque Id gateScope bitList
-    | Opaque Id gateScope LeftParen RightParen bitList
-    | Opaque Id gateScope LeftParen gateIdList RightParen bitList
-    ;
-
-measure
-    : Measure primary Assign primary
-    ;
-
-barrier
-    : Barrier primaryList
-    ;
-
-resetOperation
-    : Reset primary
-    ;
-
-primaryList
-    : primary
-    | primaryList Comma primary
-    ;
-
-primary 
-    : Id
-    | indexedId
-    ;
-
-indexedId
-    : Id LeftBrace Int RightBrace
-    ;
-
-qregDeclaration
-    : Qreg Id LeftBrace Int RightBrace Semi
-    ;
-
-cregDeclaration
-    : Creg Id LeftBrace Int RightBrace Semi
-    ;
-
-gateDeclaration
-    : Gate Id gateScope bitList gateBody
-    | Gate Id gateScope LeftParen RightParen bitList gateBody
-    | Gate Id gateScope LeftParen gateIdList RightParen bitList gateBody
-    ;
-
-gateScope
-    : // Epsilon
+opaqueDefinitionArguments
+    : paramsList
+    | LeftParen paramsList RightParen paramsList
     ; 
 
-bitList 
-    : bit
-    | bitList Comma bit
-    ;
-
-bit
+paramsList
     : Id
+    | Id Comma paramsList
     ;
 
-gateBody
-    : LeftCurlyBrace gateOpList RightCurlyBrace
+body
+    : bodyExpression
+    | bodyExpression body
     ;
 
-gateOpList
-    : // Epsilon
-    | gateOp
-    | gateOpList gateOp
+bodyExpression
+    : Cx paramsList Semi
+    | U LeftParen paramsListBody RightParen paramsList Semi
+    | Id paramsList Semi
+    | Id LeftParen paramsListBody RightParen paramsList Semi
     ;
 
-gateOp
-    : U LeftParen expList RightParen Id Semi
-    | Cx Id Comma Id Semi
-    | Id idList Semi
-    | Id LeftParen RightParen idList Semi
-    | Id LeftParen expList RightParen idList Semi
-    | Barrier idList Semi
+paramsListBody
+    : exp
+    | paramsListBody Comma exp
     ;
 
-gateIdList
-    : gate
-    | gateIdList Comma gate
-    ;
-
-gate
-    : Id
-    ;
-
-expList
-    : expression
-    | expList Comma expression
-    ;
-
-expression 
-    : multiplicativeExpression
-    | expression Pow multiplicativeExpression
-    ;
-
-multiplicativeExpression
-    : additiveExpression
-    | multiplicativeExpression Mult multiplicativeExpression
-    | multiplicativeExpression Div multiplicativeExpression
-    ;
-
-additiveExpression
-    : prefixExpression
-    | additiveExpression Sum additiveExpression
-    | additiveExpression Subs additiveExpression
-    ;
-
-prefixExpression
-    : unary
-    | Sum prefixExpression
-    | Subs prefixExpression
-    ;
-
-unary  
+exp
     : Int
     | Real
     | Pi
-    | Id  // variable ref
-    | LeftParen expression RightParen
-    | Id LeftParen expression RightParen  // function ref
+    | Id
+    | unaryOp LeftParen exp RightParen
+    | '-' exp
+    | LeftParen exp RightParen
+    | exp '+' exp
+    | exp '-' exp
+    | exp '*' exp
+    | exp '/' exp
+    | exp '^' exp
     ;
 
-idList 
+unaryOp
+    : Sin
+    | Cos
+    | Tan
+    | Exp
+    | Ln
+    | Sqrt
+    ;
+
+measure
+    : Measure qubit Assign cbit
+    | Measure Id Assign Id
+    ;
+
+qubit
+    : Id qLine
+    ;
+
+cbit
+    : Id qLine
+    ;
+
+customArglist
+    : Id LeftParen paramsListNumber RightParen qubitAndQregList
+    | Id qubitAndQregList
+    ;
+
+paramsListNumber
+    : exp
+    | paramsListNumber Comma exp
+    ;
+
+qubitAndQregList
+    : qbitOrQreg
+    | qbitOrQreg Comma qubitAndQregList 
+    ;
+
+qbitOrQreg
     : Id
-    | idList Comma Id
+    | Id qLine
+    ;
+
+cxGate
+    : Cx qubitAndQregList
+    ;
+
+barrierGate
+    : Barrier Id
+    | Barrier qubitList 
+    ;
+
+qubitList
+    : qubit
+    | qubit Comma qubitList
+    ; 
+
+resetGate
+    : Reset Id
+    | Reset qubit
     ;
 
 // terminals
@@ -198,14 +176,20 @@ WhiteSpace: [ \t\n\r] -> skip;
 
 Real: [0-9]+'.'[0-9]+;
 Int: [0-9]+;
-IbmQasm: 'OPENQASM' | 'IBMQASM';
-Include: 'include';
+QasmDescriptor: 'OPENQASM 2.0;' | 'IBMQASM 2.0;';
+Include: 'include "quelib1.inc";';
 Qelib: 'QELIB.INC';
 Qreg: 'qreg';
 Creg: 'creg';
 Clean: 'clean';
 U: 'U';
 Cx: 'CX';
+Sin: 'sin';
+Cos: 'cos';
+Tan: 'tan';
+Exp: 'exp';
+Ln: 'ln';
+Sqrt: 'sqrt';
 Measure: 'measure';
 Barrier: 'barrier';
 Reset: 'reset';

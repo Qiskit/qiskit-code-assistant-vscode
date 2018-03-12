@@ -11,7 +11,7 @@ export function calculateSuggestionsFor(input: string): string[] {
     let tokenStream = new CommonTokenStream(lexer);
     let parser = new QasmParser(tokenStream);
 
-    parser.startProgram();
+    parser.code();
 
     return calculateCandidateKeywords(parser, tokenStream.getTokens().length);
 }
