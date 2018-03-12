@@ -1,20 +1,21 @@
-import * as assert from 'assert';
+import { expect } from 'chai';
 import { parse } from '../src/antlr/parser'
 import { ParserResult } from '../src/tools/parserModel';
-
-let doesNotContainErrors = (result: ParserResult) => {
-  return result.errors.length === 0;
-}
 
 describe('A parse function', () => {
 
   describe('with an empty input', () => {
-
     it('will end without errors', () => {
       let result = parse('');
-      doesNotContainErrors(result);
+      expect(result.errors.length).to.be.eq(0);
     });
+  });
 
+  describe('with an input with only clean', () => {
+    it ('will end without errors', () => {
+      let result = parse('clean');
+      expect(result.errors.length).to.be.eq(0);
+    });
   });
 
   describe('with headers', () => {
@@ -22,7 +23,7 @@ describe('A parse function', () => {
       let input = 'OPENQASM 2.0;';
 
       let result = parse(input);
-      doesNotContainErrors(result);
+      expect(result.errors.length).to.be.eq(0);
     });
 
     it('including a functions library will end without errors', () => {
@@ -32,7 +33,7 @@ describe('A parse function', () => {
         `;
 
       let result = parse(input);
-      doesNotContainErrors(result);
+      expect(result.errors.length).to.be.eq(0);
     });
   });
 
@@ -52,7 +53,7 @@ describe('A parse function', () => {
         measure q[1] -> c[1];`;
 
       let result = parse(input);
-      doesNotContainErrors(result);
+      expect(result.errors.length).to.be.eq(0);
     });
   });
 
@@ -65,7 +66,7 @@ describe('A parse function', () => {
         qreg q;`;
 
       let result = parse(input);
-      assert.ok(result.errors[0].line === 4);
+      expect(result.errors[0].line).to.be.eq(4);
     });
   });
 

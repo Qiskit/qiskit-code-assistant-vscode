@@ -19,6 +19,7 @@
 	},
 	"devDependencies": {
 		"chai": "^4.1.1",
+		"@types/chai": "^4.1.1",
 		"mocha": "^3.5.0",
 		"antlr4ts-cli": "^0.4.0-alpha.4"
 	},
