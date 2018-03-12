@@ -43,7 +43,9 @@ expression
     | resetGate Semi
     ;
 
-conditional: 'conditional';
+conditional
+    : If LeftParen Id Equals Int RightParen
+    ;
 
 qLine: 
     LeftBrace Int RightBrace
@@ -194,6 +196,8 @@ Measure: 'measure';
 Barrier: 'barrier';
 Reset: 'reset';
 Opaque: 'opaque';
+If: 'if';
+Equals: '==';
 Assign: '->';
 Semi: ';';
 Comma: ',';

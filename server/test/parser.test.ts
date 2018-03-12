@@ -100,6 +100,17 @@ describe('A parse function', () => {
       let result = parse(input);
       expect(result.errors.length).to.be.eq(0);
     });
+
+    it('will accept conditional expressions', () => {
+      let input = `
+        qreg q[5];
+        if (a == 2)
+          barrier q[2];
+        `;
+
+      let result = parse(input);
+      expect(result.errors.length).to.be.eq(0);
+    });
   });
 
   describe('with an input from QX composer', () => {
