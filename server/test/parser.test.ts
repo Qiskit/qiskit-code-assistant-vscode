@@ -1,19 +1,21 @@
 import { expect } from 'chai';
-import { parse } from '../src/qasm/parser'
+import { Parser } from '../src/qasm/parser'
 import { ParserResult } from '../src/tools/parserModel';
 
-describe('A parse function', () => {
+describe('A parser', () => {
+
+  let parser = new Parser();
 
   describe('with an empty input', () => {
     it('will end without errors', () => {
-      let result = parse('');
+      let result = parser.parse('');
       expect(result.errors.length).to.be.eq(0);
     });
   });
 
   describe('with an input with only clean', () => {
     it ('will end without errors', () => {
-      let result = parse('clean');
+      let result = parser.parse('clean');
       expect(result.errors.length).to.be.eq(0);
     });
   });
@@ -22,7 +24,7 @@ describe('A parse function', () => {
     it('defining only ASM version will end without errors', () => {
       let input = 'OPENQASM 2.0;';
 
-      let result = parse(input);
+      let result = parser.parse(input);
       expect(result.errors.length).to.be.eq(0);
     });
 
@@ -32,7 +34,7 @@ describe('A parse function', () => {
         include "quelib1.inc";
         `;
 
-      let result = parse(input);
+      let result = parser.parse(input);
       expect(result.errors.length).to.be.eq(0);
     });
   });
@@ -44,7 +46,7 @@ describe('A parse function', () => {
         creg c[5];
         `;
 
-      let result = parse(input);
+      let result = parser.parse(input);
       expect(result.errors.length).to.be.eq(0);
     });
 
@@ -55,7 +57,7 @@ describe('A parse function', () => {
         }
         `;
 
-      let result = parse(input);
+      let result = parser.parse(input);
       expect(result.errors.length).to.be.eq(0);
     });
 
@@ -67,7 +69,7 @@ describe('A parse function', () => {
         }
         `;
       
-      let result = parse(input);
+      let result = parser.parse(input);
       expect(result.errors.length).to.be.eq(1);
       expect(result.errors[0].line).to.be.eq(3);
     });
@@ -78,14 +80,14 @@ describe('A parse function', () => {
         creg c[5];
         barrier q[1];`;
 
-      let result = parse(input);
+      let result = parser.parse(input);
       expect(result.errors.length).to.be.eq(0);
     });
 
     it('will accept opaque definition', () => {
       let input = 'opaque foo(a, b, c) q;';
 
-      let result = parse(input);
+      let result = parser.parse(input);
       expect(result.errors.length).to.be.eq(0);
     });
 
@@ -97,7 +99,7 @@ describe('A parse function', () => {
         measure q[1] -> c[1];
         reset q;`;
 
-      let result = parse(input);
+      let result = parser.parse(input);
       expect(result.errors.length).to.be.eq(0);
     });
 
@@ -108,7 +110,7 @@ describe('A parse function', () => {
           barrier q[2];
         `;
 
-      let result = parse(input);
+      let result = parser.parse(input);
       expect(result.errors.length).to.be.eq(0);
     });
   });
@@ -128,7 +130,7 @@ describe('A parse function', () => {
         cx q[1],q[0];
         measure q[1] -> c[1];`;
 
-      let result = parse(input);
+      let result = parser.parse(input);
       expect(result.errors.length).to.be.eq(0);
     });
   });
@@ -141,7 +143,7 @@ describe('A parse function', () => {
 
         qreg q;`;
 
-      let result = parse(input);
+      let result = parser.parse(input);
       expect(result.errors.length).to.be.eq(1);
       expect(result.errors[0].line).to.be.eq(4);
     });
