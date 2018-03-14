@@ -1,5 +1,13 @@
 'use strict';
 
+export interface Symbol {
+
+    label: string,
+    detail: string,
+    documentation: string,
+    type: string
+}
+
 export interface ParserResult {
     ast: any,
     errors: ParserError[]

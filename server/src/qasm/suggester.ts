@@ -2,8 +2,8 @@
 
 import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts';
 import { CodeCompletionCore } from 'antlr4-c3';
-import { QasmLexer } from './QasmLexer';
-import { QasmParser } from './QasmParser';
+import { QasmLexer } from './antlr/QasmLexer';
+import { QasmParser } from './antlr/QasmParser';
 import { Symbol } from './model';
 
 export function calculateSuggestionsFor(input: string): string[] {

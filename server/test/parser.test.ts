@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { parse } from '../src/antlr/parser'
+import { parse } from '../src/qasm/parser'
 import { ParserResult } from '../src/tools/parserModel';
 
 describe('A parse function', () => {
