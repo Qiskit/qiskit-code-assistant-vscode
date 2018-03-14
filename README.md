@@ -105,6 +105,11 @@ Some additional information can be found in this [link](https://www.digitalocean
 
 * [Online Jison generator](http://zaa.ch/jison/try/usf/#prod_1): This web is quite interesting because it is able to extract firsts and follows of the grammar. One thing that is not possible in the auto-generated parser from the Jison console command.
 
+### ANTLR4 related links
+
+* [Autocompletion library from Mike Lichske](https://github.com/mike-lischke/antlr4-c3)
+* [Universal code completion with ANTLR3](http://www.soft-gems.net/index.php/tools/47-universal-code-completion-using-antlr3)
+
 ## Meta
 
 TBD

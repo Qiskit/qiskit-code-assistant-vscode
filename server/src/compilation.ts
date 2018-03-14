@@ -9,44 +9,52 @@ import {
     TextDocument,
     TextDocumentPositionParams
 } from 'vscode-languageserver';
-import { parse } from './tools/parser';
-import { ParserError, ParseErrorLevel } from './tools/parserModel';
-
-let symbols = [{
-    label: 'OPENQASM',
-    kind: CompletionItemKind.Text,
-    data: 1,
-    detail: 'OPENQASM',
-    documentation: 'TBD ... blah blah blah'
-},
-{
-    label: 'include',
-    kind: CompletionItemKind.Text,
-    data: 2,
-    detail: 'include',
-    documentation: 'TBD ... blah blah blah'
-}
-];
+import { Parser } from './qasm/parser';
+import { Suggester } from './qasm/suggester';
+import { ParserError, ParseErrorLevel, Symbol } from './qasm/model';
 
 export class CompilationTool {
     connection: IConnection;
+    currentDocument: TextDocument = null;
+    currentSuggestions: CompletionItem[] = [];
+
+    toCompletionItem = (symbol: Symbol, index: number) => {
+        return {
+            label: symbol.label,
+            kind: CompletionItemKind.Text,
+            data: index,
+            detail: symbol.detail,
+            documentation: symbol.documentation   
+        };
+    };
 
     constructor(public _connection: IConnection) {
         this.connection = _connection;
     }
 
     validateDocument(document: TextDocument): void {
-        let result = parse(document.getText());
+        this.currentDocument = document;
+
+        let parser = new Parser();
+        let result = parser.parse(document.getText());
         this.launchCompilationErrors(document, result.errors);
     }
 
     availableCompletions(_documentPosition: TextDocumentPositionParams): CompletionItem[] {
-        // The available completions should be based in the actual state of the parser
-        return symbols;
+        if (this.currentDocument === null) {
+            return [];
+        }
+
+        let textToCaret = this.currentDocument.getText().substring(0, this.currentDocument.offsetAt(_documentPosition.position));
+
+        let suggester = new Suggester();
+        this.currentSuggestions = suggester.calculateSuggestionsFor(textToCaret).map(this.toCompletionItem);
+
+        return this.currentSuggestions;
     }
 
     completionDetailsFor(item: CompletionItem): CompletionItem {
-        let searchedSymbol = symbols.filter((symbol) => {
+        let searchedSymbol = this.currentSuggestions.filter((symbol) => {
             return symbol.data === item.data
         }).pop();
 
