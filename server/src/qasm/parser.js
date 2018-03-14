@@ -8,8 +8,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 const antlr4ts_1 = require("antlr4ts");
 const parserModel_1 = require("../tools/parserModel");
-const QasmLexer_1 = require("./QasmLexer");
-const QasmParser_1 = require("./QasmParser");
+const QasmLexer_1 = require("./antlr/QasmLexer");
+const QasmParser_1 = require("./antlr/QasmParser");
 const Decorators_1 = require("antlr4ts/Decorators");
 // This function launches the parsing engine and transforms the errors into 
 // ParserErrors which are understood by the extension
