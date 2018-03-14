@@ -10,13 +10,23 @@ import {
     TextDocumentPositionParams
 } from 'vscode-languageserver';
 import { Parser } from './qasm/parser';
-import * as suggester from './qasm/suggester';
-import { ParserError, ParseErrorLevel } from './tools/parserModel';
+import { Suggester } from './qasm/suggester';
+import { ParserError, ParseErrorLevel, Symbol } from './qasm/model';
 
 export class CompilationTool {
     connection: IConnection;
     currentDocument: TextDocument = null;
-    availableSymbols: CompletionItem[] = [];
+    currentSuggestions: CompletionItem[] = [];
+
+    toCompletionItem = (symbol: Symbol, index: number) => {
+        return {
+            label: symbol.label,
+            kind: CompletionItemKind.Text,
+            data: index,
+            detail: symbol.detail,
+            documentation: symbol.documentation   
+        };
+    };
 
     constructor(public _connection: IConnection) {
         this.connection = _connection;
@@ -37,35 +47,14 @@ export class CompilationTool {
 
         let textToCaret = this.currentDocument.getText().substring(0, this.currentDocument.offsetAt(_documentPosition.position));
 
-        let suggestions = suggester.calculateSuggestionsFor(textToCaret);
+        let suggester = new Suggester();
+        this.currentSuggestions = suggester.calculateSuggestionsFor(textToCaret).map(this.toCompletionItem);
 
-        if (suggestions.length === 0) {
-            return [];
-        }
-
-        let isContainedInSuggestions = (symbol: any) => {
-            return suggestions.indexOf(symbol.type) > -1;
-        }
-
-        return this.updatedAvailableSymbols().filter(isContainedInSuggestions);
-    }
-
-    updatedAvailableSymbols(): CompletionItem[] {
-        this.availableSymbols = suggester.availableSymbols().map((symbol, index) => {
-            return {
-                label: symbol.label,
-                kind: CompletionItemKind.Text,
-                data: index,
-                detail: symbol.detail,
-                documentation: symbol.documentation   
-            };
-        });
-
-        return this.availableSymbols;
+        return this.currentSuggestions;
     }
 
     completionDetailsFor(item: CompletionItem): CompletionItem {
-        let searchedSymbol = this.availableSymbols.filter((symbol) => {
+        let searchedSymbol = this.currentSuggestions.filter((symbol) => {
             return symbol.data === item.data
         }).pop();
 
