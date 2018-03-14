@@ -11,23 +11,27 @@ const parserModel_1 = require("../tools/parserModel");
 const QasmLexer_1 = require("./antlr/QasmLexer");
 const QasmParser_1 = require("./antlr/QasmParser");
 const Decorators_1 = require("antlr4ts/Decorators");
-// This function launches the parsing engine and transforms the errors into 
-// ParserErrors which are understood by the extension
-function parse(input) {
-    let inputStream = new antlr4ts_1.ANTLRInputStream(input);
-    let lexer = new QasmLexer_1.QasmLexer(inputStream);
-    lexer.removeErrorListener(antlr4ts_1.ConsoleErrorListener.INSTANCE);
-    let tokenStream = new antlr4ts_1.CommonTokenStream(lexer);
-    let parser = new QasmParser_1.QasmParser(tokenStream);
-    let errorListener = new ErrorListener();
-    parser.addErrorListener(errorListener);
-    let tree = parser.code();
-    return {
-        ast: tree,
-        errors: errorListener.errors
-    };
+class Parser {
+    parse(input) {
+        let errorListener = new ErrorListener();
+        let parser = this.buildQasmParser(input, errorListener);
+        let tree = parser.code();
+        return {
+            ast: tree,
+            errors: errorListener.errors
+        };
+    }
+    buildQasmParser(input, errorListener) {
+        let inputStream = new antlr4ts_1.ANTLRInputStream(input);
+        let lexer = new QasmLexer_1.QasmLexer(inputStream);
+        lexer.removeErrorListener(antlr4ts_1.ConsoleErrorListener.INSTANCE);
+        let tokenStream = new antlr4ts_1.CommonTokenStream(lexer);
+        let parser = new QasmParser_1.QasmParser(tokenStream);
+        parser.addErrorListener(errorListener);
+        return parser;
+    }
 }
-exports.parse = parse;
+exports.Parser = Parser;
 class ErrorListener {
     constructor() {
         this.errors = [];

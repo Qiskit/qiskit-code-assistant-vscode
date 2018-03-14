@@ -9,7 +9,7 @@ import {
     TextDocument,
     TextDocumentPositionParams
 } from 'vscode-languageserver';
-import { parse } from './qasm/parser';
+import { Parser } from './qasm/parser';
 import * as suggester from './qasm/suggester';
 import { ParserError, ParseErrorLevel } from './tools/parserModel';
 
@@ -25,7 +25,8 @@ export class CompilationTool {
     validateDocument(document: TextDocument): void {
         this.currentDocument = document;
 
-        let result = parse(document.getText());
+        let parser = new Parser();
+        let result = parser.parse(document.getText());
         this.launchCompilationErrors(document, result.errors);
     }
 

@@ -7,25 +7,32 @@ import { QasmLexer } from './antlr/QasmLexer';
 import { QasmParser } from './antlr/QasmParser';
 import { Override } from 'antlr4ts/Decorators';
 
-// This function launches the parsing engine and transforms the errors into 
-// ParserErrors which are understood by the extension
-export function parse(input: string): ParserResult {
-    let inputStream = new ANTLRInputStream(input);
-    let lexer = new QasmLexer(inputStream);
-    lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
+export class Parser {
 
-    let tokenStream = new CommonTokenStream(lexer);
-    let parser = new QasmParser(tokenStream);
+    parse(input: string): ParserResult {
+        let errorListener = new ErrorListener();
+        let parser = this.buildQasmParser(input, errorListener);
+    
+        let tree = parser.code();
+    
+        return {
+            ast: tree,
+            errors: errorListener.errors
+        };
+    }
 
-    let errorListener = new ErrorListener();
-    parser.addErrorListener(errorListener);
+    private buildQasmParser(input: string, errorListener: ErrorListener): QasmParser {
+        let inputStream = new ANTLRInputStream(input);
+        let lexer = new QasmLexer(inputStream);
+        lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
+    
+        let tokenStream = new CommonTokenStream(lexer);
+        let parser = new QasmParser(tokenStream);
+        parser.addErrorListener(errorListener);
 
-    let tree = parser.code();
+        return parser;
+    }
 
-    return {
-        ast: tree,
-        errors: errorListener.errors
-    };
 }
 
 class ErrorListener implements ANTLRErrorListener<CommonToken> {
