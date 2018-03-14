@@ -14,10 +14,11 @@
 		"compile": "npm run compile:parser && tsc -p client/tsconfig.json && cd server && npm run installServer && cd .. && tsc -p server/tsconfig.json",
 		"compile:client": "tsc -p client/tsconfig.json",
 		"compile:server": "cd server && npm run installServer && cd .. && tsc -p server/tsconfig.json",
-		"compile:parser": "cd server/src/tools && jison qasm.jison && cd ../../..",
+		"compile:parser": "cd server && npm run antlr4ts && cd ..",
 		"watch:client": "tsc -w -p client/tsconfig.json",
 		"watch:server": "cd server && npm run installServer && cd .. && tsc -w -p server/tsconfig.json",
-		"test": "npm run compile && cd client && node ./node_modules/vscode/bin/test"
+		"test": "npm run compile && cd client && node ./node_modules/vscode/bin/test",
+		"clean": "rm -rf node_modules/ server/node_modules client/node_modules client/server"
 	},
 	"devDependencies": {
 		"@types/mocha": "^2.2.48",
