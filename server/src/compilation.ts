@@ -54,15 +54,28 @@ export class CompilationTool {
     }
 
     completionDetailsFor(item: CompletionItem): CompletionItem {
-        // new method returning null object if nothing found
-        let searchedSymbol = this.currentSuggestions.filter((symbol) => {
-            return symbol.data === item.data
-        }).pop();
+        let searchedSymbol = this.getCompletionSymbolFor(item);
 
         item.detail = searchedSymbol.detail;
         item.documentation = searchedSymbol.documentation;
 
         return item;
+    }
+
+    private getCompletionSymbolFor(item: CompletionItem): CompletionItem {
+        let isSameData = (symbol:CompletionItem) => symbol.data === item.data;
+
+        let availableOptions = this.currentSuggestions.filter(isSameData);
+
+        if (availableOptions.length < 1) {
+            return {
+                label: item.label,
+                detail: '',
+                documentation: ''
+            };
+        }
+
+        return availableOptions[0];
     }
 
     private launchCompilationErrors(document: TextDocument, errors: ParserError[]) {
