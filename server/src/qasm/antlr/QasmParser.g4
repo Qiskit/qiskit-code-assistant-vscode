@@ -1,4 +1,5 @@
-grammar Qasm;
+parser grammar QasmParser;
+options { tokenVocab=QasmLexer; }
 
 @header {
 
@@ -22,6 +23,22 @@ private declareCreg(input: any): void {
 
 private declareQreg(input: any): void {
     this.symbolsTable.qregs.push(input.text);
+}
+
+private verifyQubitDeclaration(input: any): void {
+    if (this.symbolsTable.qregs.indexOf(input.text) === -1) {
+        console.log('Error found with input ' + input.text);
+        
+        this.notifyErrorListeners('Qubit ' + input.text + ' is not previously defined.');
+    }
+}
+
+private verifyCbitDeclaration(input: any): void {
+    if (this.symbolsTable.cregs.indexOf(input.text) === -1) {
+        console.log('Error found with input ' + input.text);
+
+        this.notifyErrorListeners('Cbit ' + input.text + ' is not previously defined.');
+    }
 }
 
 declaredVariables(): string[] {
@@ -71,7 +88,7 @@ definition
     ;
 
 expression
-    : measure Semi
+    : measure Semi 
     | customArglist Semi
     | cxGate Semi
     | barrierGate Semi
@@ -156,15 +173,19 @@ unaryOp
 
 measure
     : Measure qubit Assign cbit
-    | Measure Id Assign Id
+    | Measure q=Id Assign c=Id 
+    {
+        this.verifyQubitDeclaration($q);
+        this.verifyCbitDeclaration($c);
+    }
     ;
 
 qubit
-    : Id qLine
+    : Id qLine { this.verifyQubitDeclaration($Id); }
     ;
 
 cbit
-    : Id qLine
+    : Id qLine { this.verifyCbitDeclaration($Id); }
     ;
 
 customArglist
@@ -205,48 +226,3 @@ resetGate
     : Reset Id
     | Reset qubit
     ;
-
-// terminals
-
-Comment: '//' ~[\r\n]* -> skip;
-WhiteSpace: [ \t\n\r] -> skip;
-
-Real: [0-9]+'.'[0-9]+;
-Int: [0-9]+;
-QasmDescriptor: 'OPENQASM 2.0;' | 'IBMQASM 2.0;';
-Include: 'include "quelib1.inc";';
-Qelib: 'QELIB.INC';
-Qreg: 'qreg';
-Creg: 'creg';
-Clean: 'clean';
-U: 'U';
-Cx: 'CX';
-Sin: 'sin';
-Cos: 'cos';
-Tan: 'tan';
-Exp: 'exp';
-Ln: 'ln';
-Sqrt: 'sqrt';
-Measure: 'measure';
-Barrier: 'barrier';
-Reset: 'reset';
-Opaque: 'opaque';
-If: 'if';
-Equals: '==';
-Assign: '->';
-Semi: ';';
-Comma: ',';
-LeftCurlyBrace: '{';
-RightCurlyBrace: '}';
-LeftBrace: '[';
-RightBrace: ']';
-LeftParen: '(';
-RightParen: ')';
-Pow: '^';
-Mult: '*';
-Div: '/';
-Sum: '+';
-Subs: '-';
-Pi: 'pi';
-Gate: 'gate';
-Id: [a-z][a-zA-Z0-9]*;

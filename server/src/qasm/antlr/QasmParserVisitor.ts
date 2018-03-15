@@ -1,4 +1,4 @@
-// Generated from src/qasm/antlr/Qasm.g4 by ANTLR 4.6-SNAPSHOT
+// Generated from QasmParser.g4 by ANTLR 4.6-SNAPSHOT
 
 
 
@@ -53,7 +53,7 @@ import { ResetGateContext } from './QasmParser';
  * @param <Result> The return type of the visit operation. Use `void` for
  * operations with no return type.
  */
-export interface QasmVisitor<Result> extends ParseTreeVisitor<Result> {
+export interface QasmParserVisitor<Result> extends ParseTreeVisitor<Result> {
 	/**
 	 * Visit a parse tree produced by `QasmParser.code`.
 	 * @param ctx the parse tree

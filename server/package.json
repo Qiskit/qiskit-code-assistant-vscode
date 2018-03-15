@@ -28,8 +28,8 @@
 		"installServer": "installServerIntoExtension ../client ./package.json ./tsconfig.json",
 		"compile": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
 		"watch": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -w -p .",
-		"antlr4ts": "antlr4ts -visitor src/qasm/antlr/Qasm.g4",
-		"pretest": "antlr4ts -visitor src/qasm/antlr/Qasm.g4 && tsc test/*.test.ts test/**/*.test.ts --outDir out --module commonjs --target ES6 --experimentalDecorators",
+		"antlr4ts": "cd src/qasm/antlr && antlr4ts -visitor QasmLexer.g4 QasmParser.g4 && cd ../../..",
+		"pretest": "npm run antlr4ts && tsc test/*.test.ts test/**/*.test.ts --outDir out --module commonjs --target ES6 --experimentalDecorators",
 		"test": "mocha out/test --recursive",
 		"clean": "rm -rf out"
 	}

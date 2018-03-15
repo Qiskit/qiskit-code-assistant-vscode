@@ -1,4 +1,4 @@
-// Generated from src/qasm/antlr/Qasm.g4 by ANTLR 4.6-SNAPSHOT
+// Generated from QasmParser.g4 by ANTLR 4.6-SNAPSHOT
 
 
 
@@ -50,7 +50,7 @@ import { ResetGateContext } from './QasmParser';
  * This interface defines a complete listener for a parse tree produced by
  * `QasmParser`.
  */
-export interface QasmListener extends ParseTreeListener {
+export interface QasmParserListener extends ParseTreeListener {
 	/**
 	 * Enter a parse tree produced by `QasmParser.code`.
 	 * @param ctx the parse tree

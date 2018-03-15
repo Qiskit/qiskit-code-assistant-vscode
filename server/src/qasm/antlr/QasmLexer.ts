@@ -1,15 +1,4 @@
-// Generated from src/qasm/antlr/Qasm.g4 by ANTLR 4.6-SNAPSHOT
-
-
-
-class SymbolsTable {
-
-    qregs: string[] = [];
-
-    cregs: string[] = [];
-
-}
-
+// Generated from QasmLexer.g4 by ANTLR 4.6-SNAPSHOT
 
 
 import { ATN } from 'antlr4ts/atn/ATN';
@@ -106,35 +95,13 @@ export class QasmLexer extends Lexer {
 	}
 
 
-	    
-	private symbolsTable = new SymbolsTable();
-
-	private declareCreg(input: any): void {
-	    this.symbolsTable.cregs.push(input.text);
-	}
-
-	private declareQreg(input: any): void {
-	    this.symbolsTable.qregs.push(input.text);
-	}
-
-	declaredVariables(): string[] {
-	    let result = [];
-	    
-	    result.push(...this.symbolsTable.qregs);
-	    result.push(...this.symbolsTable.cregs);
-
-	    return result;
-	}
-
-
-
 	constructor(input: CharStream) {
 		super(input);
 		this._interp = new LexerATNSimulator(QasmLexer._ATN, this);
 	}
 
 	@Override
-	public get grammarFileName(): string { return "Qasm.g4"; }
+	public get grammarFileName(): string { return "QasmLexer.g4"; }
 
 	@Override
 	public get ruleNames(): string[] { return QasmLexer.ruleNames; }
