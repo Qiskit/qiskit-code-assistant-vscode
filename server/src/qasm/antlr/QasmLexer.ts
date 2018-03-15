@@ -1,6 +1,17 @@
 // Generated from src/qasm/antlr/Qasm.g4 by ANTLR 4.6-SNAPSHOT
 
 
+
+class SymbolsTable {
+
+    qregs: string[] = [];
+
+    cregs: string[] = [];
+
+}
+
+
+
 import { ATN } from 'antlr4ts/atn/ATN';
 import { ATNDeserializer } from 'antlr4ts/atn/ATNDeserializer';
 import { CharStream } from 'antlr4ts/CharStream';
@@ -93,6 +104,28 @@ export class QasmLexer extends Lexer {
 	public get vocabulary(): Vocabulary {
 		return QasmLexer.VOCABULARY;
 	}
+
+
+	    
+	private symbolsTable = new SymbolsTable();
+
+	private declareCreg(input: any): void {
+	    this.symbolsTable.cregs.push(input.text);
+	}
+
+	private declareQreg(input: any): void {
+	    this.symbolsTable.qregs.push(input.text);
+	}
+
+	declaredVariables(): string[] {
+	    let result = [];
+	    
+	    result.push(...this.symbolsTable.qregs);
+	    result.push(...this.symbolsTable.cregs);
+
+	    return result;
+	}
+
 
 
 	constructor(input: CharStream) {
