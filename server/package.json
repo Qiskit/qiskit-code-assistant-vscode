@@ -21,14 +21,16 @@
 		"chai": "^4.1.1",
 		"@types/chai": "^4.1.1",
 		"mocha": "^3.5.0",
-		"antlr4ts-cli": "^0.4.0-alpha.4"
+		"antlr4ts-cli": "^0.4.0-alpha.4",
+		"ts-mockito": "^2.3.0"
 	},
 	"scripts": {
 		"installServer": "installServerIntoExtension ../client ./package.json ./tsconfig.json",
 		"compile": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
 		"watch": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -w -p .",
 		"antlr4ts": "antlr4ts -visitor src/qasm/antlr/Qasm.g4",
-		"pretest": "antlr4ts -visitor src/qasm/antlr/Qasm.g4 && tsc test/*.test.ts --module commonjs --target ES6 --experimentalDecorators",
-		"test": "mocha"
+		"pretest": "antlr4ts -visitor src/qasm/antlr/Qasm.g4 && tsc test/*.test.ts test/**/*.test.ts --outDir out --module commonjs --target ES6 --experimentalDecorators",
+		"test": "mocha out/test --recursive",
+		"clean": "rm -rf out"
 	}
 }
