@@ -2,7 +2,7 @@
 
 import { ANTLRInputStream, CommonTokenStream, ANTLRErrorListener, CommonToken, Token, Recognizer, RecognitionException, ConsoleErrorListener } from 'antlr4ts';
 import { CodeCompletionCore } from 'antlr4-c3';
-import { ParserResult, ParserError, ParseErrorLevel } from '../tools/parserModel';
+import { ParserResult, ParserError, ParseErrorLevel } from '../qasm/model';
 import { QasmLexer } from './antlr/QasmLexer';
 import { QasmParser } from './antlr/QasmParser';
 import { Override } from 'antlr4ts/Decorators';
