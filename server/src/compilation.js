@@ -1,85 +1,62 @@
 'use strict';
-
-import {
-    CompletionItem,
-    CompletionItemKind,
-    Diagnostic,
-    DiagnosticSeverity,
-    IConnection,
-    TextDocument,
-    TextDocumentPositionParams
-} from 'vscode-languageserver';
-import { Parser } from './qasm/parser';
-import { Suggester } from './qasm/suggester';
-import { ParserError, ParseErrorLevel, Symbol } from './qasm/model';
-
-export class CompilationTool {
-    connection: IConnection;
-    currentDocument: TextDocument = null;
-    currentSuggestions: CompletionItem[] = [];
-
-    toCompletionItem = (symbol: Symbol, index: number) => {
-        return {
-            label: symbol.label,
-            kind: CompletionItemKind.Text,
-            data: index,
-            detail: symbol.detail,
-            documentation: symbol.documentation   
+Object.defineProperty(exports, "__esModule", { value: true });
+const vscode_languageserver_1 = require("vscode-languageserver");
+const parser_1 = require("./qasm/parser");
+const suggester_1 = require("./qasm/suggester");
+const model_1 = require("./qasm/model");
+class CompilationTool {
+    constructor(_connection) {
+        this._connection = _connection;
+        this.currentDocument = null;
+        this.currentSuggestions = [];
+        this.toCompletionItem = (symbol, index) => {
+            return {
+                label: symbol.label,
+                kind: vscode_languageserver_1.CompletionItemKind.Text,
+                data: index,
+                detail: symbol.detail,
+                documentation: symbol.documentation
+            };
         };
-    };
-
-    constructor(public _connection: IConnection) {
         this.connection = _connection;
     }
-
-    validateDocument(document: TextDocument): void {
+    validateDocument(document) {
         this.currentDocument = document;
-
-        let parser = new Parser();
+        let parser = new parser_1.Parser();
         let result = parser.parse(document.getText());
         this.launchCompilationErrors(document, result.errors);
     }
-
-    availableCompletions(_documentPosition: TextDocumentPositionParams): CompletionItem[] {
+    availableCompletions(_documentPosition) {
         if (this.currentDocument === null) {
             return [];
         }
-
         let textToCaret = this.currentDocument.getText().substring(0, this.currentDocument.offsetAt(_documentPosition.position));
-
-        let suggester = new Suggester();
+        let suggester = new suggester_1.Suggester();
         this.currentSuggestions = suggester.calculateSuggestionsFor(textToCaret).map(this.toCompletionItem);
-
         return this.currentSuggestions;
     }
-
-    completionDetailsFor(item: CompletionItem): CompletionItem {
+    completionDetailsFor(item) {
         // new method returning null object if nothing found
         let searchedSymbol = this.currentSuggestions.filter((symbol) => {
-            return symbol.data === item.data
+            return symbol.data === item.data;
         }).pop();
-
         item.detail = searchedSymbol.detail;
         item.documentation = searchedSymbol.documentation;
-
         return item;
     }
-
-    private launchCompilationErrors(document: TextDocument, errors: ParserError[]) {
-        let diagnostics: Diagnostic[] = [];
+    launchCompilationErrors(document, errors) {
+        let diagnostics = [];
         errors.forEach((error) => {
             diagnostics.push(this.errorToDiagnostics(error));
         });
-
         this.connection.sendDiagnostics({
             uri: document.uri,
             diagnostics
         });
     }
-
-    private errorToDiagnostics(error: ParserError) {
+    errorToDiagnostics(error) {
         return {
-            severity: (error.level === ParseErrorLevel.ERROR) ? DiagnosticSeverity.Error : DiagnosticSeverity.Warning,
+            severity: (error.level === model_1.ParseErrorLevel.ERROR) ? vscode_languageserver_1.DiagnosticSeverity.Error : vscode_languageserver_1.DiagnosticSeverity.Warning,
             range: {
                 start: {
                     line: error.line,
@@ -94,5 +71,5 @@ export class CompilationTool {
             source: 'ex'
         };
     }
-
 }
+exports.CompilationTool = CompilationTool;

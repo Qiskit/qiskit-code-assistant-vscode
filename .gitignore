@@ -4,4 +4,3 @@ node_modules
 *.vsix
 client/server
 .antlr/
-server/test/*.js

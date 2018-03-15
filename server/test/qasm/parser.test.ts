@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { Parser } from '../src/qasm/parser'
-import { ParserResult } from '../src/tools/parserModel';
+import { Parser } from '../../src/qasm/parser'
+import { ParserResult } from '../../src/qasm/model';
 
 describe('A parser', () => {
 
