@@ -1,5 +1,40 @@
 grammar Qasm;
 
+@header {
+
+class SymbolsTable {
+
+    qregs: string[] = [];
+
+    cregs: string[] = [];
+
+}
+
+}
+
+@members {
+    
+private symbolsTable = new SymbolsTable();
+
+private declareCreg(input: any): void {
+    this.symbolsTable.cregs.push(input.text);
+}
+
+private declareQreg(input: any): void {
+    this.symbolsTable.qregs.push(input.text);
+}
+
+declaredVariables(): string[] {
+    let result = [];
+    
+    result.push(...this.symbolsTable.qregs);
+    result.push(...this.symbolsTable.cregs);
+
+    return result;
+}
+
+}
+
 code
     : sentences
     | headers sentences
@@ -29,8 +64,8 @@ sentence
     ;
 
 definition
-    : Qreg Id qLine Semi
-    | Creg Id qLine Semi
+    : Qreg Id { this.declareQreg($Id); } qLine Semi 
+    | Creg Id { this.declareCreg($Id); } qLine Semi 
     | gateDefinition
     | opaqueDefinition Semi
     ;

@@ -55,15 +55,34 @@ export class Suggester {
             console.log('Rule > ' + candidate);
         }
     
-        let result: string[] = [];
-        result.push(...keywords);
-        result.push(...functionNames);
-        result.push(...variableNames);
+        let suggestions: string[] = [];
+        suggestions.push(...keywords);
+        suggestions.push(...functionNames);
+        suggestions.push(...variableNames);
     
-        console.log('Found ' + result);
+        console.log('Found ' + suggestions);
     
-        return this.dictionary.symbolsWithTypeIn(result);
+        let result: Symbol[] = [];
+        result.push(...this.dictionary.symbolsWithTypeIn(suggestions));
+        result.push(...this.foundVariablesAt(parser));
+
+        return result;
     }
+
+    private foundVariablesAt(parser: QasmParser): Symbol[] {
+        return parser.declaredVariables().map(this.toSymbolVariable);
+    }
+
+    toSymbolVariable = (input: string): Symbol => {
+
+        return {
+            label: input,
+            detail: 'Declared variable',
+            documentation: 'This is a previously declared variable',
+            type: 'Variable'
+        }
+    }
+
 }
 
 class SymbolsDictionary {

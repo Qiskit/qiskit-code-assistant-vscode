@@ -7,6 +7,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+class SymbolsTable {
+    constructor() {
+        this.qregs = [];
+        this.cregs = [];
+    }
+}
 const ATNDeserializer_1 = require("antlr4ts/atn/ATNDeserializer");
 const Lexer_1 = require("antlr4ts/Lexer");
 const LexerATNSimulator_1 = require("antlr4ts/atn/LexerATNSimulator");
@@ -17,10 +23,23 @@ const Utils = require("antlr4ts/misc/Utils");
 class QasmLexer extends Lexer_1.Lexer {
     constructor(input) {
         super(input);
+        this.symbolsTable = new SymbolsTable();
         this._interp = new LexerATNSimulator_1.LexerATNSimulator(QasmLexer._ATN, this);
     }
     get vocabulary() {
         return QasmLexer.VOCABULARY;
+    }
+    declareCreg(input) {
+        this.symbolsTable.cregs.push(input.text);
+    }
+    declareQreg(input) {
+        this.symbolsTable.qregs.push(input.text);
+    }
+    declaredVariables() {
+        let result = [];
+        result.push(...this.symbolsTable.qregs);
+        result.push(...this.symbolsTable.cregs);
+        return result;
     }
     get grammarFileName() { return "Qasm.g4"; }
     get ruleNames() { return QasmLexer.ruleNames; }

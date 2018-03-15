@@ -1,6 +1,17 @@
 // Generated from src/qasm/antlr/Qasm.g4 by ANTLR 4.6-SNAPSHOT
 
 
+
+class SymbolsTable {
+
+    qregs: string[] = [];
+
+    cregs: string[] = [];
+
+}
+
+
+
 import { ParseTreeVisitor } from 'antlr4ts/tree/ParseTreeVisitor';
 
 import { CodeContext } from './QasmParser';
