@@ -93,6 +93,10 @@ describe('A parser', () => {
 
     it('will accept expressions', () => {
       let input = `
+        gate cx c,t {
+          CX c,t; 
+        }
+        
         qreg q[5];
         creg c[5];
         cx q[1],q[0];

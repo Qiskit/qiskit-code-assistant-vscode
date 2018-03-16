@@ -9,6 +9,10 @@ class SymbolsTable {
 
     cregs: string[] = [];
 
+    gates: string[] = [];
+
+    opaques: string[] = [];
+
 }
 
 }
@@ -25,19 +29,30 @@ private declareQreg(input: any): void {
     this.symbolsTable.qregs.push(input.text);
 }
 
-private verifyQubitDeclaration(input: any): void {
+private declareGate(input: any): void {
+    this.symbolsTable.gates.push(input.text);
+}
+
+private declareOpaque(input: any): void {
+    this.symbolsTable.opaques.push(input.text);
+}
+
+private verifyQregDeclaration(input: any): void {
     if (this.symbolsTable.qregs.indexOf(input.text) === -1) {
-        console.log('Error found with input ' + input.text);
-        
         this.notifyErrorListeners('Qubit ' + input.text + ' is not previously defined.');
     }
 }
 
-private verifyCbitDeclaration(input: any): void {
+private verifyCregDeclaration(input: any): void {
     if (this.symbolsTable.cregs.indexOf(input.text) === -1) {
-        console.log('Error found with input ' + input.text);
-
         this.notifyErrorListeners('Cbit ' + input.text + ' is not previously defined.');
+    }
+}
+
+private verifyGateDeclaration(input: any): void {
+    if (this.symbolsTable.gates.indexOf(input.text) === -1) {
+        let message = 'Gate ' + input.text + ' is not previously defined.';
+        this.notifyErrorListeners(message, input, null);
     }
 }
 
@@ -46,6 +61,8 @@ declaredVariables(): string[] {
     
     result.push(...this.symbolsTable.qregs);
     result.push(...this.symbolsTable.cregs);
+    result.push(...this.symbolsTable.gates);
+    result.push(...this.symbolsTable.opaques);
 
     return result;
 }
@@ -104,11 +121,11 @@ qLine:
     ;
 
 gateDefinition: 
-    Gate Id gateDefinitionArguments
+    Gate Id { this.declareGate($Id); } gateDefinitionArguments
     ;
 
 opaqueDefinition
-    : Opaque Id opaqueDefinitionArguments
+    : Opaque Id { this.declareOpaque($Id); } opaqueDefinitionArguments
     ;
 
 gateDefinitionArguments
@@ -175,22 +192,22 @@ measure
     : Measure qubit Assign cbit
     | Measure q=Id Assign c=Id 
     {
-        this.verifyQubitDeclaration($q);
-        this.verifyCbitDeclaration($c);
+        this.verifyQregDeclaration($q);
+        this.verifyCregDeclaration($c);
     }
     ;
 
 qubit
-    : Id qLine { this.verifyQubitDeclaration($Id); }
+    : Id { this.verifyQregDeclaration($Id); } qLine 
     ;
 
 cbit
-    : Id qLine { this.verifyCbitDeclaration($Id); }
+    : Id { this.verifyCregDeclaration($Id); } qLine 
     ;
 
 customArglist
-    : Id LeftParen paramsListNumber RightParen qubitAndQregList
-    | Id qubitAndQregList
+    : Id {this.verifyGateDeclaration($Id); } LeftParen paramsListNumber RightParen qubitAndQregList
+    | Id {this.verifyGateDeclaration($Id); } qubitAndQregList
     ;
 
 paramsListNumber
@@ -204,8 +221,8 @@ qubitAndQregList
     ;
 
 qbitOrQreg
-    : Id
-    | Id qLine
+    : Id { this.verifyQregDeclaration($Id); }
+    | Id { this.verifyQregDeclaration($Id); } qLine
     ;
 
 cxGate
@@ -213,7 +230,7 @@ cxGate
     ;
 
 barrierGate
-    : Barrier Id
+    : Barrier Id { this.verifyQregDeclaration($Id); }
     | Barrier qubitList 
     ;
 
@@ -223,6 +240,6 @@ qubitList
     ; 
 
 resetGate
-    : Reset Id
+    : Reset Id { this.verifyQregDeclaration($Id); }
     | Reset qubit
     ;
