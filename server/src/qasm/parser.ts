@@ -51,7 +51,7 @@ class ErrorListener implements ANTLRErrorListener<CommonToken> {
         this.errors.push({
             line: line - 1,
             start: charPositionInLine,
-            end: charPositionInLine + 1,
+            end: charPositionInLine + _offendingSymbol.text.length,
             message: msg,
             level: ParseErrorLevel.ERROR
         });

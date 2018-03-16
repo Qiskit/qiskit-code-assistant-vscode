@@ -8,6 +8,10 @@ class SymbolsTable {
 
     cregs: string[] = [];
 
+    gates: string[] = [];
+
+    opaques: string[] = [];
+
 }
 
 

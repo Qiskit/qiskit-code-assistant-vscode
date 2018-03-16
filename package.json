@@ -18,7 +18,7 @@
 		"watch:client": "tsc -w -p client/tsconfig.json",
 		"watch:server": "cd server && npm run installServer && cd .. && tsc -w -p server/tsconfig.json",
 		"test": "npm run compile && cd client && node ./node_modules/vscode/bin/test",
-		"clean": "rm -rf node_modules/ server/node_modules client/node_modules client/server server/out"
+		"clean": "cd server && npm run clean && cd .. && rm -rf node_modules/ client/node_modules client/server"
 	},
 	"devDependencies": {
 		"@types/mocha": "^2.2.48",
