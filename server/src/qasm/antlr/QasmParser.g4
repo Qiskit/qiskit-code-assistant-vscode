@@ -21,35 +21,37 @@ class SymbolsTable {
     
 private symbolsTable = new SymbolsTable();
 
-private declareCreg(input: any): void {
+private declareCreg(input: Token): void {
     this.symbolsTable.cregs.push(input.text);
 }
 
-private declareQreg(input: any): void {
+private declareQreg(input: Token): void {
     this.symbolsTable.qregs.push(input.text);
 }
 
-private declareGate(input: any): void {
+private declareGate(input: Token): void {
     this.symbolsTable.gates.push(input.text);
 }
 
-private declareOpaque(input: any): void {
+private declareOpaque(input: Token): void {
     this.symbolsTable.opaques.push(input.text);
 }
 
-private verifyQregDeclaration(input: any): void {
+private verifyQregDeclaration(input: Token): void {
     if (this.symbolsTable.qregs.indexOf(input.text) === -1) {
-        this.notifyErrorListeners('Qubit ' + input.text + ' is not previously defined.');
+        let message = 'Qubit ' + input.text + ' is not previously defined.';
+        this.notifyErrorListeners(message, input, null);
     }
 }
 
-private verifyCregDeclaration(input: any): void {
+private verifyCregDeclaration(input: Token): void {
     if (this.symbolsTable.cregs.indexOf(input.text) === -1) {
-        this.notifyErrorListeners('Cbit ' + input.text + ' is not previously defined.');
+        let message = 'Cbit ' + input.text + ' is not previously defined.';
+        this.notifyErrorListeners(message, input, null);
     }
 }
 
-private verifyGateDeclaration(input: any): void {
+private verifyGateDeclaration(input: Token): void {
     if (this.symbolsTable.gates.indexOf(input.text) === -1) {
         let message = 'Gate ' + input.text + ' is not previously defined.';
         this.notifyErrorListeners(message, input, null);
