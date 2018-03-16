@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { Parser } from '../../src/qasm/parser'
-import { ParserResult } from '../../src/qasm/model';
+import { ParserResult, ParseErrorLevel } from '../../src/qasm/model';
 
 describe('A parser', () => {
 
@@ -158,10 +158,16 @@ describe('A parser', () => {
     
     it('will throw one error', () => {
       let result = parser.parse(input);
-      expect(result.errors.length).to.be.eq(1);
-      expect(result.errors[0].line).to.be.eq(0);
-      expect(result.errors[0].start).to.be.eq(28);
-      expect(result.errors[0].end).to.be.eq(31);
+
+      expect(result.errors).to.be.an('array')
+        .with.length(1);
+      expect(result.errors[0]).to.deep.equal({
+        message: 'Qubit foo is not previously defined',
+        line: 0,
+        start: 28,
+        end: 31,
+        level: ParseErrorLevel.ERROR
+      });
     });
   });
 

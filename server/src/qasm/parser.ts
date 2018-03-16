@@ -42,7 +42,7 @@ class ErrorListener implements ANTLRErrorListener<CommonToken> {
     @Override
     syntaxError<T extends Token>(
         _recognizer: Recognizer<T, any>,
-        _offendingSymbol: T | undefined,
+        offendingSymbol: T | undefined,
         line: number,
         charPositionInLine: number,
         msg: string,
@@ -51,7 +51,7 @@ class ErrorListener implements ANTLRErrorListener<CommonToken> {
         this.errors.push({
             line: line - 1,
             start: charPositionInLine,
-            end: charPositionInLine + _offendingSymbol.text.length,
+            end: charPositionInLine + offendingSymbol.text.length,
             message: msg,
             level: ParseErrorLevel.ERROR
         });
