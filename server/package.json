@@ -31,6 +31,6 @@
 		"antlr4ts": "cd src/qasm/antlr && antlr4ts -visitor QasmLexer.g4 QasmParser.g4 && cd ../../..",
 		"pretest": "npm run antlr4ts && tsc test/*.test.ts test/**/*.test.ts --outDir out --module commonjs --target ES6 --experimentalDecorators",
 		"test": "mocha out/test --recursive",
-		"clean": "rm -rf out node_modules"
+		"clean": "rm -rf  out node_modules"
 	}
 }
