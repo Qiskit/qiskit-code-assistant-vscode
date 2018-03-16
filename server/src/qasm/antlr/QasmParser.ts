@@ -2,15 +2,71 @@
 
 
 
+class Register {
+    name: string;
+    size: number;
+
+    constructor(name: string, size: number) {
+        this.name = name;
+        this.size = size;
+    }
+}
+
 class SymbolsTable {    
-
-    qregs: string[] = [];
-
-    cregs: string[] = [];
-
+    
+    private qregs: Register[] = [];
+    private cregs: Register[] = [];
     gates: string[] = [];
-
     opaques: string[] = [];
+
+    private toName = (register: Register) => register.name;
+
+    addQuantumRegister(name: string, size: number) {
+        this.qregs.push(new Register(name, size));
+    }
+
+    addClassicRegister(name: string, size: number) {
+        this.cregs.push(new Register(name, size));
+    }
+
+    containsQuantumRegister(qregName: string) {
+        let hasSearchedName = (register: Register) => register.name === qregName;
+
+        return this.qregs.filter(hasSearchedName).length > 0;
+    }
+
+    containsQuantumBit(qregName: string, position: number): boolean {
+        return this.findBitInRegister(this.qregs, qregName, position);
+    }
+
+    containsClassicRegister(cregName: string) {
+        let hasSearchedName = (register: Register) => register.name === cregName;
+
+        return this.cregs.filter(hasSearchedName).length > 0;
+    }
+
+    containsClassicBit(cregName: string, position: number): boolean {
+        return this.findBitInRegister(this.cregs, cregName, position);
+    }
+
+    private findBitInRegister(registers: Register[], registerName: string, position: number): boolean { 
+        let hasSearchedName = (register: Register) => register.name === registerName;
+
+        let searchedRegisters = registers.filter(hasSearchedName);
+        if (searchedRegisters.length > 0) {
+            return searchedRegisters[0].size > position;
+        }
+
+        return true;  // if register not found that's a different error
+    } 
+
+    getQuantumRegisters(): string[] {
+        return this.qregs.map(this.toName);
+    }
+
+    getClassicRegisters(): string[] {
+        return this.cregs.map(this.toName);
+    }
 
 }
 
@@ -159,39 +215,57 @@ export class QasmParser extends Parser {
 	    
 	private symbolsTable = new SymbolsTable();
 
-	private declareCreg(input: Token): void {
-	    this.symbolsTable.cregs.push(input.text);
+	private declareCreg(registerName: Token, size: Token): void {
+	    this.symbolsTable.addClassicRegister(registerName.text, +size.text);
 	}
 
-	private declareQreg(input: Token): void {
-	    this.symbolsTable.qregs.push(input.text);
+	private declareQreg(registerName: Token, size: Token): void {
+	    this.symbolsTable.addQuantumRegister(registerName.text, +size.text);
 	}
 
-	private declareGate(input: Token): void {
-	    this.symbolsTable.gates.push(input.text);
+	private declareGate(gateName: Token): void {
+	    this.symbolsTable.gates.push(gateName.text);
 	}
 
-	private declareOpaque(input: Token): void {
-	    this.symbolsTable.opaques.push(input.text);
+	private declareOpaque(gateName: Token): void {
+	    this.symbolsTable.opaques.push(gateName.text);
 	}
 
-	private verifyQregDeclaration(input: Token): void {
-	    if (this.symbolsTable.qregs.indexOf(input.text) === -1) {
-	        let message = 'Qubit ' + input.text + ' is not previously defined.';
-	        this.notifyErrorListeners(message, input, null);
+	private verifyQregDeclaration(registerName: Token, position?: Token): void {
+	    if (!this.symbolsTable.containsQuantumRegister(registerName.text)) {
+	        let message = 'Qubit ' + registerName.text + ' is not previously defined';
+	        this.notifyErrorListeners(message, registerName, null);
+	        return;
+	    }
+
+	    if (position) {
+	        if (!this.symbolsTable.containsQuantumBit(registerName.text, +position.text)) {
+	            let message = `Qbit ${registerName.text}[${position.text}] is not valid: index out of bound`;
+	            this.notifyErrorListeners(message, position, null);
+	            return;
+	        }
 	    }
 	}
 
-	private verifyCregDeclaration(input: Token): void {
-	    if (this.symbolsTable.cregs.indexOf(input.text) === -1) {
-	        let message = 'Cbit ' + input.text + ' is not previously defined.';
-	        this.notifyErrorListeners(message, input, null);
+	private verifyCregDeclaration(registerName: Token, position?: Token): void {
+	    if (!this.symbolsTable.containsClassicRegister(registerName.text)) {
+	        let message = 'Cbit ' + registerName.text + ' is not previously defined';
+	        this.notifyErrorListeners(message, registerName, null);
+	        return;
+	    }
+
+	    if (position) {
+	        if (!this.symbolsTable.containsClassicBit(registerName.text, +position.text)) {
+	            let message = `Cbit ${registerName.text}[${position.text}] is not valid: index out of bound`;
+	            this.notifyErrorListeners(message, position, null);
+	            return;
+	        }
 	    }
 	}
 
 	private verifyGateDeclaration(input: Token): void {
 	    if (this.symbolsTable.gates.indexOf(input.text) === -1) {
-	        let message = 'Gate ' + input.text + ' is not previously defined.';
+	        let message = 'Gate ' + input.text + ' is not previously defined';
 	        this.notifyErrorListeners(message, input, null);
 	    }
 	}
@@ -199,8 +273,8 @@ export class QasmParser extends Parser {
 	declaredVariables(): string[] {
 	    let result = [];
 	    
-	    result.push(...this.symbolsTable.qregs);
-	    result.push(...this.symbolsTable.cregs);
+	    result.push(...this.symbolsTable.getQuantumRegisters());
+	    result.push(...this.symbolsTable.getClassicRegisters());
 	    result.push(...this.symbolsTable.gates);
 	    result.push(...this.symbolsTable.opaques);
 
@@ -467,15 +541,15 @@ export class QasmParser extends Parser {
 				this.match(QasmParser.Qreg);
 				this.state = 89;
 				_localctx._Id = this.match(QasmParser.Id);
-				 this.declareQreg(_localctx._Id); 
-				this.state = 91;
+				this.state = 90;
 				this.match(QasmParser.LeftBrace);
+				this.state = 91;
+				_localctx._Int = this.match(QasmParser.Int);
 				this.state = 92;
-				this.match(QasmParser.Int);
-				this.state = 93;
 				this.match(QasmParser.RightBrace);
-				this.state = 94;
+				this.state = 93;
 				this.match(QasmParser.Semi);
+				 this.declareQreg(_localctx._Id, _localctx._Int); 
 				}
 				break;
 			case QasmParser.Creg:
@@ -485,15 +559,15 @@ export class QasmParser extends Parser {
 				this.match(QasmParser.Creg);
 				this.state = 96;
 				_localctx._Id = this.match(QasmParser.Id);
-				 this.declareCreg(_localctx._Id); 
-				this.state = 98;
+				this.state = 97;
 				this.match(QasmParser.LeftBrace);
+				this.state = 98;
+				_localctx._Int = this.match(QasmParser.Int);
 				this.state = 99;
-				this.match(QasmParser.Int);
-				this.state = 100;
 				this.match(QasmParser.RightBrace);
-				this.state = 101;
+				this.state = 100;
 				this.match(QasmParser.Semi);
+				 this.declareCreg(_localctx._Id, _localctx._Int); 
 				}
 				break;
 			case QasmParser.Gate:
@@ -1377,13 +1451,13 @@ export class QasmParser extends Parser {
 			{
 			this.state = 288;
 			_localctx._Id = this.match(QasmParser.Id);
-			 this.verifyQregDeclaration(_localctx._Id); 
-			this.state = 290;
+			this.state = 289;
 			this.match(QasmParser.LeftBrace);
+			this.state = 290;
+			_localctx._Int = this.match(QasmParser.Int);
 			this.state = 291;
-			this.match(QasmParser.Int);
-			this.state = 292;
 			this.match(QasmParser.RightBrace);
+			 this.verifyQregDeclaration(_localctx._Id, _localctx._Int); 
 			}
 		}
 		catch (re) {
@@ -1409,13 +1483,13 @@ export class QasmParser extends Parser {
 			{
 			this.state = 294;
 			_localctx._Id = this.match(QasmParser.Id);
-			 this.verifyCregDeclaration(_localctx._Id); 
-			this.state = 296;
+			this.state = 295;
 			this.match(QasmParser.LeftBrace);
+			this.state = 296;
+			_localctx._Int = this.match(QasmParser.Int);
 			this.state = 297;
-			this.match(QasmParser.Int);
-			this.state = 298;
 			this.match(QasmParser.RightBrace);
+			 this.verifyCregDeclaration(_localctx._Id, _localctx._Int); 
 			}
 		}
 		catch (re) {
@@ -1905,10 +1979,10 @@ export class QasmParser extends Parser {
 		"\x02PQ\x07\x02\x02\x03Q\t\x03\x02\x02\x02RY\x05\f\x07\x02SY\x05\x0E\b"+
 		"\x02TU\x05\x10\t\x02UV\x05\x0E\b\x02VY\x03\x02\x02\x02WY\x07\x02\x02\x03"+
 		"XR\x03\x02\x02\x02XS\x03\x02\x02\x02XT\x03\x02\x02\x02XW\x03\x02\x02\x02"+
-		"Y\v\x03\x02\x02\x02Z[\x07\n\x02\x02[\\\x07+\x02\x02\\]\b\x07\x01\x02]"+
-		"^\x07 \x02\x02^_\x07\x06\x02\x02_`\x07!\x02\x02`m\x07\x1C\x02\x02ab\x07"+
-		"\v\x02\x02bc\x07+\x02\x02cd\b\x07\x01\x02de\x07 \x02\x02ef\x07\x06\x02"+
-		"\x02fg\x07!\x02\x02gm\x07\x1C\x02\x02hm\x05\x12\n\x02ij\x05\x14\v\x02"+
+		"Y\v\x03\x02\x02\x02Z[\x07\n\x02\x02[\\\x07+\x02\x02\\]\x07 \x02\x02]^"+
+		"\x07\x06\x02\x02^_\x07!\x02\x02_`\x07\x1C\x02\x02`m\b\x07\x01\x02ab\x07"+
+		"\v\x02\x02bc\x07+\x02\x02cd\x07 \x02\x02de\x07\x06\x02\x02ef\x07!\x02"+
+		"\x02fg\x07\x1C\x02\x02gm\b\x07\x01\x02hm\x05\x12\n\x02ij\x05\x14\v\x02"+
 		"jk\x07\x1C\x02\x02km\x03\x02\x02\x02lZ\x03\x02\x02\x02la\x03\x02\x02\x02"+
 		"lh\x03\x02\x02\x02li\x03\x02\x02\x02m\r\x03\x02\x02\x02no\x05&\x14\x02"+
 		"op\x07\x1C\x02\x02p~\x03\x02\x02\x02qr\x05,\x17\x02rs\x07\x1C\x02\x02"+
@@ -1979,38 +2053,38 @@ export class QasmParser extends Parser {
 		"\x02\u011B\u011C\x07\x15\x02\x02\u011C\u011D\x07+\x02\x02\u011D\u011E"+
 		"\x07\x1B\x02\x02\u011E\u011F\x07+\x02\x02\u011F\u0121\b\x14\x01\x02\u0120"+
 		"\u0116\x03\x02\x02\x02\u0120\u011B\x03\x02\x02\x02\u0121\'\x03\x02\x02"+
-		"\x02\u0122\u0123\x07+\x02\x02\u0123\u0124\b\x15\x01\x02\u0124\u0125\x07"+
-		" \x02\x02\u0125\u0126\x07\x06\x02\x02\u0126\u0127\x07!\x02\x02\u0127)"+
-		"\x03\x02\x02\x02\u0128\u0129\x07+\x02\x02\u0129\u012A\b\x16\x01\x02\u012A"+
-		"\u012B\x07 \x02\x02\u012B\u012C\x07\x06\x02\x02\u012C\u012D\x07!\x02\x02"+
-		"\u012D+\x03\x02\x02\x02\u012E\u012F\x07+\x02\x02\u012F\u0130\b\x17\x01"+
-		"\x02\u0130\u0131\x07\"\x02\x02\u0131\u0132\x05.\x18\x02\u0132\u0133\x07"+
-		"#\x02\x02\u0133\u0134\x050\x19\x02\u0134\u0139\x03\x02\x02\x02\u0135\u0136"+
-		"\x07+\x02\x02\u0136\u0137\b\x17\x01\x02\u0137\u0139\x050\x19\x02\u0138"+
-		"\u012E\x03\x02\x02\x02\u0138\u0135\x03\x02\x02\x02\u0139-\x03\x02\x02"+
-		"\x02\u013A\u013B\b\x18\x01\x02\u013B\u013C\x05\"\x12\x02\u013C\u0142\x03"+
-		"\x02\x02\x02\u013D\u013E\f\x03\x02\x02\u013E\u013F\x07\x1D\x02\x02\u013F"+
-		"\u0141\x05\"\x12\x02\u0140\u013D\x03\x02\x02\x02\u0141\u0144\x03\x02\x02"+
-		"\x02\u0142\u0140\x03\x02\x02\x02\u0142\u0143\x03\x02\x02\x02\u0143/\x03"+
-		"\x02\x02\x02\u0144\u0142\x03\x02\x02\x02\u0145\u014B\x052\x1A\x02\u0146"+
-		"\u0147\x052\x1A\x02\u0147\u0148\x07\x1D\x02\x02\u0148\u0149\x050\x19\x02"+
-		"\u0149\u014B\x03\x02\x02\x02\u014A\u0145\x03\x02\x02\x02\u014A\u0146\x03"+
-		"\x02\x02\x02\u014B1\x03\x02\x02\x02\u014C\u014D\x07+\x02\x02\u014D\u0154"+
-		"\b\x1A\x01\x02\u014E\u014F\x07+\x02\x02\u014F\u0150\b\x1A\x01\x02\u0150"+
-		"\u0151\x07 \x02\x02\u0151\u0152\x07\x06\x02\x02\u0152\u0154\x07!\x02\x02"+
-		"\u0153\u014C\x03\x02\x02\x02\u0153\u014E\x03\x02\x02\x02\u01543\x03\x02"+
-		"\x02\x02\u0155\u0156\x07\x0E\x02\x02\u0156\u0157\x050\x19\x02\u01575\x03"+
-		"\x02\x02\x02\u0158\u0159\x07\x16\x02\x02\u0159\u015A\x07+\x02\x02\u015A"+
-		"\u015E\b\x1C\x01\x02\u015B\u015C\x07\x16\x02\x02\u015C\u015E\x058\x1D"+
-		"\x02\u015D\u0158\x03\x02\x02\x02\u015D\u015B\x03\x02\x02\x02\u015E7\x03"+
-		"\x02\x02\x02\u015F\u0165\x05(\x15\x02\u0160\u0161\x05(\x15\x02\u0161\u0162"+
-		"\x07\x1D\x02\x02\u0162\u0163\x058\x1D\x02\u0163\u0165\x03\x02\x02\x02"+
-		"\u0164\u015F\x03\x02\x02\x02\u0164\u0160\x03\x02\x02\x02\u01659\x03\x02"+
-		"\x02\x02\u0166\u0167\x07\x17\x02\x02\u0167\u0168\x07+\x02\x02\u0168\u016C"+
-		"\b\x1E\x01\x02\u0169\u016A\x07\x17\x02\x02\u016A\u016C\x05(\x15\x02\u016B"+
-		"\u0166\x03\x02\x02\x02\u016B\u0169\x03\x02\x02\x02\u016C;\x03\x02\x02"+
-		"\x02\x19AGMXl}\xB5\xBD\xC3\xC9\xE1\xEB\xFE\u010F\u0111\u0120\u0138\u0142"+
-		"\u014A\u0153\u015D\u0164\u016B";
+		"\x02\u0122\u0123\x07+\x02\x02\u0123\u0124\x07 \x02\x02\u0124\u0125\x07"+
+		"\x06\x02\x02\u0125\u0126\x07!\x02\x02\u0126\u0127\b\x15\x01\x02\u0127"+
+		")\x03\x02\x02\x02\u0128\u0129\x07+\x02\x02\u0129\u012A\x07 \x02\x02\u012A"+
+		"\u012B\x07\x06\x02\x02\u012B\u012C\x07!\x02\x02\u012C\u012D\b\x16\x01"+
+		"\x02\u012D+\x03\x02\x02\x02\u012E\u012F\x07+\x02\x02\u012F\u0130\b\x17"+
+		"\x01\x02\u0130\u0131\x07\"\x02\x02\u0131\u0132\x05.\x18\x02\u0132\u0133"+
+		"\x07#\x02\x02\u0133\u0134\x050\x19\x02\u0134\u0139\x03\x02\x02\x02\u0135"+
+		"\u0136\x07+\x02\x02\u0136\u0137\b\x17\x01\x02\u0137\u0139\x050\x19\x02"+
+		"\u0138\u012E\x03\x02\x02\x02\u0138\u0135\x03\x02\x02\x02\u0139-\x03\x02"+
+		"\x02\x02\u013A\u013B\b\x18\x01\x02\u013B\u013C\x05\"\x12\x02\u013C\u0142"+
+		"\x03\x02\x02\x02\u013D\u013E\f\x03\x02\x02\u013E\u013F\x07\x1D\x02\x02"+
+		"\u013F\u0141\x05\"\x12\x02\u0140\u013D\x03\x02\x02\x02\u0141\u0144\x03"+
+		"\x02\x02\x02\u0142\u0140\x03\x02\x02\x02\u0142\u0143\x03\x02\x02\x02\u0143"+
+		"/\x03\x02\x02\x02\u0144\u0142\x03\x02\x02\x02\u0145\u014B\x052\x1A\x02"+
+		"\u0146\u0147\x052\x1A\x02\u0147\u0148\x07\x1D\x02\x02\u0148\u0149\x05"+
+		"0\x19\x02\u0149\u014B\x03\x02\x02\x02\u014A\u0145\x03\x02\x02\x02\u014A"+
+		"\u0146\x03\x02\x02\x02\u014B1\x03\x02\x02\x02\u014C\u014D\x07+\x02\x02"+
+		"\u014D\u0154\b\x1A\x01\x02\u014E\u014F\x07+\x02\x02\u014F\u0150\b\x1A"+
+		"\x01\x02\u0150\u0151\x07 \x02\x02\u0151\u0152\x07\x06\x02\x02\u0152\u0154"+
+		"\x07!\x02\x02\u0153\u014C\x03\x02\x02\x02\u0153\u014E\x03\x02\x02\x02"+
+		"\u01543\x03\x02\x02\x02\u0155\u0156\x07\x0E\x02\x02\u0156\u0157\x050\x19"+
+		"\x02\u01575\x03\x02\x02\x02\u0158\u0159\x07\x16\x02\x02\u0159\u015A\x07"+
+		"+\x02\x02\u015A\u015E\b\x1C\x01\x02\u015B\u015C\x07\x16\x02\x02\u015C"+
+		"\u015E\x058\x1D\x02\u015D\u0158\x03\x02\x02\x02\u015D\u015B\x03\x02\x02"+
+		"\x02\u015E7\x03\x02\x02\x02\u015F\u0165\x05(\x15\x02\u0160\u0161\x05("+
+		"\x15\x02\u0161\u0162\x07\x1D\x02\x02\u0162\u0163\x058\x1D\x02\u0163\u0165"+
+		"\x03\x02\x02\x02\u0164\u015F\x03\x02\x02\x02\u0164\u0160\x03\x02\x02\x02"+
+		"\u01659\x03\x02\x02\x02\u0166\u0167\x07\x17\x02\x02\u0167\u0168\x07+\x02"+
+		"\x02\u0168\u016C\b\x1E\x01\x02\u0169\u016A\x07\x17\x02\x02\u016A\u016C"+
+		"\x05(\x15\x02\u016B\u0166\x03\x02\x02\x02\u016B\u0169\x03\x02\x02\x02"+
+		"\u016C;\x03\x02\x02\x02\x19AGMXl}\xB5\xBD\xC3\xC9\xE1\xEB\xFE\u010F\u0111"+
+		"\u0120\u0138\u0142\u014A\u0153\u015D\u0164\u016B";
 	public static __ATN: ATN;
 	public static get _ATN(): ATN {
 		if (!QasmParser.__ATN) {
@@ -2168,6 +2242,7 @@ export class SentenceContext extends ParserRuleContext {
 
 export class DefinitionContext extends ParserRuleContext {
 	public _Id: Token;
+	public _Int: Token;
 	public Qreg(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Qreg, 0); }
 	public Id(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Id, 0); }
 	public LeftBrace(): TerminalNode | undefined { return this.tryGetToken(QasmParser.LeftBrace, 0); }
@@ -2638,6 +2713,7 @@ export class MeasureContext extends ParserRuleContext {
 
 export class QubitContext extends ParserRuleContext {
 	public _Id: Token;
+	public _Int: Token;
 	public Id(): TerminalNode { return this.getToken(QasmParser.Id, 0); }
 	public LeftBrace(): TerminalNode { return this.getToken(QasmParser.LeftBrace, 0); }
 	public Int(): TerminalNode { return this.getToken(QasmParser.Int, 0); }
@@ -2666,6 +2742,7 @@ export class QubitContext extends ParserRuleContext {
 
 export class CbitContext extends ParserRuleContext {
 	public _Id: Token;
+	public _Int: Token;
 	public Id(): TerminalNode { return this.getToken(QasmParser.Id, 0); }
 	public LeftBrace(): TerminalNode { return this.getToken(QasmParser.LeftBrace, 0); }
 	public Int(): TerminalNode { return this.getToken(QasmParser.Int, 0); }
