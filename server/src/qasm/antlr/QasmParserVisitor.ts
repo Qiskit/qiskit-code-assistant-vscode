@@ -2,7 +2,7 @@
 
 
 
-class SymbolsTable {
+class SymbolsTable {    
 
     qregs: string[] = [];
 
@@ -26,7 +26,6 @@ import { SentenceContext } from './QasmParser';
 import { DefinitionContext } from './QasmParser';
 import { ExpressionContext } from './QasmParser';
 import { ConditionalContext } from './QasmParser';
-import { QLineContext } from './QasmParser';
 import { GateDefinitionContext } from './QasmParser';
 import { OpaqueDefinitionContext } from './QasmParser';
 import { GateDefinitionArgumentsContext } from './QasmParser';
@@ -113,13 +112,6 @@ export interface QasmParserVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitConditional?: (ctx: ConditionalContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `QasmParser.qLine`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitQLine?: (ctx: QLineContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `QasmParser.gateDefinition`.

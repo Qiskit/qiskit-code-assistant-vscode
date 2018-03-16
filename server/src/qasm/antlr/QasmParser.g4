@@ -3,7 +3,7 @@ options { tokenVocab=QasmLexer; }
 
 @header {
 
-class SymbolsTable {
+class SymbolsTable {    
 
     qregs: string[] = [];
 
@@ -100,8 +100,8 @@ sentence
     ;
 
 definition
-    : Qreg Id { this.declareQreg($Id); } qLine Semi 
-    | Creg Id { this.declareCreg($Id); } qLine Semi 
+    : Qreg Id { this.declareQreg($Id); } LeftBrace Int RightBrace Semi 
+    | Creg Id { this.declareCreg($Id); } LeftBrace Int RightBrace Semi 
     | gateDefinition
     | opaqueDefinition Semi
     ;
@@ -116,10 +116,6 @@ expression
 
 conditional
     : If LeftParen Id Equals Int RightParen
-    ;
-
-qLine: 
-    LeftBrace Int RightBrace
     ;
 
 gateDefinition: 
@@ -200,11 +196,11 @@ measure
     ;
 
 qubit
-    : Id { this.verifyQregDeclaration($Id); } qLine 
+    : Id { this.verifyQregDeclaration($Id); } LeftBrace Int RightBrace 
     ;
 
 cbit
-    : Id { this.verifyCregDeclaration($Id); } qLine 
+    : Id { this.verifyCregDeclaration($Id); } LeftBrace Int RightBrace 
     ;
 
 customArglist
@@ -224,7 +220,7 @@ qubitAndQregList
 
 qbitOrQreg
     : Id { this.verifyQregDeclaration($Id); }
-    | Id { this.verifyQregDeclaration($Id); } qLine
+    | Id { this.verifyQregDeclaration($Id); } LeftBrace Int RightBrace
     ;
 
 cxGate

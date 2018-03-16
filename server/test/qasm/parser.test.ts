@@ -153,4 +153,16 @@ describe('A parser', () => {
     });
   });
 
+  describe('with a semantically wrong  input', () => {
+    let input = 'qreg q[3];creg c[3];measure foo[1]->c[1];'
+    
+    it('will throw one error', () => {
+      let result = parser.parse(input);
+      expect(result.errors.length).to.be.eq(1);
+      expect(result.errors[0].line).to.be.eq(0);
+      expect(result.errors[0].start).to.be.eq(28);
+      expect(result.errors[0].end).to.be.eq(31);
+    });
+  });
+
 });
