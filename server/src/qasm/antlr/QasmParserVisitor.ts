@@ -68,6 +68,24 @@ class SymbolsTable {
         return this.cregs.map(this.toName);
     }
 
+    getDeclaredSymbols(): string[] {
+        let result = [];
+    
+        result.push(...this.getQuantumRegisters());
+        result.push(...this.getClassicRegisters());
+        result.push(...this.gates);
+        result.push(...this.opaques);
+
+        return result;
+    }
+
+    isPreviouslyDeclaredSymbol(input: string) {
+        let foundSymbols = this.getDeclaredSymbols()
+            .filter((symbol) => symbol === input);
+
+        return foundSymbols.length > 0;
+    }
+
 }
 
 

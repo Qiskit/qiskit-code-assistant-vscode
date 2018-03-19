@@ -14,7 +14,7 @@ describe('A parser', () => {
   });
 
   describe('with an input with only clean', () => {
-    it ('will end without errors', () => {
+    it('will end without errors', () => {
       let result = parser.parse('clean');
       expect(result.errors.length).to.be.eq(0);
     });
@@ -68,7 +68,7 @@ describe('A parser', () => {
           barrier q;
         }
         `;
-      
+
       let result = parser.parse(input);
       expect(result.errors.length).to.be.eq(1);
       expect(result.errors[0].line).to.be.eq(3);
@@ -155,7 +155,7 @@ describe('A parser', () => {
 
   describe('with a semantically wrong  input', () => {
     let input = 'qreg q[3];creg c[3];measure foo[1]->c[1];'
-    
+
     it('will throw one error', () => {
       let result = parser.parse(input);
 
@@ -170,5 +170,45 @@ describe('A parser', () => {
       });
     });
   });
+
+  describe('generates a duplication error', () => {
+    it('if a quatum register is defined twice', () => {
+      let input = `qreg q[5];creg c[5];qreg q[5];`;
+
+      let result = parser.parse(input);
+
+      expect(result.errors).to.be.an('array')
+        .with.length(1);
+      expect(result.errors[0]).to.deep.equal({
+        message: 'There is another declaration with name q',
+        line: 0,
+        start: 25,
+        end: 26,
+        level: ParseErrorLevel.ERROR
+      });
+    });
+
+    it('if a classical registers uses a previous quatum register definition name', () => {
+      let input = `qreg q[5];creg q[5];`;
+
+      let result = parser.parse(input);
+
+      expect(result.errors).to.be.an('array')
+        .with.length(1);
+      expect(result.errors[0]).to.deep.equal({
+        message: 'There is another declaration with name q',
+        line: 0,
+        start: 15,
+        end: 16,
+        level: ParseErrorLevel.ERROR
+      });
+    });
+  });
+
+  // Classic registers
+
+  // Gates declarations
+
+  // Opaques declarations
 
 });

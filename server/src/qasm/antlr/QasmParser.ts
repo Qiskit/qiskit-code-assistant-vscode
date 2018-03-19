@@ -68,6 +68,24 @@ class SymbolsTable {
         return this.cregs.map(this.toName);
     }
 
+    getDeclaredSymbols(): string[] {
+        let result = [];
+    
+        result.push(...this.getQuantumRegisters());
+        result.push(...this.getClassicRegisters());
+        result.push(...this.gates);
+        result.push(...this.opaques);
+
+        return result;
+    }
+
+    isPreviouslyDeclaredSymbol(input: string) {
+        let foundSymbols = this.getDeclaredSymbols()
+            .filter((symbol) => symbol === input);
+
+        return foundSymbols.length > 0;
+    }
+
 }
 
 
@@ -215,12 +233,23 @@ export class QasmParser extends Parser {
 	    
 	private symbolsTable = new SymbolsTable();
 
+	private foo(registerName: Token, f) {
+	    if (!this.symbolsTable.isPreviouslyDeclaredSymbol(registerName.text)) {
+	        f();
+	    } else {
+	        let message = `There is another declaration with name ${registerName.text}`;
+	        this.notifyErrorListeners(message, registerName, null);
+	    }
+	}
+
 	private declareCreg(registerName: Token, size: Token): void {
-	    this.symbolsTable.addClassicRegister(registerName.text, +size.text);
+	    this.foo(registerName, () => 
+	        this.symbolsTable.addClassicRegister(registerName.text, +size.text));
 	}
 
 	private declareQreg(registerName: Token, size: Token): void {
-	    this.symbolsTable.addQuantumRegister(registerName.text, +size.text);
+	    this.foo(registerName, () => 
+	        this.symbolsTable.addQuantumRegister(registerName.text, +size.text));
 	}
 
 	private declareGate(gateName: Token): void {
@@ -271,14 +300,7 @@ export class QasmParser extends Parser {
 	}
 
 	declaredVariables(): string[] {
-	    let result = [];
-	    
-	    result.push(...this.symbolsTable.getQuantumRegisters());
-	    result.push(...this.symbolsTable.getClassicRegisters());
-	    result.push(...this.symbolsTable.gates);
-	    result.push(...this.symbolsTable.opaques);
-
-	    return result;
+	    return this.symbolsTable.getDeclaredSymbols();
 	}
 
 
