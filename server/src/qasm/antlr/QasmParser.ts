@@ -233,9 +233,9 @@ export class QasmParser extends Parser {
 	    
 	private symbolsTable = new SymbolsTable();
 
-	private foo(registerName: Token, f) {
+	private checkPreviousExistenceAndApply(registerName: Token, declarationFunction) {
 	    if (!this.symbolsTable.isPreviouslyDeclaredSymbol(registerName.text)) {
-	        f();
+	        declarationFunction();
 	    } else {
 	        let message = `There is another declaration with name ${registerName.text}`;
 	        this.notifyErrorListeners(message, registerName, null);
@@ -243,17 +243,18 @@ export class QasmParser extends Parser {
 	}
 
 	private declareCreg(registerName: Token, size: Token): void {
-	    this.foo(registerName, () => 
+	    this.checkPreviousExistenceAndApply(registerName, () => 
 	        this.symbolsTable.addClassicRegister(registerName.text, +size.text));
 	}
 
 	private declareQreg(registerName: Token, size: Token): void {
-	    this.foo(registerName, () => 
+	    this.checkPreviousExistenceAndApply(registerName, () => 
 	        this.symbolsTable.addQuantumRegister(registerName.text, +size.text));
 	}
 
 	private declareGate(gateName: Token): void {
-	    this.symbolsTable.gates.push(gateName.text);
+	    this.checkPreviousExistenceAndApply(gateName, () => 
+	        this.symbolsTable.gates.push(gateName.text));
 	}
 
 	private declareOpaque(gateName: Token): void {

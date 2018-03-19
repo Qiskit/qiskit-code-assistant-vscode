@@ -105,7 +105,7 @@ private checkPreviousExistenceAndApply(registerName: Token, declarationFunction)
 }
 
 private declareCreg(registerName: Token, size: Token): void {
-    this.checkPreviousExistenceAndApplyfoo(registerName, () => 
+    this.checkPreviousExistenceAndApply(registerName, () => 
         this.symbolsTable.addClassicRegister(registerName.text, +size.text));
 }
 
@@ -115,7 +115,8 @@ private declareQreg(registerName: Token, size: Token): void {
 }
 
 private declareGate(gateName: Token): void {
-    this.symbolsTable.gates.push(gateName.text);
+    this.checkPreviousExistenceAndApply(gateName, () => 
+        this.symbolsTable.gates.push(gateName.text));
 }
 
 private declareOpaque(gateName: Token): void {

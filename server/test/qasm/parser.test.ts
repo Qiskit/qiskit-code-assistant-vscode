@@ -172,7 +172,7 @@ describe('A parser', () => {
   });
 
   describe('generates a duplication error', () => {
-    it('if a quatum register is defined twice', () => {
+    it('if a quatum register uses a previously defined symbol', () => {
       let input = `qreg q[5];creg c[5];qreg q[5];`;
 
       let result = parser.parse(input);
@@ -188,7 +188,7 @@ describe('A parser', () => {
       });
     });
 
-    it('if a classical registers uses a previous quatum register definition name', () => {
+    it('if a classic register uses a previously defined symbol', () => {
       let input = `qreg q[5];creg q[5];`;
 
       let result = parser.parse(input);
@@ -200,6 +200,24 @@ describe('A parser', () => {
         line: 0,
         start: 15,
         end: 16,
+        level: ParseErrorLevel.ERROR
+      });
+    });
+
+    it('if a gate uses a previously defined symbol', () => {
+      let input = `qreg cx[5];gate cx c,t {
+          CX c,t; 
+        }`;
+
+      let result = parser.parse(input);
+
+      expect(result.errors).to.be.an('array')
+        .with.length(1);
+      expect(result.errors[0]).to.deep.equal({
+        message: 'There is another declaration with name cx',
+        line: 0,
+        start: 16,
+        end: 18,
         level: ParseErrorLevel.ERROR
       });
     });
