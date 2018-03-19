@@ -173,7 +173,7 @@ describe('A parser', () => {
 
   describe('generates a duplication error', () => {
     it('if a quatum register uses a previously defined symbol', () => {
-      let input = `qreg q[5];creg c[5];qreg q[5];`;
+      let input = 'qreg q[5];creg c[5];qreg q[5];';
 
       let result = parser.parse(input);
 
@@ -189,7 +189,7 @@ describe('A parser', () => {
     });
 
     it('if a classic register uses a previously defined symbol', () => {
-      let input = `qreg q[5];creg q[5];`;
+      let input = 'qreg q[5];creg q[5];';
 
       let result = parser.parse(input);
 
@@ -221,12 +221,22 @@ describe('A parser', () => {
         level: ParseErrorLevel.ERROR
       });
     });
+
+    it('if an opaque uses a previously defined symbol', () => {
+      let input = `qreg foo[5];opaque foo(a, b, c) q;`;
+
+      let result = parser.parse(input);
+
+      expect(result.errors).to.be.an('array')
+        .with.length(1);
+      expect(result.errors[0]).to.deep.equal({
+        message: 'There is another declaration with name foo',
+        line: 0,
+        start: 19,
+        end: 22,
+        level: ParseErrorLevel.ERROR
+      });
+    });
   });
-
-  // Classic registers
-
-  // Gates declarations
-
-  // Opaques declarations
 
 });

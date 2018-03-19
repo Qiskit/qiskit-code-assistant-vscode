@@ -119,8 +119,9 @@ private declareGate(gateName: Token): void {
         this.symbolsTable.gates.push(gateName.text));
 }
 
-private declareOpaque(gateName: Token): void {
-    this.symbolsTable.opaques.push(gateName.text);
+private declareOpaque(opaqueName: Token): void {
+    this.checkPreviousExistenceAndApply(opaqueName, () => 
+        this.symbolsTable.opaques.push(opaqueName.text));
 }
 
 private verifyQregDeclaration(registerName: Token, position?: Token): void {
