@@ -1,23 +1,21 @@
 # Qiskit Studio
 > Qiskit Studio is a tool that makes simple working with QASM files.
 
-Q-Studio
+Q-Studio is a Visual Studio Code extension, that allow the researchers and developers create and execute Quantum circuits. After the execution the results can be evaluated.
+
+You can find additional information about planning and future of Q-Studio [here](https://ibm.ent.box.com/notes/282598814468).
 
 ## Installation
 
-TBD
+TBD (documentation for the Microsoft Code market should be created)
 
 ### How to run locally
+
+NPM is requirede to run the project in a local environment.
 
 ```sh
 npm install
 npm run compile
-```
-
-Jison is required to compile the parser grammar.
-
-```sh
-npm install jison -g
 ```
 
 ## Usage example
@@ -70,6 +68,7 @@ The server side of the extension is divided into various components to being abl
 * CompilationTool is the "interface" that gives document validation and autocompletion tips to the extension, through the Parser.
 * Parser is an adapter that is able to translate the results from the real parser engine, into the objects that the extension and CompilationTool understand.
 * QasmParserEngine is the real implementation of the parser for qasm files.
+
 ### Configuring Python >3.5
 
 The extension have some previous requirements, one of them is Python 3.5 or greater.
