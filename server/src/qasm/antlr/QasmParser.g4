@@ -95,7 +95,7 @@ class SymbolsTable {
     
 private symbolsTable = new SymbolsTable();
 
-private checkPreviousExistenceAndApply(registerName: Token, declarationFunction) {
+private checkPreviousExistenceAndApply(registerName: Token, declarationFunction: () => void) {
     if (!this.symbolsTable.isPreviouslyDeclaredSymbol(registerName.text)) {
         declarationFunction();
     } else {
