@@ -2,6 +2,8 @@
 
 
 import { Register, SymbolsTable } from './utils';
+import fs = require('fs');
+import path = require('path');
 
 
 import { ParseTreeListener } from 'antlr4ts/tree/ParseTreeListener';

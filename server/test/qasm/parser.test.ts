@@ -31,7 +31,7 @@ describe('A parser', () => {
     it('including a functions library will end without errors', () => {
       let input = `
         OPENQASM 2.0;
-        include "quelib1.inc";
+        include "qelib1.inc";
         `;
 
       let result = parser.parse(input);
@@ -123,7 +123,7 @@ describe('A parser', () => {
     it('will end without errors', () => {
       let input = `
         OPENQASM 2.0;
-        include "quelib1.inc";
+        include "qelib1.inc";
 
         qreg q[5];
         creg c[5];
@@ -143,7 +143,7 @@ describe('A parser', () => {
     it('will throw one error', () => {
       let input = `
         OPENQASM 2.0;
-        include "quelib1.inc";
+        include "qelib1.inc";
 
         qreg q;`;
 

@@ -2,6 +2,8 @@
 
 
 import { Register, SymbolsTable } from './utils';
+import fs = require('fs');
+import path = require('path');
 
 
 import { ATN } from 'antlr4ts/atn/ATN';
@@ -221,8 +223,11 @@ export class QasmParser extends Parser {
 	    return this.symbolsTable.getDeclaredSymbols();
 	}
 
-	private processLibrary(_libraryName: string) {
+	private processLibrary(libraryName: string) {
+	    let libraryPath = path.join(__dirname, '..', 'libs', libraryName);
+	    let text = fs.readFileSync(libraryPath, 'utf8');
 
+	    console.log(text);
 	}
 
 
