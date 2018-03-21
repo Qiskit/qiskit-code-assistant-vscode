@@ -3,6 +3,9 @@ options { tokenVocab=QasmLexer; }
 
 @header {
 import { Register, SymbolsTable } from './utils';
+import { QasmLexer } from './QasmLexer';
+import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts'; 
+import { SymbolTable } from '../compiler/symbolTable';
 import fs = require('fs');
 import path = require('path');
 }
@@ -10,6 +13,8 @@ import path = require('path');
 @members {
     
 private symbolsTable = new SymbolsTable();
+
+private symbolTable = new SymbolTable(null);
 
 private checkPreviousExistenceAndApply(registerName: Token, declarationFunction: () => void) {
     if (!this.symbolsTable.isPreviouslyDeclaredSymbol(registerName.text)) {
@@ -83,11 +88,29 @@ declaredVariables(): string[] {
     return this.symbolsTable.getDeclaredSymbols();
 }
 
+getSymbolTable(): SymbolTable {
+    return this.symbolTable;
+}
+
+private buildQasmParser(input: string): QasmParser {
+    let inputStream = new ANTLRInputStream(input);
+    let lexer = new QasmLexer(inputStream);
+    let tokenStream = new CommonTokenStream(lexer);
+    let parser = new QasmParser(tokenStream);
+
+    return parser;
+}
+
 private processLibrary(libraryName: string) {
     let libraryPath = path.join(__dirname, '..', 'libs', libraryName);
     let text = fs.readFileSync(libraryPath, 'utf8');
+    let parser = this.buildQasmParser(text);
 
-    console.log(text);
+    parser.code();
+
+    this.symbolTable = parser.getSymbolTable();
+
+    console.log(JSON.stringify(this.symbolTable));
 }
 
 }
