@@ -18,6 +18,9 @@ export class SymbolTableBuilder {
         let globalScope = new GlobalScope();
         let symbolTable = new SymbolTable(globalScope);
         symbolTable.define(new BuiltInTypeSymbol('CREG'));
+        symbolTable.define(new BuiltInTypeSymbol('QREG'));
+        symbolTable.define(new BuiltInTypeSymbol('INT'));
+        symbolTable.define(new BuiltInTypeSymbol('REAL'));
 
         return symbolTable;
     }
@@ -33,11 +36,20 @@ export class SymbolTable {
     }
 
     lookup(name: string): Symbol {
-        return this.currentScope.lookup(name);
+        let symbol = this.currentScope.lookup(name);
+        if (symbol) {
+            return symbol;
+        }
+
+        throw new Error('Not defined symbol');
     }
 
     define(symbol: Symbol): void {
         this.currentScope.define(symbol);
+    }
+
+    push(scopeName: string): void {
+        this.currentScope = new LocalScope(scopeName, this.currentScope);
     }
     
 }
@@ -67,7 +79,7 @@ class BuiltInTypeSymbol extends Symbol implements Type {
 
 }
 
-class VariableSymbol extends Symbol {
+export class VariableSymbol extends Symbol {
     
     constructor(name: string, type: Type) {
         super(name, type);
@@ -81,9 +93,36 @@ interface Type {
 
 }
 
-class GlobalScope implements Scope {
+abstract class Scope {
 
     dictionary: Map<string, Symbol> = new Map();
+
+    abstract getScopeName(): string;
+
+    abstract getEnclosingScope(): Scope;
+    
+    define(symbol: Symbol): void {
+        this.dictionary.set(symbol.name, symbol);
+    }
+
+    lookup(name: string): Symbol {
+        let symbol = this.dictionary.get(name)
+        
+        if (symbol) {
+            return symbol;
+        }
+        
+        if (this.getEnclosingScope()) {
+            return this.getEnclosingScope().lookup(name);
+        }
+
+        return null;
+    }
+
+
+}
+
+class GlobalScope extends Scope {
 
     getScopeName(): string {
         return 'global';
@@ -93,24 +132,27 @@ class GlobalScope implements Scope {
         return null;
     }
 
-    define(symbol: Symbol): void {
-        this.dictionary.set(symbol.name, symbol);
-    }
-
-    lookup(name: string): Symbol {
-        return this.dictionary.get(name);
-    }
-
 }
 
-interface Scope {
+class LocalScope extends Scope {
 
-    getScopeName(): string;
+    name: string;
 
-    getEnclosingScope(): Scope;
+    enclosingScope: Scope;
 
-    define(symbol: Symbol): void;
+    constructor(name: string, enclosingScope: Scope) {
+        super();
+        
+        this.name = name;
+        this.enclosingScope = enclosingScope;
+    }
 
-    lookup(name: string): Symbol;
+    getScopeName(): string {
+        return this.name;
+    }
+
+    getEnclosingScope(): Scope {
+        return this.enclosingScope;
+    }
 
 }
