@@ -21,6 +21,7 @@ export class SymbolTableBuilder {
         symbolTable.define(new BuiltInTypeSymbol('QREG'));
         symbolTable.define(new BuiltInTypeSymbol('INT'));
         symbolTable.define(new BuiltInTypeSymbol('REAL'));
+        symbolTable.define(new BuiltInTypeSymbol('GATE'));
 
         return symbolTable;
     }
@@ -50,6 +51,13 @@ export class SymbolTable {
 
     push(scopeName: string): void {
         this.currentScope = new LocalScope(scopeName, this.currentScope);
+    }
+
+    pop(): Scope {
+        let oldScope = this.currentScope;
+        this.currentScope = this.currentScope.getEnclosingScope();
+
+        return oldScope;
     }
     
 }
@@ -81,6 +89,14 @@ class BuiltInTypeSymbol extends Symbol implements Type {
 
 export class VariableSymbol extends Symbol {
     
+    constructor(name: string, type: Type) {
+        super(name, type);
+    }
+
+}
+
+export class GateSymbol extends Symbol {
+
     constructor(name: string, type: Type) {
         super(name, type);
     }
