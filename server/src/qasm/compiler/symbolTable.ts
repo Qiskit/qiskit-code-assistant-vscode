@@ -17,11 +17,12 @@ export class SymbolTableBuilder {
     public static build(): SymbolTable {
         let globalScope = new GlobalScope();
         let symbolTable = new SymbolTable(globalScope);
-        symbolTable.define(new BuiltInTypeSymbol('CREG'));
-        symbolTable.define(new BuiltInTypeSymbol('QREG'));
-        symbolTable.define(new BuiltInTypeSymbol('INT'));
-        symbolTable.define(new BuiltInTypeSymbol('REAL'));
-        symbolTable.define(new BuiltInTypeSymbol('GATE'));
+        symbolTable.define(new BuiltInTypeSymbol('Creg'));
+        symbolTable.define(new BuiltInTypeSymbol('Qreg'));
+        symbolTable.define(new BuiltInTypeSymbol('Int'));
+        symbolTable.define(new BuiltInTypeSymbol('Real'));
+        symbolTable.define(new BuiltInTypeSymbol('Gate'));
+        symbolTable.define(new BuiltInTypeSymbol('Opaque'));
 
         return symbolTable;
     }
@@ -42,7 +43,7 @@ export class SymbolTable {
             return symbol;
         }
 
-        throw new Error('Not defined symbol');
+        return null;
     }
 
     define(symbol: Symbol): void {
@@ -60,6 +61,10 @@ export class SymbolTable {
         return oldScope;
     }
     
+    definedSymbols(): string[] {
+        return this.currentScope.definedSymbols().map((symbol) => symbol.name);
+    }
+
 }
 
 class Symbol {
@@ -135,7 +140,15 @@ abstract class Scope {
         return null;
     }
 
+    definedSymbols(): Symbol[] {
+        let symbols: Symbol[] = [];
+        if (this.getEnclosingScope()) {
+            symbols.push(...this.getEnclosingScope().definedSymbols());
+        }
+        symbols.push(...this.dictionary.values());
 
+        return symbols;
+    }
 }
 
 class GlobalScope extends Scope {

@@ -5,17 +5,16 @@ options { tokenVocab=QasmLexer; }
 import { Register, SymbolsTable } from './utils';
 import { QasmLexer } from './QasmLexer';
 import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts'; 
-import { SymbolTable } from '../compiler/symbolTable';
+import { SymbolTable, SymbolTableBuilder, VariableSymbol } from '../compiler/symbolTable';
 import fs = require('fs');
 import path = require('path');
 }
 
 @members {
     
-private symbolsTable = new SymbolsTable();
+private symbolTable = SymbolTableBuilder.build();
 
-private symbolTable = new SymbolTable(null);
-
+/*
 private checkPreviousExistenceAndApply(registerName: Token, declarationFunction: () => void) {
     if (!this.symbolsTable.isPreviouslyDeclaredSymbol(registerName.text)) {
         declarationFunction();
@@ -28,11 +27,6 @@ private checkPreviousExistenceAndApply(registerName: Token, declarationFunction:
 private declareCreg(registerName: Token, size: Token): void {
     this.checkPreviousExistenceAndApply(registerName, () => 
         this.symbolsTable.addClassicRegister(registerName.text, +size.text));
-}
-
-private declareQreg(registerName: Token, size: Token): void {
-    this.checkPreviousExistenceAndApply(registerName, () => 
-        this.symbolsTable.addQuantumRegister(registerName.text, +size.text));
 }
 
 private declareGate(gateName: Token): void {
@@ -83,10 +77,82 @@ private verifyGateDeclaration(input: Token): void {
         this.notifyErrorListeners(message, input, null);
     }
 }
+*/
+
+private declareQreg(registerName: Token): void {
+    let variableSymbol = this.symbolTable.lookup(registerName.text);
+    if (variableSymbol == null) {
+        let qregSymbol = this.symbolTable.lookup('Qreg');
+        let newSymbol = new VariableSymbol(registerName.text, qregSymbol.type);
+
+        this.symbolTable.define(newSymbol);
+    } else {
+        let message = `There is another declaration with name ${registerName.text}`;
+        this.notifyErrorListeners(message, registerName, null);
+    }
+}
+
+private declareCreg(registerName: Token): void {
+    let variableSymbol = this.symbolTable.lookup(registerName.text);
+    if (variableSymbol == null) {
+        let cregSymbol = this.symbolTable.lookup('Creg');
+        let newSymbol = new VariableSymbol(registerName.text, cregSymbol.type);
+
+        this.symbolTable.define(newSymbol);
+    } else {
+        let message = `There is another declaration with name ${registerName.text}`;
+        this.notifyErrorListeners(message, registerName, null);
+    }
+}
+
+private declareGate(gateName: Token): void {
+    let variableSymbol = this.symbolTable.lookup(gateName.text);
+    if (variableSymbol == null) {
+        let gateSymbol = this.symbolTable.lookup('Gate');
+        let newSymbol = new VariableSymbol(gateName.text, gateSymbol.type);
+
+        this.symbolTable.define(newSymbol);
+    } else {
+        let message = `There is another declaration with name ${gateName.text}`;
+        this.notifyErrorListeners(message, gateName, null);
+    }
+}
+
+private declareOpaque(opaqueName: Token): void {
+    let variableSymbol = this.symbolTable.lookup(opaqueName.text);
+    if (variableSymbol == null) {
+        let opaqueSymbol = this.symbolTable.lookup('Opaque');
+        let newSymbol = new VariableSymbol(opaqueName.text, opaqueSymbol.type);
+
+        this.symbolTable.define(newSymbol);
+    } else {
+        let message = `There is another declaration with name ${opaqueName.text}`;
+        this.notifyErrorListeners(message, opaqueName, null);
+    }
+}
+
+private verifyQregUssage(id: Token, _position?: Token) {
+    let variableSymbol = this.symbolTable.lookup(id.text);
+    if (variableSymbol) {
+    } else {
+        let message = `Qubit ${id.text} is not previously defined`;
+        this.notifyErrorListeners(message, id, null);
+    }
+}
+
+private verifyCregUssage(id: Token, _position?: Token) {
+    let variableSymbol = this.symbolTable.lookup(id.text);
+    if (variableSymbol) {
+    } else {
+        let message = `Cbit ${id.text} is not previously defined`;
+        this.notifyErrorListeners(message, id, null);
+    }
+}
 
 declaredVariables(): string[] {
-    return this.symbolsTable.getDeclaredSymbols();
+    return this.symbolTable.definedSymbols();
 }
+ 
 
 getSymbolTable(): SymbolTable {
     return this.symbolTable;
@@ -148,8 +214,8 @@ sentence
     ;
 
 definition
-    : Qreg Id LeftBrace Int RightBrace Semi { this.declareQreg($Id, $Int); }
-    | Creg Id LeftBrace Int RightBrace Semi { this.declareCreg($Id, $Int); }
+    : Qreg Id LeftBrace Int RightBrace Semi { this.declareQreg($Id); }
+    | Creg Id LeftBrace Int RightBrace Semi { this.declareCreg($Id); }
     | gateDefinition
     | opaqueDefinition Semi
     ;
@@ -167,11 +233,16 @@ conditional
     ;
 
 gateDefinition: 
-    Gate Id { this.declareGate($Id); } gateDefinitionArguments
+    Gate Id { 
+        this.declareGate($Id); 
+        this.symbolTable.push($Id.text);
+    } gateDefinitionArguments {
+        this.symbolTable.pop();
+    }
     ;
 
 opaqueDefinition
-    : Opaque Id { this.declareOpaque($Id); } opaqueDefinitionArguments
+    : Opaque Id opaqueDefinitionArguments { this.declareOpaque($Id); }
     ;
 
 gateDefinitionArguments
@@ -236,24 +307,20 @@ unaryOp
 
 measure
     : Measure qubit Assign cbit
-    | Measure q=Id Assign c=Id 
-    {
-        this.verifyQregDeclaration($q);
-        this.verifyCregDeclaration($c);
-    }
+    | Measure q=Id { this.verifyQregUssage($q); } Assign c=Id { this.verifyCregUssage($c); }
     ;
 
 qubit
-    : Id LeftBrace Int RightBrace { this.verifyQregDeclaration($Id, $Int); }
+    : Id LeftBrace Int RightBrace { this.verifyQregUssage($Id, $Int); }
     ;
 
 cbit
-    : Id LeftBrace Int RightBrace { this.verifyCregDeclaration($Id, $Int); }
+    : Id LeftBrace Int RightBrace { this.verifyCregUssage($Id); }
     ;
 
 customArglist
-    : Id {this.verifyGateDeclaration($Id); } LeftParen paramsListNumber RightParen qubitAndQregList
-    | Id {this.verifyGateDeclaration($Id); } qubitAndQregList
+    : Id LeftParen paramsListNumber RightParen qubitAndQregList
+    | Id qubitAndQregList
     ;
 
 paramsListNumber
@@ -267,8 +334,8 @@ qubitAndQregList
     ;
 
 qbitOrQreg
-    : Id { this.verifyQregDeclaration($Id); }
-    | Id { this.verifyQregDeclaration($Id); } LeftBrace Int RightBrace
+    : Id 
+    | Id LeftBrace Int RightBrace
     ;
 
 cxGate
@@ -276,7 +343,7 @@ cxGate
     ;
 
 barrierGate
-    : Barrier Id { this.verifyQregDeclaration($Id); }
+    : Barrier Id
     | Barrier qubitList 
     ;
 
@@ -286,6 +353,6 @@ qubitList
     ; 
 
 resetGate
-    : Reset Id { this.verifyQregDeclaration($Id); }
+    : Reset Id
     | Reset qubit
     ;

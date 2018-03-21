@@ -21,21 +21,22 @@ describe('A symbol table', () => {
 
     describe('after construction', () => {
         it('contains the built in types', () => {
-            expect(symbolTable.lookup('CREG').name).to.be.equals('CREG');
-            expect(symbolTable.lookup('QREG').name).to.be.equals('QREG');
-            expect(symbolTable.lookup('INT').name).to.be.equals('INT');
-            expect(symbolTable.lookup('REAL').name).to.be.equals('REAL');
-            expect(symbolTable.lookup('GATE').name).to.be.equals('GATE');
+            expect(symbolTable.lookup('Creg').name).to.be.equals('Creg');
+            expect(symbolTable.lookup('Qreg').name).to.be.equals('Qreg');
+            expect(symbolTable.lookup('Int').name).to.be.equals('Int');
+            expect(symbolTable.lookup('Real').name).to.be.equals('Real');
+            expect(symbolTable.lookup('Gate').name).to.be.equals('Gate');
+            expect(symbolTable.lookup('Opaque').name).to.be.equals('Opaque');
         });
 
-        it('throws an error when looking up for a symbol not defined', () => {
-            expect(() => symbolTable.lookup('a')).to.throw('Not defined symbol');
+        it('returns null if a symbol is not defined', () => {
+            expect(symbolTable.lookup('a')).to.be.null;
         });
     });
 
     describe('can define a variable symbol', () => {
         it('with QREG type', () => {
-            let qregSymbol = symbolTable.lookup('QREG');
+            let qregSymbol = symbolTable.lookup('Qreg');
             symbolTable.define(new VariableSymbol('q', qregSymbol.type));
 
             expect(symbolTable.lookup('q').type).to.be.equals(qregSymbol.type);
@@ -43,7 +44,7 @@ describe('A symbol table', () => {
 
         it('in a child scope', () => {
             symbolTable.push('foo');
-            let qregSymbol = symbolTable.lookup('QREG');
+            let qregSymbol = symbolTable.lookup('Qreg');
             symbolTable.define(new VariableSymbol('q', qregSymbol.type));
 
             expect(symbolTable.lookup('q').type).to.be.equals(qregSymbol.type);
@@ -52,27 +53,42 @@ describe('A symbol table', () => {
 
     describe('when discards a scope', () => {
         it('can no longer access to previous scope variables', () => {
-            let gateSymbol = symbolTable.lookup('GATE');
+            let gateSymbol = symbolTable.lookup('Gate');
             symbolTable.define(new GateSymbol('foo', gateSymbol.type));
             symbolTable.push('foo');
-            let qregSymbol = symbolTable.lookup('QREG');
+            let qregSymbol = symbolTable.lookup('Qreg');
             symbolTable.define(new VariableSymbol('q', qregSymbol.type));
             symbolTable.pop();
 
-            expect(() => symbolTable.lookup('q')).to.throw('Not defined symbol');
+            expect(symbolTable.lookup('q')).to.be.null;
         });
     });
 
     describe('when a previous scope defines a variable', () => {
         it('newer scopes return its own symbol', () => {
-            let cregSymbol = symbolTable.lookup('CREG');
+            let cregSymbol = symbolTable.lookup('Creg');
             symbolTable.define(new VariableSymbol('myReg', cregSymbol.type));
             symbolTable.push('foo');
-            let qregSymbol = symbolTable.lookup('QREG');
+            let qregSymbol = symbolTable.lookup('Qreg');
             symbolTable.define(new VariableSymbol('myReg', cregSymbol.type));
 
             expect(symbolTable.lookup('myReg').type).to.be.equals(qregSymbol.type);
         });
-    })
+    });
+
+    describe('with various scopes', () => {
+        it('can return the symbols array', () => {
+            let gateSymbol = symbolTable.lookup('Gate');
+            symbolTable.define(new GateSymbol('foo', gateSymbol.type));
+            symbolTable.push('foo');
+            let qregSymbol = symbolTable.lookup('Qreg');
+            symbolTable.define(new VariableSymbol('q', qregSymbol.type));
+
+            expect(symbolTable.definedSymbols()).to.be.length(8);
+            expect(symbolTable.definedSymbols())
+                .to.include('q')
+                .to.include('foo');
+        });
+    });
 
 });
