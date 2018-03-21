@@ -11,7 +11,7 @@ TBD (documentation for the Microsoft Code market should be created)
 
 ### How to run locally
 
-NPM is requirede to run the project in a local environment.
+NPM is required to run the project in a local environment.
 
 ```sh
 npm install
