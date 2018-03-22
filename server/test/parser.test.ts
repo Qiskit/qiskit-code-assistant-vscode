@@ -165,7 +165,7 @@ describe('A parser', () => {
         message: 'Qubit foo is not previously defined',
         start: 28,
         end: 31,
-      }, result.errors);
+      }).at(result.errors);
     });
   });
 
@@ -179,7 +179,7 @@ describe('A parser', () => {
         message: 'There is another declaration with name q',
         start: 25,
         end: 26,
-      }, result.errors);
+      }).at(result.errors);
     });
 
     it('if a classic register uses a previously defined symbol', () => {
@@ -191,7 +191,7 @@ describe('A parser', () => {
         message: 'There is another declaration with name q',
         start: 15,
         end: 16,
-      }, result.errors);
+      }).at(result.errors);
     });
 
     it('if a gate uses a previously defined symbol', () => {
@@ -205,7 +205,7 @@ describe('A parser', () => {
         message: 'There is another declaration with name cx',
         start: 16,
         end: 18
-      }, result.errors);
+      }).at(result.errors);
     });
 
     it('if an opaque uses a previously defined symbol', () => {
@@ -217,7 +217,7 @@ describe('A parser', () => {
         message: 'There is another declaration with name foo',
         start: 19,
         end: 22
-      }, result.errors);
+      }).at(result.errors);
     });
   });
 
@@ -231,7 +231,7 @@ describe('A parser', () => {
         message: 'Index out of bound at register foo',
         start: 36,
         end: 37
-      }, result.errors);
+      }).at(result.errors);
     });
 
     it('if expecting a different type of register', () => {
@@ -243,11 +243,19 @@ describe('A parser', () => {
         message: 'Wrong type at foo, expecting a Qreg',
         start: 32,
         end: 35
-      }, result.errors);
+      }).at(result.errors);
     });
 
     it('if registers sizes are different at measure', () => {
-      expect(false).to.be.true;
+      let input = `qreg foo[5];creg bar[3];measure foo -> bar;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'The quatum register foo cannot be mapped to smaller classic register bar',
+        start: 32,
+        end: 35
+      }).at(result.errors);
     });
 
     it('if a gate is used before its definition', () => {
@@ -263,14 +271,28 @@ describe('A parser', () => {
 
 class Expect {
 
-  public static oneErrorLike(error: Error, errors: ParserError[]): void {
+  public static oneErrorLike(error: Error): OneErrorLike {
+    return new OneErrorLike(error);
+  }
+
+}
+
+class OneErrorLike {
+
+  expectedError: Error;
+
+  constructor(expectedError: Error) {
+    this.expectedError = expectedError;
+  }
+
+  public at(errors: ParserError[]): void {
     expect(errors).to.be.an('array')
       .with.length(1);
     expect(errors[0]).to.deep.equal({
-      message: error.message,
-      line: error.line || 0,
-      start: error.start,
-      end: error.end,
+      message: this.expectedError.message,
+      line: this.expectedError.line ||  0,
+      start: this.expectedError.start,
+      end: this.expectedError.end,
       level: ParseErrorLevel.ERROR
     });
   }

@@ -112,6 +112,16 @@ private verifyCregUssage(id: Token, position?: Token) {
     }
 }
 
+private verifyMeasureInvocation(quantumRegister: Token, classicRegister: Token): void {
+    let qregSymbol = this.symbolTable.lookup(quantumRegister.text) as RegisterSymbol;
+    let cregSymbol = this.symbolTable.lookup(classicRegister.text) as RegisterSymbol;
+
+    if (qregSymbol.size > cregSymbol.size) {
+        let message = `The quatum register ${quantumRegister.text} cannot be mapped to smaller classic register ${classicRegister.text}`;
+        this.notifyErrorListeners(message, quantumRegister, null);
+    }
+}
+
 declaredVariables(): string[] {
     return this.symbolTable.definedSymbols();
 }
@@ -267,8 +277,11 @@ unaryOp
     ;
 
 measure
-    : Measure qubit Assign cbit
-    | Measure q=Id { this.verifyQregUssage($q); } Assign c=Id { this.verifyCregUssage($c); }
+    : Measure qubit Assign cbit 
+    | Measure q=Id { this.verifyQregUssage($q); } Assign c=Id { 
+        this.verifyCregUssage($c); 
+        this.verifyMeasureInvocation($q, $c);
+    }
     ;
 
 qubit

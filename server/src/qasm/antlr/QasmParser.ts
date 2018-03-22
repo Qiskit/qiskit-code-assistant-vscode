@@ -252,6 +252,16 @@ export class QasmParser extends Parser {
 	    }
 	}
 
+	private verifyMeasureInvocation(quantumRegister: Token, classicRegister: Token): void {
+	    let qregSymbol = this.symbolTable.lookup(quantumRegister.text) as RegisterSymbol;
+	    let cregSymbol = this.symbolTable.lookup(classicRegister.text) as RegisterSymbol;
+
+	    if (qregSymbol.size > cregSymbol.size) {
+	        let message = `The quatum register ${quantumRegister.text} cannot be mapped to smaller classic register ${classicRegister.text}`;
+	        this.notifyErrorListeners(message, quantumRegister, null);
+	    }
+	}
+
 	declaredVariables(): string[] {
 	    return this.symbolTable.definedSymbols();
 	}
@@ -1456,7 +1466,10 @@ export class QasmParser extends Parser {
 				this.match(QasmParser.Assign);
 				this.state = 293;
 				_localctx._c = this.match(QasmParser.Id);
-				 this.verifyCregUssage(_localctx._c); 
+				 
+				        this.verifyCregUssage(_localctx._c); 
+				        this.verifyMeasureInvocation(_localctx._q, _localctx._c);
+				    
 				}
 				break;
 			}
