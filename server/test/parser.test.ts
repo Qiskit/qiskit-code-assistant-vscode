@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { Parser } from '../src/qasm/parser'
-import { ParserResult, ParseErrorLevel } from '../src/qasm/model';
+import { ParserResult, ParseErrorLevel, ParserError } from '../src/qasm/model';
 
 describe('A parser', () => {
 
@@ -70,6 +70,7 @@ describe('A parser', () => {
         `;
 
       let result = parser.parse(input);
+      // TODO this expectation should be much better > Expect.oneErrorLike
       expect(result.errors.length).to.be.eq(1);
       expect(result.errors[0].line).to.be.eq(3);
     });
@@ -148,6 +149,7 @@ describe('A parser', () => {
         qreg q;`;
 
       let result = parser.parse(input);
+      // TODO this expectation should be much better > Expect.oneErrorLike
       expect(result.errors.length).to.be.eq(1);
       expect(result.errors[0].line).to.be.eq(4);
     });
@@ -159,15 +161,11 @@ describe('A parser', () => {
     it('will throw one error', () => {
       let result = parser.parse(input);
 
-      expect(result.errors).to.be.an('array')
-        .with.length(1);
-      expect(result.errors[0]).to.deep.equal({
+      Expect.oneErrorLike({
         message: 'Qubit foo is not previously defined',
-        line: 0,
         start: 28,
         end: 31,
-        level: ParseErrorLevel.ERROR
-      });
+      }, result.errors);
     });
   });
 
@@ -177,15 +175,11 @@ describe('A parser', () => {
 
       let result = parser.parse(input);
 
-      expect(result.errors).to.be.an('array')
-        .with.length(1);
-      expect(result.errors[0]).to.deep.equal({
+      Expect.oneErrorLike({
         message: 'There is another declaration with name q',
-        line: 0,
         start: 25,
         end: 26,
-        level: ParseErrorLevel.ERROR
-      });
+      }, result.errors);
     });
 
     it('if a classic register uses a previously defined symbol', () => {
@@ -193,15 +187,11 @@ describe('A parser', () => {
 
       let result = parser.parse(input);
 
-      expect(result.errors).to.be.an('array')
-        .with.length(1);
-      expect(result.errors[0]).to.deep.equal({
+      Expect.oneErrorLike({
         message: 'There is another declaration with name q',
-        line: 0,
         start: 15,
         end: 16,
-        level: ParseErrorLevel.ERROR
-      });
+      }, result.errors);
     });
 
     it('if a gate uses a previously defined symbol', () => {
@@ -211,15 +201,11 @@ describe('A parser', () => {
 
       let result = parser.parse(input);
 
-      expect(result.errors).to.be.an('array')
-        .with.length(1);
-      expect(result.errors[0]).to.deep.equal({
+      Expect.oneErrorLike({
         message: 'There is another declaration with name cx',
-        line: 0,
         start: 16,
-        end: 18,
-        level: ParseErrorLevel.ERROR
-      });
+        end: 18
+      }, result.errors);
     });
 
     it('if an opaque uses a previously defined symbol', () => {
@@ -227,15 +213,11 @@ describe('A parser', () => {
 
       let result = parser.parse(input);
 
-      expect(result.errors).to.be.an('array')
-        .with.length(1);
-      expect(result.errors[0]).to.deep.equal({
+      Expect.oneErrorLike({
         message: 'There is another declaration with name foo',
-        line: 0,
         start: 19,
-        end: 22,
-        level: ParseErrorLevel.ERROR
-      });
+        end: 22
+      }, result.errors);
     });
   });
 
@@ -245,34 +227,65 @@ describe('A parser', () => {
 
       let result = parser.parse(input);
 
-      expect(result.errors).to.be.an('array')
-        .with.length(1);
-      expect(result.errors[0]).to.deep.equal({
+      Expect.oneErrorLike({
         message: 'Index out of bound at register foo',
-        line: 0,
         start: 36,
-        end: 37,
-        level: ParseErrorLevel.ERROR
-      });
+        end: 37
+      }, result.errors);
     });
 
     it('if expecting a different type of register', () => {
       let input = `creg foo[5];creg bar[5];measure foo -> bar;`;
 
       let result = parser.parse(input);
-      
-      expect(result.errors).to.be.an('array')
-        .with.length(1);
-      expect(result.errors[0]).to.deep.equal({
+
+      Expect.oneErrorLike({
         message: 'Wrong type at foo, expecting a Qreg',
-        line: 0,
         start: 32,
-        end: 35,
-        level: ParseErrorLevel.ERROR
-      });
+        end: 35
+      }, result.errors);
     });
 
-    it('if register sizes are different at measure', () => {});
+    it('if registers sizes are different at measure', () => {
+      expect(false).to.be.true;
+    });
+
+    it('if a gate is used before its definition', () => {
+      expect(false).to.be.true;
+    });
+
+    it('if a gate receive more arguments than its definition', () => {
+      expect(false).to.be.true;
+    });
   });
-  
+
 });
+
+class Expect {
+
+  public static oneErrorLike(error: Error, errors: ParserError[]): void {
+    expect(errors).to.be.an('array')
+      .with.length(1);
+    expect(errors[0]).to.deep.equal({
+      message: error.message,
+      line: error.line || 0,
+      start: error.start,
+      end: error.end,
+      level: ParseErrorLevel.ERROR
+    });
+  }
+
+}
+
+interface Error {
+
+  message: string;
+
+  start: number;
+
+  end: number;
+
+  line?: number;
+
+}
+
