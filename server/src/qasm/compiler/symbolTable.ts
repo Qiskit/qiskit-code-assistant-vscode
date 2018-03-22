@@ -80,7 +80,7 @@ class Symbol {
 
 }
 
-class BuiltInTypeSymbol extends Symbol implements Type {
+export class BuiltInTypeSymbol extends Symbol implements Type {
 
     constructor(name: string) {
         super(name, null);

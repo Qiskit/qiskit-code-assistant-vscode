@@ -5,7 +5,7 @@ options { tokenVocab=QasmLexer; }
 import { Register, SymbolsTable } from './utils';
 import { QasmLexer } from './QasmLexer';
 import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts'; 
-import { SymbolTable, SymbolTableBuilder, VariableSymbol, RegisterSymbol } from '../compiler/symbolTable';
+import { SymbolTable, SymbolTableBuilder, VariableSymbol, RegisterSymbol, BuiltInTypeSymbol } from '../compiler/symbolTable';
 import fs = require('fs');
 import path = require('path');
 }
@@ -17,8 +17,8 @@ private symbolTable = SymbolTableBuilder.build();
 private declareQreg(registerName: Token, size: Token): void {
     let variableSymbol = this.symbolTable.lookup(registerName.text);
     if (variableSymbol == null) {
-        let qregSymbol = this.symbolTable.lookup('Qreg');
-        let newSymbol = new RegisterSymbol(registerName.text, qregSymbol.type, +size.text);
+        let qregSymbol = this.symbolTable.lookup('Qreg') as BuiltInTypeSymbol;
+        let newSymbol = new RegisterSymbol(registerName.text, qregSymbol, +size.text);
 
         this.symbolTable.define(newSymbol);
     } else {
@@ -30,8 +30,8 @@ private declareQreg(registerName: Token, size: Token): void {
 private declareCreg(registerName: Token, size: Token): void {
     let variableSymbol = this.symbolTable.lookup(registerName.text);
     if (variableSymbol == null) {
-        let cregSymbol = this.symbolTable.lookup('Creg');
-        let newSymbol = new RegisterSymbol(registerName.text, cregSymbol.type, +size.text);
+        let cregSymbol = this.symbolTable.lookup('Creg') as BuiltInTypeSymbol;
+        let newSymbol = new RegisterSymbol(registerName.text, cregSymbol, +size.text);
 
         this.symbolTable.define(newSymbol);
     } else {
@@ -43,8 +43,8 @@ private declareCreg(registerName: Token, size: Token): void {
 private declareGate(gateName: Token): void {
     let variableSymbol = this.symbolTable.lookup(gateName.text);
     if (variableSymbol == null) {
-        let gateSymbol = this.symbolTable.lookup('Gate');
-        let newSymbol = new VariableSymbol(gateName.text, gateSymbol.type);
+        let gateSymbol = this.symbolTable.lookup('Gate') as BuiltInTypeSymbol;
+        let newSymbol = new VariableSymbol(gateName.text, gateSymbol);
 
         this.symbolTable.define(newSymbol);
     } else {
@@ -56,8 +56,8 @@ private declareGate(gateName: Token): void {
 private declareOpaque(opaqueName: Token): void {
     let variableSymbol = this.symbolTable.lookup(opaqueName.text);
     if (variableSymbol == null) {
-        let opaqueSymbol = this.symbolTable.lookup('Opaque');
-        let newSymbol = new VariableSymbol(opaqueName.text, opaqueSymbol.type);
+        let opaqueSymbol = this.symbolTable.lookup('Opaque') as BuiltInTypeSymbol;
+        let newSymbol = new VariableSymbol(opaqueName.text, opaqueSymbol);
 
         this.symbolTable.define(newSymbol);
     } else {
@@ -69,6 +69,12 @@ private declareOpaque(opaqueName: Token): void {
 private verifyQregUssage(id: Token, position?: Token) {
     let variableSymbol = this.symbolTable.lookup(id.text);
     if (variableSymbol) {
+        let qregSymbol = this.symbolTable.lookup('Qreg') as BuiltInTypeSymbol;
+        if (variableSymbol.type != qregSymbol) {
+            let message = `Wrong type at ${id.text}, expecting a ${qregSymbol.getName()}`;
+            this.notifyErrorListeners(message, id, null);
+        }
+
         if (position) {
             let register = variableSymbol as RegisterSymbol;
             let selectedPosition = +position.text;
@@ -86,6 +92,12 @@ private verifyQregUssage(id: Token, position?: Token) {
 private verifyCregUssage(id: Token, position?: Token) {
     let variableSymbol = this.symbolTable.lookup(id.text);
     if (variableSymbol) {
+        let cregSymbol = this.symbolTable.lookup('Creg') as BuiltInTypeSymbol;
+        if (variableSymbol.type != cregSymbol) {
+            let message = `Wrong type at ${id.text}, expecting a ${cregSymbol.getName()}`;
+            this.notifyErrorListeners(message, id, null);
+        }
+
         if (position) {
             let register = variableSymbol as RegisterSymbol;
             let selectedPosition = +position.text;
@@ -260,11 +272,11 @@ measure
     ;
 
 qubit
-    : Id LeftBrace Int RightBrace { this.verifyQregUssage($Id, $Int); }
+    : Id LeftBrace position=Int RightBrace { this.verifyQregUssage($Id, $position); }
     ;
 
 cbit
-    : Id LeftBrace Int RightBrace { this.verifyCregUssage($Id); }
+    : Id LeftBrace position=Int RightBrace { this.verifyCregUssage($Id, $position); }
     ;
 
 customArglist

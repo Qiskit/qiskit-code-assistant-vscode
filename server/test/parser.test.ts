@@ -239,7 +239,7 @@ describe('A parser', () => {
     });
   });
 
-  describe('generates an index out of bound error', () => {
+  describe('throws a semantic error', () => {
     it('if one register is used beyond its size', () => {
       let input = `qreg foo[5];creg bar[5];measure foo[6] -> bar[4];`;
 
@@ -255,6 +255,24 @@ describe('A parser', () => {
         level: ParseErrorLevel.ERROR
       });
     });
-  });
 
+    it('if expecting a different type of register', () => {
+      let input = `creg foo[5];creg bar[5];measure foo -> bar;`;
+
+      let result = parser.parse(input);
+      
+      expect(result.errors).to.be.an('array')
+        .with.length(1);
+      expect(result.errors[0]).to.deep.equal({
+        message: 'Wrong type at foo, expecting a Qreg',
+        line: 0,
+        start: 32,
+        end: 35,
+        level: ParseErrorLevel.ERROR
+      });
+    });
+
+    it('if register sizes are different at measure', () => {});
+  });
+  
 });

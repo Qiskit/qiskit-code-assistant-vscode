@@ -4,7 +4,7 @@
 import { Register, SymbolsTable } from './utils';
 import { QasmLexer } from './QasmLexer';
 import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts'; 
-import { SymbolTable, SymbolTableBuilder, VariableSymbol, RegisterSymbol } from '../compiler/symbolTable';
+import { SymbolTable, SymbolTableBuilder, VariableSymbol, RegisterSymbol, BuiltInTypeSymbol } from '../compiler/symbolTable';
 import fs = require('fs');
 import path = require('path');
 
@@ -157,8 +157,8 @@ export class QasmParser extends Parser {
 	private declareQreg(registerName: Token, size: Token): void {
 	    let variableSymbol = this.symbolTable.lookup(registerName.text);
 	    if (variableSymbol == null) {
-	        let qregSymbol = this.symbolTable.lookup('Qreg');
-	        let newSymbol = new RegisterSymbol(registerName.text, qregSymbol.type, +size.text);
+	        let qregSymbol = this.symbolTable.lookup('Qreg') as BuiltInTypeSymbol;
+	        let newSymbol = new RegisterSymbol(registerName.text, qregSymbol, +size.text);
 
 	        this.symbolTable.define(newSymbol);
 	    } else {
@@ -170,8 +170,8 @@ export class QasmParser extends Parser {
 	private declareCreg(registerName: Token, size: Token): void {
 	    let variableSymbol = this.symbolTable.lookup(registerName.text);
 	    if (variableSymbol == null) {
-	        let cregSymbol = this.symbolTable.lookup('Creg');
-	        let newSymbol = new RegisterSymbol(registerName.text, cregSymbol.type, +size.text);
+	        let cregSymbol = this.symbolTable.lookup('Creg') as BuiltInTypeSymbol;
+	        let newSymbol = new RegisterSymbol(registerName.text, cregSymbol, +size.text);
 
 	        this.symbolTable.define(newSymbol);
 	    } else {
@@ -183,8 +183,8 @@ export class QasmParser extends Parser {
 	private declareGate(gateName: Token): void {
 	    let variableSymbol = this.symbolTable.lookup(gateName.text);
 	    if (variableSymbol == null) {
-	        let gateSymbol = this.symbolTable.lookup('Gate');
-	        let newSymbol = new VariableSymbol(gateName.text, gateSymbol.type);
+	        let gateSymbol = this.symbolTable.lookup('Gate') as BuiltInTypeSymbol;
+	        let newSymbol = new VariableSymbol(gateName.text, gateSymbol);
 
 	        this.symbolTable.define(newSymbol);
 	    } else {
@@ -196,8 +196,8 @@ export class QasmParser extends Parser {
 	private declareOpaque(opaqueName: Token): void {
 	    let variableSymbol = this.symbolTable.lookup(opaqueName.text);
 	    if (variableSymbol == null) {
-	        let opaqueSymbol = this.symbolTable.lookup('Opaque');
-	        let newSymbol = new VariableSymbol(opaqueName.text, opaqueSymbol.type);
+	        let opaqueSymbol = this.symbolTable.lookup('Opaque') as BuiltInTypeSymbol;
+	        let newSymbol = new VariableSymbol(opaqueName.text, opaqueSymbol);
 
 	        this.symbolTable.define(newSymbol);
 	    } else {
@@ -209,6 +209,12 @@ export class QasmParser extends Parser {
 	private verifyQregUssage(id: Token, position?: Token) {
 	    let variableSymbol = this.symbolTable.lookup(id.text);
 	    if (variableSymbol) {
+	        let qregSymbol = this.symbolTable.lookup('Qreg') as BuiltInTypeSymbol;
+	        if (variableSymbol.type != qregSymbol) {
+	            let message = `Wrong type at ${id.text}, expecting a ${qregSymbol.getName()}`;
+	            this.notifyErrorListeners(message, id, null);
+	        }
+
 	        if (position) {
 	            let register = variableSymbol as RegisterSymbol;
 	            let selectedPosition = +position.text;
@@ -226,6 +232,12 @@ export class QasmParser extends Parser {
 	private verifyCregUssage(id: Token, position?: Token) {
 	    let variableSymbol = this.symbolTable.lookup(id.text);
 	    if (variableSymbol) {
+	        let cregSymbol = this.symbolTable.lookup('Creg') as BuiltInTypeSymbol;
+	        if (variableSymbol.type != cregSymbol) {
+	            let message = `Wrong type at ${id.text}, expecting a ${cregSymbol.getName()}`;
+	            this.notifyErrorListeners(message, id, null);
+	        }
+
 	        if (position) {
 	            let register = variableSymbol as RegisterSymbol;
 	            let selectedPosition = +position.text;
@@ -1475,10 +1487,10 @@ export class QasmParser extends Parser {
 			this.state = 298;
 			this.match(QasmParser.LeftBrace);
 			this.state = 299;
-			_localctx._Int = this.match(QasmParser.Int);
+			_localctx._position = this.match(QasmParser.Int);
 			this.state = 300;
 			this.match(QasmParser.RightBrace);
-			 this.verifyQregUssage(_localctx._Id, _localctx._Int); 
+			 this.verifyQregUssage(_localctx._Id, _localctx._position); 
 			}
 		}
 		catch (re) {
@@ -1507,10 +1519,10 @@ export class QasmParser extends Parser {
 			this.state = 304;
 			this.match(QasmParser.LeftBrace);
 			this.state = 305;
-			this.match(QasmParser.Int);
+			_localctx._position = this.match(QasmParser.Int);
 			this.state = 306;
 			this.match(QasmParser.RightBrace);
-			 this.verifyCregUssage(_localctx._Id); 
+			 this.verifyCregUssage(_localctx._Id, _localctx._position); 
 			}
 		}
 		catch (re) {
@@ -2758,11 +2770,11 @@ export class MeasureContext extends ParserRuleContext {
 
 export class QubitContext extends ParserRuleContext {
 	public _Id: Token;
-	public _Int: Token;
+	public _position: Token;
 	public Id(): TerminalNode { return this.getToken(QasmParser.Id, 0); }
 	public LeftBrace(): TerminalNode { return this.getToken(QasmParser.LeftBrace, 0); }
-	public Int(): TerminalNode { return this.getToken(QasmParser.Int, 0); }
 	public RightBrace(): TerminalNode { return this.getToken(QasmParser.RightBrace, 0); }
+	public Int(): TerminalNode { return this.getToken(QasmParser.Int, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
@@ -2787,10 +2799,11 @@ export class QubitContext extends ParserRuleContext {
 
 export class CbitContext extends ParserRuleContext {
 	public _Id: Token;
+	public _position: Token;
 	public Id(): TerminalNode { return this.getToken(QasmParser.Id, 0); }
 	public LeftBrace(): TerminalNode { return this.getToken(QasmParser.LeftBrace, 0); }
-	public Int(): TerminalNode { return this.getToken(QasmParser.Int, 0); }
 	public RightBrace(): TerminalNode { return this.getToken(QasmParser.RightBrace, 0); }
+	public Int(): TerminalNode { return this.getToken(QasmParser.Int, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
