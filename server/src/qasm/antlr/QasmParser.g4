@@ -5,7 +5,7 @@ options { tokenVocab=QasmLexer; }
 import { Register, SymbolsTable } from './utils';
 import { QasmLexer } from './QasmLexer';
 import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts'; 
-import { SymbolTable, SymbolTableBuilder, VariableSymbol } from '../compiler/symbolTable';
+import { SymbolTable, SymbolTableBuilder, VariableSymbol, RegisterSymbol } from '../compiler/symbolTable';
 import fs = require('fs');
 import path = require('path');
 }
@@ -14,76 +14,11 @@ import path = require('path');
     
 private symbolTable = SymbolTableBuilder.build();
 
-/*
-private checkPreviousExistenceAndApply(registerName: Token, declarationFunction: () => void) {
-    if (!this.symbolsTable.isPreviouslyDeclaredSymbol(registerName.text)) {
-        declarationFunction();
-    } else {
-        let message = `There is another declaration with name ${registerName.text}`;
-        this.notifyErrorListeners(message, registerName, null);
-    }
-}
-
-private declareCreg(registerName: Token, size: Token): void {
-    this.checkPreviousExistenceAndApply(registerName, () => 
-        this.symbolsTable.addClassicRegister(registerName.text, +size.text));
-}
-
-private declareGate(gateName: Token): void {
-    this.checkPreviousExistenceAndApply(gateName, () => 
-        this.symbolsTable.gates.push(gateName.text));
-}
-
-private declareOpaque(opaqueName: Token): void {
-    this.checkPreviousExistenceAndApply(opaqueName, () => 
-        this.symbolsTable.opaques.push(opaqueName.text));
-}
-
-private verifyQregDeclaration(registerName: Token, position?: Token): void {
-    if (!this.symbolsTable.containsQuantumRegister(registerName.text)) {
-        let message = 'Qubit ' + registerName.text + ' is not previously defined';
-        this.notifyErrorListeners(message, registerName, null);
-        return;
-    }
-
-    if (position) {
-        if (!this.symbolsTable.containsQuantumBit(registerName.text, +position.text)) {
-            let message = `Qbit ${registerName.text}[${position.text}] is not valid: index out of bound`;
-            this.notifyErrorListeners(message, position, null);
-            return;
-        }
-    }
-}
-
-private verifyCregDeclaration(registerName: Token, position?: Token): void {
-    if (!this.symbolsTable.containsClassicRegister(registerName.text)) {
-        let message = 'Cbit ' + registerName.text + ' is not previously defined';
-        this.notifyErrorListeners(message, registerName, null);
-        return;
-    }
-
-    if (position) {
-        if (!this.symbolsTable.containsClassicBit(registerName.text, +position.text)) {
-            let message = `Cbit ${registerName.text}[${position.text}] is not valid: index out of bound`;
-            this.notifyErrorListeners(message, position, null);
-            return;
-        }
-    }
-}
-
-private verifyGateDeclaration(input: Token): void {
-    if (this.symbolsTable.gates.indexOf(input.text) === -1) {
-        let message = 'Gate ' + input.text + ' is not previously defined';
-        this.notifyErrorListeners(message, input, null);
-    }
-}
-*/
-
-private declareQreg(registerName: Token): void {
+private declareQreg(registerName: Token, size: Token): void {
     let variableSymbol = this.symbolTable.lookup(registerName.text);
     if (variableSymbol == null) {
         let qregSymbol = this.symbolTable.lookup('Qreg');
-        let newSymbol = new VariableSymbol(registerName.text, qregSymbol.type);
+        let newSymbol = new RegisterSymbol(registerName.text, qregSymbol.type, +size.text);
 
         this.symbolTable.define(newSymbol);
     } else {
@@ -92,11 +27,11 @@ private declareQreg(registerName: Token): void {
     }
 }
 
-private declareCreg(registerName: Token): void {
+private declareCreg(registerName: Token, size: Token): void {
     let variableSymbol = this.symbolTable.lookup(registerName.text);
     if (variableSymbol == null) {
         let cregSymbol = this.symbolTable.lookup('Creg');
-        let newSymbol = new VariableSymbol(registerName.text, cregSymbol.type);
+        let newSymbol = new RegisterSymbol(registerName.text, cregSymbol.type, +size.text);
 
         this.symbolTable.define(newSymbol);
     } else {
@@ -131,18 +66,34 @@ private declareOpaque(opaqueName: Token): void {
     }
 }
 
-private verifyQregUssage(id: Token, _position?: Token) {
+private verifyQregUssage(id: Token, position?: Token) {
     let variableSymbol = this.symbolTable.lookup(id.text);
     if (variableSymbol) {
+        if (position) {
+            let register = variableSymbol as RegisterSymbol;
+            let selectedPosition = +position.text;
+            if (selectedPosition >= register.size) {
+                let message = `Index out of bound at register ${id.text}`;
+                this.notifyErrorListeners(message, position, null);
+            }
+        }
     } else {
         let message = `Qubit ${id.text} is not previously defined`;
         this.notifyErrorListeners(message, id, null);
     }
 }
 
-private verifyCregUssage(id: Token, _position?: Token) {
+private verifyCregUssage(id: Token, position?: Token) {
     let variableSymbol = this.symbolTable.lookup(id.text);
     if (variableSymbol) {
+        if (position) {
+            let register = variableSymbol as RegisterSymbol;
+            let selectedPosition = +position.text;
+            if (selectedPosition >= register.size) {
+                let message = `Index out of bound at register ${id.text}`;
+                this.notifyErrorListeners(message, position, null);
+            }
+        }
     } else {
         let message = `Cbit ${id.text} is not previously defined`;
         this.notifyErrorListeners(message, id, null);
@@ -175,8 +126,6 @@ private processLibrary(libraryName: string) {
     parser.code();
 
     this.symbolTable = parser.getSymbolTable();
-
-    console.log(JSON.stringify(this.symbolTable));
 }
 
 }
@@ -214,8 +163,8 @@ sentence
     ;
 
 definition
-    : Qreg Id LeftBrace Int RightBrace Semi { this.declareQreg($Id); }
-    | Creg Id LeftBrace Int RightBrace Semi { this.declareCreg($Id); }
+    : Qreg Id LeftBrace size=Int RightBrace Semi { this.declareQreg($Id, $size); }
+    | Creg Id LeftBrace size=Int RightBrace Semi { this.declareCreg($Id, $size); }
     | gateDefinition
     | opaqueDefinition Semi
     ;

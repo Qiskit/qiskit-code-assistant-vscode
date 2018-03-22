@@ -100,6 +100,17 @@ export class VariableSymbol extends Symbol {
 
 }
 
+export class RegisterSymbol extends Symbol {
+
+    size: number;
+
+    constructor(name: string, type: Type, size: number) {
+        super(name, type);
+        this.size = size;
+    }
+
+}
+
 export class GateSymbol extends Symbol {
 
     constructor(name: string, type: Type) {

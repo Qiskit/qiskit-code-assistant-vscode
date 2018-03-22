@@ -9,7 +9,7 @@
 */
 
 import { expect } from 'chai';
-import { SymbolTable, SymbolTableBuilder, VariableSymbol, GateSymbol } from '../src/qasm/compiler/symbolTable'
+import { SymbolTable, SymbolTableBuilder, VariableSymbol, GateSymbol, RegisterSymbol } from '../src/qasm/compiler/symbolTable'
 
 describe('A symbol table', () => {
 
@@ -40,6 +40,15 @@ describe('A symbol table', () => {
             symbolTable.define(new VariableSymbol('q', qregSymbol.type));
 
             expect(symbolTable.lookup('q').type).to.be.equals(qregSymbol.type);
+        });
+
+        it('of quantum register type', () => {
+            let qregSymbol = symbolTable.lookup('Qreg');
+            symbolTable.define(new RegisterSymbol('q', qregSymbol.type, 4));
+
+            let result = symbolTable.lookup('q') as RegisterSymbol;
+
+            expect(result).to.have.property('size').to.be.equals(4);
         });
 
         it('in a child scope', () => {

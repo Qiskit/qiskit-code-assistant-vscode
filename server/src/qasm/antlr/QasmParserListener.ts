@@ -4,7 +4,7 @@
 import { Register, SymbolsTable } from './utils';
 import { QasmLexer } from './QasmLexer';
 import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts'; 
-import { SymbolTable, SymbolTableBuilder, VariableSymbol } from '../compiler/symbolTable';
+import { SymbolTable, SymbolTableBuilder, VariableSymbol, RegisterSymbol } from '../compiler/symbolTable';
 import fs = require('fs');
 import path = require('path');
 

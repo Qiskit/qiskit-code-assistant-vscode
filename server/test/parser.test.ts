@@ -239,4 +239,22 @@ describe('A parser', () => {
     });
   });
 
+  describe('generates an index out of bound error', () => {
+    it('if one register is used beyond its size', () => {
+      let input = `qreg foo[5];creg bar[5];measure foo[6] -> bar[4];`;
+
+      let result = parser.parse(input);
+
+      expect(result.errors).to.be.an('array')
+        .with.length(1);
+      expect(result.errors[0]).to.deep.equal({
+        message: 'Index out of bound at register foo',
+        line: 0,
+        start: 36,
+        end: 37,
+        level: ParseErrorLevel.ERROR
+      });
+    });
+  });
+
 });
