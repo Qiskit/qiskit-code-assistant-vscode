@@ -23,11 +23,11 @@ export class Parser {
     parse(input: string): ParserResult {
         let errorListener = new ErrorListener();
         let parser = this.buildQasmParser(input, errorListener);
-    
+
         let tree = parser.code();
 
-        TreePrinter.print(parser.ruleNames, tree);
-    
+        // TreePrinter.print(parser.ruleNames, tree);
+
         return {
             ast: tree,
             errors: errorListener.errors
@@ -38,7 +38,7 @@ export class Parser {
         let inputStream = new ANTLRInputStream(input);
         let lexer = new QasmLexer(inputStream);
         lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
-    
+
         let tokenStream = new CommonTokenStream(lexer);
         let parser = new QasmParser(tokenStream);
         parser.addErrorListener(errorListener);
@@ -61,13 +61,23 @@ class ErrorListener implements ANTLRErrorListener<CommonToken> {
         msg: string,
         _e: RecognitionException | undefined): void {
 
-        this.errors.push({
-            line: line - 1,
-            start: charPositionInLine,
-            end: charPositionInLine + offendingSymbol.text.length,
-            message: msg,
-            level: ParseErrorLevel.ERROR
-        });
+        if (offendingSymbol.text === ')') {
+            this.errors.push({
+                line: line - 1,
+                start: charPositionInLine,
+                end: charPositionInLine + offendingSymbol.text.length,
+                message: 'Expecting arguments before symbol )',
+                level: ParseErrorLevel.ERROR
+            });
+        } else {
+            this.errors.push({
+                line: line - 1,
+                start: charPositionInLine,
+                end: charPositionInLine + offendingSymbol.text.length,
+                message: msg,
+                level: ParseErrorLevel.ERROR
+            });
+        }
     }
 
 }

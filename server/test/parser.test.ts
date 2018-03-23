@@ -318,7 +318,39 @@ describe('A parser', () => {
       }).at(result.errors);
     });
 
+    it('if an opaque gate is defined twice', () => {
+      let input = `opaque a(foo) q; opaque a(foo, bar) q;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'There is another declaration with name a',
+        start: 24,
+        end: 25
+      }).at(result.errors);
+    });
+
+    it('if an opaque gate is defined without arguments inside parenthesis', () => {
+      let input = `opaque a() q;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'Expecting arguments before symbol )',
+        start: 9,
+        end: 10
+      }).at(result.errors);
+    });
+
     it('if a gate receive more arguments than its definition', () => {
+      expect(false).to.be.true;
+    });
+
+    it('if a gate receive more arguments than its definition as an opaque', () => {
+      expect(false).to.be.true;
+    });
+
+    it('if a qreg is used as argument of a conditional', () => {
       expect(false).to.be.true;
     });
   });
