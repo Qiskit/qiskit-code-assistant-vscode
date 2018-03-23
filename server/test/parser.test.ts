@@ -111,6 +111,7 @@ describe('A parser', () => {
     it('will accept conditional expressions', () => {
       let input = `
         qreg q[5];
+        creg a[5];
         if (a == 2)
           barrier q[2];
         `;
@@ -351,7 +352,15 @@ describe('A parser', () => {
     });
 
     it('if a qreg is used as argument of a conditional', () => {
-      expect(false).to.be.true;
+      let input = `qreg q[5]; if (q == 25) barrier q;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'Wrong type at q, expecting a Creg',
+        start: 15,
+        end: 16
+      }).at(result.errors);
     });
   });
 

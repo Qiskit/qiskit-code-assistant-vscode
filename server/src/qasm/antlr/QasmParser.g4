@@ -209,7 +209,7 @@ expression
     ;
 
 conditional
-    : If LeftParen Id Equals Int RightParen
+    : If LeftParen Id { this.verifyCregReference($Id); } Equals Int RightParen
     ;
 
 gateDefinition: 

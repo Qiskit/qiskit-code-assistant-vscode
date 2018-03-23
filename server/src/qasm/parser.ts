@@ -61,6 +61,8 @@ class ErrorListener implements ANTLRErrorListener<CommonToken> {
         msg: string,
         _e: RecognitionException | undefined): void {
 
+        // _e contains the first token of the rule that failed
+
         if (offendingSymbol.text === ')') {
             this.errors.push({
                 line: line - 1,
