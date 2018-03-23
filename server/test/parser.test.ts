@@ -270,10 +270,54 @@ describe('A parser', () => {
       }).at(result.errors);
     });
 
-    it('if a creg is used as a qreg when a gate is invocated', () => {
-      expect(false).to.be.true;
+    it('if a creg is used as a qreg when a gate is invoked', () => {
+      let input = `gate u1(lamda) q {U(0,0,lambda) q;} creg c[5]; u1(pi) c;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'Wrong type at c, expecting a Qreg',
+        start: 54,
+        end: 55
+      }).at(result.errors);
     });
     
+    it('if a creg is used as a qreg when a Cx gate is invoked', ()  => {
+      let input = `creg c[5]; CX c;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'Wrong type at c, expecting a Qreg',
+        start: 14,
+        end: 15
+      }).at(result.errors);
+    });
+
+    it('if a creg is used as a qreg when a barrier gate is invoked', ()  => {
+      let input = `creg c[5]; barrier c;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'Wrong type at c, expecting a Qreg',
+        start: 19,
+        end: 20
+      }).at(result.errors);
+    });
+
+    it('if a creg is used as a qreg when a reset gate is invoked', ()  => {
+      let input = `creg c[5]; reset c;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'Wrong type at c, expecting a Qreg',
+        start: 17,
+        end: 18
+      }).at(result.errors);
+    });
+
     it('if a gate receive more arguments than its definition', () => {
       expect(false).to.be.true;
     });

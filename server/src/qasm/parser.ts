@@ -26,7 +26,7 @@ export class Parser {
     
         let tree = parser.code();
 
-        // TreePrinter.print(parser.ruleNames, tree);
+        TreePrinter.print(parser.ruleNames, tree);
     
         return {
             ast: tree,

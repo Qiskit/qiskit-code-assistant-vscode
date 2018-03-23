@@ -66,7 +66,7 @@ private declareOpaque(opaqueName: Token): void {
     }
 }
 
-private verifyQregUssage(id: Token, position?: Token) {
+private verifyQregReference(id: Token, position?: Token) {
     let variableSymbol = this.symbolTable.lookup(id.text);
     if (variableSymbol) {
         let qregSymbol = this.symbolTable.lookup('Qreg') as BuiltInTypeSymbol;
@@ -89,7 +89,7 @@ private verifyQregUssage(id: Token, position?: Token) {
     }
 }
 
-private verifyCregUssage(id: Token, position?: Token) {
+private verifyCregReference(id: Token, position?: Token) {
     let variableSymbol = this.symbolTable.lookup(id.text);
     if (variableSymbol) {
         let cregSymbol = this.symbolTable.lookup('Creg') as BuiltInTypeSymbol;
@@ -287,18 +287,18 @@ unaryOp
 
 measure
     : Measure qubit Assign cbit 
-    | Measure q=Id { this.verifyQregUssage($q); } Assign c=Id { 
-        this.verifyCregUssage($c); 
+    | Measure q=Id { this.verifyQregReference($q); } Assign c=Id { 
+        this.verifyCregReference($c); 
         this.verifyMeasureInvocation($q, $c);
     }
     ;
 
 qubit
-    : Id LeftBrace position=Int RightBrace { this.verifyQregUssage($Id, $position); }
+    : Id LeftBrace position=Int RightBrace { this.verifyQregReference($Id, $position); }
     ;
 
 cbit
-    : Id LeftBrace position=Int RightBrace { this.verifyCregUssage($Id, $position); }
+    : Id LeftBrace position=Int RightBrace { this.verifyCregReference($Id, $position); }
     ;
 
 customArglist
@@ -317,8 +317,8 @@ qubitAndQregList
     ;
 
 qbitOrQreg
-    : Id 
-    | Id LeftBrace Int RightBrace
+    : Id { this.verifyQregReference($Id); }
+    | Id LeftBrace position=Int RightBrace { this.verifyQregReference($Id, $position); }
     ;
 
 cxGate
@@ -326,7 +326,7 @@ cxGate
     ;
 
 barrierGate
-    : Barrier Id
+    : Barrier Id { this.verifyQregReference($Id); }
     | Barrier qubitList 
     ;
 
@@ -336,6 +336,6 @@ qubitList
     ; 
 
 resetGate
-    : Reset Id
+    : Reset Id { this.verifyQregReference($Id); }
     | Reset qubit
     ;
