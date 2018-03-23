@@ -117,8 +117,17 @@ private verifyMeasureInvocation(quantumRegister: Token, classicRegister: Token):
     let cregSymbol = this.symbolTable.lookup(classicRegister.text) as RegisterSymbol;
 
     if (qregSymbol.size > cregSymbol.size) {
-        let message = `The quatum register ${quantumRegister.text} cannot be mapped to smaller classic register ${classicRegister.text}`;
+        let message = `The quatum register ${quantumRegister.text} cannot be mapped to a smaller classic register ${classicRegister.text}`;
         this.notifyErrorListeners(message, quantumRegister, null);
+    }
+}
+
+private verifyGateInvocation(id: Token): void {
+    let gateSymbol = this.symbolTable.lookup(id.text);
+
+    if (gateSymbol == null) {
+        let message = `The symbol ${id.text} is not previously defined`;
+        this.notifyErrorListeners(message, id, null);
     }
 }
 
@@ -243,8 +252,8 @@ body
 bodyExpression
     : Cx paramsList Semi
     | U LeftParen paramsListBody RightParen paramsList Semi
-    | Id paramsList Semi
-    | Id LeftParen paramsListBody RightParen paramsList Semi
+    | Id paramsList Semi 
+    | Id LeftParen paramsListBody RightParen paramsList Semi 
     ;
 
 paramsListBody
@@ -293,8 +302,8 @@ cbit
     ;
 
 customArglist
-    : Id LeftParen paramsListNumber RightParen qubitAndQregList
-    | Id qubitAndQregList
+    : Id LeftParen paramsListNumber RightParen qubitAndQregList { this.verifyGateInvocation($Id); }
+    | Id qubitAndQregList { this.verifyGateInvocation($Id); }
     ;
 
 paramsListNumber

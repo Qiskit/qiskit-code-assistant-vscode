@@ -252,16 +252,28 @@ describe('A parser', () => {
       let result = parser.parse(input);
 
       Expect.oneErrorLike({
-        message: 'The quatum register foo cannot be mapped to smaller classic register bar',
+        message: 'The quatum register foo cannot be mapped to a smaller classic register bar',
         start: 32,
         end: 35
       }).at(result.errors);
     });
 
     it('if a gate is used before its definition', () => {
-      expect(false).to.be.true;
+      let input = `qreg q[4];u1(pi) q;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'The symbol u1 is not previously defined',
+        start: 10,
+        end: 12
+      }).at(result.errors);
     });
 
+    it('if a creg is used as a qreg when a gate is invocated', () => {
+      expect(false).to.be.true;
+    });
+    
     it('if a gate receive more arguments than its definition', () => {
       expect(false).to.be.true;
     });
