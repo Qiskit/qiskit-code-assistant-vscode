@@ -64,6 +64,8 @@ export class Suggester {
         result.push(...this.dictionary.symbolsWithTypeIn(suggestions));
         result.push(...this.foundVariablesAt(parser));
 
+        console.log(`Available suggestions > ${result}`);
+
         return result;
     }
 

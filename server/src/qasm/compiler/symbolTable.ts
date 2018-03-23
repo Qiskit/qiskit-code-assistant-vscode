@@ -156,7 +156,10 @@ abstract class Scope {
         if (this.getEnclosingScope()) {
             symbols.push(...this.getEnclosingScope().definedSymbols());
         }
-        symbols.push(...this.dictionary.values());
+
+        let noBuiltInSymbols = Array.from(this.dictionary.values())
+            .filter((symbol) => !(symbol instanceof BuiltInTypeSymbol));
+        symbols.push(...noBuiltInSymbols);
 
         return symbols;
     }

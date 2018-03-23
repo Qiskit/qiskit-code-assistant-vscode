@@ -85,15 +85,15 @@ describe('A symbol table', () => {
         });
     });
 
-    describe('with various scopes', () => {
-        it('can return the symbols array', () => {
+    describe('when returns the defined symbols', () => {
+        it('does not return the built in type symbols', () => {
             let gateSymbol = symbolTable.lookup('Gate');
             symbolTable.define(new GateSymbol('foo', gateSymbol.type));
             symbolTable.push('foo');
             let qregSymbol = symbolTable.lookup('Qreg');
             symbolTable.define(new VariableSymbol('q', qregSymbol.type));
 
-            expect(symbolTable.definedSymbols()).to.be.length(8);
+            expect(symbolTable.definedSymbols()).to.be.length(2);
             expect(symbolTable.definedSymbols())
                 .to.include('q')
                 .to.include('foo');
