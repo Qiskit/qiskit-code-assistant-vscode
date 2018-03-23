@@ -5,6 +5,26 @@ Q-Studio is a Visual Studio Code extension, that allow the researchers and devel
 
 You can find additional information about planning and future of Q-Studio [here](https://ibm.ent.box.com/notes/282598814468).
 
+## Q-Studio features
+
+### Errors highlight
+
+Below is a list of the syntactic and semantic errors detected by the extension:
+
+:white_check_mark: Not previously defined symbols.
+
+:white_check_mark: Duplicated symbol definition.
+
+:white_check_mark: Out of bound position in a register.
+
+:white_check_mark: Wrong type at measure operation.
+
+:white_check_mark: Wrong type at gate invocation.
+
+:white_check_mark: Wrong types in conditional sentences.
+
+:soon: Wrong number of arguments in a gate invocation.
+
 ## Installation
 
 TBD (documentation for the Microsoft Code market should be created)
