@@ -80,7 +80,7 @@ class Symbol {
 
 }
 
-class BuiltInTypeSymbol extends Symbol implements Type {
+export class BuiltInTypeSymbol extends Symbol implements Type {
 
     constructor(name: string) {
         super(name, null);
@@ -96,6 +96,17 @@ export class VariableSymbol extends Symbol {
     
     constructor(name: string, type: Type) {
         super(name, type);
+    }
+
+}
+
+export class RegisterSymbol extends Symbol {
+
+    size: number;
+
+    constructor(name: string, type: Type, size: number) {
+        super(name, type);
+        this.size = size;
     }
 
 }
@@ -145,7 +156,10 @@ abstract class Scope {
         if (this.getEnclosingScope()) {
             symbols.push(...this.getEnclosingScope().definedSymbols());
         }
-        symbols.push(...this.dictionary.values());
+
+        let noBuiltInSymbols = Array.from(this.dictionary.values())
+            .filter((symbol) => !(symbol instanceof BuiltInTypeSymbol));
+        symbols.push(...noBuiltInSymbols);
 
         return symbols;
     }

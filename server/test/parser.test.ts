@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { Parser } from '../src/qasm/parser'
-import { ParserResult, ParseErrorLevel } from '../src/qasm/model';
+import { ParserResult, ParseErrorLevel, ParserError } from '../src/qasm/model';
 
 describe('A parser', () => {
 
@@ -70,6 +70,7 @@ describe('A parser', () => {
         `;
 
       let result = parser.parse(input);
+      // TODO this expectation should be much better > Expect.oneErrorLike
       expect(result.errors.length).to.be.eq(1);
       expect(result.errors[0].line).to.be.eq(3);
     });
@@ -110,6 +111,7 @@ describe('A parser', () => {
     it('will accept conditional expressions', () => {
       let input = `
         qreg q[5];
+        creg a[5];
         if (a == 2)
           barrier q[2];
         `;
@@ -148,6 +150,7 @@ describe('A parser', () => {
         qreg q;`;
 
       let result = parser.parse(input);
+      // TODO this expectation should be much better > Expect.oneErrorLike
       expect(result.errors.length).to.be.eq(1);
       expect(result.errors[0].line).to.be.eq(4);
     });
@@ -159,15 +162,11 @@ describe('A parser', () => {
     it('will throw one error', () => {
       let result = parser.parse(input);
 
-      expect(result.errors).to.be.an('array')
-        .with.length(1);
-      expect(result.errors[0]).to.deep.equal({
+      Expect.oneErrorLike({
         message: 'Qubit foo is not previously defined',
-        line: 0,
         start: 28,
         end: 31,
-        level: ParseErrorLevel.ERROR
-      });
+      }).at(result.errors);
     });
   });
 
@@ -177,15 +176,11 @@ describe('A parser', () => {
 
       let result = parser.parse(input);
 
-      expect(result.errors).to.be.an('array')
-        .with.length(1);
-      expect(result.errors[0]).to.deep.equal({
+      Expect.oneErrorLike({
         message: 'There is another declaration with name q',
-        line: 0,
         start: 25,
         end: 26,
-        level: ParseErrorLevel.ERROR
-      });
+      }).at(result.errors);
     });
 
     it('if a classic register uses a previously defined symbol', () => {
@@ -193,15 +188,11 @@ describe('A parser', () => {
 
       let result = parser.parse(input);
 
-      expect(result.errors).to.be.an('array')
-        .with.length(1);
-      expect(result.errors[0]).to.deep.equal({
+      Expect.oneErrorLike({
         message: 'There is another declaration with name q',
-        line: 0,
         start: 15,
         end: 16,
-        level: ParseErrorLevel.ERROR
-      });
+      }).at(result.errors);
     });
 
     it('if a gate uses a previously defined symbol', () => {
@@ -211,15 +202,11 @@ describe('A parser', () => {
 
       let result = parser.parse(input);
 
-      expect(result.errors).to.be.an('array')
-        .with.length(1);
-      expect(result.errors[0]).to.deep.equal({
+      Expect.oneErrorLike({
         message: 'There is another declaration with name cx',
-        line: 0,
         start: 16,
-        end: 18,
-        level: ParseErrorLevel.ERROR
-      });
+        end: 18
+      }).at(result.errors);
     });
 
     it('if an opaque uses a previously defined symbol', () => {
@@ -227,16 +214,197 @@ describe('A parser', () => {
 
       let result = parser.parse(input);
 
-      expect(result.errors).to.be.an('array')
-        .with.length(1);
-      expect(result.errors[0]).to.deep.equal({
+      Expect.oneErrorLike({
         message: 'There is another declaration with name foo',
-        line: 0,
         start: 19,
-        end: 22,
-        level: ParseErrorLevel.ERROR
-      });
+        end: 22
+      }).at(result.errors);
+    });
+  });
+
+  describe('throws a semantic error', () => {
+    it('if one register is used beyond its size', () => {
+      let input = `qreg foo[5];creg bar[5];measure foo[6] -> bar[4];`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'Index out of bound at register foo',
+        start: 36,
+        end: 37
+      }).at(result.errors);
+    });
+
+    it('if expecting a different type of register', () => {
+      let input = `creg foo[5];creg bar[5];measure foo -> bar;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'Wrong type at foo, expecting a Qreg',
+        start: 32,
+        end: 35
+      }).at(result.errors);
+    });
+
+    it('if registers sizes are different at measure', () => {
+      let input = `qreg foo[5];creg bar[3];measure foo -> bar;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'The quatum register foo cannot be mapped to a smaller classic register bar',
+        start: 32,
+        end: 35
+      }).at(result.errors);
+    });
+
+    it('if a gate is used before its definition', () => {
+      let input = `qreg q[4];u1(pi) q;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'The symbol u1 is not previously defined',
+        start: 10,
+        end: 12
+      }).at(result.errors);
+    });
+
+    it('if a creg is used as a qreg when a gate is invoked', () => {
+      let input = `gate u1(lamda) q {U(0,0,lambda) q;} creg c[5]; u1(pi) c;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'Wrong type at c, expecting a Qreg',
+        start: 54,
+        end: 55
+      }).at(result.errors);
+    });
+    
+    it('if a creg is used as a qreg when a Cx gate is invoked', ()  => {
+      let input = `creg c[5]; CX c;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'Wrong type at c, expecting a Qreg',
+        start: 14,
+        end: 15
+      }).at(result.errors);
+    });
+
+    it('if a creg is used as a qreg when a barrier gate is invoked', ()  => {
+      let input = `creg c[5]; barrier c;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'Wrong type at c, expecting a Qreg',
+        start: 19,
+        end: 20
+      }).at(result.errors);
+    });
+
+    it('if a creg is used as a qreg when a reset gate is invoked', ()  => {
+      let input = `creg c[5]; reset c;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'Wrong type at c, expecting a Qreg',
+        start: 17,
+        end: 18
+      }).at(result.errors);
+    });
+
+    it('if an opaque gate is defined twice', () => {
+      let input = `opaque a(foo) q; opaque a(foo, bar) q;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'There is another declaration with name a',
+        start: 24,
+        end: 25
+      }).at(result.errors);
+    });
+
+    it('if an opaque gate is defined without arguments inside parenthesis', () => {
+      let input = `opaque a() q;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'Expecting arguments before symbol )',
+        start: 9,
+        end: 10
+      }).at(result.errors);
+    });
+
+    it('if a gate receive more arguments than its definition', () => {
+      expect(false).to.be.true;
+    });
+
+    it('if a gate receive more arguments than its definition as an opaque', () => {
+      expect(false).to.be.true;
+    });
+
+    it('if a qreg is used as argument of a conditional', () => {
+      let input = `qreg q[5]; if (q == 25) barrier q;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'Wrong type at q, expecting a Creg',
+        start: 15,
+        end: 16
+      }).at(result.errors);
     });
   });
 
 });
+
+class Expect {
+
+  public static oneErrorLike(error: Error): OneErrorLike {
+    return new OneErrorLike(error);
+  }
+
+}
+
+class OneErrorLike {
+
+  expectedError: Error;
+
+  constructor(expectedError: Error) {
+    this.expectedError = expectedError;
+  }
+
+  public at(errors: ParserError[]): void {
+    expect(errors).to.be.an('array')
+      .with.length(1);
+    expect(errors[0]).to.deep.equal({
+      message: this.expectedError.message,
+      line: this.expectedError.line ||  0,
+      start: this.expectedError.start,
+      end: this.expectedError.end,
+      level: ParseErrorLevel.ERROR
+    });
+  }
+
+}
+
+interface Error {
+
+  message: string;
+
+  start: number;
+
+  end: number;
+
+  line?: number;
+
+}
+

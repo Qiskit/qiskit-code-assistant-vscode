@@ -5,18 +5,46 @@ Q-Studio is a Visual Studio Code extension, that allow the researchers and devel
 
 You can find additional information about planning and future of Q-Studio [here](https://ibm.ent.box.com/notes/282598814468).
 
+## Q-Studio features
+
+### Errors highlight
+
+Below is a list of the syntactic and semantic errors detected by the extension:
+
+:white_check_mark: Not previously defined symbols.
+
+:white_check_mark: Duplicated symbol definition.
+
+:white_check_mark: Out of bound position in a register.
+
+:white_check_mark: Wrong type at measure operation.
+
+:white_check_mark: Wrong type at gate invocation.
+
+:white_check_mark: Wrong types in conditional sentences.
+
+:soon: Wrong number of arguments in a gate invocation.
+
 ## Installation
 
 TBD (documentation for the Microsoft Code market should be created)
 
 ### How to run locally
 
-NPM is requirede to run the project in a local environment.
+NPM is required to run the project in a local environment.
 
 ```sh
 npm install
 npm run compile
 ```
+
+Open the project with Visual Studio Code and follow the instructions below.
+
+![step1](docs/images/qiskit-studio_1.png)
+
+![step2](docs/images/qiskit-studio_2.png)
+
+![step3](docs/images/qiskit-studio_3.png)
 
 ## Usage example
 
@@ -64,12 +92,7 @@ The server side of the extension is divided into various components to being abl
 
 ![Parser code structure](docs/diagrams/ParserStructure.png)
 
-* Server is the main code that launches the server side features of the extension.
-* CompilationTool is the "interface" that gives document validation and autocompletion tips to the extension, through the Parser.
-* Parser is an adapter that is able to translate the results from the real parser engine, into the objects that the extension and CompilationTool understand.
-* QasmParserEngine is the real implementation of the parser for qasm files.
-
-### Configuring Python >3.5
+### Configuring Python >3.5
 
 The extension have some previous requirements, one of them is Python 3.5 or greater.
 
@@ -100,11 +123,11 @@ Some additional information can be found in this [link](https://www.digitalocean
 * [How to create a language server?](https://code.visualstudio.com/docs/extensions/example-language-server)
 * [VS Code extension examples](https://code.visualstudio.com/docs/extensions/samples)
 
-### Jison related links
+### Jison related links
 
 * [Online Jison generator](http://zaa.ch/jison/try/usf/#prod_1): This web is quite interesting because it is able to extract firsts and follows of the grammar. One thing that is not possible in the auto-generated parser from the Jison console command.
 
-### ANTLR4 related links
+### ANTLR4 related links
 
 * [Autocompletion library from Mike Lichske](https://github.com/mike-lischke/antlr4-c3)
 * [Universal code completion with ANTLR3](http://www.soft-gems.net/index.php/tools/47-universal-code-completion-using-antlr3)

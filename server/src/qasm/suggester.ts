@@ -60,11 +60,11 @@ export class Suggester {
         suggestions.push(...functionNames);
         suggestions.push(...variableNames);
     
-        console.log('Found ' + suggestions);
-    
         let result: Symbol[] = [];
         result.push(...this.dictionary.symbolsWithTypeIn(suggestions));
         result.push(...this.foundVariablesAt(parser));
+
+        console.log(`Available suggestions > ${result}`);
 
         return result;
     }
