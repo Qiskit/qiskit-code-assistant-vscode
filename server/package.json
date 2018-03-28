@@ -1,8 +1,15 @@
 {
-	"name": "qasm-language-support",
-	"description": "QASM language support server",
-	"author": "Isma Development Team",
-	"license": "MIT",
+	"name": "ibm-q-studio",
+	"description": "VSCode extension to develop using IBM Q suite",
+	"author": "IBM Research",
+	"license": "Apache-2.0",
+	"licenses": [
+		{
+			"type": "Apache-2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0"
+		}
+	],
+	"publisher": "IBM Research",
 	"version": "0.0.1",
 	"engines": {
 		"node": "*"
