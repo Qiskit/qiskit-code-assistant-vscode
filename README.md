@@ -135,3 +135,13 @@ Some additional information can be found in this [link](https://www.digitalocean
 ## Meta
 
 TBD
+
+## Authors (alphabetical)
+
+IBM Q Studio was originally authored by Juan Cruz-Benito, Yeray Darias, Ismael Faro, Juan Gómez and Paco Martín.
+
+And continues to grow with the help and work of [many people](./CONTRIBUTORS.md) who contribute to the project at different levels.
+
+
+## License 
+This project uses the [Apache License Version 2.0 software license](https://www.apache.org/licenses/LICENSE-2.0).
