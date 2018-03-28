@@ -1,6 +1,6 @@
 {
-	"name": "qasm-language-support",
-	"description": "QASM language support client",
+	"name": "ibm-q-studio",
+	"description": "VSCode extension to develop using IBM Q suite",
 	"author": "IBM Research",
 	"license": "Apache-2.0",
 	"licenses": [
