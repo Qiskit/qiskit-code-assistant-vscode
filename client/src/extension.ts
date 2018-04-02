@@ -75,20 +75,31 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    DependencyMgr.checkDependencies().then((deps) => {
+    let depMgr = new DependencyMgr();
+    depMgr.checkDependencies()
+    .then((deps) => {
         console.log('All dependencies are met!');
+        vscode.window.showInformationMessage('All dependencies are met!');
+        console.log(deps);
         deps.forEach(dep => {
             console.log("Package: " + dep.Name + " Version: " +
+                dep.InstalledVersion);
+                vscode.window.showInformationMessage("Package: " + dep.Name + " Version: " +
                 dep.InstalledVersion);
         });
         return Q.resolve();
     // Check for pyhton packages!
     }).then(() => {
         console.log('Check for required python packages...');
-        return PackageMgr.check();
+        let packMgr = new PackageMgr();
+        return packMgr.check().then(results => {
+            console.log(results);
+            vscode.window.showInformationMessage(results);
+        })
     // Iterate over the list of packages
     }).catch(error => {
         console.log('Seems like there was a problem: ' + error);
+        vscode.window.showErrorMessage('Seems like there was a problem: ' + error);
     });
 
     function registerQiskitCommands(context: vscode.ExtensionContext): void {

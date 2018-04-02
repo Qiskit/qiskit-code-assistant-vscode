@@ -17,18 +17,22 @@ import * as Q from "q";
 
 import {IPackage} from "./interfaces";
 import {PipPackage} from "./pipPackage";
+import {workspace} from "vscode";
 
 export class PackageMgr {
-    private static packages : [IPackage] = [
-        new PipPackage('qiskit'),
-    ];
+    static _packages : Q.Promise<[IPackage]> = [];
 
     constructor() {
+        const config = workspace.getConfiguration('ibm-q-studio');
+        const qiskitPacks = config.get("qiskit.packages");
+        Object.keys(qiskitPacks).forEach(function(key) {
+            PackageMgr._packages.push(new PipPackage(key.toString()));     
+          });
     }
 
-    public static check() : Q.Promise {
+    check() : Q.Promise {
         let packages: Q.Promise<IPackage>[] = [];
-        this.packages.forEach(pkg => {
+        PackageMgr._packages.forEach(pkg => {
             packages.push(pkg.check());
         });
         return Q.all(packages);

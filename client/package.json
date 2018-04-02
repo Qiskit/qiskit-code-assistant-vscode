@@ -23,13 +23,14 @@
 		"Snippets"
 	],
 	"activationEvents": [
-		"onLanguage:qasm-lang"
+		"onLanguage:qasm-lang",
+		"*"
 	],
 	"main": "./out/src/extension",
 	"contributes": {
 		"configuration": {
 			"type": "object",
-			"title": "QASM configuration",
+			"title": "IBM Q Studio configuration",
 			"properties": {
 				"qasmLang.maxNumberOfProblems": {
 					"scope": "resource",
@@ -47,6 +48,21 @@
 					],
 					"default": "off",
 					"description": "Traces the communication between VSCode and the language server."
+				},
+				"ibm-q-studio.python.dependencies": {
+					"type": "object",
+					"default": {
+						"python": "3.5",
+						"pip": "9"
+					},
+					"description": "Basic python dependencies required"
+				},
+				"ibm-q-studio.qiskit.packages": {
+					"type": "object",
+					"default": {
+						"qiskit": "0.4"
+					},
+					"description": "QISKit and libraries related to run code"
 				}
 			}
 		},

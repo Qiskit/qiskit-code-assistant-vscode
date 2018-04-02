@@ -47,7 +47,7 @@ export class Dependency implements IDependency {
     }
 
     private getInstalledVersion(force: boolean = false): Q.Promise<IVersion> {
-        return Q.Promise((resolve) => {
+        return Q.Promise((resolve, reject) => {
             if(!force && this.InstalledVersion != null) {
                 return resolve(this.InstalledVersion)
             }
@@ -56,6 +56,9 @@ export class Dependency implements IDependency {
             .then((stdout) => {
                 this.InstalledVersion = Version.fromString(stdout.split(" ")[1]);
                 resolve(this.InstalledVersion);
+            })
+            .catch((err) => {
+                reject(err);
             });
         });
     }
