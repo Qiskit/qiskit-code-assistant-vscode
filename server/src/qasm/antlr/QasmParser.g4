@@ -116,7 +116,7 @@ private verifyMeasureInvocation(quantumRegister: Token, classicRegister: Token):
     let qregSymbol = this.symbolTable.lookup(quantumRegister.text) as RegisterSymbol;
     let cregSymbol = this.symbolTable.lookup(classicRegister.text) as RegisterSymbol;
 
-    if (qregSymbol.size > cregSymbol.size) {
+    if (qregSymbol && cregSymbol && qregSymbol.size > cregSymbol.size) {
         let message = `The quatum register ${quantumRegister.text} cannot be mapped to a smaller classic register ${classicRegister.text}`;
         this.notifyErrorListeners(message, quantumRegister, null);
     }
