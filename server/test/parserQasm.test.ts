@@ -1,10 +1,10 @@
 import { expect } from 'chai';
-import { Parser } from '../src/qasm/parser'
-import { ParserResult, ParseErrorLevel, ParserError } from '../src/qasm/model';
+import { QASMParser } from '../src/qasm/parser'
+import { Parser, ParserResult, ParseErrorLevel, ParserError } from '../src/types';
 
 describe('A parser', () => {
 
-  let parser = new Parser();
+  let parser: Parser = new QASMParser();
 
   describe('with an empty input', () => {
     it('will end without errors', () => {

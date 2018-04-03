@@ -35,10 +35,11 @@
 		"installServer": "installServerIntoExtension ../client ./package.json ./tsconfig.json",
 		"compile": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
 		"watch": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -w -p .",
-		"compile:parser": "cd src/qasm/antlr && antlr4ts -visitor QasmLexer.g4 QasmParser.g4 && cd ../../..",
+		"compile:qasmParser": "cd src/qasm/antlr && antlr4ts -visitor QasmLexer.g4 QasmParser.g4 && cd ../../..",
 		"compile:qiskitParser": "cd src/qiskit/antlr && antlr4ts -visitor Python3.g4 && cd ../../..",
+		"compile:parser": "npm run compile:qasmParser && npm run compile:qiskitParser",
 		"exportQuantumLibraries": "cp -R src/qasm/libs out/src/qasm",
-		"pretest": "npm run compile:parser && npm run compile:qiskitParser && tsc test/*.test.ts --outDir out --module commonjs --target ES6 --experimentalDecorators && npm run exportQuantumLibraries ",
+		"pretest": "npm run compile:parser && tsc test/*.test.ts --outDir out --module commonjs --target ES6 --experimentalDecorators && npm run exportQuantumLibraries ",
 		"test": "mocha out/test --recursive",
 		"clean": "rm -rf  out node_modules"
 	}

@@ -4,7 +4,7 @@ import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts';
 import { CodeCompletionCore } from 'antlr4-c3';
 import { QasmLexer } from './antlr/QasmLexer';
 import { QasmParser } from './antlr/QasmParser';
-import { Symbol } from './model';
+import { Symbol } from '../types';
 
 export class Suggester {
 

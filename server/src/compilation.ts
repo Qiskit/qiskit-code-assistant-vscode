@@ -9,9 +9,9 @@ import {
     TextDocument,
     TextDocumentPositionParams
 } from 'vscode-languageserver';
-import { Parser } from './qasm/parser';
+import { QASMParser } from './qasm/parser';
 import { Suggester } from './qasm/suggester';
-import { ParserError, ParseErrorLevel, Symbol } from './qasm/model';
+import { ParserError, ParseErrorLevel, Symbol } from './types';
 
 export class CompilationTool {
     connection: IConnection;
@@ -35,7 +35,7 @@ export class CompilationTool {
     validateDocument(document: TextDocument): void {
         this.currentDocument = document;
 
-        let parser = new Parser();
+        let parser = new QASMParser();
         let result = parser.parse(document.getText());
         this.launchCompilationErrors(document, result.errors);
     }

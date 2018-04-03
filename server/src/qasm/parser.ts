@@ -12,21 +12,18 @@
 
 import { ANTLRInputStream, CommonTokenStream, ANTLRErrorListener, CommonToken, Token, Recognizer, RecognitionException, ConsoleErrorListener, ParserRuleContext } from 'antlr4ts';
 import { CodeCompletionCore } from 'antlr4-c3';
-import { ParserResult, ParserError, ParseErrorLevel } from '../qasm/model';
+import { Parser, ParserResult, ParserError, ParseErrorLevel } from '../types';
 import { QasmLexer } from './antlr/QasmLexer';
 import { QasmParser, CodeContext } from './antlr/QasmParser';
 import { Override } from 'antlr4ts/Decorators';
-import { TreePrinter } from './compiler/treePrinter';
 
-export class Parser {
+export class QASMParser implements Parser {
 
     parse(input: string): ParserResult {
         let errorListener = new ErrorListener();
         let parser = this.buildQasmParser(input, errorListener);
 
         let tree = parser.code();
-
-        // TreePrinter.print(parser.ruleNames, tree);
 
         return {
             ast: tree,
