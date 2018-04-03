@@ -9,12 +9,9 @@ import {
     TextDocument,
     TextDocumentPositionParams
 } from 'vscode-languageserver';
-import { QASMParser } from './qasm/parser';
-import { Suggester } from './qasm/suggester';
-import { ParserError, ParseErrorLevel, Symbol } from './types';
+import { Parser, Suggester, ParserError, ParseErrorLevel, Symbol } from './types';
 
 export class CompilationTool {
-    connection: IConnection;
     currentDocument: TextDocument = null;
     currentSuggestions: CompletionItem[] = [];
 
@@ -28,15 +25,13 @@ export class CompilationTool {
         };
     };
 
-    constructor(public _connection: IConnection) {
-        this.connection = _connection;
+    constructor(private connection: IConnection, private parser: Parser, private suggester: Suggester) {
     }
 
     validateDocument(document: TextDocument): void {
         this.currentDocument = document;
 
-        let parser = new QASMParser();
-        let result = parser.parse(document.getText());
+        let result = this.parser.parse(document.getText());
         this.launchCompilationErrors(document, result.errors);
     }
 
@@ -47,8 +42,7 @@ export class CompilationTool {
 
         let textToCaret = this.currentDocument.getText().substring(0, this.currentDocument.offsetAt(_documentPosition.position));
 
-        let suggester = new Suggester();
-        this.currentSuggestions = suggester.calculateSuggestionsFor(textToCaret).map(this.toCompletionItem);
+        this.currentSuggestions = this.suggester.calculateSuggestionsFor(textToCaret).map(this.toCompletionItem);
 
         return this.currentSuggestions;
     }

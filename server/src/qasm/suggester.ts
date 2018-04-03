@@ -4,9 +4,9 @@ import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts';
 import { CodeCompletionCore } from 'antlr4-c3';
 import { QasmLexer } from './antlr/QasmLexer';
 import { QasmParser } from './antlr/QasmParser';
-import { Symbol } from '../types';
+import { Symbol, Suggester } from '../types';
 
-export class Suggester {
+export class QASMSuggester implements Suggester {
 
     dictionary: SymbolsDictionary = new SymbolsDictionary();
 
@@ -73,7 +73,7 @@ export class Suggester {
         return parser.declaredVariables().map(this.toSymbolVariable);
     }
 
-    toSymbolVariable = (input: string): Symbol => {
+    private toSymbolVariable = (input: string): Symbol => {
 
         return {
             label: input,

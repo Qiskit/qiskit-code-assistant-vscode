@@ -2,6 +2,8 @@ import { expect } from 'chai';
 import { mock, instance } from 'ts-mockito';
 import { createConnection, IConnection, IPCMessageWriter, IPCMessageReader, CompletionItem } from 'vscode-languageserver';
 import { CompilationTool } from '../src/compilation';
+import { QASMParser } from '../src/qasm/parser';
+import { QASMSuggester } from '../src/qasm/suggester';
 
 describe('A compilation tool', () => {
 
@@ -13,7 +15,7 @@ describe('A compilation tool', () => {
 
     let connection:IConnection = createConnection(messageReader, messageWriter);
 
-    let compilationTool:CompilationTool = new CompilationTool(connection);
+    let compilationTool:CompilationTool = new CompilationTool(connection, new QASMParser(), new QASMSuggester());
     
     describe('when asked for a completion item detail', () => {
         it('will not fail if there is no option available', () => {

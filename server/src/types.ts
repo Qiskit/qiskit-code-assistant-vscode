@@ -4,6 +4,11 @@ export interface Parser {
     parse(input: string): ParserResult;
 }
 
+export interface Suggester {
+    calculateSuggestionsFor(input: string): Symbol[];
+    availableSymbols(): Symbol[];
+}
+
 export interface Symbol {
 
     label: string,
