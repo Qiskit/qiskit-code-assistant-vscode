@@ -20,7 +20,6 @@ import { Override } from 'antlr4ts/Decorators';
 import { Parser, ParserResult, ParserError, ParseErrorLevel } from "../types";
 import { Python3Parser } from './antlr/Python3Parser';
 import { Python3Lexer } from './antlr/Python3Lexer';
-import { TreePrinter } from '../tools';
 
 export class QiskitParser implements Parser {
 
@@ -29,8 +28,6 @@ export class QiskitParser implements Parser {
         let parser = this.buildQiskitParser(input, errorListener);
 
         let tree = parser.file_input();
-
-        TreePrinter.print(parser.ruleNames, tree);
         
         return {
             ast: tree,

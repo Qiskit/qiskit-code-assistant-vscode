@@ -44,8 +44,6 @@ export class CompilationTool {
     }
 
     validateDocument(document: TextDocument): void {
-        this.connection.console.log(`Validating document ${document.uri}`);
-
         this.currentDocument = document;
 
         let result = this.parser.parse(document.getText());
