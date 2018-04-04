@@ -23,7 +23,8 @@
 		"Snippets"
 	],
 	"activationEvents": [
-		"onLanguage:qasm-lang"
+		"onLanguage:qasm-lang",
+		"onLanguage:qiskit-lang"
 	],
 	"main": "./out/src/extension",
 	"contributes": {
@@ -54,7 +55,7 @@
 			{
 				"id": "qasm-lang",
 				"aliases": [
-					"QAsm"
+					"QASM"
 				],
 				"extensions": [
 					".qasm"
