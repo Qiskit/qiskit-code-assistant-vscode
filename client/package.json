@@ -60,6 +60,16 @@
 					".qasm"
 				],
 				"configuration": "./qasm.configuration.json"
+			},
+			{
+				"id": "qiskit-lang",
+				"aliases": [
+					"QISKit"
+				],
+				"extensions": [
+					".py"
+				],
+				"configuration": "./qiskit.configuration.json"
 			}
 		],
 		"grammars": [
@@ -67,6 +77,11 @@
 				"language": "qasm-lang",
 				"scopeName": "source.qasm",
 				"path": "./syntaxes/qasm.json"
+			},
+			{
+				"language": "qiskit-lang",
+				"scopeName": "source.py",
+				"path": "./syntaxes/qiskit.json"
 			}
 		]
 	},

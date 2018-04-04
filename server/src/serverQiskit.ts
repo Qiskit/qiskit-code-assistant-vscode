@@ -28,19 +28,19 @@ import {
 import {
     CompilationTool
 } from './compilation';
-import { QASMSuggester } from './qasm/suggester';
-import { QASMParser } from './qasm/parser';
+import { QiskitSuggester } from './qiskit/suggester';
+import { QiskitParser } from './qiskit/parser';
 
 let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
 
 let documents: TextDocuments = new TextDocuments();
 documents.listen(connection);
 
-let compilationTool: CompilationTool = new CompilationTool(connection, new QASMParser(), new QASMSuggester());
+let compilationTool: CompilationTool = new CompilationTool(connection, new QiskitParser(), new QiskitSuggester());
 
 connection.onInitialize((_params): InitializeResult => {
 
-    connection.console.log('QASM language support is being initialized ...');
+    connection.console.log('QISKit language support is being initialized ...');
 
     return {
         capabilities: {
