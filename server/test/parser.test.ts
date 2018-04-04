@@ -282,8 +282,8 @@ describe('A parser', () => {
         end: 55
       }).at(result.errors);
     });
-    
-    it('if a creg is used as a qreg when a Cx gate is invoked', ()  => {
+
+    it('if a creg is used as a qreg when a Cx gate is invoked', () => {
       let input = `creg c[5]; CX c;`;
 
       let result = parser.parse(input);
@@ -295,7 +295,7 @@ describe('A parser', () => {
       }).at(result.errors);
     });
 
-    it('if a creg is used as a qreg when a barrier gate is invoked', ()  => {
+    it('if a creg is used as a qreg when a barrier gate is invoked', () => {
       let input = `creg c[5]; barrier c;`;
 
       let result = parser.parse(input);
@@ -307,7 +307,7 @@ describe('A parser', () => {
       }).at(result.errors);
     });
 
-    it('if a creg is used as a qreg when a reset gate is invoked', ()  => {
+    it('if a creg is used as a qreg when a reset gate is invoked', () => {
       let input = `creg c[5]; reset c;`;
 
       let result = parser.parse(input);
@@ -362,6 +362,18 @@ describe('A parser', () => {
         end: 16
       }).at(result.errors);
     });
+
+    it('if a measure is applied on a non defined cbit', () => {
+      let input = `qreg q[3];measure q -> a;`;
+
+      let result = parser.parse(input);
+
+      Expect.oneErrorLike({
+        message: 'Cbit a is not previously defined',
+        start: 23,
+        end: 24
+      }).at(result.errors);
+    });
   });
 
 });
@@ -387,7 +399,7 @@ class OneErrorLike {
       .with.length(1);
     expect(errors[0]).to.deep.equal({
       message: this.expectedError.message,
-      line: this.expectedError.line ||  0,
+      line: this.expectedError.line || 0,
       start: this.expectedError.start,
       end: this.expectedError.end,
       level: ParseErrorLevel.ERROR
