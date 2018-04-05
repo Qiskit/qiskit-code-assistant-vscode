@@ -9,7 +9,8 @@
 */
 
 import { expect } from 'chai';
-import { SymbolTable, SymbolTableBuilder, VariableSymbol, GateSymbol, RegisterSymbol } from '../src/qasm/compiler/symbolTable'
+import { SymbolTable } from '../src/tools/symbolTable'
+import { SymbolTableBuilder, VariableSymbol, GateSymbol, RegisterSymbol } from '../src/qasm/compiler/symbolTable'
 
 describe('A symbol table', () => {
 

@@ -5,7 +5,8 @@ options { tokenVocab=QasmLexer; }
 import { Register, SymbolsTable } from './utils';
 import { QasmLexer } from './QasmLexer';
 import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts'; 
-import { SymbolTable, SymbolTableBuilder, VariableSymbol, RegisterSymbol, BuiltInTypeSymbol } from '../compiler/symbolTable';
+import { SymbolTable, BuiltInTypeSymbol } from '../../tools/symbolTable'; 
+import { SymbolTableBuilder, VariableSymbol, RegisterSymbol } from '../compiler/symbolTable';
 import fs = require('fs');
 import path = require('path');
 }
