@@ -34,41 +34,92 @@ export class PipPackage implements IPackage {
     private pip : PipWrapper = new PipWrapper();
     private pypi: PyPiWrapper = new PyPiWrapper();
     
-    constructor(name: string){
+    constructor(name: string, version:string){
         this.Info.Name = name;
+        this.Info.Version = Version.fromString(version);
     }
 
-    public check(): Q.Promise<void> {
+    public checkVersion(): Q.Promise<void> {
+        console.log(this.Info.Name);
+        let packageName = this.Info.Name;
         return this.pip.getPackageInfo(this.Info.Name)
         .then((installedPkgInfo: IPackageInfo) => {
+            console.log(installedPkgInfo);
             this.Info = installedPkgInfo;
             // Let's check for new versions
-            return this.pypi.getPackageInfo(this.Info.Name);
+            return this.pypi.getPackageInfo(this.Info.Name)
         }).then((pkgInfo: IPackageInfo) => {
             if(pkgInfo.Version.isGreater(this.Info.Version)){
-                // TODO: Show a user dialog and asks for permission to update
+                console.log("New version",pkgInfo.Version.toString());
                 return vscode.window.showInputBox({
                     ignoreFocusOut: true,
-                    prompt: `There's a new QISKit release: ${pkgInfo.Version.toString()}. Do you want to upgrade?`,
+                    prompt: `👉 There's a new ${packageName} release: ${pkgInfo.Version.toString()}. Do you want to upgrade? 👈`,
                     value: 'Yes',
                 });
             }
-
             return null;
         // There's a new version...
         }).then((selection: string|undefined) => {
+            //Getting the selection from last showInputBox
             if(selection == 'Yes'){
-                return this.pip.update('qiskit').then((stdout) => {
-                    console.log(stdout);
-                    vscode.window.showInformationMessage('QISKit updated!!');
-                    return Q.resolve();
-                }).catch((error) => {
-                    console.log(error);
-                    vscode.window.showInformationMessage(`ERROR: Couldn't upgrade QISKit. ${error}`);
-                    return Q.reject(error);
-                });
+                vscode.window.showInformationMessage(`Updating ${packageName}... (this may take some time, be patient 🙏)`);
+                return this.pip.update(packageName)
+                    .then((stdout) => {
+                        console.log(stdout);
+                        return Q.resolve();
+                    }).then(result => {
+                        console.log(result);
+                        vscode.window.showInformationMessage(`${packageName} updated! 🎉🎉🎉`);
+                    }).catch((error) => {
+                        console.log(error);
+                        vscode.window.showErrorMessage(`ERROR: Couldn't upgrade ${packageName}. ${error}`);
+                        return Q.reject(error);
+                    });
             }
-            return Q.resolve();
+            return Q.all();
+        }).catch((err) => {
+            this.pip.list()
+                .then(result => {
+                    //console.log("pip list",result); 
+                    if (result.search(packageName) == -1 ) { 
+                        console.log(`${packageName} not installed`); 
+                        return vscode.window.showInputBox({
+                            ignoreFocusOut: true,
+                            prompt: `👉 You don't have installed ${packageName}. Do you want to install it? 👈`,
+                            value: 'Yes',
+                        });
+                    } else { 
+                        console.log(`${packageName} is already installed`); 
+                        vscode.window.showInformationMessage(`👌 ${packageName} is already installed`);
+                        return Q.resolve();
+                    } 
+                })
+                .then((selection: string|undefined) => {
+                    //Getting the selection from last showInputBox
+                    if(selection == 'Yes'){
+                        vscode.window.showInformationMessage(`Installing ${packageName}... (this may take some time, be patient 🙏)`);
+                        return this.pip.install(packageName)
+                            .then((stdout) => {
+                                console.log(stdout);
+                                return Q.resolve();
+                            }).then(result => {
+                                console.log(result);
+                                vscode.window.showInformationMessage(`${packageName} installed! 🎉🎉🎉`);
+                            }).catch((error) => {
+                                console.log(error);
+                                vscode.window.showErrorMessage(`ERROR: Couldn't install ${packageName}. ${error}`);
+                                return Q.reject(error);
+                            });
+                    }
+                    return Q.resolve();
+                }).catch(err =>{
+                    console.log("error pip list",err);
+                    return Q.reject(err);   
+                });
+            if (err){
+                return Q.reject(err);  
+            }
+            return Q.resolve();  
         });
     }
 

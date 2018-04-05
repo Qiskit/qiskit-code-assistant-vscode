@@ -23,19 +23,25 @@ export class PackageMgr {
     static _packages : Q.Promise<[IPackage]> = [];
 
     constructor() {
-        const config = workspace.getConfiguration('ibm-q-studio');
-        const qiskitPacks = config.get("qiskit.packages");
-        Object.keys(qiskitPacks).forEach(function(key) {
-            PackageMgr._packages.push(new PipPackage(key.toString()));     
-          });
+        try{
+            const config = workspace.getConfiguration('ibm-q-studio');
+            const qiskitPacks = config.get("qiskit.packages");
+            Object.keys(qiskitPacks).forEach(function(key) {
+                console.log(key.toString(), qiskitPacks[key].toString());
+                PackageMgr._packages.push(new PipPackage(key.toString(), qiskitPacks[key].toString()));     
+              });
+        } catch (err){
+            console.log("PackMGr",err);
+        }
+        
     }
 
     check() : Q.Promise {
         let packages: Q.Promise<IPackage>[] = [];
         PackageMgr._packages.forEach(pkg => {
-            packages.push(pkg.check());
+            packages.push(pkg.checkVersion());
         });
-        return Q.all(packages);
+        return Q.resolve(packages);        
     }
 
 }
