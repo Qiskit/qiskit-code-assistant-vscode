@@ -24,7 +24,7 @@ import {
     ServerOptions,
     TransportKind
 } from 'vscode-languageclient';
-import {CommandPaletteHelper} from "./commandPaletteHelper";
+//import {CommandPaletteHelper} from "./commandPaletteHelper";
 import {DependencyMgr} from "./dependencyMgr";
 import {PackageMgr} from "./packageMgr";
 
@@ -34,7 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.window.showInformationMessage("✨ Activating IBM Q Studio extension... ✨");
 
-    registerQiskitCommands(context);
+    //registerQiskitCommands(context);
 
     let serverModule = context.asAbsolutePath(path.join('server', 'server.js'));
     
@@ -80,7 +80,7 @@ export function activate(context: vscode.ExtensionContext) {
     let depMgr = new DependencyMgr();
     depMgr.checkDependencies()
     .then((deps) => {
-        console.log('All dependencies are met!');
+        console.log('Checking for Python dependencies...');
         //vscode.window.showInformationMessage("Checking for Python dependencies...");
         let depsList :string = "";
         deps.forEach(dep => {
@@ -114,11 +114,16 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showErrorMessage('Seems like there was a problem: ' + error);
     });
 
-    function registerQiskitCommands(context: vscode.ExtensionContext): void {
+    /*function registerQiskitCommands(context: vscode.ExtensionContext): void {
         context.subscriptions.push(vscode.commands.registerCommand(`qiskitRun`, () => {
             return CommandPaletteHelper.run()
         }));
-    }
+    }*/
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("qstudio.reload", () => activate(context)),
+        vscode.commands.registerCommand("qstudio.checkDependencies", () => activate(context)),
+    );
 }
 
 export function deactivate() {

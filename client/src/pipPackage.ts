@@ -62,19 +62,7 @@ export class PipPackage implements IPackage {
         }).then((selection: string|undefined) => {
             //Getting the selection from last showInputBox
             if(selection == 'Yes'){
-                vscode.window.showInformationMessage(`Updating ${packageName}... (this may take some time, be patient 🙏)`);
-                return this.pip.update(packageName)
-                    .then((stdout) => {
-                        console.log(stdout);
-                        return Q.resolve();
-                    }).then(result => {
-                        console.log(result);
-                        vscode.window.showInformationMessage(`${packageName} updated! 🎉🎉🎉`);
-                    }).catch((error) => {
-                        console.log(error);
-                        vscode.window.showErrorMessage(`ERROR: Couldn't upgrade ${packageName}. ${error}`);
-                        return Q.reject(error);
-                    });
+                return this.update(packageName);
             }
             return Q.all();
         }).catch((err) => {
@@ -97,19 +85,7 @@ export class PipPackage implements IPackage {
                 .then((selection: string|undefined) => {
                     //Getting the selection from last showInputBox
                     if(selection == 'Yes'){
-                        vscode.window.showInformationMessage(`Installing ${packageName}... (this may take some time, be patient 🙏)`);
-                        return this.pip.install(packageName)
-                            .then((stdout) => {
-                                console.log(stdout);
-                                return Q.resolve();
-                            }).then(result => {
-                                console.log(result);
-                                vscode.window.showInformationMessage(`${packageName} installed! 🎉🎉🎉`);
-                            }).catch((error) => {
-                                console.log(error);
-                                vscode.window.showErrorMessage(`ERROR: Couldn't install ${packageName}. ${error}`);
-                                return Q.reject(error);
-                            });
+                        this.install(packageName);
                     }
                     return Q.resolve();
                 }).catch(err =>{
@@ -123,7 +99,37 @@ export class PipPackage implements IPackage {
         });
     }
 
-    public update(): Q.Promise<string> {
-        return Q.resolve();
+    public update(packageName: string): Q.Promise<string> {
+        vscode.window.showInformationMessage(`Updating ${packageName}... (this may take some time, be patient 🙏)`);
+        return this.pip.update(packageName)
+            .then((stdout) => {
+                console.log(stdout);
+                return Q.resolve();
+            }).then(result => {
+                console.log(result);
+                vscode.window.showInformationMessage(`${packageName} updated! 🎉🎉🎉`);
+                return Q.resolve();
+            }).catch((error) => {
+                console.log(error);
+                vscode.window.showErrorMessage(`ERROR: Couldn't upgrade ${packageName}. ${error}`);
+                return Q.reject(error);
+            });
+    }
+
+    public install(packageName: string): Q.Promise<string> {
+        vscode.window.showInformationMessage(`Installing ${packageName}... (this may take some time, be patient 🙏)`);
+        return this.pip.install(packageName)
+            .then((stdout) => {
+                console.log(stdout);
+                return Q.resolve();
+            }).then(result => {
+                console.log(result);
+                vscode.window.showInformationMessage(`${packageName} installed! 🎉🎉🎉`);
+                return Q.resolve();
+            }).catch((error) => {
+                console.log(error);
+                vscode.window.showErrorMessage(`ERROR: Couldn't install ${packageName}. ${error}`);
+                return Q.reject(error);
+            });
     }
 }

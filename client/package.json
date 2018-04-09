@@ -24,6 +24,8 @@
 	],
 	"activationEvents": [
 		"onLanguage:qasm-lang",
+		"onCommand:qstudio.reload",
+		"onCommand:qstudio.checkDependencies",
 		"*"
 	],
 	"main": "./out/src/extension",
@@ -83,6 +85,18 @@
 				"language": "qasm-lang",
 				"scopeName": "source.qasm",
 				"path": "./syntaxes/qasm.json"
+			}
+		],
+		"commands": [
+			{
+				"command": "qstudio.reload",
+				"title": "Reload IBM Q Studio",
+				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.checkDependencies",
+				"title": "Check IBM Q Studio dependencies",
+				"category": "qstudio"
 			}
 		]
 	},
