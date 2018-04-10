@@ -160,37 +160,46 @@ import { AssignmentsStack, Assignment } from '../compiler/assignmentsStack';
 @parser::members {
 public symbolTable = QiskitSymbolTable.build();
 private assignments = new AssignmentsStack();
+private argumentsScope = false;
 
 declaredVariables(): string[] {
     return this.symbolTable.definedSymbols();
 }
 
-applyAssignment(symbol: string): void {
+applyAssignment(symbol: string, start: Token, stop: Token): void {
   let lastAssignment = this.assignments.popLastAssignment();
   if (this.isAssignmentAppliable(lastAssignment, symbol)) {
-    let parentSymbol = this.findParentSymbolWith(lastAssignment);
-    let variable = new VariableSymbol(symbol, parentSymbol);
-    this.symbolTable.define(variable);
+    let parentSymbol = this.findParentSymbolWith(lastAssignment, start, stop);
+    if (parentSymbol !== null) {
+      let variable = new VariableSymbol(symbol, parentSymbol);
+      this.symbolTable.define(variable);
+    }
   }
 }
 
-findParentSymbolWith(assignment: Assignment): Symbol {
-  if (assignment.hasTrailingMethods()) {
-    return this.findParentSymbolTraversingMethods(assignment);
-  } else {
-    return this.symbolTable.lookup(assignment.getVariable());
-  }
+findParentSymbolWith(assignment: Assignment, start: Token, stop: Token): Symbol {
+  // if (assignment.hasTrailingMethods()) {
+    return this.findParentSymbolTraversingMethods(assignment, start, stop);
+  // } else {
+  //   return this.symbolTable.lookup(assignment.getVariable());
+  // }
 }
 
 // TODO could be the same method if trailingMethods is an empty array
-findParentSymbolTraversingMethods(assignment: Assignment): Symbol {
+findParentSymbolTraversingMethods(assignment: Assignment, start: Token, _stop: Token): Symbol {
   let currentSymbol = this.symbolTable.lookup(assignment.getVariable());
+  if (currentSymbol === null) {
+    return null;
+  }
   assignment.getTrailingMethods().forEach((method) => {
     let classType = currentSymbol.type as ClassSymbol;
-    let compatibleMethods = classType.getMethods().filter((classMethod) => {
-      return classMethod.getName() === method;
-    });
-    currentSymbol = this.symbolTable.lookup(compatibleMethods[0].type.getName());
+    let compatibleMethod = classType.getMethods().find((m) => m.getName() === method.getName());
+    if (compatibleMethod) {
+      currentSymbol = this.symbolTable.lookup(compatibleMethod.type.getName());
+    } else {
+      let message = `Method ${method.getName()} not available at current scope`
+      this.notifyErrorListeners(message, start, null);
+    }
   });
 
   return currentSymbol;
@@ -316,7 +325,7 @@ small_stmt
 ///                      ('=' (yield_expr|testlist_star_expr))*)
 expr_stmt
  : symbol=testlist_star_expr ( augassign ( yield_expr | testlist)
-                      | ( '=' { this.assignments.newAssignmentOn($symbol.text); } ( yield_expr| testlist_star_expr ) )* { this.applyAssignment($symbol.text); } )
+                      | ( '=' { this.assignments.newAssignmentOn($symbol.text); } ( yield_expr| assignment=testlist_star_expr { this.applyAssignment($symbol.text, $assignment.start, $assignment.stop); } ) )* )  
  ;
 
 /// testlist_star_expr: (test|star_expr) (',' (test|star_expr))* [',']
@@ -635,11 +644,29 @@ power
 ///        NAME | NUMBER | STRING+ | '...' | 'None' | 'True' | 'False')
 atom
  : '(' ( yield_expr | testlist_comp )? ')'
- | '[' testlist_comp? ']'
+ | '[' testlist_comp? ']' 
  | '{' dictorsetmaker? '}'
- | NAME { this.assignments.setVariable($NAME.text); }
- | number
- | str+
+ | NAME { 
+   if (this.argumentsScope) {
+    this.assignments.addArgument($NAME.text);
+   } else {
+    this.assignments.setVariable($NAME.text); 
+   }
+ }
+ | number { 
+   if (this.argumentsScope) {
+    this.assignments.addArgument($number.text);
+   } else {
+    this.assignments.setVariable($number.text); 
+   }
+ }
+ | str+ { 
+   if (this.argumentsScope) {
+    this.assignments.addArgument($str.text);
+   } else {
+    this.assignments.setVariable($str.text); 
+   }
+ }
  | '...'
  | NONE
  | TRUE
@@ -655,7 +682,7 @@ testlist_comp
 
 /// trailer: '(' [arglist] ')' | '[' subscriptlist ']' | '.' NAME
 trailer
- : '(' arglist? ')'
+ : { this.argumentsScope = true; } '(' arglist? ')' { this.argumentsScope = false; }
  | '[' subscriptlist ']'
  | '.' NAME { this.assignments.addTrailingMethod($NAME.text); }
  ;

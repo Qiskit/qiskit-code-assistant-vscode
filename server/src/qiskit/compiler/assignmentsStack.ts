@@ -24,6 +24,12 @@ export class AssignmentsStack {
         });
     }
 
+    addArgument(argument: any): void {
+        this.applyOnLastAssignment((lastAssignment: Assignment) => {
+            lastAssignment.addArgument(argument);
+        });
+    }
+
     private applyOnLastAssignment(f: (lastAssignment: Assignment) => void): void {
         let lastAssignment = this.assignments.pop();
         if (lastAssignment) {
@@ -38,7 +44,7 @@ export class Assignment {
 
     private variable: string = null;
 
-    private trailingMethods: string[] = [];
+    private trailingMethods: Method[] = [];
 
     constructor(private symbol: string) {}
 
@@ -47,7 +53,13 @@ export class Assignment {
     }
 
     addTrailingMethod(method: string): void {
-        this.trailingMethods.push(method);
+        this.trailingMethods.push(new Method(method));
+    }
+
+    addArgument(argument: any): void {
+        let lastMethod = this.trailingMethods.pop();
+        lastMethod.addArgument(argument);
+        this.trailingMethods.push(lastMethod);
     }
 
     getSymbol(): string {
@@ -58,12 +70,32 @@ export class Assignment {
         return this.variable;
     }
 
-    getTrailingMethods(): string[] {
+    getTrailingMethods(): Method[] {
         return this.trailingMethods;
     }
 
     hasTrailingMethods(): boolean {
         return this.trailingMethods.length > 0;
+    }
+
+}
+
+class Method {
+
+    private arguments: any[] = [];
+
+    constructor(private name: string) {}
+
+    getName(): string {
+        return this.name;
+    }
+
+    addArgument(argument: any): void {
+        this.arguments.push(argument);
+    }
+
+    getArguments(): any[] {
+        return this.arguments;
     }
 
 }

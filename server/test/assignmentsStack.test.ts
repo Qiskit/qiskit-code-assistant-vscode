@@ -19,7 +19,9 @@ describe('An assignments stack', () => {
         expect(assignment.getSymbol()).to.be.equal('boo');
         expect(assignment.getVariable()).to.be.equal('foo');
         expect(assignment.hasTrailingMethods()).to.be.true;
-        expect(assignment.getTrailingMethods()).to.have.ordered.members(['applyBar', 'applyTutu', 'applyBoo']);
+        expect(assignment.getTrailingMethods()[0]).to.include({name: 'applyBar'});
+        expect(assignment.getTrailingMethods()[1]).to.include({name: 'applyTutu'});
+        expect(assignment.getTrailingMethods()[2]).to.include({name: 'applyBoo'});
     });
 
     it('should store a new assignment qp = QuantumProgram()', ()  => {
@@ -32,6 +34,24 @@ describe('An assignments stack', () => {
 
         expect(assignment.getSymbol()).to.be.equal('qp');
         expect(assignment.hasTrailingMethods()).to.be.false;
+    });
+
+    it('should store assignment qr = qp.create_quantum_register("qr", 2)', () => {
+        let assignmentsStack = new AssignmentsStack();
+
+        assignmentsStack.newAssignmentOn('qr');
+        assignmentsStack.setVariable('qp');
+        assignmentsStack.addTrailingMethod('create_quantum_register');
+        assignmentsStack.addArgument('"qr"');
+        assignmentsStack.addArgument(2);
+
+        let assignment = assignmentsStack.popLastAssignment();
+
+        expect(assignment.getSymbol()).to.be.equal('qr');
+        expect(assignment.getVariable()).to.be.equal('qp');
+        expect(assignment.hasTrailingMethods()).to.be.true;
+        expect(assignment.getTrailingMethods()[0].getName()).to.be.equal('create_quantum_register');
+        expect(assignment.getTrailingMethods()[0].getArguments()).to.include.ordered.members(['"qr"', 2]);
     });
 
 });

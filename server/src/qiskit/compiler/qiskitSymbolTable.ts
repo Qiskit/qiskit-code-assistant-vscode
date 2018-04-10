@@ -16,6 +16,7 @@
 'use strict';
 
 import { SymbolTable, Symbol, GlobalScope, Type, BuiltInTypeSymbol } from "../../tools/symbolTable";
+import { lookup } from "dns";
 
 export class QiskitSymbolTable {
 
@@ -37,7 +38,8 @@ export class QiskitSymbolTable {
     private static createQuantumProgramSymbol(symbolTable: SymbolTable): ClassSymbol {
         let methods = [
             new MethodSymbol('create_quantum_register', symbolTable.lookup('QuantumRegister')), 
-            new MethodSymbol('create_classical_register', symbolTable.lookup('ClassicalRegister'))
+            new MethodSymbol('create_classical_register', symbolTable.lookup('ClassicalRegister')),
+            new MethodSymbol('create_circuit', symbolTable.lookup('QuantumCircuit'))
         ];
 
         return new ClassSymbol('QuantumProgram', symbolTable.lookup('class'), methods);
