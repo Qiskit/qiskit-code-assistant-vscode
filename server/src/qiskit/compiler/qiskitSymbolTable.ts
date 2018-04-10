@@ -29,9 +29,18 @@ export class QiskitSymbolTable {
         symbolTable.define(new ClassSymbol('QuantumRegister', classType, []));
         symbolTable.define(new ClassSymbol('ClassicalRegister', classType, []));
         symbolTable.define(new ClassSymbol('QuantumCircuit', classType, []));
-        symbolTable.define(new ClassSymbol('QuantumProgram', classType, [new MethodSymbol('create_quatum_register', symbolTable.lookup('QuantumRegister').type), new MethodSymbol('create_classical_register', symbolTable.lookup('ClassicalRegister').type)]));
+        symbolTable.define(this.createQuantumProgramSymbol(symbolTable));
         
         return symbolTable;
+    }
+
+    private static createQuantumProgramSymbol(symbolTable: SymbolTable): ClassSymbol {
+        let methods = [
+            new MethodSymbol('create_quatum_register', symbolTable.lookup('QuantumRegister')), 
+            new MethodSymbol('create_classical_register', symbolTable.lookup('ClassicalRegister'))
+        ];
+
+        return new ClassSymbol('QuantumProgram', symbolTable.lookup('class'), methods);
     }
 
 }

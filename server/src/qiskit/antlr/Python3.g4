@@ -275,6 +275,7 @@ expr_stmt
  : rightside=testlist_star_expr ( augassign ( yield_expr | testlist)
                       | ( '=' { this.assignments.newAssignmentOn($rightside.text); } ( yield_expr| testlist_star_expr ) )* 
                       {
+                        console.log(`Assignments table > ${JSON.stringify(this.assignments)}`);
                         let lastAssignment = this.assignments.popLastAssignment();
                         if (lastAssignment != null) {
                           if (lastAssignment.symbol === $rightside.text) {
@@ -625,7 +626,7 @@ testlist_comp
 trailer
  : '(' arglist? ')'
  | '[' subscriptlist ']'
- | '.' NAME
+ | '.' NAME { this.assignments.addLastAssignmentWithoutType($NAME.text); }
  ;
 
 /// subscriptlist: subscript (',' subscript)* [',']
