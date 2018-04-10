@@ -54,12 +54,14 @@ export class SymbolTable {
     }
 
     print() {
+        console.log('Printing symbol table >>>>>>>>')
         this.currentScope.print();
+        console.log('<<<<<<<<<<<<<<<<');
     }
 
 }
 
-export class Symbol {
+export class Symbol implements Type {
 
     name: string;
 
@@ -68,6 +70,10 @@ export class Symbol {
     constructor(name: string, type: Type) {
         this.name = name;
         this.type = type;
+    }
+
+    getName(): string {
+        return this.name;
     }
 
 }
@@ -80,6 +86,10 @@ export class BuiltInTypeSymbol extends Symbol implements Type {
 
     getName(): string {
         return this.name;
+    }
+
+    toString(): string {
+        return `{ name: ${this.getName()} }`;
     }
 
 }
@@ -130,11 +140,18 @@ abstract class Scope {
     }
 
     print(): void {
-        console.log(this.dictionary);
+        console.log(`${this.getScopeName()} => `);
+        this.printEntries();
         
         if (this.getEnclosingScope()) {
             this.getEnclosingScope().print();
         }
+    }
+
+    private printEntries() {
+        this.dictionary.forEach((entry) => {
+            console.log(`\t${entry.toString()}`);
+        });
     }
 
 }

@@ -22,30 +22,28 @@ export class QiskitSymbolTable {
     public static build(): SymbolTable {
         let globalScope = new GlobalScope();
         let symbolTable = new SymbolTable(globalScope);
+        
+        let classType = new BuiltInTypeSymbol('class');
 
-        symbolTable.define(new ClassSymbol('QuantumRegister', []));
-        symbolTable.define(new ClassSymbol('ClassicalRegister', []));
-        symbolTable.define(new ClassSymbol('QuantumCircuit', []));
-        symbolTable.define(this.theQuantumProgramClass(symbolTable));
+        symbolTable.define(classType);
+        symbolTable.define(new ClassSymbol('QuantumRegister', classType, []));
+        symbolTable.define(new ClassSymbol('ClassicalRegister', classType, []));
+        symbolTable.define(new ClassSymbol('QuantumCircuit', classType, []));
+        symbolTable.define(new ClassSymbol('QuantumProgram', classType, [new MethodSymbol('create_quatum_register', symbolTable.lookup('QuantumRegister').type), new MethodSymbol('create_classical_register', symbolTable.lookup('ClassicalRegister').type)]));
         
         return symbolTable;
-    }
-
-    private static theQuantumProgramClass(symbolTable: SymbolTable): Symbol {
-        let methods = [
-            new MethodSymbol('create_quatum_register', symbolTable.lookup('QuantumRegister').type),
-            new MethodSymbol('create_classical_register', symbolTable.lookup('ClassicalRegister').type)
-        ];
-
-        return new ClassSymbol('QuantumProgram', methods);
     }
 
 }
 
 export class ClassSymbol extends Symbol {
 
-    constructor(name: string, private methods: MethodSymbol[]) {
-        super(name, new ClassType());
+    constructor(name: string, type: Type, private methods: MethodSymbol[]) {
+        super(name, type);
+    }
+
+    toString() {
+        return `{ name: ${this.name}, type: ${this.type.getName()}, methods: [${this.methods}] }`;
     }
 
 }
@@ -56,6 +54,10 @@ export class MethodSymbol extends Symbol {
         super(name, type);
     }
 
+    toString() {
+        return `{ name: ${this.name}, type: ${this.type.getName()} }`;
+    }
+
 }
 
 export class VariableSymbol extends Symbol {
@@ -64,12 +66,8 @@ export class VariableSymbol extends Symbol {
         super(name, type);
     }
 
-}
-
-export class ClassType implements Type {
-
-    getName(): string {
-        return 'Class';
+    toString() {
+        return `{ name: ${this.name}, type: ${this.type.getName()} }`;
     }
 
 }

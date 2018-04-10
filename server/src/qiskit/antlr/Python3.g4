@@ -279,7 +279,7 @@ expr_stmt
                         if (lastAssignment != null) {
                           if (lastAssignment.symbol === $rightside.text) {
                             let parentSymbol = this.symbolTable.lookup(lastAssignment.type);
-                            let variable = new VariableSymbol($rightside.text, parentSymbol.type);
+                            let variable = new VariableSymbol($rightside.text, parentSymbol);
                             this.symbolTable.define(variable);
                           }
                         }

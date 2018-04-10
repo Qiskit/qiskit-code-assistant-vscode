@@ -1636,7 +1636,7 @@ export class Python3Parser extends Parser {
 				                        if (lastAssignment != null) {
 				                          if (lastAssignment.symbol === (_localctx._rightside!=null?this._input.getTextFromRange(_localctx._rightside._start,_localctx._rightside._stop):undefined)) {
 				                            let parentSymbol = this.symbolTable.lookup(lastAssignment.type);
-				                            let variable = new VariableSymbol((_localctx._rightside!=null?this._input.getTextFromRange(_localctx._rightside._start,_localctx._rightside._stop):undefined), parentSymbol.type);
+				                            let variable = new VariableSymbol((_localctx._rightside!=null?this._input.getTextFromRange(_localctx._rightside._start,_localctx._rightside._stop):undefined), parentSymbol);
 				                            this.symbolTable.define(variable);
 				                          }
 				                        }
