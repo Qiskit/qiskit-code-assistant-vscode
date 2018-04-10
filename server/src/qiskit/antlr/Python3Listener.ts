@@ -1,6 +1,10 @@
 // Generated from Python3.g4 by ANTLR 4.6-SNAPSHOT
 
 
+import { QiskitSymbolTable, VariableSymbol } from '../compiler/qiskitSymbolTable';
+import { AssignmentsStack } from '../compiler/assignmentsStack';
+
+
 import { ParseTreeListener } from 'antlr4ts/tree/ParseTreeListener';
 
 import { Single_inputContext } from './Python3Parser';

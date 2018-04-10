@@ -53,6 +53,10 @@ export class SymbolTable {
         return this.currentScope.definedSymbols().map((symbol) => symbol.name);
     }
 
+    print() {
+        this.currentScope.print();
+    }
+
 }
 
 export class Symbol {
@@ -124,6 +128,15 @@ abstract class Scope {
 
         return symbols;
     }
+
+    print(): void {
+        console.log(this.dictionary);
+        
+        if (this.getEnclosingScope()) {
+            this.getEnclosingScope().print();
+        }
+    }
+
 }
 
 export class GlobalScope extends Scope {

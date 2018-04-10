@@ -28,7 +28,9 @@ export class QiskitParser implements Parser {
         let parser = this.buildQiskitParser(input, errorListener);
 
         let tree = parser.file_input();
-        
+
+        parser.symbolTable.print();
+
         return {
             ast: tree,
             errors: errorListener.errors

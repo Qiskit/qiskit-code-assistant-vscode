@@ -151,6 +151,20 @@ tokens { INDENT, DEDENT }
   }
 }
 
+@parser::header {
+import { QiskitSymbolTable, VariableSymbol } from '../compiler/qiskitSymbolTable';
+import { AssignmentsStack } from '../compiler/assignmentsStack';
+}
+
+@parser::members {
+public symbolTable = QiskitSymbolTable.build();
+private assignments = new AssignmentsStack();
+
+declaredVariables(): string[] {
+    return this.symbolTable.definedSymbols();
+}
+}
+
 /*
  * parser rules
  */
@@ -258,8 +272,18 @@ small_stmt
 /// expr_stmt: testlist_star_expr (augassign (yield_expr|testlist) |
 ///                      ('=' (yield_expr|testlist_star_expr))*)
 expr_stmt
- : testlist_star_expr ( augassign ( yield_expr | testlist)
-                      | ( '=' ( yield_expr| testlist_star_expr ) )*
+ : rightside=testlist_star_expr ( augassign ( yield_expr | testlist)
+                      | ( '=' { this.assignments.newAssignmentOn($rightside.text); } ( yield_expr| testlist_star_expr ) )* 
+                      {
+                        let lastAssignment = this.assignments.popLastAssignment();
+                        if (lastAssignment != null) {
+                          if (lastAssignment.symbol === $rightside.text) {
+                            let parentSymbol = this.symbolTable.lookup(lastAssignment.type);
+                            let variable = new VariableSymbol($rightside.text, parentSymbol.type);
+                            this.symbolTable.define(variable);
+                          }
+                        }
+                      }
                       )
  ;
 
@@ -581,7 +605,7 @@ atom
  : '(' ( yield_expr | testlist_comp )? ')'
  | '[' testlist_comp? ']'
  | '{' dictorsetmaker? '}'
- | NAME
+ | NAME { this.assignments.addLastAssignmentWithoutType($NAME.text); }
  | number
  | str+
  | '...'
