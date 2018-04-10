@@ -1,8 +1,9 @@
 // Generated from Python3.g4 by ANTLR 4.6-SNAPSHOT
 
 
-import { QiskitSymbolTable, VariableSymbol } from '../compiler/qiskitSymbolTable';
-import { AssignmentsStack } from '../compiler/assignmentsStack';
+import { QiskitSymbolTable, VariableSymbol, ClassSymbol } from '../compiler/qiskitSymbolTable';
+import { Symbol } from '../../tools/symbolTable';
+import { AssignmentsStack, Assignment } from '../compiler/assignmentsStack';
 
 
 import { ParseTreeListener } from 'antlr4ts/tree/ParseTreeListener';

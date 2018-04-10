@@ -36,7 +36,7 @@ export class QiskitSymbolTable {
 
     private static createQuantumProgramSymbol(symbolTable: SymbolTable): ClassSymbol {
         let methods = [
-            new MethodSymbol('create_quatum_register', symbolTable.lookup('QuantumRegister')), 
+            new MethodSymbol('create_quantum_register', symbolTable.lookup('QuantumRegister')), 
             new MethodSymbol('create_classical_register', symbolTable.lookup('ClassicalRegister'))
         ];
 
@@ -49,6 +49,10 @@ export class ClassSymbol extends Symbol {
 
     constructor(name: string, type: Type, private methods: MethodSymbol[]) {
         super(name, type);
+    }
+
+    getMethods(): MethodSymbol[] {
+        return this.methods;
     }
 
     toString() {

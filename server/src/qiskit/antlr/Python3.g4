@@ -152,8 +152,9 @@ tokens { INDENT, DEDENT }
 }
 
 @parser::header {
-import { QiskitSymbolTable, VariableSymbol } from '../compiler/qiskitSymbolTable';
-import { AssignmentsStack } from '../compiler/assignmentsStack';
+import { QiskitSymbolTable, VariableSymbol, ClassSymbol } from '../compiler/qiskitSymbolTable';
+import { Symbol } from '../../tools/symbolTable';
+import { AssignmentsStack, Assignment } from '../compiler/assignmentsStack';
 }
 
 @parser::members {
@@ -162,6 +163,48 @@ private assignments = new AssignmentsStack();
 
 declaredVariables(): string[] {
     return this.symbolTable.definedSymbols();
+}
+
+applyAssignment(symbol: string): void {
+  let lastAssignment = this.assignments.popLastAssignment();
+  if (this.isAssignmentAppliable(lastAssignment, symbol)) {
+    let parentSymbol = this.findParentSymbolWith(lastAssignment);
+    let variable = new VariableSymbol(symbol, parentSymbol);
+    this.symbolTable.define(variable);
+  }
+}
+
+findParentSymbolWith(assignment: Assignment): Symbol {
+  if (assignment.hasTrailingMethods()) {
+    return this.findParentSymbolTraversingMethods(assignment);
+  } else {
+    return this.symbolTable.lookup(assignment.getVariable());
+  }
+}
+
+// TODO could be the same method if trailingMethods is an empty array
+findParentSymbolTraversingMethods(assignment: Assignment): Symbol {
+  let currentSymbol = this.symbolTable.lookup(assignment.getVariable());
+  assignment.getTrailingMethods().forEach((method) => {
+    let classType = currentSymbol.type as ClassSymbol;
+    let compatibleMethods = classType.getMethods().filter((classMethod) => {
+      return classMethod.getName() === method;
+    });
+    currentSymbol = this.symbolTable.lookup(compatibleMethods[0].type.getName());
+  });
+
+  return currentSymbol;
+}
+
+isAssignmentAppliable(assignment: Assignment, symbol: string): boolean {
+  if (assignment === null) {
+    return false;
+  }
+  if (assignment.getSymbol() !== symbol) {
+    return false;
+  }
+
+  return true;
 }
 }
 
@@ -272,20 +315,8 @@ small_stmt
 /// expr_stmt: testlist_star_expr (augassign (yield_expr|testlist) |
 ///                      ('=' (yield_expr|testlist_star_expr))*)
 expr_stmt
- : rightside=testlist_star_expr ( augassign ( yield_expr | testlist)
-                      | ( '=' { this.assignments.newAssignmentOn($rightside.text); } ( yield_expr| testlist_star_expr ) )* 
-                      {
-                        console.log(`Assignments table > ${JSON.stringify(this.assignments)}`);
-                        let lastAssignment = this.assignments.popLastAssignment();
-                        if (lastAssignment != null) {
-                          if (lastAssignment.symbol === $rightside.text) {
-                            let parentSymbol = this.symbolTable.lookup(lastAssignment.type);
-                            let variable = new VariableSymbol($rightside.text, parentSymbol);
-                            this.symbolTable.define(variable);
-                          }
-                        }
-                      }
-                      )
+ : symbol=testlist_star_expr ( augassign ( yield_expr | testlist)
+                      | ( '=' { this.assignments.newAssignmentOn($symbol.text); } ( yield_expr| testlist_star_expr ) )* { this.applyAssignment($symbol.text); } )
  ;
 
 /// testlist_star_expr: (test|star_expr) (',' (test|star_expr))* [',']
@@ -606,7 +637,7 @@ atom
  : '(' ( yield_expr | testlist_comp )? ')'
  | '[' testlist_comp? ']'
  | '{' dictorsetmaker? '}'
- | NAME { this.assignments.addLastAssignmentWithoutType($NAME.text); }
+ | NAME { this.assignments.setVariable($NAME.text); }
  | number
  | str+
  | '...'
@@ -626,7 +657,7 @@ testlist_comp
 trailer
  : '(' arglist? ')'
  | '[' subscriptlist ']'
- | '.' NAME { this.assignments.addLastAssignmentWithoutType($NAME.text); }
+ | '.' NAME { this.assignments.addTrailingMethod($NAME.text); }
  ;
 
 /// subscriptlist: subscript (',' subscript)* [',']

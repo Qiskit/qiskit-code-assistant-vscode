@@ -5,30 +5,16 @@ export class AssignmentsStack {
     private assignments: Assignment[] = [];
 
     newAssignmentOn(symbol: string): void {
-        let assigment = new Assignment();
-        assigment.symbol = symbol;
-
-        this.assignments.push(assigment);
-    }
-
-    // DEPRECATED
-    addLastAssignmentWithoutType(type: string): void {
-        let lastAssignment = this.assignments.pop();
-        if (lastAssignment && lastAssignment.type === null) {
-            lastAssignment.type = type;
-        }
-        this.assignments.push(lastAssignment);
+        this.assignments.push(new Assignment(symbol));
     }
 
     popLastAssignment(): Assignment {
         return this.assignments.pop() || null;
     }
 
-    // New methods -----------------------------------------------
-
     setVariable(variable: string): void {
         this.applyOnLastAssignment((lastAssignment: Assignment) => {
-            lastAssignment.variable = variable;
+            lastAssignment.setVariable(variable);
         });
     }
 
@@ -50,14 +36,15 @@ export class AssignmentsStack {
 
 export class Assignment {
 
-    symbol: string = null;
+    private variable: string = null;
 
-    variable: string = null;
+    private trailingMethods: string[] = [];
 
-    trailingMethods: string[] = [];
+    constructor(private symbol: string) {}
 
-    // DEPRECATED
-    type: string = null;
+    setVariable(variable: string): void {
+        this.variable = variable;
+    }
 
     addTrailingMethod(method: string): void {
         this.trailingMethods.push(method);

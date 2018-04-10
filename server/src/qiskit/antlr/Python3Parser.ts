@@ -1,8 +1,9 @@
 // Generated from Python3.g4 by ANTLR 4.6-SNAPSHOT
 
 
-import { QiskitSymbolTable, VariableSymbol } from '../compiler/qiskitSymbolTable';
-import { AssignmentsStack } from '../compiler/assignmentsStack';
+import { QiskitSymbolTable, VariableSymbol, ClassSymbol } from '../compiler/qiskitSymbolTable';
+import { Symbol } from '../../tools/symbolTable';
+import { AssignmentsStack, Assignment } from '../compiler/assignmentsStack';
 
 
 import { ATN } from 'antlr4ts/atn/ATN';
@@ -280,6 +281,48 @@ export class Python3Parser extends Parser {
 
 	declaredVariables(): string[] {
 	    return this.symbolTable.definedSymbols();
+	}
+
+	applyAssignment(symbol: string): void {
+	  let lastAssignment = this.assignments.popLastAssignment();
+	  if (this.isAssignmentAppliable(lastAssignment, symbol)) {
+	    let parentSymbol = this.findParentSymbolWith(lastAssignment);
+	    let variable = new VariableSymbol(symbol, parentSymbol);
+	    this.symbolTable.define(variable);
+	  }
+	}
+
+	findParentSymbolWith(assignment: Assignment): Symbol {
+	  if (assignment.hasTrailingMethods()) {
+	    return this.findParentSymbolTraversingMethods(assignment);
+	  } else {
+	    return this.symbolTable.lookup(assignment.getVariable());
+	  }
+	}
+
+	// TODO could be the same method if trailingMethods is an empty array
+	findParentSymbolTraversingMethods(assignment: Assignment): Symbol {
+	  let currentSymbol = this.symbolTable.lookup(assignment.getVariable());
+	  assignment.getTrailingMethods().forEach((method) => {
+	    let classType = currentSymbol.type as ClassSymbol;
+	    let compatibleMethods = classType.getMethods().filter((classMethod) => {
+	      return classMethod.getName() === method;
+	    });
+	    currentSymbol = this.symbolTable.lookup(compatibleMethods[0].type.getName());
+	  });
+
+	  return currentSymbol;
+	}
+
+	isAssignmentAppliable(assignment: Assignment, symbol: string): boolean {
+	  if (assignment === null) {
+	    return false;
+	  }
+	  if (assignment.getSymbol() !== symbol) {
+	    return false;
+	  }
+
+	  return true;
 	}
 
 	constructor(input: TokenStream) {
@@ -1512,7 +1555,7 @@ export class Python3Parser extends Parser {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			this.state = 398;
-			_localctx._rightside = this.testlist_star_expr();
+			_localctx._symbol = this.testlist_star_expr();
 			this.state = 416;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
@@ -1585,7 +1628,7 @@ export class Python3Parser extends Parser {
 					{
 					this.state = 404;
 					this.match(Python3Parser.ASSIGN);
-					 this.assignments.newAssignmentOn((_localctx._rightside!=null?this._input.getTextFromRange(_localctx._rightside._start,_localctx._rightside._stop):undefined)); 
+					 this.assignments.newAssignmentOn((_localctx._symbol!=null?this._input.getTextFromRange(_localctx._symbol._start,_localctx._symbol._stop):undefined)); 
 					this.state = 408;
 					this._errHandler.sync(this);
 					switch (this._input.LA(1)) {
@@ -1631,17 +1674,7 @@ export class Python3Parser extends Parser {
 					this._errHandler.sync(this);
 					_la = this._input.LA(1);
 				}
-
-				                        console.log(`Assignments table > ${JSON.stringify(this.assignments)}`);
-				                        let lastAssignment = this.assignments.popLastAssignment();
-				                        if (lastAssignment != null) {
-				                          if (lastAssignment.symbol === (_localctx._rightside!=null?this._input.getTextFromRange(_localctx._rightside._start,_localctx._rightside._stop):undefined)) {
-				                            let parentSymbol = this.symbolTable.lookup(lastAssignment.type);
-				                            let variable = new VariableSymbol((_localctx._rightside!=null?this._input.getTextFromRange(_localctx._rightside._start,_localctx._rightside._stop):undefined), parentSymbol);
-				                            this.symbolTable.define(variable);
-				                          }
-				                        }
-				                      
+				 this.applyAssignment((_localctx._symbol!=null?this._input.getTextFromRange(_localctx._symbol._start,_localctx._symbol._stop):undefined)); 
 				}
 				break;
 			default:
@@ -4259,7 +4292,7 @@ export class Python3Parser extends Parser {
 				{
 				this.state = 846;
 				_localctx._NAME = this.match(Python3Parser.NAME);
-				 this.assignments.addLastAssignmentWithoutType((_localctx._NAME!=null?_localctx._NAME.text:undefined)); 
+				 this.assignments.setVariable((_localctx._NAME!=null?_localctx._NAME.text:undefined)); 
 				}
 				break;
 			case Python3Parser.DECIMAL_INTEGER:
@@ -4459,7 +4492,7 @@ export class Python3Parser extends Parser {
 				this.match(Python3Parser.DOT);
 				this.state = 884;
 				_localctx._NAME = this.match(Python3Parser.NAME);
-				 this.assignments.addLastAssignmentWithoutType((_localctx._NAME!=null?_localctx._NAME.text:undefined)); 
+				 this.assignments.addTrailingMethod((_localctx._NAME!=null?_localctx._NAME.text:undefined)); 
 				}
 				break;
 			default:
@@ -6522,7 +6555,7 @@ export class Small_stmtContext extends ParserRuleContext {
 
 
 export class Expr_stmtContext extends ParserRuleContext {
-	public _rightside: Testlist_star_exprContext;
+	public _symbol: Testlist_star_exprContext;
 	public testlist_star_expr(): Testlist_star_exprContext[];
 	public testlist_star_expr(i: number): Testlist_star_exprContext;
 	public testlist_star_expr(i?: number): Testlist_star_exprContext | Testlist_star_exprContext[] {
