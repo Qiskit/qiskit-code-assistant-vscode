@@ -38,10 +38,14 @@ export class PackageMgr {
 
     check() : Q.Promise {
         let packages: Q.Promise<IPackage>[] = [];
-        PackageMgr._packages.forEach(pkg => {
-            packages.push(pkg.checkVersion());
-        });
-        return Q.resolve(packages);        
+        try{
+            PackageMgr._packages.forEach(pkg => {
+                packages.push(pkg.checkVersion());
+            });
+            return Q.resolve(packages);   
+        } catch (err){
+            return Q.reject(err);
+        }
     }
 
 }

@@ -48,7 +48,9 @@ export class PipPackage implements IPackage {
             this.Info = installedPkgInfo;
             // Let's check for new versions
             return this.pypi.getPackageInfo(this.Info.Name)
-        }).then((pkgInfo: IPackageInfo) => {
+        })
+        .then((pkgInfo: IPackageInfo) => {
+            // If there is a new version, offer to the user the update.
             if(pkgInfo.Version.isGreater(this.Info.Version)){
                 console.log("New version",pkgInfo.Version.toString());
                 return vscode.window.showInputBox({
@@ -58,14 +60,15 @@ export class PipPackage implements IPackage {
                 });
             }
             return null;
-        // There's a new version...
+        // There's a new version... If user want to update, do that!
         }).then((selection: string|undefined) => {
             //Getting the selection from last showInputBox
             if(selection == 'Yes'){
                 return this.update(packageName);
             }
-            return Q.all();
-        }).catch((err) => {
+            return null;
+        }).then(() => {
+            // Check if the software is installed, if not offer the install
             this.pip.list()
                 .then(result => {
                     //console.log("pip list",result); 
@@ -92,10 +95,11 @@ export class PipPackage implements IPackage {
                     console.log("error pip list",err);
                     return Q.reject(err);   
                 });
-            if (err){
-                return Q.reject(err);  
-            }
-            return Q.resolve();  
+        })
+        .catch((err) => {
+            // If error in packages, reject the promise.
+            return Q.reject(err);  
+            
         });
     }
 
@@ -104,7 +108,7 @@ export class PipPackage implements IPackage {
         return this.pip.update(packageName)
             .then((stdout) => {
                 console.log(stdout);
-                return Q.resolve();
+                //return Q.resolve();
             }).then(result => {
                 console.log(result);
                 vscode.window.showInformationMessage(`${packageName} updated! 🎉🎉🎉`);

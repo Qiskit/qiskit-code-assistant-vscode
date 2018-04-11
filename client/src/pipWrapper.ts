@@ -58,6 +58,8 @@ export class PipWrapper implements IPackageInfo {
                                'pip show' command output!`);
             }
             return Q.resolve(pkg);
+        }).catch(err => {
+            return Q.reject(err);
         });
     }
 
@@ -101,6 +103,8 @@ export class PipWrapper implements IPackageInfo {
         return (new CommandExecutor).exec(PipWrapper.PIP_COMMAND,[command].concat(args))
             .then((stdout) => {
                 return Q.resolve(parser(stdout));
+            }).catch(err => {
+                return Q.reject(err);
             });
     }
 }
