@@ -168,25 +168,21 @@ declaredVariables(): string[] {
 
 applyAssignment(symbol: string, start: Token, stop: Token): void {
   let lastAssignment = this.assignments.popLastAssignment();
+
+  console.log(`Assignment to apply > ${lastAssignment}`);
+
   if (this.isAssignmentAppliable(lastAssignment, symbol)) {
     let parentSymbol = this.findParentSymbolWith(lastAssignment, start, stop);
     if (parentSymbol !== null) {
+      this.checkArguments(lastAssignment, parentSymbol);
+
       let variable = new VariableSymbol(symbol, parentSymbol);
       this.symbolTable.define(variable);
     }
   }
 }
 
-findParentSymbolWith(assignment: Assignment, start: Token, stop: Token): Symbol {
-  // if (assignment.hasTrailingMethods()) {
-    return this.findParentSymbolTraversingMethods(assignment, start, stop);
-  // } else {
-  //   return this.symbolTable.lookup(assignment.getVariable());
-  // }
-}
-
-// TODO could be the same method if trailingMethods is an empty array
-findParentSymbolTraversingMethods(assignment: Assignment, start: Token, _stop: Token): Symbol {
+findParentSymbolWith(assignment: Assignment, start: Token, _stop: Token): Symbol {
   let currentSymbol = this.symbolTable.lookup(assignment.getVariable());
   if (currentSymbol === null) {
     return null;
@@ -203,6 +199,10 @@ findParentSymbolTraversingMethods(assignment: Assignment, start: Token, _stop: T
   });
 
   return currentSymbol;
+}
+
+checkArguments(_lastAssignment: Assignment, _symbol: Symbol): void {
+  return;
 }
 
 isAssignmentAppliable(assignment: Assignment, symbol: string): boolean {
@@ -655,7 +655,7 @@ atom
  }
  | number { 
    if (this.argumentsScope) {
-    this.assignments.addArgument($number.text);
+    this.assignments.addArgument(+$number.text);
    } else {
     this.assignments.setVariable($number.text); 
    }

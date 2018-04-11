@@ -82,10 +82,11 @@ export class QiskitSymbolTable {
 
 export class ClassSymbol extends Symbol {
 
-    constructor(name: string, type: Type, private methods: MethodSymbol[]) {
+    constructor(name: string, type: Type, public methods: MethodSymbol[]) {
         super(name, type);
     }
 
+    // DEPRECATED
     getMethods(): MethodSymbol[] {
         return this.methods;
     }
@@ -103,6 +104,10 @@ export class MethodSymbol extends Symbol {
     constructor(name: string, type: Type, requiredArguments: ArgumentSymbol[] = []) {
         super(name, type);
         this.arguments = requiredArguments;
+    }
+
+    getArguments(): ArgumentSymbol[] {
+        return this.arguments;
     }
 
     toString() {

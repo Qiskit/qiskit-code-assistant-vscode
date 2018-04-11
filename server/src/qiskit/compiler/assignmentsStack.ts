@@ -78,6 +78,48 @@ export class Assignment {
         return this.trailingMethods.length > 0;
     }
 
+    toString(): string {
+        return `{ variable: ${this.variable}, trailingMethods: ${this.trailingMethods} }`;
+    }
+
+}
+
+export class MethodCall {
+
+    private trailingMethods: Method[] = [];
+
+    constructor(private variable: string) {}
+
+    setVariable(variable: string): void {
+        this.variable = variable;
+    }
+
+    addTrailingMethod(method: string): void {
+        this.trailingMethods.push(new Method(method));
+    }
+
+    addArgument(argument: any): void {
+        let lastMethod = this.trailingMethods.pop();
+        lastMethod.addArgument(argument);
+        this.trailingMethods.push(lastMethod);
+    }
+
+    getVariable(): string {
+        return this.variable;
+    }
+
+    getTrailingMethods(): Method[] {
+        return this.trailingMethods;
+    }
+
+    hasTrailingMethods(): boolean {
+        return this.trailingMethods.length > 0;
+    }
+
+    toString(): string {
+        return `{ variable: ${this.variable}, trailingMethods: ${this.trailingMethods} }`;
+    }
+
 }
 
 class Method {
@@ -96,6 +138,14 @@ class Method {
 
     getArguments(): any[] {
         return this.arguments;
+    }
+
+    hasArguments(): boolean {
+        return this.arguments.length > 0;
+    }
+
+    toString(): string {
+        return `{ name: ${this.name}, arguments: [ ${this.arguments} ] }`;
     }
 
 }
