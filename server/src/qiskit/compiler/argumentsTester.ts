@@ -48,6 +48,10 @@ export class ArgumentsTester {
 
     private checkNumberOfArguments(method: Method, classSymbol: ClassSymbol): ArgumentError[] {
         let searchedMethod = classSymbol.methods.find((m) => m.getName() === method.name);
+        if (typeof searchedMethod === 'undefined') {
+            return [];
+        }
+
         if (method.arguments.length !== searchedMethod.arguments.length) {
             let expectedArguments = searchedMethod.arguments.length
             let receivedArguments = method.arguments.length;
