@@ -14,19 +14,19 @@ export class AssignmentsStack {
 
     setVariable(variable: string): void {
         this.applyOnLastAssignment((lastAssignment: Assignment) => {
-            lastAssignment.setVariable(variable);
+            lastAssignment.call = new MethodCall(variable);
         });
     }
 
     addTrailingMethod(method: string): void {
         this.applyOnLastAssignment((lastAssignment: Assignment) => {
-            lastAssignment.addTrailingMethod(method);
+            lastAssignment.call.addTrailingMethod(method);
         });
     }
 
     addArgument(argument: any): void {
         this.applyOnLastAssignment((lastAssignment: Assignment) => {
-            lastAssignment.addArgument(argument);
+            lastAssignment.call.addArgument(argument);
         });
     }
 
@@ -42,53 +42,21 @@ export class AssignmentsStack {
 
 export class Assignment {
 
-    private variable: string = null;
+    call: MethodCall = new MethodCall('');
 
-    private trailingMethods: Method[] = [];
-
-    constructor(private symbol: string) {}
-
-    setVariable(variable: string): void {
-        this.variable = variable;
-    }
-
-    addTrailingMethod(method: string): void {
-        this.trailingMethods.push(new Method(method));
-    }
-
-    addArgument(argument: any): void {
-        let lastMethod = this.trailingMethods.pop();
-        lastMethod.addArgument(argument);
-        this.trailingMethods.push(lastMethod);
-    }
-
-    getSymbol(): string {
-        return this.symbol;
-    }
-
-    getVariable(): string {
-        return this.variable;
-    }
-
-    getTrailingMethods(): Method[] {
-        return this.trailingMethods;
-    }
-
-    hasTrailingMethods(): boolean {
-        return this.trailingMethods.length > 0;
-    }
+    constructor(public symbol: string) {}
 
     toString(): string {
-        return `{ variable: ${this.variable}, trailingMethods: ${this.trailingMethods} }`;
+        return `{ methodCall: ${this.call} }`;
     }
 
 }
 
 export class MethodCall {
 
-    private trailingMethods: Method[] = [];
+    trailingMethods: Method[] = [];
 
-    constructor(private variable: string) {}
+    constructor(public variable: string) {}
 
     setVariable(variable: string): void {
         this.variable = variable;

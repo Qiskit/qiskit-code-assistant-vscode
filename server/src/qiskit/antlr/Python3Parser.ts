@@ -3,7 +3,8 @@
 
 import { QiskitSymbolTable, VariableSymbol, ClassSymbol } from '../compiler/qiskitSymbolTable';
 import { Symbol } from '../../tools/symbolTable';
-import { AssignmentsStack, Assignment } from '../compiler/assignmentsStack';
+import { AssignmentsStack, Assignment, MethodCall } from '../compiler/assignmentsStack';
+import { ArgumentsTester } from '../compiler/argumentsTester';
 
 
 import { ATN } from 'antlr4ts/atn/ATN';
@@ -288,6 +289,8 @@ export class Python3Parser extends Parser {
 	  let lastAssignment = this.assignments.popLastAssignment();
 
 	  if (this.isAssignmentAppliable(lastAssignment, symbol)) {
+	    this.verifyMethodCall(lastAssignment.call, start, stop);
+
 	    let parentSymbol = this.findParentSymbolWith(lastAssignment, start, stop);
 	    if (parentSymbol !== null) {
 	      this.checkArguments(lastAssignment, parentSymbol);
@@ -298,12 +301,20 @@ export class Python3Parser extends Parser {
 	  }
 	}
 
+	private verifyMethodCall(call: MethodCall, start: Token, _stop: Token): void {
+	  let argumentsTester = new ArgumentsTester(this.symbolTable);
+	  let results = argumentsTester.check(call);
+	  results.forEach((result) => {
+	    this.notifyErrorListeners(result.message, start, null);
+	  });
+	}
+
 	findParentSymbolWith(assignment: Assignment, start: Token, _stop: Token): Symbol {
-	  let currentSymbol = this.symbolTable.lookup(assignment.getVariable());
+	  let currentSymbol = this.symbolTable.lookup(assignment.call.variable);
 	  if (currentSymbol === null) {
 	    return null;
 	  }
-	  assignment.getTrailingMethods().forEach((method) => {
+	  assignment.call.trailingMethods.forEach((method) => {
 	    let classType = currentSymbol.type as ClassSymbol;
 	    let compatibleMethod = classType.getMethods().find((m) => m.getName() === method.name);
 	    if (compatibleMethod) {
@@ -325,7 +336,7 @@ export class Python3Parser extends Parser {
 	  if (assignment === null) {
 	    return false;
 	  }
-	  if (assignment.getSymbol() !== symbol) {
+	  if (assignment.symbol !== symbol) {
 	    return false;
 	  }
 
