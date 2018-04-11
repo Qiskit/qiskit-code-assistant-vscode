@@ -287,8 +287,6 @@ export class Python3Parser extends Parser {
 	applyAssignment(symbol: string, start: Token, stop: Token): void {
 	  let lastAssignment = this.assignments.popLastAssignment();
 
-	  console.log(`Assignment to apply > ${lastAssignment}`);
-
 	  if (this.isAssignmentAppliable(lastAssignment, symbol)) {
 	    let parentSymbol = this.findParentSymbolWith(lastAssignment, start, stop);
 	    if (parentSymbol !== null) {
@@ -307,11 +305,11 @@ export class Python3Parser extends Parser {
 	  }
 	  assignment.getTrailingMethods().forEach((method) => {
 	    let classType = currentSymbol.type as ClassSymbol;
-	    let compatibleMethod = classType.getMethods().find((m) => m.getName() === method.getName());
+	    let compatibleMethod = classType.getMethods().find((m) => m.getName() === method.name);
 	    if (compatibleMethod) {
 	      currentSymbol = this.symbolTable.lookup(compatibleMethod.type.getName());
 	    } else {
-	      let message = `Method ${method.getName()} not available at current scope`
+	      let message = `Method ${method.name} not available at current scope`
 	      this.notifyErrorListeners(message, start, null);
 	    }
 	  });

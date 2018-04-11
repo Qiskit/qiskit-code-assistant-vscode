@@ -128,16 +128,8 @@ export class Method {
 
     constructor(public name: string) {}
 
-    getName(): string {
-        return this.name;
-    }
-
     addArgument(argument: any): void {
         this.arguments.push(argument);
-    }
-
-    getArguments(): any[] {
-        return this.arguments;
     }
 
     hasArguments(): boolean {

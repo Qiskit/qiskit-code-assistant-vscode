@@ -155,6 +155,7 @@ tokens { INDENT, DEDENT }
 import { QiskitSymbolTable, VariableSymbol, ClassSymbol } from '../compiler/qiskitSymbolTable';
 import { Symbol } from '../../tools/symbolTable';
 import { AssignmentsStack, Assignment } from '../compiler/assignmentsStack';
+import { ArgumentsTester } from '../compiler/argumentsTester';
 }
 
 @parser::members {
@@ -168,8 +169,6 @@ declaredVariables(): string[] {
 
 applyAssignment(symbol: string, start: Token, stop: Token): void {
   let lastAssignment = this.assignments.popLastAssignment();
-
-  console.log(`Assignment to apply > ${lastAssignment}`);
 
   if (this.isAssignmentAppliable(lastAssignment, symbol)) {
     let parentSymbol = this.findParentSymbolWith(lastAssignment, start, stop);
@@ -189,11 +188,11 @@ findParentSymbolWith(assignment: Assignment, start: Token, _stop: Token): Symbol
   }
   assignment.getTrailingMethods().forEach((method) => {
     let classType = currentSymbol.type as ClassSymbol;
-    let compatibleMethod = classType.getMethods().find((m) => m.getName() === method.getName());
+    let compatibleMethod = classType.getMethods().find((m) => m.getName() === method.name);
     if (compatibleMethod) {
       currentSymbol = this.symbolTable.lookup(compatibleMethod.type.getName());
     } else {
-      let message = `Method ${method.getName()} not available at current scope`
+      let message = `Method ${method.name} not available at current scope`
       this.notifyErrorListeners(message, start, null);
     }
   });

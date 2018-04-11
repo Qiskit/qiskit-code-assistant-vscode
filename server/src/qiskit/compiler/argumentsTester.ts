@@ -9,43 +9,50 @@ export class ArgumentsTester {
     constructor(private symbolTable: SymbolTable) {}
 
     check(call: MethodCall): ArgumentError[] {
-
         let calledSymbol = this.symbolTable.lookup(call.getVariable());
-
         if (calledSymbol.type instanceof ClassSymbol) {
-
-            let errors: ArgumentError[] = [];
-            let classSymbol = calledSymbol.type as ClassSymbol;
-
-            call.getTrailingMethods().forEach((method) => {
-                errors.push(... this.checkNumberOfArguments(method, classSymbol));
-
-                if (method.hasArguments()) {
-                    method.getArguments().forEach((argument, index) => {
-                        let searchedMethod = classSymbol.methods.find((m) => m.getName() === method.getName());
-                        if (searchedMethod) {
-                            let requiredArgument = searchedMethod.getArguments()[index];
-                            if (!requiredArgument.isSameType(argument)) {
-                                let errorMessage = `Expecting argument of type ${requiredArgument.type.getName()}, but received ${typeof argument}`;
-                                errors.push(new ArgumentError(errorMessage));
-                            }
-                        }
-                    });
-                }
-            });
-
-            console.log(`Errors detected > ${errors}`);
-
-            return errors;
+            return this.traverseMethodsCheckingCalls(call, calledSymbol.type);
         }
-
         return [];
     }
 
+    private traverseMethodsCheckingCalls(call: MethodCall, classSymbol: ClassSymbol): ArgumentError[] {
+        let errors: ArgumentError[] = [];
+
+        call.getTrailingMethods().forEach((method) => {
+            errors.push(... this.checkNumberOfArguments(method, classSymbol));
+            errors.push(... this.checkEachMethodType(method, classSymbol));
+        });
+
+        return errors;
+    }
+
+    private checkEachMethodType(method: Method, classSymbol: ClassSymbol): ArgumentError[] {
+        let errors: ArgumentError[] = [];
+
+        method.arguments.forEach((argument, index) => {
+            let searchedMethod = classSymbol.methods.find((m) => m.getName() === method.name);
+            if (searchedMethod) {
+                let requiredArgument = searchedMethod.getArguments()[index];
+                if (!requiredArgument.isSameType(argument)) {
+                    let expectedType = requiredArgument.type.getName();
+                    let receivedType = typeof argument;
+
+                    errors.push(ArgumentErrorBuilder.wrongArgumentsType(expectedType, receivedType));
+                }
+            }
+        });
+
+        return errors;
+    }
+
     private checkNumberOfArguments(method: Method, classSymbol: ClassSymbol): ArgumentError[] {
-        let searchedMethod = classSymbol.methods.find((m) => m.getName() === method.getName());
+        let searchedMethod = classSymbol.methods.find((m) => m.getName() === method.name);
         if (method.arguments.length !== searchedMethod.arguments.length) {
-            return [ArgumentErrorBuilder.wrongArgumentsNumber(searchedMethod.arguments.length, method.arguments.length)];
+            let expectedArguments = searchedMethod.arguments.length
+            let receivedArguments = method.arguments.length;
+
+            return [ArgumentErrorBuilder.wrongArgumentsNumber(expectedArguments, receivedArguments)];
         }
 
         return [];
@@ -67,6 +74,10 @@ export class ArgumentErrorBuilder {
 
     static wrongArgumentsNumber(expected: number, received: number): ArgumentError {
         return new ArgumentError(`Expecting ${expected} arguments, but received ${received}`);
+    }
+
+    static wrongArgumentsType(expected: string, received: string): ArgumentError {
+        return new ArgumentError(`Expecting argument type ${expected}, but received ${received}`);
     }
 
 }

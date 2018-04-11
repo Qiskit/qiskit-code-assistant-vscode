@@ -50,8 +50,8 @@ describe('An assignments stack', () => {
         expect(assignment.getSymbol()).to.be.equal('qr');
         expect(assignment.getVariable()).to.be.equal('qp');
         expect(assignment.hasTrailingMethods()).to.be.true;
-        expect(assignment.getTrailingMethods()[0].getName()).to.be.equal('create_quantum_register');
-        expect(assignment.getTrailingMethods()[0].getArguments()).to.include.ordered.members(['"qr"', 2]);
+        expect(assignment.getTrailingMethods()[0].name).to.be.equal('create_quantum_register');
+        expect(assignment.getTrailingMethods()[0].arguments).to.include.ordered.members(['"qr"', 2]);
     });
 
 });
