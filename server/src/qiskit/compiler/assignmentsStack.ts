@@ -122,11 +122,11 @@ export class MethodCall {
 
 }
 
-class Method {
+export class Method {
 
-    private arguments: any[] = [];
+    public arguments: any[] = [];
 
-    constructor(private name: string) {}
+    constructor(public name: string) {}
 
     getName(): string {
         return this.name;

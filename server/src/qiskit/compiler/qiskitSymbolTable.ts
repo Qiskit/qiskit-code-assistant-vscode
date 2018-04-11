@@ -99,7 +99,7 @@ export class ClassSymbol extends Symbol {
 
 export class MethodSymbol extends Symbol {
 
-    private arguments: ArgumentSymbol[] = [];
+    arguments: ArgumentSymbol[] = [];
 
     constructor(name: string, type: Type, requiredArguments: ArgumentSymbol[] = []) {
         super(name, type);
@@ -122,10 +122,20 @@ export class ArgumentSymbol extends Symbol {
         super(name, type);
     }
 
+    isSameType(input: any): boolean {
+        if (typeof input === "string") {
+            return this.type.getName() === 'string';
+        }
+        if (typeof input === "number") {
+            return this.type.getName() === 'int';
+        }
+
+        return false;
+    }
+
     toString() {
         return `{ name: ${this.name}, type: ${this.type.getName()} }`;
     }
-
 
 }
 

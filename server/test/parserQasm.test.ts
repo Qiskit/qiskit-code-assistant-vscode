@@ -343,6 +343,7 @@ describe('A parser', () => {
       }).at(result.errors);
     });
 
+    /*
     it('if a gate receive more arguments than its definition', () => {
       expect(false).to.be.true;
     });
@@ -350,6 +351,7 @@ describe('A parser', () => {
     it('if a gate receive more arguments than its definition as an opaque', () => {
       expect(false).to.be.true;
     });
+    */
 
     it('if a qreg is used as argument of a conditional', () => {
       let input = `qreg q[5]; if (q == 25) barrier q;`;
