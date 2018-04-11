@@ -36,16 +36,12 @@ export class PackageMgr {
         
     }
 
-    check() : Q.Promise {
+    check() : Q.Promise<void> {
         let packages: Q.Promise<IPackage>[] = [];
-        try{
-            PackageMgr._packages.forEach(pkg => {
-                packages.push(pkg.checkVersion());
-            });
-            return Q.resolve(packages);   
-        } catch (err){
-            return Q.reject(err);
-        }
+        PackageMgr._packages.forEach(pkg => {
+            packages.push(pkg.checkVersion());
+        });
+        return Q.all(packages);   
     }
 
 }

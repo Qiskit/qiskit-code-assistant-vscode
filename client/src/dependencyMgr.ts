@@ -32,7 +32,7 @@ export class DependencyMgr {
           });
     }
 
-    checkDependencies() : Q.Promise {
+    checkDependencies() : Q.Promise<void> {
         let packages: Q.Promise<IDependency>[] = [];
         
         DependencyMgr._dependencies.forEach(dep => {

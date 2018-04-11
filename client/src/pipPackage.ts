@@ -40,14 +40,14 @@ export class PipPackage implements IPackage {
     }
 
     public checkVersion(): Q.Promise<void> {
-        console.log(this.Info.Name);
+        //console.log(this.Info.Name);
         let packageName = this.Info.Name;
         return this.pip.getPackageInfo(this.Info.Name)
         .then((installedPkgInfo: IPackageInfo) => {
-            console.log(installedPkgInfo);
+            //console.log(installedPkgInfo);
             this.Info = installedPkgInfo;
             // Let's check for new versions
-            return this.pypi.getPackageInfo(this.Info.Name)
+            return this.pypi.getPackageInfo(this.Info.Name);
         })
         .then((pkgInfo: IPackageInfo) => {
             // If there is a new version, offer to the user the update.
@@ -69,7 +69,7 @@ export class PipPackage implements IPackage {
             return null;
         }).then(() => {
             // Check if the software is installed, if not offer the install
-            this.pip.list()
+            return this.pip.list()
                 .then(result => {
                     //console.log("pip list",result); 
                     if (result.search(packageName) == -1 ) { 
