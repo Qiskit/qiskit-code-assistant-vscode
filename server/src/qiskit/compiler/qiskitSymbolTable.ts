@@ -26,6 +26,8 @@ export class QiskitSymbolTable {
         
         let classType = new BuiltInTypeSymbol('class');
 
+        symbolTable.define(new BuiltInTypeSymbol('string'));
+        symbolTable.define(new BuiltInTypeSymbol('int'));
         symbolTable.define(classType);
         symbolTable.define(new ClassSymbol('QuantumRegister', classType, []));
         symbolTable.define(new ClassSymbol('ClassicalRegister', classType, []));
@@ -37,12 +39,43 @@ export class QiskitSymbolTable {
 
     private static createQuantumProgramSymbol(symbolTable: SymbolTable): ClassSymbol {
         let methods = [
-            new MethodSymbol('create_quantum_register', symbolTable.lookup('QuantumRegister')), 
-            new MethodSymbol('create_classical_register', symbolTable.lookup('ClassicalRegister')),
-            new MethodSymbol('create_circuit', symbolTable.lookup('QuantumCircuit'))
+            this.createQuantumRegisterMethod(symbolTable),
+            this.createClassicalRegisterMethod(symbolTable),
+            this.createCircuitMethod(symbolTable)
         ];
 
         return new ClassSymbol('QuantumProgram', symbolTable.lookup('class'), methods);
+    }
+
+    private static createQuantumRegisterMethod(symbolTable: SymbolTable): MethodSymbol {
+        let type = symbolTable.lookup('QuantumRegister');
+        let requiredArguments = [
+            new ArgumentSymbol('name', symbolTable.lookup('string')),
+            new ArgumentSymbol('size', symbolTable.lookup('int'))
+        ];
+
+        return new MethodSymbol('create_quantum_register', type, requiredArguments);
+    }
+
+    private static createClassicalRegisterMethod(symbolTable: SymbolTable): MethodSymbol {
+        let type = symbolTable.lookup('ClassicalRegister');
+        let requiredArguments = [
+            new ArgumentSymbol('name', symbolTable.lookup('string')),
+            new ArgumentSymbol('size', symbolTable.lookup('int'))
+        ];
+
+        return new MethodSymbol('create_classical_register', type, requiredArguments);
+    }
+
+    private static createCircuitMethod(symbolTable: SymbolTable): MethodSymbol {
+        let type = symbolTable.lookup('QuantumCircuit');
+        let requiredArguments = [
+            new ArgumentSymbol('name', symbolTable.lookup('string')),
+            new ArgumentSymbol('quantumRegister', symbolTable.lookup('QuantumRegister')),
+            new ArgumentSymbol('classicalRegister', symbolTable.lookup('ClassicalRegister'))
+        ];
+
+        return new MethodSymbol('create_circuit', type, requiredArguments);
     }
 
 }
@@ -65,6 +98,21 @@ export class ClassSymbol extends Symbol {
 
 export class MethodSymbol extends Symbol {
 
+    private arguments: ArgumentSymbol[] = [];
+
+    constructor(name: string, type: Type, requiredArguments: ArgumentSymbol[] = []) {
+        super(name, type);
+        this.arguments = requiredArguments;
+    }
+
+    toString() {
+        return `{ name: ${this.name}, type: ${this.type.getName()}, arguments: ${this.arguments} }`;
+    }
+
+}
+
+export class ArgumentSymbol extends Symbol {
+
     constructor(name: string, type: Type) {
         super(name, type);
     }
@@ -72,6 +120,7 @@ export class MethodSymbol extends Symbol {
     toString() {
         return `{ name: ${this.name}, type: ${this.type.getName()} }`;
     }
+
 
 }
 
