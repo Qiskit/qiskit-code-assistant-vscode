@@ -35,9 +35,9 @@ export class AssignmentsStack {
         });
     }
 
-    addTrailingMethod(method: Token): void {
+    addTrailingMethod(methodName: Token): void {
         this.applyOnLastAssignment((assignment) => {
-            assignment.call.addTrailingMethod(method);
+            assignment.call.addTrailingMethod(methodName);
         });
     }
 
@@ -71,8 +71,8 @@ export class MethodCall {
 
     constructor(public variable: Token) {};
 
-    addTrailingMethod(method: Token): void {
-        this.trailingMethods.push(new Method(method));
+    addTrailingMethod(methodName: Token): void {
+        this.trailingMethods.push(new Method(methodName));
     }
 
     addArgument(argument: Token): void {
@@ -91,7 +91,7 @@ export class Method {
 
     arguments: Token[] = [];
 
-    constructor(public method: Token) {};
+    constructor(public methodName: Token) {};
 
     hasArguments(): boolean {
         return this.arguments.length > 0;
