@@ -4301,7 +4301,7 @@ export class Python3Parser extends Parser {
 				_localctx._NAME = this.match(Python3Parser.NAME);
 				 
 				   if (this.argumentsScope) {
-				    this.assignments.addArgument(_localctx._NAME);
+				    this.assignments.addArgument(_localctx._NAME, this.symbolTable.lookup((_localctx._NAME!=null?_localctx._NAME.text:undefined)));
 				   } else {
 				    this.assignments.setVariable(_localctx._NAME); 
 				   }
@@ -4318,13 +4318,7 @@ export class Python3Parser extends Parser {
 				{
 				this.state = 849;
 				_localctx._number = this.number();
-				 
-				   if (this.argumentsScope) {
-				    this.assignments.addArgument((_localctx._number!=null?(_localctx._number._start):undefined));
-				   } else {
-				    this.assignments.setVariable((_localctx._number!=null?(_localctx._number._start):undefined)); 
-				   }
-				 
+				 this.assignments.addArgument((_localctx._number!=null?(_localctx._number._start):undefined), this.symbolTable.lookup('int')); 
 				}
 				break;
 			case Python3Parser.STRING_LITERAL:
@@ -4345,13 +4339,7 @@ export class Python3Parser extends Parser {
 					this._errHandler.sync(this);
 					_la = this._input.LA(1);
 				} while ( _la===Python3Parser.STRING_LITERAL || _la===Python3Parser.BYTES_LITERAL );
-				 
-				   if (this.argumentsScope) {
-				    this.assignments.addArgument((_localctx._str!=null?(_localctx._str._start):undefined));
-				   } else {
-				    this.assignments.setVariable((_localctx._str!=null?(_localctx._str._start):undefined)); 
-				   }
-				 
+				 this.assignments.addArgument((_localctx._str!=null?(_localctx._str._start):undefined), this.symbolTable.lookup('string')); 
 				}
 				break;
 			case Python3Parser.ELLIPSIS:

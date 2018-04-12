@@ -19,6 +19,7 @@ import { expect } from 'chai';
 import { AssignmentsStack, MethodCall, Method } from '../src/qiskit/antlr/tools/assignmentsStack';
 import { Python3Lexer } from '../src/qiskit/antlr/Python3Lexer';
 import { Token } from './utils/tokens';
+import { Type } from '../src/tools/symbolTable';
 
 describe('An assignments stack', () => {
 
@@ -71,13 +72,13 @@ describe('An assignments stack', () => {
         assignmentsStack.setVariable(Token.build(Python3Lexer.NAME, 'boo', 7, 10));
         assignmentsStack.addTrailingMethod(Token.build(Python3Lexer.NAME, 'my_method', 11, 20));
         assignmentsStack.addTrailingMethod(Token.build(Python3Lexer.NAME, 'my_trailed_method', 21, 38));
-        assignmentsStack.addArgument(Token.build(Python3Lexer.STRING_LITERAL, '"a"', 39, 42));
-        assignmentsStack.addArgument(Token.build(Python3Lexer.BIN_INTEGER, '2', 44, 45));
+        assignmentsStack.addArgument(Token.build(Python3Lexer.STRING_LITERAL, '"a"', 39, 42), new FakeSymbol());
+        assignmentsStack.addArgument(Token.build(Python3Lexer.BIN_INTEGER, '2', 44, 45), new FakeSymbol());
 
         let result = assignmentsStack.popLastAssignment();
 
-        expect(result.call.trailingMethods[1].arguments[0].text).to.be.equal('"a"');
-        expect(result.call.trailingMethods[1].arguments[1].text).to.be.equal('2');
+        expect(result.call.trailingMethods[1].arguments[0].token.text).to.be.equal('"a"');
+        expect(result.call.trailingMethods[1].arguments[1].token.text).to.be.equal('2');
     });
 
 });
@@ -99,3 +100,11 @@ describe('A MethodCall', () => {
     });
 
 });
+
+class FakeSymbol implements Type {
+
+    getName() {
+        return "I'm a fake symbol";
+    }
+
+}

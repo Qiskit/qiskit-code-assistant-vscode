@@ -43,11 +43,11 @@ export class ArgumentsTester {
             let searchedMethod = classSymbol.methods.find((m) => m.getName() === method.methodName.text);
             if (searchedMethod) {
                 let requiredArgument = searchedMethod.getArguments()[index];
-                if (!requiredArgument.isSameType(argument.text)) {
+                if (requiredArgument.type.getName() !== argument.type.getName()) {
                     let expectedType = requiredArgument.type.getName();
-                    let receivedType = typeof argument;
+                    let receivedType = argument.type.getName()
 
-                    this.errorHandler.wrongArgumentType(method.methodName, expectedType, receivedType);
+                    this.errorHandler.wrongArgumentType(argument.token, expectedType, receivedType);
                 }
             }
         });

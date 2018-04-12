@@ -16,6 +16,7 @@
 'use strict';
 
 import { Token } from "antlr4ts";
+import { Type } from "../../../tools/symbolTable";
 
 export class AssignmentsStack {
 
@@ -41,9 +42,9 @@ export class AssignmentsStack {
         });
     }
 
-    addArgument(argument: Token): void {
+    addArgument(argument: Token, type: Type): void {
         this.applyOnLastAssignment((assignment) => {
-            assignment.call.addArgument(argument);
+            assignment.call.addArgument(argument, type);
         });
     }
 
@@ -75,9 +76,9 @@ export class MethodCall {
         this.trailingMethods.push(new Method(methodName));
     }
 
-    addArgument(argument: Token): void {
+    addArgument(argument: Token, type: Type): void {
         let lastTrailingMethod = this.trailingMethods.pop();
-        lastTrailingMethod.arguments.push(argument);
+        lastTrailingMethod.addArgument(argument, type);
         this.trailingMethods.push(lastTrailingMethod);
     }
 
@@ -89,12 +90,22 @@ export class MethodCall {
 
 export class Method {
 
-    arguments: Token[] = [];
+    arguments: Argument[] = [];
 
     constructor(public methodName: Token) {};
+
+    addArgument(token: Token, type: Type) {
+        this.arguments.push(new Argument(token, type));
+    }
 
     hasArguments(): boolean {
         return this.arguments.length > 0;
     }
+
+}
+
+export class Argument {
+
+    constructor(public token: Token, public type: Type) {}
 
 }

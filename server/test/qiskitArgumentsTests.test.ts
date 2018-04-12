@@ -44,8 +44,12 @@ describe('An arguments tester on a QISKit grammar', () => {
     it('detect errors on qr = qp.create_quamtum_register(2, "qr")', () => {
         let call = new MethodCall(Token.build(Python3Lexer.NAME, 'qp', 1, 1));
         call.addTrailingMethod(Token.build(Python3Lexer.NAME, 'create_quantum_register', 1, 1));
-        call.addArgument(Token.build(Python3Lexer.BIN_INTEGER, '2', 1, 1));
-        call.addArgument(Token.build(Python3Lexer.STRING_LITERAL, '"qr"', 1, 1));
+        call.addArgument(
+            Token.build(Python3Lexer.BIN_INTEGER, '2', 1, 1),
+            symbolTable.lookup('int'));
+        call.addArgument(
+            Token.build(Python3Lexer.STRING_LITERAL, '"qr"', 1, 1),
+            symbolTable.lookup('string'));
 
         tester.check(call);
 
@@ -56,7 +60,9 @@ describe('An arguments tester on a QISKit grammar', () => {
     it('detect errors on qr = qp.create_quamtum_register("qr")', () => {
         let call = new MethodCall(Token.build(Python3Lexer.NAME, 'qp', 1, 1));
         call.addTrailingMethod(Token.build(Python3Lexer.NAME, 'create_quantum_register', 1, 1));
-        call.addArgument(Token.build(Python3Lexer.STRING_LITERAL, '"qr"', 1, 1));
+        call.addArgument(
+            Token.build(Python3Lexer.STRING_LITERAL, '"qr"', 1, 1),
+            symbolTable.lookup('string'));
 
         tester.check(call);
 
@@ -66,8 +72,12 @@ describe('An arguments tester on a QISKit grammar', () => {
     it('do not detect errors on qr = qp.create_quantum_register("qr", 2)', () => {
         let call = new MethodCall(Token.build(Python3Lexer.NAME, 'qp', 1, 1));
         call.addTrailingMethod(Token.build(Python3Lexer.NAME, 'create_quantum_register', 1, 1));
-        call.addArgument(Token.build(Python3Lexer.STRING_LITERAL, '"qr"', 1, 1));
-        call.addArgument(Token.build(Python3Lexer.BIN_INTEGER, '2', 1, 1));
+        call.addArgument(
+            Token.build(Python3Lexer.STRING_LITERAL, '"qr"', 1, 1),
+            symbolTable.lookup('string'));
+        call.addArgument(
+            Token.build(Python3Lexer.BIN_INTEGER, '2', 1, 1),
+            symbolTable.lookup('int'));
 
         tester.check(call);
 

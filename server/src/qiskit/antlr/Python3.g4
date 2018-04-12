@@ -646,25 +646,13 @@ atom
  | '{' dictorsetmaker? '}'
  | NAME { 
    if (this.argumentsScope) {
-    this.assignments.addArgument($NAME);
+    this.assignments.addArgument($NAME, this.symbolTable.lookup($NAME.text));
    } else {
     this.assignments.setVariable($NAME); 
    }
  }
- | number { 
-   if (this.argumentsScope) {
-    this.assignments.addArgument($number.start);
-   } else {
-    this.assignments.setVariable($number.start); 
-   }
- }
- | str+ { 
-   if (this.argumentsScope) {
-    this.assignments.addArgument($str.start);
-   } else {
-    this.assignments.setVariable($str.start); 
-   }
- }
+ | number { this.assignments.addArgument($number.start, this.symbolTable.lookup('int')); }
+ | str+ { this.assignments.addArgument($str.start, this.symbolTable.lookup('string')); }
  | '...'
  | NONE
  | TRUE
