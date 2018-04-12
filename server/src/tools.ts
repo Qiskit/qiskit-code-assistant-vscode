@@ -32,7 +32,7 @@ export class TreePrinter {
                 spaces += '|  ';
                 spacePosition++;
             }
-            if (ruleNames[child.ruleIndex] == undefined) {
+            if (ruleNames[child.ruleIndex] === undefined) {
                 console.log(`${spaces}${child.text}`);
             } else {
                 console.log(`${spaces}${ruleNames[child.ruleIndex]} > `);

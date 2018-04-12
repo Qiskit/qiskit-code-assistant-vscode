@@ -38,7 +38,7 @@ export class CompilationTool {
             detail: symbol.detail,
             documentation: symbol.documentation   
         };
-    };
+    }
 
     constructor(private connection: IConnection, private parser: Parser, private suggester: Suggester) {
     }

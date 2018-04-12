@@ -62,7 +62,7 @@ export class Assignment {
 
     call: MethodCall;
 
-    constructor(public symbol: Token) {};
+    constructor(public symbol: Token) {}
 
 }
 
@@ -70,7 +70,7 @@ export class MethodCall {
 
     trailingMethods: Method[] = [];
 
-    constructor(public variable: Token) {};
+    constructor(public variable: Token) {}
 
     addTrailingMethod(methodName: Token): void {
         this.trailingMethods.push(new Method(methodName));
@@ -92,7 +92,7 @@ export class Method {
 
     arguments: Argument[] = [];
 
-    constructor(public methodName: Token) {};
+    constructor(public methodName: Token) {}
 
     addArgument(token: Token, type: Type) {
         this.arguments.push(new Argument(token, type));

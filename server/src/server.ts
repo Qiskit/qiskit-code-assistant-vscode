@@ -49,7 +49,7 @@ connection.onInitialize((_params): InitializeResult => {
                 resolveProvider: true
             }
         }
-    }
+    };
 });
 
 documents.onDidChangeContent((change) => {

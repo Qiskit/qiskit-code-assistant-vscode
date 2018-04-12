@@ -45,7 +45,7 @@ export class ArgumentsTester {
                 let requiredArgument = searchedMethod.getArguments()[index];
                 if (requiredArgument.type.getName() !== argument.type.getName()) {
                     let expectedType = requiredArgument.type.getName();
-                    let receivedType = argument.type.getName()
+                    let receivedType = argument.type.getName();
 
                     this.errorHandler.wrongArgumentType(argument.token, expectedType, receivedType);
                 }
@@ -60,7 +60,7 @@ export class ArgumentsTester {
         }
 
         if (method.arguments.length !== searchedMethod.arguments.length) {
-            let expectedArguments = searchedMethod.arguments.length
+            let expectedArguments = searchedMethod.arguments.length;
             let receivedArguments = method.arguments.length;
 
             this.errorHandler.wrongArgumentsNumber(method.methodName, expectedArguments, receivedArguments);

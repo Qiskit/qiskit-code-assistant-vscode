@@ -74,13 +74,12 @@ export class QASMSuggester implements Suggester {
     }
 
     private toSymbolVariable = (input: string): Symbol => {
-
         return {
             label: input,
             detail: 'Declared variable',
             documentation: 'This is a previously declared variable',
             type: 'Variable'
-        }
+        };
     }
 
 }

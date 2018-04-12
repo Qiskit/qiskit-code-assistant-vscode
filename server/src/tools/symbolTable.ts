@@ -54,7 +54,7 @@ export class SymbolTable {
     }
 
     print() {
-        console.log('Printing symbol table >>>>>>>>')
+        console.log('Printing symbol table >>>>>>>>');
         this.currentScope.print();
         console.log('<<<<<<<<<<<<<<<<');
     }
@@ -113,7 +113,7 @@ abstract class Scope {
     }
 
     lookup(name: string): Symbol {
-        let symbol = this.dictionary.get(name)
+        let symbol = this.dictionary.get(name);
         
         if (symbol) {
             return symbol;
