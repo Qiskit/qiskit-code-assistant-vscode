@@ -154,71 +154,60 @@ tokens { INDENT, DEDENT }
 @parser::header {
 import { QiskitSymbolTable, VariableSymbol, ClassSymbol } from '../compiler/qiskitSymbolTable';
 import { Symbol } from '../../tools/symbolTable';
-import { AssignmentsStack, Assignment, MethodCall } from '../compiler/assignmentsStack';
-import { ArgumentsTester } from '../compiler/argumentsTester';
+import { AssignmentsStack, Assignment, MethodCall } from './tools/assignmentsStack';
+import { ArgumentsTester, ParserArgumentsErrorHandler } from './tools/argumentsTester';
 }
 
 @parser::members {
 public symbolTable = QiskitSymbolTable.build();
 private assignments = new AssignmentsStack();
 private argumentsScope = false;
+private argumentsErrorHandler = new ParserArgumentsErrorHandler(this);
 
 declaredVariables(): string[] {
     return this.symbolTable.definedSymbols();
 }
 
-applyAssignment(symbol: string, start: Token, stop: Token): void {
+applyAssignment(symbol: string): void {
   let lastAssignment = this.assignments.popLastAssignment();
 
   if (this.isAssignmentAppliable(lastAssignment, symbol)) {
-    this.verifyMethodCall(lastAssignment.call, start, stop);
+    this.verifyMethodCall(lastAssignment.call);
 
-    let parentSymbol = this.findParentSymbolWith(lastAssignment, start, stop);
+    let parentSymbol = this.findParentSymbolWith(lastAssignment);
     if (parentSymbol !== null) {
-      this.checkArguments(lastAssignment, parentSymbol);
-
       let variable = new VariableSymbol(symbol, parentSymbol);
       this.symbolTable.define(variable);
     }
   }
 }
 
-private verifyMethodCall(call: MethodCall, start: Token, _stop: Token): void {
-  let argumentsTester = new ArgumentsTester(this.symbolTable);
-  let results = argumentsTester.check(call);
-  results.forEach((result) => {
-    this.notifyErrorListeners(result.message, start, null);
-  });
+private verifyMethodCall(call: MethodCall,): void {
+  new ArgumentsTester(this.symbolTable, this.argumentsErrorHandler)
+    .check(call);
 }
 
-findParentSymbolWith(assignment: Assignment, start: Token, _stop: Token): Symbol {
-  let currentSymbol = this.symbolTable.lookup(assignment.call.variable);
+findParentSymbolWith(assignment: Assignment): Symbol {
+  let currentSymbol = this.symbolTable.lookup(assignment.call.variable.text);
   if (currentSymbol === null) {
     return null;
   }
   assignment.call.trailingMethods.forEach((method) => {
     let classType = currentSymbol.type as ClassSymbol;
-    let compatibleMethod = classType.getMethods().find((m) => m.getName() === method.name);
+    let compatibleMethod = classType.getMethods().find((m) => m.getName() === method.methodName.text);
     if (compatibleMethod) {
       currentSymbol = this.symbolTable.lookup(compatibleMethod.type.getName());
-    } else {
-      let message = `Method ${method.name} not available at current scope`
-      this.notifyErrorListeners(message, start, null);
-    }
+    } 
   });
 
   return currentSymbol;
-}
-
-checkArguments(_lastAssignment: Assignment, _symbol: Symbol): void {
-  return;
 }
 
 isAssignmentAppliable(assignment: Assignment, symbol: string): boolean {
   if (assignment === null) {
     return false;
   }
-  if (assignment.symbol !== symbol) {
+  if (assignment.symbol.text !== symbol) {
     return false;
   }
 
@@ -334,7 +323,7 @@ small_stmt
 ///                      ('=' (yield_expr|testlist_star_expr))*)
 expr_stmt
  : symbol=testlist_star_expr ( augassign ( yield_expr | testlist)
-                      | ( '=' { this.assignments.newAssignmentOn($symbol.text); } ( yield_expr| assignment=testlist_star_expr { this.applyAssignment($symbol.text, $assignment.start, $assignment.stop); } ) )* )  
+                      | ( '=' { this.assignments.newAssignmentOn($symbol.start); } ( yield_expr| assignment=testlist_star_expr { this.applyAssignment($symbol.text); } ) )* )  
  ;
 
 /// testlist_star_expr: (test|star_expr) (',' (test|star_expr))* [',']
@@ -657,23 +646,23 @@ atom
  | '{' dictorsetmaker? '}'
  | NAME { 
    if (this.argumentsScope) {
-    this.assignments.addArgument($NAME.text);
+    this.assignments.addArgument($NAME);
    } else {
-    this.assignments.setVariable($NAME.text); 
+    this.assignments.setVariable($NAME); 
    }
  }
  | number { 
    if (this.argumentsScope) {
-    this.assignments.addArgument(+$number.text);
+    this.assignments.addArgument($number.start);
    } else {
-    this.assignments.setVariable($number.text); 
+    this.assignments.setVariable($number.start); 
    }
  }
  | str+ { 
    if (this.argumentsScope) {
-    this.assignments.addArgument($str.text);
+    this.assignments.addArgument($str.start);
    } else {
-    this.assignments.setVariable($str.text); 
+    this.assignments.setVariable($str.start); 
    }
  }
  | '...'
@@ -693,7 +682,7 @@ testlist_comp
 trailer
  : { this.argumentsScope = true; } '(' arglist? ')' { this.argumentsScope = false; }
  | '[' subscriptlist ']'
- | '.' NAME { this.assignments.addTrailingMethod($NAME.text); }
+ | '.' NAME { this.assignments.addTrailingMethod($NAME); }
  ;
 
 /// subscriptlist: subscript (',' subscript)* [',']

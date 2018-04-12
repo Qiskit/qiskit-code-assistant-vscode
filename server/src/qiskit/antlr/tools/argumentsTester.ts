@@ -18,7 +18,7 @@
 import { MethodCall, Method } from "./assignmentsStack";
 import { SymbolTable } from "../../../tools/symbolTable";
 import { ClassSymbol } from "../../compiler/qiskitSymbolTable";
-import { Token } from "antlr4ts";
+import { Token, Parser } from "antlr4ts";
 
 export class ArgumentsTester {
 
@@ -43,7 +43,7 @@ export class ArgumentsTester {
             let searchedMethod = classSymbol.methods.find((m) => m.getName() === method.methodName.text);
             if (searchedMethod) {
                 let requiredArgument = searchedMethod.getArguments()[index];
-                if (!requiredArgument.isSameType(argument)) {
+                if (!requiredArgument.isSameType(argument.text)) {
                     let expectedType = requiredArgument.type.getName();
                     let receivedType = typeof argument;
 
@@ -81,6 +81,18 @@ export abstract class ArgumentsErrorHandler {
     wrongArgumentsNumber(offendingToken: Token, expected: number, received: number): void {
         let message = `Expecting ${expected} arguments, but received ${received}`;
         this.handleError(offendingToken, message);
+    }
+
+}
+
+export class ParserArgumentsErrorHandler extends ArgumentsErrorHandler {
+
+    constructor(private parser: Parser) {
+        super();
+    }
+
+    handleError(offendingToken: Token, message: string): void {
+        this.parser.notifyErrorListeners(message, offendingToken, null);
     }
 
 }

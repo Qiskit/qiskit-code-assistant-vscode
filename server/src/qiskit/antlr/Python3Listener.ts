@@ -3,8 +3,8 @@
 
 import { QiskitSymbolTable, VariableSymbol, ClassSymbol } from '../compiler/qiskitSymbolTable';
 import { Symbol } from '../../tools/symbolTable';
-import { AssignmentsStack, Assignment, MethodCall } from '../compiler/assignmentsStack';
-import { ArgumentsTester } from '../compiler/argumentsTester';
+import { AssignmentsStack, Assignment, MethodCall } from './tools/assignmentsStack';
+import { ArgumentsTester, ParserArgumentsErrorHandler } from './tools/argumentsTester';
 
 
 import { ParseTreeListener } from 'antlr4ts/tree/ParseTreeListener';

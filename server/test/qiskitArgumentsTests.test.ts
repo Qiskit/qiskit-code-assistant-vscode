@@ -44,26 +44,23 @@ describe('An arguments tester on a QISKit grammar', () => {
     it('detect errors on qr = qp.create_quamtum_register(2, "qr")', () => {
         let call = new MethodCall(Token.build(Python3Lexer.NAME, 'qp', 1, 1));
         call.addTrailingMethod(Token.build(Python3Lexer.NAME, 'create_quantum_register', 1, 1));
-        let offendingToken1 = Token.build(Python3Lexer.BIN_INTEGER, '2', 1, 1);
-        call.addArgument(offendingToken1);
-        let offendingToken2 = Token.build(Python3Lexer.STRING_LITERAL, '"qr"', 1, 1);
-        call.addArgument(offendingToken2);
-
-        tester.check(call);
-
-        verify(argumentsErrorHandlerSpy.handleError(offendingToken1, anyString())).once()
-        verify(argumentsErrorHandlerSpy.handleError(offendingToken2, anyString())).once()
-    });
-
-    it('detect errors on qr = qp.create_quamtum_register("qr")', () => {
-        let call = new MethodCall(Token.build(Python3Lexer.NAME, 'qp', 1, 1));
-        let offendingToken = Token.build(Python3Lexer.NAME, 'create_quantum_register', 1, 1);
-        call.addTrailingMethod(offendingToken);
+        call.addArgument(Token.build(Python3Lexer.BIN_INTEGER, '2', 1, 1));
         call.addArgument(Token.build(Python3Lexer.STRING_LITERAL, '"qr"', 1, 1));
 
         tester.check(call);
 
-        verify(argumentsErrorHandlerSpy.handleError(offendingToken, anyString())).once();
+        verify(argumentsErrorHandlerSpy.handleError(anything(), anyString())).once()
+        verify(argumentsErrorHandlerSpy.handleError(anything(), anyString())).once()
+    });
+
+    it('detect errors on qr = qp.create_quamtum_register("qr")', () => {
+        let call = new MethodCall(Token.build(Python3Lexer.NAME, 'qp', 1, 1));
+        call.addTrailingMethod(Token.build(Python3Lexer.NAME, 'create_quantum_register', 1, 1));
+        call.addArgument(Token.build(Python3Lexer.STRING_LITERAL, '"qr"', 1, 1));
+
+        tester.check(call);
+
+        verify(argumentsErrorHandlerSpy.handleError(anything(), anyString())).once();
     });
     
     it('do not detect errors on qr = qp.create_quantum_register("qr", 2)', () => {
