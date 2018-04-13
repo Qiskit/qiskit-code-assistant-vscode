@@ -1,5 +1,9 @@
 {
 	"rules": {
+		"file-header": [
+			true,
+			"Copyright \\d{4} IBM RESEARCH"
+		],
 		"no-string-throw": true,
 		"no-unused-expression": true,
 		"no-duplicate-variable": true,
@@ -11,8 +15,17 @@
 		],
 		"triple-equals": true
 	},
-    "defaultSeverity": "warning",
-    "linterOptions": {
-        "exclude": ["**/QasmParser.ts", "**/Python3Lexer.ts", "**/Python3Parser.ts"]
-    }
+	"defaultSeverity": "warning",
+	"linterOptions": {
+		"exclude": [
+			"**/QasmParser.ts",
+			"**/QasmLexer.ts",
+			"**/QasmParserListener.ts",
+			"**/QasmParserVisitor.ts",
+			"**/Python3Lexer.ts",
+			"**/Python3Parser.ts",
+			"**/Python3Listener.ts",
+			"**/Python3Visitor.ts"
+		]
+	}
 }
