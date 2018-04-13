@@ -16,7 +16,7 @@
 'use strict';
 
 import { MethodCall, Method, Argument } from "./assignmentsStack";
-import { SymbolTable } from "../../../tools/symbolTable";
+import { SymbolTable, Symbol, BuiltInTypeSymbol } from "../../../tools/symbolTable";
 import { ClassSymbol, ArgumentSymbol } from "../../compiler/qiskitSymbolTable";
 import { Token, Parser } from "antlr4ts";
 
@@ -26,6 +26,10 @@ export class ArgumentsTester {
 
     check(call: MethodCall): void {
         let calledSymbol = this.symbolTable.lookup(call.variable.text);
+        if (calledSymbol === null) {
+            return;
+        }
+
         if (calledSymbol.type instanceof ClassSymbol) {
             return this.traverseMethodsCheckingCalls(call, calledSymbol.type);
         }
@@ -49,6 +53,10 @@ export class ArgumentsTester {
     }
 
     private checkArgumentType(requiredArgument: ArgumentSymbol, argument: Argument) {
+        if (typeof requiredArgument === 'undefined') {
+            return;
+        }
+
         if (requiredArgument.type instanceof ClassSymbol) {
             this.checkClassType(requiredArgument, argument);
         } else {
@@ -57,10 +65,19 @@ export class ArgumentsTester {
     }
 
     private checkClassType(requiredArgument: ArgumentSymbol, argument: Argument) {
-        let argumentType = argument.type as ClassSymbol;
-        if (requiredArgument.type.getName() !== argumentType.type.getName()) {
+        if (argument.type instanceof BuiltInTypeSymbol) {
+            // TODO createWrongArgumentTypeError method
             let expectedType = requiredArgument.type.getName();
-            let receivedType = argumentType.type.getName();
+            let receivedType = argument.type.getName();
+            this.errorHandler.wrongArgumentType(argument.token, expectedType, receivedType);
+
+            return;
+        }
+
+        let argumentClassType = argument.type as Symbol;
+        if (requiredArgument.type.getName() !== argumentClassType.type.getName()) {
+            let expectedType = requiredArgument.type.getName();
+            let receivedType = argumentClassType.type.getName();
             this.errorHandler.wrongArgumentType(argument.token, expectedType, receivedType);
         }
     }
