@@ -15,9 +15,9 @@
 
 'use strict';
 
-import { MethodCall, Method } from "./assignmentsStack";
+import { MethodCall, Method, Argument } from "./assignmentsStack";
 import { SymbolTable } from "../../../tools/symbolTable";
-import { ClassSymbol } from "../../compiler/qiskitSymbolTable";
+import { ClassSymbol, ArgumentSymbol } from "../../compiler/qiskitSymbolTable";
 import { Token, Parser } from "antlr4ts";
 
 export class ArgumentsTester {
@@ -43,14 +43,34 @@ export class ArgumentsTester {
             let searchedMethod = classSymbol.methods.find((m) => m.getName() === method.methodName.text);
             if (searchedMethod) {
                 let requiredArgument = searchedMethod.getArguments()[index];
-                if (requiredArgument.type.getName() !== argument.type.getName()) {
-                    let expectedType = requiredArgument.type.getName();
-                    let receivedType = argument.type.getName();
-
-                    this.errorHandler.wrongArgumentType(argument.token, expectedType, receivedType);
-                }
+                this.checkArgumentType(requiredArgument, argument);
             }
         });
+    }
+
+    private checkArgumentType(requiredArgument: ArgumentSymbol, argument: Argument) {
+        if (requiredArgument.type instanceof ClassSymbol) {
+            this.checkClassType(requiredArgument, argument);
+        } else {
+            this.checkPrimitiveType(requiredArgument, argument);
+        }
+    }
+
+    private checkClassType(requiredArgument: ArgumentSymbol, argument: Argument) {
+        let argumentType = argument.type as ClassSymbol;
+        if (requiredArgument.type.getName() !== argumentType.type.getName()) {
+            let expectedType = requiredArgument.type.getName();
+            let receivedType = argumentType.type.getName();
+            this.errorHandler.wrongArgumentType(argument.token, expectedType, receivedType);
+        }
+    }
+
+    private checkPrimitiveType(requiredArgument: ArgumentSymbol, argument: Argument) {
+        if (requiredArgument.type.getName() !== argument.type.getName()) {
+            let expectedType = requiredArgument.type.getName();
+            let receivedType = argument.type.getName();
+            this.errorHandler.wrongArgumentType(argument.token, expectedType, receivedType);
+        }
     }
 
     private checkNumberOfArguments(method: Method, classSymbol: ClassSymbol): void {
