@@ -28,6 +28,8 @@ import {
 import {DependencyMgr} from "./dependencyMgr";
 import {PackageMgr} from "./packageMgr";
 
+import { CommandExecutor } from "./commandExecutor";
+
 export function activate(context: vscode.ExtensionContext) {
 
     console.log('Activating IBM Q Studio extension ...');
@@ -96,6 +98,8 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.commands.registerCommand("qstudio.reload", () => activate(context)),
         vscode.commands.registerCommand("qstudio.checkDependencies", () => checkDependencies()),
+        vscode.commands.registerCommand("qstudio.runCode", () => runCodeOnQISKit()),
+        vscode.commands.registerCommand("qstudio.discoverLocalBackends", () => discoverQiskitLocalBackends())
     );
 }
 
@@ -140,6 +144,32 @@ function checkDependencies(): Q.Promise<string> {
             });
         }
     );
+}
+
+function runCodeOnQISKit(): Q.Promise<string> {
+    const codeFile = vscode.window.activeTextEditor.document;
+    codeFile.save();
+    //console.log(codeFile);
+    //return Q.resolve(codeFile);
+
+    (new CommandExecutor).exec("python", [codeFile.fileName.toString()])
+        .then((stdout) => {
+            console.log(stdout);
+            vscode.window.showInformationMessage("Execution result:",stdout);
+            return Q.resolve(stdout);
+        }).catch(err => {
+            console.log(err);
+            vscode.window.showErrorMessage(err);
+            return Q.reject(err);
+        });
+}
+
+function discoverQiskitLocalBackends(): Q.Promise<void>{
+    //print("Local backends: ", qiskit.backends.discover_local_backends());
+    console.log("Not implemented!");
+    return Q.resolve("Not implemented!");
+
+
 }
 
 export function deactivate() {

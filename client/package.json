@@ -97,8 +97,53 @@
 				"command": "qstudio.checkDependencies",
 				"title": "Check IBM Q Studio dependencies",
 				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.runCode",
+				"title": "▶ Run this Q code",
+				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.discoverLocalBackends",
+				"title": "Discover local backends available",
+				"category": "qstudio"
 			}
-		]
+		],
+		"keybindings": [
+			{
+				"command": "qstudio.reload",
+				"key": "Ctrl+r",
+				"mac": "cmd+r",
+				"when": "editorTextFocus && editorLangId == 'python'"
+			},
+			{
+				"command": "qstudio.runCode",
+				"key": "shift+enter",
+				"mac": "shift+enter",
+				"when": "editorTextFocus && editorLangId == 'python'"
+			}
+		],
+		"menus": {
+				"editor/title": [
+					{
+					"when": "editorLangId == 'python'",
+					"command": "qstudio.runCode",
+					"group": "navigation"
+					},
+					{
+					"when": "editorLangId == 'qasm-lang'",
+					"command": "qstudio.runCode",
+					"group": "navigation"
+					}
+				],
+				"explorer/context": [
+					{
+						"when": "resourceLangId == 'python'",
+						"command": "qstudio.discoverLocalBackends",
+						"group": "navigation"
+					}
+				]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "tsc -p ./",
