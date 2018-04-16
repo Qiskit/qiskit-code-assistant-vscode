@@ -108,11 +108,10 @@ function checkDependencies(): Q.Promise<string> {
                 //vscode.window.showInformationMessage("Checking for Python dependencies...");
                 let depsList :string = "";
                 deps.forEach(dep => {
-                    console.log("Package: " + dep.Name + " Version: " +
-                        dep.InstalledVersion);
-                        depsList+=("👌 " + dep.Name + " v " + dep.InstalledVersion+"\n");
+                    console.log(`Package: ${dep.Name} Version: ${dep.InstalledVersion}`);
+                        depsList+=(`👌 ${dep.Name} v ${dep.InstalledVersion}\n`);
                 });
-                vscode.window.showInformationMessage("IBM Q Studio dependencies found! "+depsList);
+                vscode.window.showInformationMessage(`IBM Q Studio dependencies found! ${depsList}`);
             // Check for pyhton packages!
             }).then(() => {
                 console.log('Check for required python packages...');
@@ -122,20 +121,20 @@ function checkDependencies(): Q.Promise<string> {
                 let packMgr = new PackageMgr();
                 return packMgr.check()
                     .then(results => {
-                        console.log("packMgr.check extension.ts",results);
+                        console.log(`packMgr.check extension.ts ${results}`);
                         vscode.window.showInformationMessage(results);
                         //return Q.resolve(results);
                         return resolve();
                     }).catch(err => {
-                        console.log("packMgr.check error extension.ts",err);
+                        console.log(`packMgr.check error extension.ts ${err}`);
                         return Q.reject(err);
                     });
                 
             // Iterate over the list of packages
             }).catch(error => {
-                console.log('Seems like there was a problem: ' + error);
+                console.log(`Seems like there was a problem: ${error}`);
                 //vscode.window.showWarningMessage('Seems like there was a problem: ' + error);
-                vscode.window.showErrorMessage('Seems like there was a problem: ' + error);
+                vscode.window.showErrorMessage(`Seems like there was a problem: ${error}`);
                 return reject(error);
             });
         }

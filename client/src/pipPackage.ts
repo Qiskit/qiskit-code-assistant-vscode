@@ -52,7 +52,7 @@ export class PipPackage implements IPackage {
         .then((pkgInfo: IPackageInfo) => {
             // If there is a new version, offer to the user the update.
             if(pkgInfo.Version.isGreater(this.Info.Version)){
-                console.log("New version",pkgInfo.Version.toString());
+                console.log(`New version ${pkgInfo.Version.toString()}`);
                 return vscode.window.showInputBox({
                     ignoreFocusOut: true,
                     prompt: `👉 There's a new ${packageName} release: ${pkgInfo.Version.toString()}. Do you want to upgrade? 👈`,
@@ -71,7 +71,7 @@ export class PipPackage implements IPackage {
             // Check if the software is installed, if not offer the install
             return this.pip.list()
                 .then(result => {
-                    //console.log("pip list",result); 
+                    //console.log(`pip list ${result}`); 
                     if (result.search(packageName) == -1 ) { 
                         console.log(`${packageName} not installed`); 
                         return vscode.window.showInputBox({
@@ -92,7 +92,7 @@ export class PipPackage implements IPackage {
                     }
                     return Q.resolve();
                 }).catch(err =>{
-                    console.log("error pip list",err);
+                    console.log(`Error: pip list ${err}`);
                     return Q.reject(err);   
                 });
         })

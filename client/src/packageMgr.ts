@@ -31,7 +31,7 @@ export class PackageMgr {
                 PackageMgr._packages.push(new PipPackage(key.toString(), qiskitPacks[key].toString()));     
               });
         } catch (err){
-            console.log("PackMGr",err);
+            console.log(`PackMGr ${err}`);
         }
         
     }
