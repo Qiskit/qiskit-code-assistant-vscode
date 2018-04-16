@@ -18,22 +18,24 @@ import * as Q from "q";
 import {IDependency} from "./interfaces";
 import {Dependency} from "./dependency";
 import {Version} from "./version";
+import {workspace} from "vscode";
+
 
 export class DependencyMgr {
-    private static dependencies : IDependency[] = [
-        new Dependency('pip', Version.fromString('9')),
-        new Dependency('python', Version.fromString('3.5'))
-    ];
-
+    static _dependencies : Q.Promise<IDependency[]> = [];
     constructor() {
+        const config = workspace.getConfiguration('ibm-q-studio');
+        const dependList = config.get("python.dependencies");
+
+        Object.keys(dependList).forEach(function(key) {
+            DependencyMgr._dependencies.push(new Dependency(key.toString(), Version.fromString(dependList[key].toString())));     
+          });
     }
 
-    public static checkDependencies() : Q.Promise {
-        // TODO: Read depdencies from external file
-        // Check for python > 3.5
-        // Check for pip
+    checkDependencies() : Q.Promise<void> {
         let packages: Q.Promise<IDependency>[] = [];
-        DependencyMgr.dependencies.forEach(dep => {
+        
+        DependencyMgr._dependencies.forEach(dep => {
             packages.push(dep.isInstalled());
         });
         

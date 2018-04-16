@@ -36,7 +36,7 @@ export class PyPiWrapper implements IPackageInfo {
         return httpc.get(url).then((res: httpm.HttpClientResponse) => {
             return res.readBody().then((body: string) => {
                 let pypiPkgJson = JSON.parse(body);
-                let pkg = new PipPackage(pypiPkgJson.info.name)
+                let pkg = new PipPackage(pypiPkgJson.info.name, pypiPkgJson.info.version);
                 pkg.Info.Dependencies = pypiPkgJson.info.requires_dist;
                 pkg.Info.Location = pypiPkgJson.info.package_url;
                 pkg.Info.Summary = pypiPkgJson.info.summary;

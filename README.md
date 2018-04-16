@@ -1,15 +1,15 @@
-# Qiskit Studio
-> Qiskit Studio is a tool that makes simple working with QASM files.
+# IBM Q Studio
+> IBM Q Studio is a tool that makes simple working with QASM files and QISKit SDK.
 
-Q-Studio is a Visual Studio Code extension, that allow the researchers and developers create and execute Quantum circuits. After the execution the results can be evaluated.
+IBM Q Studio is a Visual Studio Code extension, that allow the researchers and developers create and execute Quantum circuits. After the execution the results can be evaluated.
 
-You can find additional information about planning and future of Q-Studio [here](https://ibm.ent.box.com/notes/282598814468).
+You can find additional information about planning and future of Q Studio [here](https://ibm.ent.box.com/notes/282598814468).
 
-## Q-Studio features
+## Q Studio features
 
-### Errors highlight
+### Errors highlighting
 
-Below is a list of the syntactic and semantic errors detected by the extension:
+Below there is a list of the syntactic and semantic errors detected by the extension:
 
 :white_check_mark: Not previously defined symbols.
 
@@ -24,6 +24,25 @@ Below is a list of the syntactic and semantic errors detected by the extension:
 :white_check_mark: Wrong types in conditional sentences.
 
 :soon: Wrong number of arguments in a gate invocation.
+
+### Dependency Management
+
+IBM Q Studio includes features to manage the related dependencies. IBM Q Studio will not work  without `python` (>=3.5) and `pip` (>=9.0.0) installed in your system (or virtualenv). Apart of python and pip, this extension requires the `qiskit` SDK (and related dependencies) to run executions and to use other core-features.
+
+To assure the proper work of this extension, it checks your environment to verify it includes the different dependencies, allowing also to update or install them if it is needed.
+
+
+### Work with different _virtualenvs_
+In the Python ecosystem is common to use different _virtualenvs_ to manage the execution environment. In our case, we allow users to change their python virtualenvs using the VSCode utilities as documented in  https://code.visualstudio.com/docs/python/environments 
+
+If you change your Python _virtualenv_ after beginning your use of VSCode, please check again the IBM Q Studio-related dependencies using the command `qstudio.checkDependencies` to assure the proper running of this extension.
+
+
+### Custom VSCode commands
+Currently, this extension includes the following commands:
+
+  * `qstudio.reload`: reload all the extension.
+  * `qstudio.checkDependencies`: checks the dependencies. Pretty useful if changing between different _virtualenvs_.
 
 ## Installation
 

@@ -24,13 +24,15 @@
 	],
 	"activationEvents": [
 		"onLanguage:qasm-lang",
-		"onLanguage:qiskit-lang"
+		"onCommand:qstudio.reload",
+		"onCommand:qstudio.checkDependencies",
+		"*"
 	],
 	"main": "./out/src/extension",
 	"contributes": {
 		"configuration": {
 			"type": "object",
-			"title": "QASM configuration",
+			"title": "IBM Q Studio configuration",
 			"properties": {
 				"qasmLang.maxNumberOfProblems": {
 					"scope": "resource",
@@ -48,6 +50,21 @@
 					],
 					"default": "off",
 					"description": "Traces the communication between VSCode and the language server."
+				},
+				"ibm-q-studio.python.dependencies": {
+					"type": "object",
+					"default": {
+						"python": "3.5",
+						"pip": "9.0.0"
+					},
+					"description": "Basic python dependencies required"
+				},
+				"ibm-q-studio.qiskit.packages": {
+					"type": "object",
+					"default": {
+						"qiskit": "0.4.11"
+					},
+					"description": "QISKit and libraries related to run code"
 				}
 			}
 		},
@@ -78,11 +95,18 @@
 				"language": "qasm-lang",
 				"scopeName": "source.qasm",
 				"path": "./syntaxes/qasm.json"
+			}
+		],
+		"commands": [
+			{
+				"command": "qstudio.reload",
+				"title": "Reload IBM Q Studio",
+				"category": "qstudio"
 			},
 			{
-				"language": "qiskit-lang",
-				"scopeName": "source.py",
-				"path": "./syntaxes/qiskit.json"
+				"command": "qstudio.checkDependencies",
+				"title": "Check IBM Q Studio dependencies",
+				"category": "qstudio"
 			}
 		]
 	},

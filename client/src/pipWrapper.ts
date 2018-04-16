@@ -58,6 +58,8 @@ export class PipWrapper implements IPackageInfo {
                                'pip show' command output!`);
             }
             return Q.resolve(pkg);
+        }).catch(err => {
+            return Q.reject(err);
         });
     }
 
@@ -69,15 +71,15 @@ export class PipWrapper implements IPackageInfo {
     }
 
     public search(pkg: string): Q.Promise<boolean> {
-        let parserFunc : ParserFunction = () => {
-            return "Need to implement this method!";
+        let parserFunc : ParserFunction = (stdout: string) => {
+            return stdout;
         };
         return this.exec("search", [pkg], parserFunc);
     }
 
     public install(pkg: string): Q.Promise<string>{
-        let parserFunc : ParserFunction = () => {
-            return "Need to implement this method!";
+        let parserFunc : ParserFunction = (stdout: string) => {
+            return stdout;
         };
         return this.exec("install", [pkg], parserFunc);
     }
@@ -89,13 +91,20 @@ export class PipWrapper implements IPackageInfo {
         return this.exec("install", ["-U", "--no-cache-dir", pkg], parserFunc);
     }
 
-
+    public list(): Q.Promise<string>{
+        let parserFunc : ParserFunction = (stdout: string) => {
+            return stdout;
+        };
+        return this.exec("list", [], parserFunc);
+    }
 
     private exec(command: string, args:string [], parser: ParserFunction): 
         Q.Promise<string> {
         return (new CommandExecutor).exec(PipWrapper.PIP_COMMAND,[command].concat(args))
-        .then((stdout) => {
-            return Q.resolve(parser(stdout));
-        });
+            .then((stdout) => {
+                return Q.resolve(parser(stdout));
+            }).catch(err => {
+                return Q.reject(err);
+            });
     }
 }

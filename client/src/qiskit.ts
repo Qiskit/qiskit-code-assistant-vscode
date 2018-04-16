@@ -22,7 +22,11 @@ export class Qiskit implements IPackage {
         return Q.reject("Not implemented!");
     }
 
-    check() : Q.Promise<void> {
+    checkVersion() : Q.Promise<void> {
+        return Q.reject("Not implemented!");
+    }
+
+    install() : Q.Promise<void> {
         return Q.reject("Not implemented!");
     }
 }
