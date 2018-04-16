@@ -24,15 +24,17 @@ import {
     ServerOptions,
     TransportKind
 } from 'vscode-languageclient';
-import {CommandPaletteHelper} from "./commandPaletteHelper";
+//import {CommandPaletteHelper} from "./commandPaletteHelper";
 import {DependencyMgr} from "./dependencyMgr";
 import {PackageMgr} from "./packageMgr";
 
 export function activate(context: vscode.ExtensionContext) {
 
-    console.log('Activating Qiskit extension ...');
+    console.log('Activating IBM Q Studio extension ...');
 
-    registerQiskitCommands(context);
+    vscode.window.showInformationMessage("✨ Activating IBM Q Studio extension... ✨");
+
+    //registerQiskitCommands(context);
 
     let serverModule = context.asAbsolutePath(path.join('server', 'server.js'));
     
@@ -75,27 +77,68 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    DependencyMgr.checkDependencies().then((deps) => {
-        console.log('All dependencies are met!');
-        deps.forEach(dep => {
-            console.log("Package: " + dep.Name + " Version: " +
-                dep.InstalledVersion);
-        });
-        return Q.resolve();
-    // Check for pyhton packages!
-    }).then(() => {
-        console.log('Check for required python packages...');
-        return PackageMgr.check();
-    // Iterate over the list of packages
-    }).catch(error => {
-        console.log('Seems like there was a problem: ' + error);
-    });
+    checkDependencies()
+        .then(() => {
+            console.log('IBM Q Studio extension succesfully loaded!');
+            vscode.window.showInformationMessage("🚀 IBM Q Studio extension loaded! 🚀");
+        })
+        .catch(err => {
+            console.log('Dependencies error:',err);
+            vscode.window.showErrorMessage(err);
+        })
 
-    function registerQiskitCommands(context: vscode.ExtensionContext): void {
+    /*function registerQiskitCommands(context: vscode.ExtensionContext): void {
         context.subscriptions.push(vscode.commands.registerCommand(`qiskitRun`, () => {
             return CommandPaletteHelper.run()
         }));
-    }
+    }*/
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("qstudio.reload", () => activate(context)),
+        vscode.commands.registerCommand("qstudio.checkDependencies", () => checkDependencies()),
+    );
+}
+
+function checkDependencies(): Q.Promise<string> {
+    let depMgr = new DependencyMgr();
+    return Q.Promise((resolve, reject) => {
+        return depMgr.checkDependencies()
+            .then((deps) => {
+                console.log('Checking for Python dependencies...');
+                //vscode.window.showInformationMessage("Checking for Python dependencies...");
+                let depsList :string = "";
+                deps.forEach(dep => {
+                    console.log(`Package: ${dep.Name} Version: ${dep.InstalledVersion}`);
+                        depsList+=(`👌 ${dep.Name} v ${dep.InstalledVersion}\n`);
+                });
+                vscode.window.showInformationMessage(`IBM Q Studio dependencies found! ${depsList}`);
+            // Check for pyhton packages!
+            }).then(() => {
+                console.log('Check for required python packages...');
+
+                //vscode.window.showInformationMessage("Checking for required python packages...");
+                
+                let packMgr = new PackageMgr();
+                return packMgr.check()
+                    .then(results => {
+                        console.log(`packMgr.check extension.ts ${results}`);
+                        vscode.window.showInformationMessage(results);
+                        //return Q.resolve(results);
+                        return resolve();
+                    }).catch(err => {
+                        console.log(`packMgr.check error extension.ts ${err}`);
+                        return Q.reject(err);
+                    });
+                
+            // Iterate over the list of packages
+            }).catch(error => {
+                console.log(`Seems like there was a problem: ${error}`);
+                //vscode.window.showWarningMessage('Seems like there was a problem: ' + error);
+                vscode.window.showErrorMessage(`Seems like there was a problem: ${error}`);
+                return reject(error);
+            });
+        }
+    );
 }
 
 export function deactivate() {
