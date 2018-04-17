@@ -281,6 +281,7 @@ export class Python3Parser extends Parser {
 	public symbolTable = QiskitSymbolTable.build();
 	private statements = new StatementsStack();
 	private argumentsScope = false;
+	private arrayScope = false;
 	private argumentsErrorHandler = new ParserArgumentsErrorHandler(this);
 
 	declaredVariables(): string[] {
@@ -296,8 +297,6 @@ export class Python3Parser extends Parser {
 
 	applyAssignment(symbol: string): void {
 	  let statement = this.statements.last();
-
-	  console.log(`Current assignment ${statement}`);
 
 	  if (this.isAssignmentAppliable(statement, symbol)) {
 	    let parentSymbol = this.findParentSymbolWith(statement);
@@ -4311,7 +4310,7 @@ export class Python3Parser extends Parser {
 				 
 				   if (this.argumentsScope) {
 				    this.statements.addArgument(_localctx._NAME, this.symbolTable.lookup((_localctx._NAME!=null?_localctx._NAME.text:undefined)));
-				   } else {
+				   } else if (this.arrayScope) { } else  {
 				    this.statements.addVariable(_localctx._NAME); 
 				   }
 				 
@@ -4327,7 +4326,12 @@ export class Python3Parser extends Parser {
 				{
 				this.state = 853;
 				_localctx._number = this.number();
-				 this.statements.addArgument((_localctx._number!=null?(_localctx._number._start):undefined), this.symbolTable.lookup('int')); 
+				 
+				    if (this.arrayScope) {
+				    } else {
+				      this.statements.addArgument((_localctx._number!=null?(_localctx._number._start):undefined), this.symbolTable.lookup('int')); 
+				    }
+				   
 				}
 				break;
 			case Python3Parser.STRING_LITERAL:
@@ -4348,7 +4352,12 @@ export class Python3Parser extends Parser {
 					this._errHandler.sync(this);
 					_la = this._input.LA(1);
 				} while ( _la===Python3Parser.STRING_LITERAL || _la===Python3Parser.BYTES_LITERAL );
-				 this.statements.addArgument((_localctx._str!=null?(_localctx._str._start):undefined), this.symbolTable.lookup('string')); 
+				 
+				    if (this.arrayScope) {
+				    } else {
+				     this.statements.addArgument((_localctx._str!=null?(_localctx._str._start):undefined), this.symbolTable.lookup('string')); 
+				    }
+				   
 				}
 				break;
 			case Python3Parser.ELLIPSIS:
@@ -4476,7 +4485,7 @@ export class Python3Parser extends Parser {
 		this.enterRule(_localctx, 132, Python3Parser.RULE_trailer);
 		let _la: number;
 		try {
-			this.state = 897;
+			this.state = 899;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case Python3Parser.OPEN_PAREN:
@@ -4503,20 +4512,22 @@ export class Python3Parser extends Parser {
 			case Python3Parser.OPEN_BRACK:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 890;
-				this.match(Python3Parser.OPEN_BRACK);
+				 this.arrayScope = true; 
 				this.state = 891;
-				this.subscriptlist();
+				this.match(Python3Parser.OPEN_BRACK);
 				this.state = 892;
+				this.subscriptlist();
+				this.state = 893;
 				this.match(Python3Parser.CLOSE_BRACK);
+				 this.arrayScope = false; 
 				}
 				break;
 			case Python3Parser.DOT:
 				this.enterOuterAlt(_localctx, 3);
 				{
-				this.state = 894;
+				this.state = 896;
 				this.match(Python3Parser.DOT);
-				this.state = 895;
+				this.state = 897;
 				_localctx._NAME = this.match(Python3Parser.NAME);
 				 this.statements.addTrailingMethod(_localctx._NAME); 
 				}
@@ -4548,32 +4559,32 @@ export class Python3Parser extends Parser {
 			let _alt: number;
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 899;
+			this.state = 901;
 			this.subscript();
-			this.state = 904;
+			this.state = 906;
 			this._errHandler.sync(this);
 			_alt = this.interpreter.adaptivePredict(this._input,117,this._ctx);
 			while ( _alt!==2 && _alt!==ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt===1 ) {
 					{
 					{
-					this.state = 900;
+					this.state = 902;
 					this.match(Python3Parser.COMMA);
-					this.state = 901;
+					this.state = 903;
 					this.subscript();
 					}
 					} 
 				}
-				this.state = 906;
+				this.state = 908;
 				this._errHandler.sync(this);
 				_alt = this.interpreter.adaptivePredict(this._input,117,this._ctx);
 			}
-			this.state = 908;
+			this.state = 910;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if (_la===Python3Parser.COMMA) {
 				{
-				this.state = 907;
+				this.state = 909;
 				this.match(Python3Parser.COMMA);
 				}
 			}
@@ -4600,13 +4611,13 @@ export class Python3Parser extends Parser {
 		this.enterRule(_localctx, 136, Python3Parser.RULE_subscript);
 		let _la: number;
 		try {
-			this.state = 921;
+			this.state = 923;
 			this._errHandler.sync(this);
 			switch ( this.interpreter.adaptivePredict(this._input,122,this._ctx) ) {
 			case 1:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 910;
+				this.state = 912;
 				this.test();
 				}
 				break;
@@ -4614,34 +4625,34 @@ export class Python3Parser extends Parser {
 			case 2:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 912;
-				this._errHandler.sync(this);
-				_la = this._input.LA(1);
-				if (((((_la - 20)) & ~0x1F) === 0 && ((1 << (_la - 20)) & ((1 << (Python3Parser.LAMBDA - 20)) | (1 << (Python3Parser.NOT - 20)) | (1 << (Python3Parser.NONE - 20)) | (1 << (Python3Parser.TRUE - 20)) | (1 << (Python3Parser.FALSE - 20)) | (1 << (Python3Parser.NAME - 20)) | (1 << (Python3Parser.STRING_LITERAL - 20)) | (1 << (Python3Parser.BYTES_LITERAL - 20)) | (1 << (Python3Parser.DECIMAL_INTEGER - 20)) | (1 << (Python3Parser.OCT_INTEGER - 20)) | (1 << (Python3Parser.HEX_INTEGER - 20)) | (1 << (Python3Parser.BIN_INTEGER - 20)) | (1 << (Python3Parser.FLOAT_NUMBER - 20)) | (1 << (Python3Parser.IMAG_NUMBER - 20)) | (1 << (Python3Parser.ELLIPSIS - 20)) | (1 << (Python3Parser.STAR - 20)) | (1 << (Python3Parser.OPEN_PAREN - 20)))) !== 0) || ((((_la - 54)) & ~0x1F) === 0 && ((1 << (_la - 54)) & ((1 << (Python3Parser.OPEN_BRACK - 54)) | (1 << (Python3Parser.ADD - 54)) | (1 << (Python3Parser.MINUS - 54)) | (1 << (Python3Parser.NOT_OP - 54)) | (1 << (Python3Parser.OPEN_BRACE - 54)))) !== 0)) {
-					{
-					this.state = 911;
-					this.test();
-					}
-				}
-
 				this.state = 914;
-				this.match(Python3Parser.COLON);
-				this.state = 916;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 				if (((((_la - 20)) & ~0x1F) === 0 && ((1 << (_la - 20)) & ((1 << (Python3Parser.LAMBDA - 20)) | (1 << (Python3Parser.NOT - 20)) | (1 << (Python3Parser.NONE - 20)) | (1 << (Python3Parser.TRUE - 20)) | (1 << (Python3Parser.FALSE - 20)) | (1 << (Python3Parser.NAME - 20)) | (1 << (Python3Parser.STRING_LITERAL - 20)) | (1 << (Python3Parser.BYTES_LITERAL - 20)) | (1 << (Python3Parser.DECIMAL_INTEGER - 20)) | (1 << (Python3Parser.OCT_INTEGER - 20)) | (1 << (Python3Parser.HEX_INTEGER - 20)) | (1 << (Python3Parser.BIN_INTEGER - 20)) | (1 << (Python3Parser.FLOAT_NUMBER - 20)) | (1 << (Python3Parser.IMAG_NUMBER - 20)) | (1 << (Python3Parser.ELLIPSIS - 20)) | (1 << (Python3Parser.STAR - 20)) | (1 << (Python3Parser.OPEN_PAREN - 20)))) !== 0) || ((((_la - 54)) & ~0x1F) === 0 && ((1 << (_la - 54)) & ((1 << (Python3Parser.OPEN_BRACK - 54)) | (1 << (Python3Parser.ADD - 54)) | (1 << (Python3Parser.MINUS - 54)) | (1 << (Python3Parser.NOT_OP - 54)) | (1 << (Python3Parser.OPEN_BRACE - 54)))) !== 0)) {
 					{
-					this.state = 915;
+					this.state = 913;
 					this.test();
 					}
 				}
 
-				this.state = 919;
+				this.state = 916;
+				this.match(Python3Parser.COLON);
+				this.state = 918;
+				this._errHandler.sync(this);
+				_la = this._input.LA(1);
+				if (((((_la - 20)) & ~0x1F) === 0 && ((1 << (_la - 20)) & ((1 << (Python3Parser.LAMBDA - 20)) | (1 << (Python3Parser.NOT - 20)) | (1 << (Python3Parser.NONE - 20)) | (1 << (Python3Parser.TRUE - 20)) | (1 << (Python3Parser.FALSE - 20)) | (1 << (Python3Parser.NAME - 20)) | (1 << (Python3Parser.STRING_LITERAL - 20)) | (1 << (Python3Parser.BYTES_LITERAL - 20)) | (1 << (Python3Parser.DECIMAL_INTEGER - 20)) | (1 << (Python3Parser.OCT_INTEGER - 20)) | (1 << (Python3Parser.HEX_INTEGER - 20)) | (1 << (Python3Parser.BIN_INTEGER - 20)) | (1 << (Python3Parser.FLOAT_NUMBER - 20)) | (1 << (Python3Parser.IMAG_NUMBER - 20)) | (1 << (Python3Parser.ELLIPSIS - 20)) | (1 << (Python3Parser.STAR - 20)) | (1 << (Python3Parser.OPEN_PAREN - 20)))) !== 0) || ((((_la - 54)) & ~0x1F) === 0 && ((1 << (_la - 54)) & ((1 << (Python3Parser.OPEN_BRACK - 54)) | (1 << (Python3Parser.ADD - 54)) | (1 << (Python3Parser.MINUS - 54)) | (1 << (Python3Parser.NOT_OP - 54)) | (1 << (Python3Parser.OPEN_BRACE - 54)))) !== 0)) {
+					{
+					this.state = 917;
+					this.test();
+					}
+				}
+
+				this.state = 921;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 				if (_la===Python3Parser.COLON) {
 					{
-					this.state = 918;
+					this.state = 920;
 					this.sliceop();
 					}
 				}
@@ -4672,14 +4683,14 @@ export class Python3Parser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 923;
-			this.match(Python3Parser.COLON);
 			this.state = 925;
+			this.match(Python3Parser.COLON);
+			this.state = 927;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if (((((_la - 20)) & ~0x1F) === 0 && ((1 << (_la - 20)) & ((1 << (Python3Parser.LAMBDA - 20)) | (1 << (Python3Parser.NOT - 20)) | (1 << (Python3Parser.NONE - 20)) | (1 << (Python3Parser.TRUE - 20)) | (1 << (Python3Parser.FALSE - 20)) | (1 << (Python3Parser.NAME - 20)) | (1 << (Python3Parser.STRING_LITERAL - 20)) | (1 << (Python3Parser.BYTES_LITERAL - 20)) | (1 << (Python3Parser.DECIMAL_INTEGER - 20)) | (1 << (Python3Parser.OCT_INTEGER - 20)) | (1 << (Python3Parser.HEX_INTEGER - 20)) | (1 << (Python3Parser.BIN_INTEGER - 20)) | (1 << (Python3Parser.FLOAT_NUMBER - 20)) | (1 << (Python3Parser.IMAG_NUMBER - 20)) | (1 << (Python3Parser.ELLIPSIS - 20)) | (1 << (Python3Parser.STAR - 20)) | (1 << (Python3Parser.OPEN_PAREN - 20)))) !== 0) || ((((_la - 54)) & ~0x1F) === 0 && ((1 << (_la - 54)) & ((1 << (Python3Parser.OPEN_BRACK - 54)) | (1 << (Python3Parser.ADD - 54)) | (1 << (Python3Parser.MINUS - 54)) | (1 << (Python3Parser.NOT_OP - 54)) | (1 << (Python3Parser.OPEN_BRACE - 54)))) !== 0)) {
 				{
-				this.state = 924;
+				this.state = 926;
 				this.test();
 				}
 			}
@@ -4709,32 +4720,32 @@ export class Python3Parser extends Parser {
 			let _alt: number;
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 927;
+			this.state = 929;
 			this.star_expr();
-			this.state = 932;
+			this.state = 934;
 			this._errHandler.sync(this);
 			_alt = this.interpreter.adaptivePredict(this._input,124,this._ctx);
 			while ( _alt!==2 && _alt!==ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt===1 ) {
 					{
 					{
-					this.state = 928;
+					this.state = 930;
 					this.match(Python3Parser.COMMA);
-					this.state = 929;
+					this.state = 931;
 					this.star_expr();
 					}
 					} 
 				}
-				this.state = 934;
+				this.state = 936;
 				this._errHandler.sync(this);
 				_alt = this.interpreter.adaptivePredict(this._input,124,this._ctx);
 			}
-			this.state = 936;
+			this.state = 938;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if (_la===Python3Parser.COMMA) {
 				{
-				this.state = 935;
+				this.state = 937;
 				this.match(Python3Parser.COMMA);
 				}
 			}
@@ -4764,32 +4775,32 @@ export class Python3Parser extends Parser {
 			let _alt: number;
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 938;
+			this.state = 940;
 			this.test();
-			this.state = 943;
+			this.state = 945;
 			this._errHandler.sync(this);
 			_alt = this.interpreter.adaptivePredict(this._input,126,this._ctx);
 			while ( _alt!==2 && _alt!==ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt===1 ) {
 					{
 					{
-					this.state = 939;
+					this.state = 941;
 					this.match(Python3Parser.COMMA);
-					this.state = 940;
+					this.state = 942;
 					this.test();
 					}
 					} 
 				}
-				this.state = 945;
+				this.state = 947;
 				this._errHandler.sync(this);
 				_alt = this.interpreter.adaptivePredict(this._input,126,this._ctx);
 			}
-			this.state = 947;
+			this.state = 949;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if (_la===Python3Parser.COMMA) {
 				{
-				this.state = 946;
+				this.state = 948;
 				this.match(Python3Parser.COMMA);
 				}
 			}
@@ -4817,58 +4828,58 @@ export class Python3Parser extends Parser {
 		let _la: number;
 		try {
 			let _alt: number;
-			this.state = 982;
+			this.state = 984;
 			this._errHandler.sync(this);
 			switch ( this.interpreter.adaptivePredict(this._input,134,this._ctx) ) {
 			case 1:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 949;
-				this.test();
-				this.state = 950;
-				this.match(Python3Parser.COLON);
 				this.state = 951;
 				this.test();
-				this.state = 966;
+				this.state = 952;
+				this.match(Python3Parser.COLON);
+				this.state = 953;
+				this.test();
+				this.state = 968;
 				this._errHandler.sync(this);
 				switch (this._input.LA(1)) {
 				case Python3Parser.FOR:
 					{
-					this.state = 952;
+					this.state = 954;
 					this.comp_for();
 					}
 					break;
 				case Python3Parser.COMMA:
 				case Python3Parser.CLOSE_BRACE:
 					{
-					this.state = 960;
+					this.state = 962;
 					this._errHandler.sync(this);
 					_alt = this.interpreter.adaptivePredict(this._input,128,this._ctx);
 					while ( _alt!==2 && _alt!==ATN.INVALID_ALT_NUMBER ) {
 						if ( _alt===1 ) {
 							{
 							{
-							this.state = 953;
-							this.match(Python3Parser.COMMA);
-							this.state = 954;
-							this.test();
 							this.state = 955;
-							this.match(Python3Parser.COLON);
+							this.match(Python3Parser.COMMA);
 							this.state = 956;
+							this.test();
+							this.state = 957;
+							this.match(Python3Parser.COLON);
+							this.state = 958;
 							this.test();
 							}
 							} 
 						}
-						this.state = 962;
+						this.state = 964;
 						this._errHandler.sync(this);
 						_alt = this.interpreter.adaptivePredict(this._input,128,this._ctx);
 					}
-					this.state = 964;
+					this.state = 966;
 					this._errHandler.sync(this);
 					_la = this._input.LA(1);
 					if (_la===Python3Parser.COMMA) {
 						{
-						this.state = 963;
+						this.state = 965;
 						this.match(Python3Parser.COMMA);
 						}
 					}
@@ -4884,44 +4895,44 @@ export class Python3Parser extends Parser {
 			case 2:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 968;
+				this.state = 970;
 				this.test();
-				this.state = 980;
+				this.state = 982;
 				this._errHandler.sync(this);
 				switch (this._input.LA(1)) {
 				case Python3Parser.FOR:
 					{
-					this.state = 969;
+					this.state = 971;
 					this.comp_for();
 					}
 					break;
 				case Python3Parser.COMMA:
 				case Python3Parser.CLOSE_BRACE:
 					{
-					this.state = 974;
+					this.state = 976;
 					this._errHandler.sync(this);
 					_alt = this.interpreter.adaptivePredict(this._input,131,this._ctx);
 					while ( _alt!==2 && _alt!==ATN.INVALID_ALT_NUMBER ) {
 						if ( _alt===1 ) {
 							{
 							{
-							this.state = 970;
+							this.state = 972;
 							this.match(Python3Parser.COMMA);
-							this.state = 971;
+							this.state = 973;
 							this.test();
 							}
 							} 
 						}
-						this.state = 976;
+						this.state = 978;
 						this._errHandler.sync(this);
 						_alt = this.interpreter.adaptivePredict(this._input,131,this._ctx);
 					}
-					this.state = 978;
+					this.state = 980;
 					this._errHandler.sync(this);
 					_la = this._input.LA(1);
 					if (_la===Python3Parser.COMMA) {
 						{
-						this.state = 977;
+						this.state = 979;
 						this.match(Python3Parser.COMMA);
 						}
 					}
@@ -4957,35 +4968,35 @@ export class Python3Parser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 984;
+			this.state = 986;
 			this.match(Python3Parser.CLASS);
-			this.state = 985;
+			this.state = 987;
 			this.match(Python3Parser.NAME);
-			this.state = 991;
+			this.state = 993;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if (_la===Python3Parser.OPEN_PAREN) {
 				{
-				this.state = 986;
-				this.match(Python3Parser.OPEN_PAREN);
 				this.state = 988;
+				this.match(Python3Parser.OPEN_PAREN);
+				this.state = 990;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 				if (((((_la - 20)) & ~0x1F) === 0 && ((1 << (_la - 20)) & ((1 << (Python3Parser.LAMBDA - 20)) | (1 << (Python3Parser.NOT - 20)) | (1 << (Python3Parser.NONE - 20)) | (1 << (Python3Parser.TRUE - 20)) | (1 << (Python3Parser.FALSE - 20)) | (1 << (Python3Parser.NAME - 20)) | (1 << (Python3Parser.STRING_LITERAL - 20)) | (1 << (Python3Parser.BYTES_LITERAL - 20)) | (1 << (Python3Parser.DECIMAL_INTEGER - 20)) | (1 << (Python3Parser.OCT_INTEGER - 20)) | (1 << (Python3Parser.HEX_INTEGER - 20)) | (1 << (Python3Parser.BIN_INTEGER - 20)) | (1 << (Python3Parser.FLOAT_NUMBER - 20)) | (1 << (Python3Parser.IMAG_NUMBER - 20)) | (1 << (Python3Parser.ELLIPSIS - 20)) | (1 << (Python3Parser.STAR - 20)) | (1 << (Python3Parser.OPEN_PAREN - 20)))) !== 0) || ((((_la - 52)) & ~0x1F) === 0 && ((1 << (_la - 52)) & ((1 << (Python3Parser.POWER - 52)) | (1 << (Python3Parser.OPEN_BRACK - 52)) | (1 << (Python3Parser.ADD - 52)) | (1 << (Python3Parser.MINUS - 52)) | (1 << (Python3Parser.NOT_OP - 52)) | (1 << (Python3Parser.OPEN_BRACE - 52)))) !== 0)) {
 					{
-					this.state = 987;
+					this.state = 989;
 					this.arglist();
 					}
 				}
 
-				this.state = 990;
+				this.state = 992;
 				this.match(Python3Parser.CLOSE_PAREN);
 				}
 			}
 
-			this.state = 993;
+			this.state = 995;
 			this.match(Python3Parser.COLON);
-			this.state = 994;
+			this.state = 996;
 			this.suite();
 			}
 		}
@@ -5012,37 +5023,37 @@ export class Python3Parser extends Parser {
 			let _alt: number;
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 1001;
+			this.state = 1003;
 			this._errHandler.sync(this);
 			_alt = this.interpreter.adaptivePredict(this._input,137,this._ctx);
 			while ( _alt!==2 && _alt!==ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt===1 ) {
 					{
 					{
-					this.state = 996;
+					this.state = 998;
 					this.argument();
-					this.state = 997;
+					this.state = 999;
 					this.match(Python3Parser.COMMA);
 					}
 					} 
 				}
-				this.state = 1003;
+				this.state = 1005;
 				this._errHandler.sync(this);
 				_alt = this.interpreter.adaptivePredict(this._input,137,this._ctx);
 			}
-			this.state = 1024;
+			this.state = 1026;
 			this._errHandler.sync(this);
 			switch ( this.interpreter.adaptivePredict(this._input,141,this._ctx) ) {
 			case 1:
 				{
-				this.state = 1004;
-				this.argument();
 				this.state = 1006;
+				this.argument();
+				this.state = 1008;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 				if (_la===Python3Parser.COMMA) {
 					{
-					this.state = 1005;
+					this.state = 1007;
 					this.match(Python3Parser.COMMA);
 					}
 				}
@@ -5052,38 +5063,38 @@ export class Python3Parser extends Parser {
 
 			case 2:
 				{
-				this.state = 1008;
+				this.state = 1010;
 				this.match(Python3Parser.STAR);
-				this.state = 1009;
+				this.state = 1011;
 				this.test();
-				this.state = 1014;
+				this.state = 1016;
 				this._errHandler.sync(this);
 				_alt = this.interpreter.adaptivePredict(this._input,139,this._ctx);
 				while ( _alt!==2 && _alt!==ATN.INVALID_ALT_NUMBER ) {
 					if ( _alt===1 ) {
 						{
 						{
-						this.state = 1010;
+						this.state = 1012;
 						this.match(Python3Parser.COMMA);
-						this.state = 1011;
+						this.state = 1013;
 						this.argument();
 						}
 						} 
 					}
-					this.state = 1016;
+					this.state = 1018;
 					this._errHandler.sync(this);
 					_alt = this.interpreter.adaptivePredict(this._input,139,this._ctx);
 				}
-				this.state = 1020;
+				this.state = 1022;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 				if (_la===Python3Parser.COMMA) {
 					{
-					this.state = 1017;
-					this.match(Python3Parser.COMMA);
-					this.state = 1018;
-					this.match(Python3Parser.POWER);
 					this.state = 1019;
+					this.match(Python3Parser.COMMA);
+					this.state = 1020;
+					this.match(Python3Parser.POWER);
+					this.state = 1021;
 					this.test();
 					}
 				}
@@ -5093,9 +5104,9 @@ export class Python3Parser extends Parser {
 
 			case 3:
 				{
-				this.state = 1022;
+				this.state = 1024;
 				this.match(Python3Parser.POWER);
-				this.state = 1023;
+				this.state = 1025;
 				this.test();
 				}
 				break;
@@ -5122,20 +5133,20 @@ export class Python3Parser extends Parser {
 		this.enterRule(_localctx, 150, Python3Parser.RULE_argument);
 		let _la: number;
 		try {
-			this.state = 1034;
+			this.state = 1036;
 			this._errHandler.sync(this);
 			switch ( this.interpreter.adaptivePredict(this._input,143,this._ctx) ) {
 			case 1:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 1026;
-				this.test();
 				this.state = 1028;
+				this.test();
+				this.state = 1030;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 				if (_la===Python3Parser.FOR) {
 					{
-					this.state = 1027;
+					this.state = 1029;
 					this.comp_for();
 					}
 				}
@@ -5146,11 +5157,11 @@ export class Python3Parser extends Parser {
 			case 2:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 1030;
-				this.test();
-				this.state = 1031;
-				this.match(Python3Parser.ASSIGN);
 				this.state = 1032;
+				this.test();
+				this.state = 1033;
+				this.match(Python3Parser.ASSIGN);
+				this.state = 1034;
 				this.test();
 				}
 				break;
@@ -5175,20 +5186,20 @@ export class Python3Parser extends Parser {
 		let _localctx: Comp_iterContext = new Comp_iterContext(this._ctx, this.state);
 		this.enterRule(_localctx, 152, Python3Parser.RULE_comp_iter);
 		try {
-			this.state = 1038;
+			this.state = 1040;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case Python3Parser.FOR:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 1036;
+				this.state = 1038;
 				this.comp_for();
 				}
 				break;
 			case Python3Parser.IF:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 1037;
+				this.state = 1039;
 				this.comp_if();
 				}
 				break;
@@ -5218,20 +5229,20 @@ export class Python3Parser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 1040;
-			this.match(Python3Parser.FOR);
-			this.state = 1041;
-			this.exprlist();
 			this.state = 1042;
-			this.match(Python3Parser.IN);
+			this.match(Python3Parser.FOR);
 			this.state = 1043;
-			this.or_test();
+			this.exprlist();
+			this.state = 1044;
+			this.match(Python3Parser.IN);
 			this.state = 1045;
+			this.or_test();
+			this.state = 1047;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if (_la===Python3Parser.IF || _la===Python3Parser.FOR) {
 				{
-				this.state = 1044;
+				this.state = 1046;
 				this.comp_iter();
 				}
 			}
@@ -5260,16 +5271,16 @@ export class Python3Parser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 1047;
+			this.state = 1049;
 			this.match(Python3Parser.IF);
-			this.state = 1048;
-			this.test_nocond();
 			this.state = 1050;
+			this.test_nocond();
+			this.state = 1052;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if (_la===Python3Parser.IF || _la===Python3Parser.FOR) {
 				{
-				this.state = 1049;
+				this.state = 1051;
 				this.comp_iter();
 				}
 			}
@@ -5298,14 +5309,14 @@ export class Python3Parser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 1052;
-			this.match(Python3Parser.YIELD);
 			this.state = 1054;
+			this.match(Python3Parser.YIELD);
+			this.state = 1056;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if (((((_la - 4)) & ~0x1F) === 0 && ((1 << (_la - 4)) & ((1 << (Python3Parser.FROM - 4)) | (1 << (Python3Parser.LAMBDA - 4)) | (1 << (Python3Parser.NOT - 4)) | (1 << (Python3Parser.NONE - 4)) | (1 << (Python3Parser.TRUE - 4)) | (1 << (Python3Parser.FALSE - 4)) | (1 << (Python3Parser.NAME - 4)))) !== 0) || ((((_la - 36)) & ~0x1F) === 0 && ((1 << (_la - 36)) & ((1 << (Python3Parser.STRING_LITERAL - 36)) | (1 << (Python3Parser.BYTES_LITERAL - 36)) | (1 << (Python3Parser.DECIMAL_INTEGER - 36)) | (1 << (Python3Parser.OCT_INTEGER - 36)) | (1 << (Python3Parser.HEX_INTEGER - 36)) | (1 << (Python3Parser.BIN_INTEGER - 36)) | (1 << (Python3Parser.FLOAT_NUMBER - 36)) | (1 << (Python3Parser.IMAG_NUMBER - 36)) | (1 << (Python3Parser.ELLIPSIS - 36)) | (1 << (Python3Parser.STAR - 36)) | (1 << (Python3Parser.OPEN_PAREN - 36)) | (1 << (Python3Parser.OPEN_BRACK - 36)) | (1 << (Python3Parser.ADD - 36)) | (1 << (Python3Parser.MINUS - 36)) | (1 << (Python3Parser.NOT_OP - 36)) | (1 << (Python3Parser.OPEN_BRACE - 36)))) !== 0)) {
 				{
-				this.state = 1053;
+				this.state = 1055;
 				this.yield_arg();
 				}
 			}
@@ -5331,15 +5342,15 @@ export class Python3Parser extends Parser {
 		let _localctx: Yield_argContext = new Yield_argContext(this._ctx, this.state);
 		this.enterRule(_localctx, 160, Python3Parser.RULE_yield_arg);
 		try {
-			this.state = 1059;
+			this.state = 1061;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case Python3Parser.FROM:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 1056;
+				this.state = 1058;
 				this.match(Python3Parser.FROM);
-				this.state = 1057;
+				this.state = 1059;
 				this.test();
 				}
 				break;
@@ -5367,7 +5378,7 @@ export class Python3Parser extends Parser {
 			case Python3Parser.OPEN_BRACE:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 1058;
+				this.state = 1060;
 				this.testlist();
 				}
 				break;
@@ -5397,7 +5408,7 @@ export class Python3Parser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 1061;
+			this.state = 1063;
 			_la = this._input.LA(1);
 			if ( !(_la===Python3Parser.STRING_LITERAL || _la===Python3Parser.BYTES_LITERAL) ) {
 			this._errHandler.recoverInline(this);
@@ -5430,7 +5441,7 @@ export class Python3Parser extends Parser {
 		let _localctx: NumberContext = new NumberContext(this._ctx, this.state);
 		this.enterRule(_localctx, 164, Python3Parser.RULE_number);
 		try {
-			this.state = 1066;
+			this.state = 1068;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case Python3Parser.DECIMAL_INTEGER:
@@ -5439,21 +5450,21 @@ export class Python3Parser extends Parser {
 			case Python3Parser.BIN_INTEGER:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 1063;
+				this.state = 1065;
 				this.integer();
 				}
 				break;
 			case Python3Parser.FLOAT_NUMBER:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 1064;
+				this.state = 1066;
 				this.match(Python3Parser.FLOAT_NUMBER);
 				}
 				break;
 			case Python3Parser.IMAG_NUMBER:
 				this.enterOuterAlt(_localctx, 3);
 				{
-				this.state = 1065;
+				this.state = 1067;
 				this.match(Python3Parser.IMAG_NUMBER);
 				}
 				break;
@@ -5483,7 +5494,7 @@ export class Python3Parser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 1068;
+			this.state = 1070;
 			_la = this._input.LA(1);
 			if ( !(((((_la - 38)) & ~0x1F) === 0 && ((1 << (_la - 38)) & ((1 << (Python3Parser.DECIMAL_INTEGER - 38)) | (1 << (Python3Parser.OCT_INTEGER - 38)) | (1 << (Python3Parser.HEX_INTEGER - 38)) | (1 << (Python3Parser.BIN_INTEGER - 38)))) !== 0)) ) {
 			this._errHandler.recoverInline(this);
@@ -5514,7 +5525,7 @@ export class Python3Parser extends Parser {
 
 	private static readonly _serializedATNSegments: number = 2;
 	private static readonly _serializedATNSegment0: string =
-		"\x03\uAF6F\u8320\u479D\uB75C\u4880\u1605\u191C\uAB37\x03`\u0431\x04\x02"+
+		"\x03\uAF6F\u8320\u479D\uB75C\u4880\u1605\u191C\uAB37\x03`\u0433\x04\x02"+
 		"\t\x02\x04\x03\t\x03\x04\x04\t\x04\x04\x05\t\x05\x04\x06\t\x06\x04\x07"+
 		"\t\x07\x04\b\t\b\x04\t\t\t\x04\n\t\n\x04\v\t\v\x04\f\t\f\x04\r\t\r\x04"+
 		"\x0E\t\x0E\x04\x0F\t\x0F\x04\x10\t\x10\x04\x11\t\x11\x04\x12\t\x12\x04"+
@@ -5595,34 +5606,34 @@ export class Python3Parser extends Parser {
 		"\x03B\x03B\x03B\x06B\u035C\nB\rB\x0EB\u035D\x03B\x03B\x03B\x03B\x03B\x03"+
 		"B\x05B\u0366\nB\x03C\x03C\x03C\x03C\x07C\u036C\nC\fC\x0EC\u036F\vC\x03"+
 		"C\x05C\u0372\nC\x05C\u0374\nC\x03D\x03D\x03D\x05D\u0379\nD\x03D\x03D\x03"+
-		"D\x03D\x03D\x03D\x03D\x03D\x03D\x05D\u0384\nD\x03E\x03E\x03E\x07E\u0389"+
-		"\nE\fE\x0EE\u038C\vE\x03E\x05E\u038F\nE\x03F\x03F\x05F\u0393\nF\x03F\x03"+
-		"F\x05F\u0397\nF\x03F\x05F\u039A\nF\x05F\u039C\nF\x03G\x03G\x05G\u03A0"+
-		"\nG\x03H\x03H\x03H\x07H\u03A5\nH\fH\x0EH\u03A8\vH\x03H\x05H\u03AB\nH\x03"+
-		"I\x03I\x03I\x07I\u03B0\nI\fI\x0EI\u03B3\vI\x03I\x05I\u03B6\nI\x03J\x03"+
-		"J\x03J\x03J\x03J\x03J\x03J\x03J\x03J\x07J\u03C1\nJ\fJ\x0EJ\u03C4\vJ\x03"+
-		"J\x05J\u03C7\nJ\x05J\u03C9\nJ\x03J\x03J\x03J\x03J\x07J\u03CF\nJ\fJ\x0E"+
-		"J\u03D2\vJ\x03J\x05J\u03D5\nJ\x05J\u03D7\nJ\x05J\u03D9\nJ\x03K\x03K\x03"+
-		"K\x03K\x05K\u03DF\nK\x03K\x05K\u03E2\nK\x03K\x03K\x03K\x03L\x03L\x03L"+
-		"\x07L\u03EA\nL\fL\x0EL\u03ED\vL\x03L\x03L\x05L\u03F1\nL\x03L\x03L\x03"+
-		"L\x03L\x07L\u03F7\nL\fL\x0EL\u03FA\vL\x03L\x03L\x03L\x05L\u03FF\nL\x03"+
-		"L\x03L\x05L\u0403\nL\x03M\x03M\x05M\u0407\nM\x03M\x03M\x03M\x03M\x05M"+
-		"\u040D\nM\x03N\x03N\x05N\u0411\nN\x03O\x03O\x03O\x03O\x03O\x05O\u0418"+
-		"\nO\x03P\x03P\x03P\x05P\u041D\nP\x03Q\x03Q\x05Q\u0421\nQ\x03R\x03R\x03"+
-		"R\x05R\u0426\nR\x03S\x03S\x03T\x03T\x03T\x05T\u042D\nT\x03U\x03U\x03U"+
-		"\x02\x02\x02V\x02\x02\x04\x02\x06\x02\b\x02\n\x02\f\x02\x0E\x02\x10\x02"+
-		"\x12\x02\x14\x02\x16\x02\x18\x02\x1A\x02\x1C\x02\x1E\x02 \x02\"\x02$\x02"+
-		"&\x02(\x02*\x02,\x02.\x020\x022\x024\x026\x028\x02:\x02<\x02>\x02@\x02"+
-		"B\x02D\x02F\x02H\x02J\x02L\x02N\x02P\x02R\x02T\x02V\x02X\x02Z\x02\\\x02"+
-		"^\x02`\x02b\x02d\x02f\x02h\x02j\x02l\x02n\x02p\x02r\x02t\x02v\x02x\x02"+
-		"z\x02|\x02~\x02\x80\x02\x82\x02\x84\x02\x86\x02\x88\x02\x8A\x02\x8C\x02"+
-		"\x8E\x02\x90\x02\x92\x02\x94\x02\x96\x02\x98\x02\x9A\x02\x9C\x02\x9E\x02"+
-		"\xA0\x02\xA2\x02\xA4\x02\xA6\x02\xA8\x02\x02\x06\x03\x02P\\\x03\x02./"+
-		"\x03\x02&\'\x03\x02(+\u04A1\x02\xAF\x03\x02\x02\x02\x04\xB5\x03\x02\x02"+
-		"\x02\x06\xBA\x03\x02\x02\x02\b\xC3\x03\x02\x02\x02\n\xCF\x03\x02\x02\x02"+
-		"\f\xD3\x03\x02\x02\x02\x0E\xD8\x03\x02\x02\x02\x10\xE2\x03\x02\x02\x02"+
-		"\x12\u0129\x03\x02\x02\x02\x14\u012B\x03\x02\x02\x02\x16\u0171\x03\x02"+
-		"\x02\x02\x18\u0173\x03\x02\x02\x02\x1A\u0177\x03\x02\x02\x02\x1C\u0179"+
+		"D\x03D\x03D\x03D\x03D\x03D\x03D\x03D\x03D\x05D\u0386\nD\x03E\x03E\x03"+
+		"E\x07E\u038B\nE\fE\x0EE\u038E\vE\x03E\x05E\u0391\nE\x03F\x03F\x05F\u0395"+
+		"\nF\x03F\x03F\x05F\u0399\nF\x03F\x05F\u039C\nF\x05F\u039E\nF\x03G\x03"+
+		"G\x05G\u03A2\nG\x03H\x03H\x03H\x07H\u03A7\nH\fH\x0EH\u03AA\vH\x03H\x05"+
+		"H\u03AD\nH\x03I\x03I\x03I\x07I\u03B2\nI\fI\x0EI\u03B5\vI\x03I\x05I\u03B8"+
+		"\nI\x03J\x03J\x03J\x03J\x03J\x03J\x03J\x03J\x03J\x07J\u03C3\nJ\fJ\x0E"+
+		"J\u03C6\vJ\x03J\x05J\u03C9\nJ\x05J\u03CB\nJ\x03J\x03J\x03J\x03J\x07J\u03D1"+
+		"\nJ\fJ\x0EJ\u03D4\vJ\x03J\x05J\u03D7\nJ\x05J\u03D9\nJ\x05J\u03DB\nJ\x03"+
+		"K\x03K\x03K\x03K\x05K\u03E1\nK\x03K\x05K\u03E4\nK\x03K\x03K\x03K\x03L"+
+		"\x03L\x03L\x07L\u03EC\nL\fL\x0EL\u03EF\vL\x03L\x03L\x05L\u03F3\nL\x03"+
+		"L\x03L\x03L\x03L\x07L\u03F9\nL\fL\x0EL\u03FC\vL\x03L\x03L\x03L\x05L\u0401"+
+		"\nL\x03L\x03L\x05L\u0405\nL\x03M\x03M\x05M\u0409\nM\x03M\x03M\x03M\x03"+
+		"M\x05M\u040F\nM\x03N\x03N\x05N\u0413\nN\x03O\x03O\x03O\x03O\x03O\x05O"+
+		"\u041A\nO\x03P\x03P\x03P\x05P\u041F\nP\x03Q\x03Q\x05Q\u0423\nQ\x03R\x03"+
+		"R\x03R\x05R\u0428\nR\x03S\x03S\x03T\x03T\x03T\x05T\u042F\nT\x03U\x03U"+
+		"\x03U\x02\x02\x02V\x02\x02\x04\x02\x06\x02\b\x02\n\x02\f\x02\x0E\x02\x10"+
+		"\x02\x12\x02\x14\x02\x16\x02\x18\x02\x1A\x02\x1C\x02\x1E\x02 \x02\"\x02"+
+		"$\x02&\x02(\x02*\x02,\x02.\x020\x022\x024\x026\x028\x02:\x02<\x02>\x02"+
+		"@\x02B\x02D\x02F\x02H\x02J\x02L\x02N\x02P\x02R\x02T\x02V\x02X\x02Z\x02"+
+		"\\\x02^\x02`\x02b\x02d\x02f\x02h\x02j\x02l\x02n\x02p\x02r\x02t\x02v\x02"+
+		"x\x02z\x02|\x02~\x02\x80\x02\x82\x02\x84\x02\x86\x02\x88\x02\x8A\x02\x8C"+
+		"\x02\x8E\x02\x90\x02\x92\x02\x94\x02\x96\x02\x98\x02\x9A\x02\x9C\x02\x9E"+
+		"\x02\xA0\x02\xA2\x02\xA4\x02\xA6\x02\xA8\x02\x02\x06\x03\x02P\\\x03\x02"+
+		"./\x03\x02&\'\x03\x02(+\u04A3\x02\xAF\x03\x02\x02\x02\x04\xB5\x03\x02"+
+		"\x02\x02\x06\xBA\x03\x02\x02\x02\b\xC3\x03\x02\x02\x02\n\xCF\x03\x02\x02"+
+		"\x02\f\xD3\x03\x02\x02\x02\x0E\xD8\x03\x02\x02\x02\x10\xE2\x03\x02\x02"+
+		"\x02\x12\u0129\x03\x02\x02\x02\x14\u012B\x03\x02\x02\x02\x16\u0171\x03"+
+		"\x02\x02\x02\x18\u0173\x03\x02\x02\x02\x1A\u0177\x03\x02\x02\x02\x1C\u0179"+
 		"\x03\x02\x02\x02\x1E\u018E\x03\x02\x02\x02 \u0190\x03\x02\x02\x02\"\u01AB"+
 		"\x03\x02\x02\x02$\u01BA\x03\x02\x02\x02&\u01BC\x03\x02\x02\x02(\u01BF"+
 		"\x03\x02\x02\x02*\u01C6\x03\x02\x02\x02,\u01C8\x03\x02\x02\x02.\u01CA"+
@@ -5640,13 +5651,13 @@ export class Python3Parser extends Parser {
 		"\x03\x02\x02\x02r\u02F5\x03\x02\x02\x02t\u02FD\x03\x02\x02\x02v\u0305"+
 		"\x03\x02\x02\x02x\u030D\x03\x02\x02\x02z\u0317\x03\x02\x02\x02|\u0321"+
 		"\x03\x02\x02\x02~\u0338\x03\x02\x02\x02\x80\u033A\x03\x02\x02\x02\x82"+
-		"\u0365\x03\x02\x02\x02\x84\u0367\x03\x02\x02\x02\x86\u0383\x03\x02\x02"+
-		"\x02\x88\u0385\x03\x02\x02\x02\x8A\u039B\x03\x02\x02\x02\x8C\u039D\x03"+
-		"\x02\x02\x02\x8E\u03A1\x03\x02\x02\x02\x90\u03AC\x03\x02\x02\x02\x92\u03D8"+
-		"\x03\x02\x02\x02\x94\u03DA\x03\x02\x02\x02\x96\u03EB\x03\x02\x02\x02\x98"+
-		"\u040C\x03\x02\x02\x02\x9A\u0410\x03\x02\x02\x02\x9C\u0412\x03\x02\x02"+
-		"\x02\x9E\u0419\x03\x02\x02\x02\xA0\u041E\x03\x02\x02\x02\xA2\u0425\x03"+
-		"\x02\x02\x02\xA4\u0427\x03\x02\x02\x02\xA6\u042C\x03\x02\x02\x02\xA8\u042E"+
+		"\u0365\x03\x02\x02\x02\x84\u0367\x03\x02\x02\x02\x86\u0385\x03\x02\x02"+
+		"\x02\x88\u0387\x03\x02\x02\x02\x8A\u039D\x03\x02\x02\x02\x8C\u039F\x03"+
+		"\x02\x02\x02\x8E\u03A3\x03\x02\x02\x02\x90\u03AE\x03\x02\x02\x02\x92\u03DA"+
+		"\x03\x02\x02\x02\x94\u03DC\x03\x02\x02\x02\x96\u03ED\x03\x02\x02\x02\x98"+
+		"\u040E\x03\x02\x02\x02\x9A\u0412\x03\x02\x02\x02\x9C\u0414\x03\x02\x02"+
+		"\x02\x9E\u041B\x03\x02\x02\x02\xA0\u0420\x03\x02\x02\x02\xA2\u0427\x03"+
+		"\x02\x02\x02\xA4\u0429\x03\x02\x02\x02\xA6\u042E\x03\x02\x02\x02\xA8\u0430"+
 		"\x03\x02\x02\x02\xAA\xB0\x07$\x02\x02\xAB\xB0\x05\x1C\x0F\x02\xAC\xAD"+
 		"\x05L\'\x02\xAD\xAE\x07$\x02\x02\xAE\xB0\x03\x02\x02\x02\xAF\xAA\x03\x02"+
 		"\x02\x02\xAF\xAB\x03\x02\x02\x02\xAF\xAC\x03\x02\x02\x02\xB0\x03\x03\x02"+
@@ -5764,67 +5775,67 @@ export class Python3Parser extends Parser {
 		"\x03\x02\x02\x02\u01AC\u01B4\x03\x02\x02\x02\u01AD\u01B0\x073\x02\x02"+
 		"\u01AE\u01B1\x05^0\x02\u01AF\u01B1\x05p9\x02\u01B0\u01AE\x03\x02\x02\x02"+
 		"\u01B0\u01AF\x03\x02\x02\x02\u01B1\u01B3\x03\x02\x02\x02\u01B2\u01AD\x03"+
-		"\x02\x02\x02\u01B3\u01B6\x03\x02\x02\x02\u01B4\u01B2\x03\x02\x02\x02\u01B4";
+		"\x02\x02\x02\u01B3\u01B6\x03\x02\x02\x02\u01B4\u01B2\x03";
 	private static readonly _serializedATNSegment1: string =
-		"\u01B5\x03\x02\x02\x02\u01B5\u01B8\x03\x02\x02\x02\u01B6\u01B4\x03\x02"+
-		"\x02\x02\u01B7\u01B9\x073\x02\x02\u01B8\u01B7\x03\x02\x02\x02\u01B8\u01B9"+
-		"\x03\x02\x02\x02\u01B9#\x03\x02\x02\x02\u01BA\u01BB\t\x02\x02\x02\u01BB"+
-		"%\x03\x02\x02\x02\u01BC\u01BD\x07 \x02\x02\u01BD\u01BE\x05\x8EH\x02\u01BE"+
-		"\'\x03\x02\x02\x02\u01BF\u01C0\x07!\x02\x02\u01C0)\x03\x02\x02\x02\u01C1"+
-		"\u01C7\x05,\x17\x02\u01C2\u01C7\x05.\x18\x02\u01C3\u01C7\x050\x19\x02"+
-		"\u01C4\u01C7\x054\x1B\x02\u01C5\u01C7\x052\x1A\x02\u01C6\u01C1\x03\x02"+
-		"\x02\x02\u01C6\u01C2\x03\x02\x02\x02\u01C6\u01C3\x03\x02\x02\x02\u01C6"+
-		"\u01C4\x03\x02\x02\x02\u01C6\u01C5\x03\x02\x02\x02\u01C7+\x03\x02\x02"+
-		"\x02\u01C8\u01C9\x07#\x02\x02\u01C9-\x03\x02\x02\x02\u01CA\u01CB\x07\""+
-		"\x02\x02\u01CB/\x03\x02\x02\x02\u01CC\u01CE\x07\x04\x02\x02\u01CD\u01CF"+
-		"\x05\x90I\x02\u01CE\u01CD\x03\x02\x02\x02\u01CE\u01CF\x03\x02\x02\x02"+
-		"\u01CF1\x03\x02\x02\x02\u01D0\u01D1\x05\xA0Q\x02\u01D13\x03\x02\x02\x02"+
-		"\u01D2\u01D8\x07\x05\x02\x02\u01D3\u01D6\x05^0\x02\u01D4\u01D5\x07\x06"+
-		"\x02\x02\u01D5\u01D7\x05^0\x02\u01D6\u01D4\x03\x02\x02\x02\u01D6\u01D7"+
-		"\x03\x02\x02\x02\u01D7\u01D9\x03\x02\x02\x02\u01D8\u01D3\x03\x02\x02\x02"+
-		"\u01D8\u01D9\x03\x02\x02\x02\u01D95\x03\x02\x02\x02\u01DA\u01DD\x058\x1D"+
-		"\x02\u01DB\u01DD\x05:\x1E\x02\u01DC\u01DA\x03\x02\x02\x02\u01DC\u01DB"+
-		"\x03\x02\x02\x02\u01DD7\x03\x02\x02\x02\u01DE\u01DF\x07\x07\x02\x02\u01DF"+
-		"\u01E0\x05B\"\x02\u01E09\x03\x02\x02\x02\u01E1\u01EE\x07\x06\x02\x02\u01E2"+
-		"\u01E4\t\x03\x02\x02\u01E3\u01E2\x03\x02\x02\x02\u01E4\u01E7\x03\x02\x02"+
-		"\x02\u01E5\u01E3\x03\x02\x02\x02\u01E5\u01E6\x03\x02\x02\x02\u01E6\u01E8"+
-		"\x03\x02\x02\x02\u01E7\u01E5\x03\x02\x02\x02\u01E8\u01EF\x05D#\x02\u01E9"+
-		"\u01EB\t\x03\x02\x02\u01EA\u01E9\x03\x02\x02\x02\u01EB\u01EC\x03\x02\x02"+
-		"\x02\u01EC\u01EA\x03\x02\x02\x02\u01EC\u01ED\x03\x02\x02\x02\u01ED\u01EF"+
-		"\x03\x02\x02\x02\u01EE\u01E5\x03\x02\x02\x02\u01EE\u01EA\x03\x02\x02\x02"+
-		"\u01EF\u01F0\x03\x02\x02\x02\u01F0\u01F7\x07\x07\x02\x02\u01F1\u01F8\x07"+
-		"0\x02\x02\u01F2\u01F3\x071\x02\x02\u01F3\u01F4\x05@!\x02\u01F4\u01F5\x07"+
-		"2\x02\x02\u01F5\u01F8\x03\x02\x02\x02\u01F6\u01F8\x05@!\x02\u01F7\u01F1"+
-		"\x03\x02\x02\x02\u01F7\u01F2\x03\x02\x02\x02\u01F7\u01F6\x03\x02\x02\x02"+
-		"\u01F8;\x03\x02\x02\x02\u01F9\u01FC\x07%\x02\x02\u01FA\u01FB\x07\b\x02"+
-		"\x02\u01FB\u01FD\x07%\x02\x02\u01FC\u01FA\x03\x02\x02\x02\u01FC\u01FD"+
-		"\x03\x02\x02\x02\u01FD=\x03\x02\x02\x02\u01FE\u0201\x05D#\x02\u01FF\u0200"+
-		"\x07\b\x02\x02\u0200\u0202\x07%\x02\x02\u0201\u01FF\x03\x02\x02\x02\u0201"+
-		"\u0202\x03\x02\x02\x02\u0202?\x03\x02\x02\x02\u0203\u0208\x05<\x1F\x02"+
-		"\u0204\u0205\x073\x02\x02\u0205\u0207\x05<\x1F\x02\u0206\u0204\x03\x02"+
-		"\x02\x02\u0207\u020A\x03\x02\x02\x02\u0208\u0206\x03\x02\x02\x02\u0208"+
-		"\u0209\x03\x02\x02\x02\u0209\u020C\x03\x02\x02\x02\u020A\u0208\x03\x02"+
-		"\x02\x02\u020B\u020D\x073\x02\x02\u020C\u020B\x03\x02\x02\x02\u020C\u020D"+
-		"\x03\x02\x02\x02\u020DA\x03\x02\x02\x02\u020E\u0213\x05> \x02\u020F\u0210"+
-		"\x073\x02\x02\u0210\u0212\x05> \x02\u0211\u020F\x03\x02\x02\x02\u0212"+
-		"\u0215\x03\x02\x02\x02\u0213\u0211\x03\x02\x02\x02\u0213\u0214\x03\x02"+
-		"\x02\x02\u0214C\x03\x02\x02\x02\u0215\u0213\x03\x02\x02\x02\u0216\u021B"+
-		"\x07%\x02\x02\u0217\u0218\x07.\x02\x02\u0218\u021A\x07%\x02\x02\u0219"+
-		"\u0217\x03\x02\x02\x02\u021A\u021D\x03\x02\x02\x02\u021B\u0219\x03\x02"+
-		"\x02\x02\u021B\u021C\x03\x02\x02\x02\u021CE\x03\x02\x02\x02\u021D\u021B"+
-		"\x03\x02\x02\x02\u021E\u021F\x07\t\x02\x02\u021F\u0224\x07%\x02\x02\u0220"+
-		"\u0221\x073\x02\x02\u0221\u0223\x07%\x02\x02\u0222\u0220\x03\x02\x02\x02"+
-		"\u0223\u0226\x03\x02\x02\x02\u0224\u0222\x03\x02\x02\x02\u0224\u0225\x03"+
-		"\x02\x02\x02\u0225G\x03\x02\x02\x02\u0226\u0224\x03\x02\x02\x02\u0227"+
-		"\u0228\x07\n\x02\x02\u0228\u022D\x07%\x02\x02\u0229\u022A\x073\x02\x02"+
-		"\u022A\u022C\x07%\x02\x02\u022B\u0229\x03\x02\x02\x02\u022C\u022F\x03"+
-		"\x02\x02\x02\u022D\u022B\x03\x02\x02\x02\u022D\u022E\x03\x02\x02\x02\u022E"+
-		"I\x03\x02\x02\x02\u022F\u022D\x03\x02\x02\x02\u0230\u0231\x07\v\x02\x02"+
-		"\u0231\u0234\x05^0\x02\u0232\u0233\x073\x02\x02\u0233\u0235\x05^0\x02"+
-		"\u0234\u0232\x03\x02\x02\x02\u0234\u0235\x03\x02\x02\x02\u0235K\x03\x02"+
-		"\x02\x02\u0236\u023F\x05N(\x02\u0237\u023F\x05P)\x02\u0238\u023F\x05R"+
-		"*\x02\u0239\u023F\x05T+\x02\u023A\u023F\x05V,\x02\u023B\u023F\x05\x0E"+
-		"\b\x02\u023C\u023F\x05\x94K\x02\u023D\u023F\x05\f\x07\x02\u023E\u0236"+
+		"\x02\x02\x02\u01B4\u01B5\x03\x02\x02\x02\u01B5\u01B8\x03\x02\x02\x02\u01B6"+
+		"\u01B4\x03\x02\x02\x02\u01B7\u01B9\x073\x02\x02\u01B8\u01B7\x03\x02\x02"+
+		"\x02\u01B8\u01B9\x03\x02\x02\x02\u01B9#\x03\x02\x02\x02\u01BA\u01BB\t"+
+		"\x02\x02\x02\u01BB%\x03\x02\x02\x02\u01BC\u01BD\x07 \x02\x02\u01BD\u01BE"+
+		"\x05\x8EH\x02\u01BE\'\x03\x02\x02\x02\u01BF\u01C0\x07!\x02\x02\u01C0)"+
+		"\x03\x02\x02\x02\u01C1\u01C7\x05,\x17\x02\u01C2\u01C7\x05.\x18\x02\u01C3"+
+		"\u01C7\x050\x19\x02\u01C4\u01C7\x054\x1B\x02\u01C5\u01C7\x052\x1A\x02"+
+		"\u01C6\u01C1\x03\x02\x02\x02\u01C6\u01C2\x03\x02\x02\x02\u01C6\u01C3\x03"+
+		"\x02\x02\x02\u01C6\u01C4\x03\x02\x02\x02\u01C6\u01C5\x03\x02\x02\x02\u01C7"+
+		"+\x03\x02\x02\x02\u01C8\u01C9\x07#\x02\x02\u01C9-\x03\x02\x02\x02\u01CA"+
+		"\u01CB\x07\"\x02\x02\u01CB/\x03\x02\x02\x02\u01CC\u01CE\x07\x04\x02\x02"+
+		"\u01CD\u01CF\x05\x90I\x02\u01CE\u01CD\x03\x02\x02\x02\u01CE\u01CF\x03"+
+		"\x02\x02\x02\u01CF1\x03\x02\x02\x02\u01D0\u01D1\x05\xA0Q\x02\u01D13\x03"+
+		"\x02\x02\x02\u01D2\u01D8\x07\x05\x02\x02\u01D3\u01D6\x05^0\x02\u01D4\u01D5"+
+		"\x07\x06\x02\x02\u01D5\u01D7\x05^0\x02\u01D6\u01D4\x03\x02\x02\x02\u01D6"+
+		"\u01D7\x03\x02\x02\x02\u01D7\u01D9\x03\x02\x02\x02\u01D8\u01D3\x03\x02"+
+		"\x02\x02\u01D8\u01D9\x03\x02\x02\x02\u01D95\x03\x02\x02\x02\u01DA\u01DD"+
+		"\x058\x1D\x02\u01DB\u01DD\x05:\x1E\x02\u01DC\u01DA\x03\x02\x02\x02\u01DC"+
+		"\u01DB\x03\x02\x02\x02\u01DD7\x03\x02\x02\x02\u01DE\u01DF\x07\x07\x02"+
+		"\x02\u01DF\u01E0\x05B\"\x02\u01E09\x03\x02\x02\x02\u01E1\u01EE\x07\x06"+
+		"\x02\x02\u01E2\u01E4\t\x03\x02\x02\u01E3\u01E2\x03\x02\x02\x02\u01E4\u01E7"+
+		"\x03\x02\x02\x02\u01E5\u01E3\x03\x02\x02\x02\u01E5\u01E6\x03\x02\x02\x02"+
+		"\u01E6\u01E8\x03\x02\x02\x02\u01E7\u01E5\x03\x02\x02\x02\u01E8\u01EF\x05"+
+		"D#\x02\u01E9\u01EB\t\x03\x02\x02\u01EA\u01E9\x03\x02\x02\x02\u01EB\u01EC"+
+		"\x03\x02\x02\x02\u01EC\u01EA\x03\x02\x02\x02\u01EC\u01ED\x03\x02\x02\x02"+
+		"\u01ED\u01EF\x03\x02\x02\x02\u01EE\u01E5\x03\x02\x02\x02\u01EE\u01EA\x03"+
+		"\x02\x02\x02\u01EF\u01F0\x03\x02\x02\x02\u01F0\u01F7\x07\x07\x02\x02\u01F1"+
+		"\u01F8\x070\x02\x02\u01F2\u01F3\x071\x02\x02\u01F3\u01F4\x05@!\x02\u01F4"+
+		"\u01F5\x072\x02\x02\u01F5\u01F8\x03\x02\x02\x02\u01F6\u01F8\x05@!\x02"+
+		"\u01F7\u01F1\x03\x02\x02\x02\u01F7\u01F2\x03\x02\x02\x02\u01F7\u01F6\x03"+
+		"\x02\x02\x02\u01F8;\x03\x02\x02\x02\u01F9\u01FC\x07%\x02\x02\u01FA\u01FB"+
+		"\x07\b\x02\x02\u01FB\u01FD\x07%\x02\x02\u01FC\u01FA\x03\x02\x02\x02\u01FC"+
+		"\u01FD\x03\x02\x02\x02\u01FD=\x03\x02\x02\x02\u01FE\u0201\x05D#\x02\u01FF"+
+		"\u0200\x07\b\x02\x02\u0200\u0202\x07%\x02\x02\u0201\u01FF\x03\x02\x02"+
+		"\x02\u0201\u0202\x03\x02\x02\x02\u0202?\x03\x02\x02\x02\u0203\u0208\x05"+
+		"<\x1F\x02\u0204\u0205\x073\x02\x02\u0205\u0207\x05<\x1F\x02\u0206\u0204"+
+		"\x03\x02\x02\x02\u0207\u020A\x03\x02\x02\x02\u0208\u0206\x03\x02\x02\x02"+
+		"\u0208\u0209\x03\x02\x02\x02\u0209\u020C\x03\x02\x02\x02\u020A\u0208\x03"+
+		"\x02\x02\x02\u020B\u020D\x073\x02\x02\u020C\u020B\x03\x02\x02\x02\u020C"+
+		"\u020D\x03\x02\x02\x02\u020DA\x03\x02\x02\x02\u020E\u0213\x05> \x02\u020F"+
+		"\u0210\x073\x02\x02\u0210\u0212\x05> \x02\u0211\u020F\x03\x02\x02\x02"+
+		"\u0212\u0215\x03\x02\x02\x02\u0213\u0211\x03\x02\x02\x02\u0213\u0214\x03"+
+		"\x02\x02\x02\u0214C\x03\x02\x02\x02\u0215\u0213\x03\x02\x02\x02\u0216"+
+		"\u021B\x07%\x02\x02\u0217\u0218\x07.\x02\x02\u0218\u021A\x07%\x02\x02"+
+		"\u0219\u0217\x03\x02\x02\x02\u021A\u021D\x03\x02\x02\x02\u021B\u0219\x03"+
+		"\x02\x02\x02\u021B\u021C\x03\x02\x02\x02\u021CE\x03\x02\x02\x02\u021D"+
+		"\u021B\x03\x02\x02\x02\u021E\u021F\x07\t\x02\x02\u021F\u0224\x07%\x02"+
+		"\x02\u0220\u0221\x073\x02\x02\u0221\u0223\x07%\x02\x02\u0222\u0220\x03"+
+		"\x02\x02\x02\u0223\u0226\x03\x02\x02\x02\u0224\u0222\x03\x02\x02\x02\u0224"+
+		"\u0225\x03\x02\x02\x02\u0225G\x03\x02\x02\x02\u0226\u0224\x03\x02\x02"+
+		"\x02\u0227\u0228\x07\n\x02\x02\u0228\u022D\x07%\x02\x02\u0229\u022A\x07"+
+		"3\x02\x02\u022A\u022C\x07%\x02\x02\u022B\u0229\x03\x02\x02\x02\u022C\u022F"+
+		"\x03\x02\x02\x02\u022D\u022B\x03\x02\x02\x02\u022D\u022E\x03\x02\x02\x02"+
+		"\u022EI\x03\x02\x02\x02\u022F\u022D\x03\x02\x02\x02\u0230\u0231\x07\v"+
+		"\x02\x02\u0231\u0234\x05^0\x02\u0232\u0233\x073\x02\x02\u0233\u0235\x05"+
+		"^0\x02\u0234\u0232\x03\x02\x02\x02\u0234\u0235\x03\x02\x02\x02\u0235K"+
+		"\x03\x02\x02\x02\u0236\u023F\x05N(\x02\u0237\u023F\x05P)\x02\u0238\u023F"+
+		"\x05R*\x02\u0239\u023F\x05T+\x02\u023A\u023F\x05V,\x02\u023B\u023F\x05"+
+		"\x0E\b\x02\u023C\u023F\x05\x94K\x02\u023D\u023F\x05\f\x07\x02\u023E\u0236"+
 		"\x03\x02\x02\x02\u023E\u0237\x03\x02\x02\x02\u023E\u0238\x03\x02\x02\x02"+
 		"\u023E\u0239\x03\x02\x02\x02\u023E\u023A\x03\x02\x02\x02\u023E\u023B\x03"+
 		"\x02\x02\x02\u023E\u023C\x03\x02\x02\x02\u023E\u023D\x03\x02\x02\x02\u023F"+
@@ -5969,100 +5980,101 @@ export class Python3Parser extends Parser {
 		"\x03\x02\x02\x02\u0373\u036D\x03\x02\x02\x02\u0374\x85\x03\x02\x02\x02"+
 		"\u0375\u0376\bD\x01\x02\u0376\u0378\x071\x02\x02\u0377\u0379\x05\x96L"+
 		"\x02\u0378\u0377\x03\x02\x02\x02\u0378\u0379\x03\x02\x02\x02\u0379\u037A"+
-		"\x03\x02\x02\x02\u037A\u037B\x072\x02\x02\u037B\u0384\bD\x01\x02\u037C"+
-		"\u037D\x078\x02\x02\u037D\u037E\x05\x88E\x02\u037E\u037F\x079\x02\x02"+
-		"\u037F\u0384\x03\x02\x02\x02\u0380\u0381\x07.\x02\x02\u0381\u0382\x07"+
-		"%\x02\x02\u0382\u0384\bD\x01\x02\u0383\u0375\x03\x02\x02\x02\u0383\u037C"+
-		"\x03\x02\x02\x02\u0383\u0380\x03\x02\x02\x02\u0384\x87\x03\x02\x02\x02"+
-		"\u0385\u038A\x05\x8AF\x02\u0386\u0387\x073\x02\x02\u0387\u0389\x05\x8A"+
-		"F\x02\u0388\u0386\x03\x02\x02\x02\u0389\u038C\x03\x02\x02\x02\u038A\u0388"+
-		"\x03\x02\x02\x02\u038A\u038B\x03\x02\x02\x02\u038B\u038E\x03\x02\x02\x02"+
-		"\u038C\u038A\x03\x02\x02\x02\u038D\u038F\x073\x02\x02\u038E\u038D\x03"+
-		"\x02\x02\x02\u038E\u038F\x03\x02\x02\x02\u038F\x89\x03\x02\x02\x02\u0390"+
-		"\u039C\x05^0\x02\u0391\u0393\x05^0\x02\u0392\u0391\x03\x02\x02\x02\u0392"+
-		"\u0393\x03\x02\x02\x02\u0393\u0394\x03\x02\x02\x02\u0394\u0396\x074\x02"+
-		"\x02\u0395\u0397\x05^0\x02\u0396\u0395\x03\x02\x02\x02\u0396\u0397\x03"+
-		"\x02\x02\x02\u0397\u0399\x03\x02\x02\x02\u0398\u039A\x05\x8CG\x02\u0399"+
-		"\u0398\x03\x02\x02\x02\u0399\u039A\x03\x02\x02\x02\u039A\u039C\x03\x02"+
-		"\x02\x02\u039B\u0390\x03\x02\x02\x02\u039B\u0392\x03\x02\x02\x02\u039C"+
-		"\x8B\x03\x02\x02\x02\u039D\u039F\x074\x02\x02\u039E\u03A0\x05^0\x02\u039F"+
-		"\u039E\x03\x02\x02\x02\u039F\u03A0\x03\x02\x02\x02\u03A0\x8D\x03\x02\x02"+
-		"\x02\u03A1\u03A6\x05p9\x02\u03A2\u03A3\x073\x02\x02\u03A3\u03A5\x05p9"+
-		"\x02\u03A4\u03A2\x03\x02\x02\x02\u03A5\u03A8\x03\x02\x02\x02\u03A6\u03A4"+
-		"\x03\x02\x02\x02\u03A6\u03A7\x03\x02\x02\x02\u03A7\u03AA\x03\x02\x02\x02"+
-		"\u03A8\u03A6\x03\x02\x02\x02\u03A9\u03AB\x073\x02\x02\u03AA\u03A9\x03"+
-		"\x02\x02\x02\u03AA\u03AB\x03\x02\x02\x02\u03AB\x8F\x03\x02\x02\x02\u03AC"+
-		"\u03B1\x05^0\x02\u03AD\u03AE\x073\x02\x02\u03AE\u03B0\x05^0\x02\u03AF"+
-		"\u03AD\x03\x02\x02\x02\u03B0\u03B3\x03\x02\x02\x02\u03B1\u03AF\x03\x02"+
-		"\x02\x02\u03B1\u03B2\x03\x02\x02\x02\u03B2\u03B5\x03\x02\x02\x02\u03B3"+
-		"\u03B1\x03\x02\x02\x02\u03B4\u03B6\x073\x02\x02\u03B5\u03B4\x03\x02\x02"+
-		"\x02\u03B5\u03B6\x03\x02\x02\x02\u03B6\x91\x03\x02\x02\x02\u03B7\u03B8"+
-		"\x05^0\x02\u03B8\u03B9\x074\x02\x02\u03B9\u03C8\x05^0\x02\u03BA\u03C9"+
-		"\x05\x9CO\x02\u03BB\u03BC\x073\x02\x02\u03BC\u03BD\x05^0\x02\u03BD\u03BE"+
-		"\x074\x02\x02\u03BE\u03BF\x05^0\x02\u03BF\u03C1\x03\x02\x02\x02\u03C0"+
-		"\u03BB\x03\x02\x02\x02\u03C1\u03C4\x03\x02\x02\x02\u03C2\u03C0\x03\x02"+
-		"\x02\x02\u03C2\u03C3\x03\x02\x02\x02\u03C3\u03C6\x03\x02\x02\x02\u03C4"+
-		"\u03C2\x03\x02\x02\x02\u03C5\u03C7\x073\x02\x02\u03C6\u03C5\x03\x02\x02"+
-		"\x02\u03C6\u03C7\x03\x02\x02\x02\u03C7\u03C9\x03\x02\x02\x02\u03C8\u03BA"+
-		"\x03\x02\x02\x02\u03C8\u03C2\x03\x02\x02\x02\u03C9\u03D9\x03\x02\x02\x02"+
-		"\u03CA\u03D6\x05^0\x02\u03CB\u03D7\x05\x9CO\x02\u03CC\u03CD\x073\x02\x02"+
-		"\u03CD\u03CF\x05^0\x02\u03CE\u03CC\x03\x02\x02\x02\u03CF\u03D2\x03\x02"+
-		"\x02\x02\u03D0\u03CE\x03\x02\x02\x02\u03D0\u03D1\x03\x02\x02\x02\u03D1"+
-		"\u03D4\x03\x02\x02\x02\u03D2\u03D0\x03\x02\x02\x02\u03D3\u03D5\x073\x02"+
-		"\x02\u03D4\u03D3\x03\x02\x02\x02\u03D4\u03D5\x03\x02\x02\x02\u03D5\u03D7"+
-		"\x03\x02\x02\x02\u03D6\u03CB\x03\x02\x02\x02\u03D6\u03D0\x03\x02\x02\x02"+
-		"\u03D7\u03D9\x03\x02\x02\x02\u03D8\u03B7\x03\x02\x02\x02\u03D8\u03CA\x03"+
-		"\x02\x02\x02\u03D9\x93\x03\x02\x02\x02\u03DA\u03DB\x07\x1E\x02\x02\u03DB"+
-		"\u03E1\x07%\x02\x02\u03DC\u03DE\x071\x02\x02\u03DD\u03DF\x05\x96L\x02"+
-		"\u03DE\u03DD\x03\x02\x02\x02\u03DE\u03DF\x03\x02\x02\x02\u03DF\u03E0\x03"+
-		"\x02\x02\x02\u03E0\u03E2\x072\x02\x02\u03E1\u03DC\x03\x02\x02\x02\u03E1"+
-		"\u03E2\x03\x02\x02\x02\u03E2\u03E3\x03\x02\x02\x02\u03E3\u03E4\x074\x02"+
-		"\x02\u03E4\u03E5\x05\\/\x02\u03E5\x95\x03\x02\x02\x02\u03E6\u03E7\x05"+
-		"\x98M\x02\u03E7\u03E8\x073\x02\x02\u03E8\u03EA\x03\x02\x02\x02\u03E9\u03E6"+
-		"\x03\x02\x02\x02\u03EA\u03ED\x03\x02\x02\x02\u03EB\u03E9\x03\x02\x02\x02"+
-		"\u03EB\u03EC\x03\x02\x02\x02\u03EC\u0402\x03\x02\x02\x02\u03ED\u03EB\x03"+
-		"\x02\x02\x02\u03EE\u03F0\x05\x98M\x02\u03EF\u03F1\x073\x02\x02\u03F0\u03EF"+
-		"\x03\x02\x02\x02\u03F0\u03F1\x03\x02\x02\x02\u03F1\u0403\x03\x02\x02\x02"+
-		"\u03F2\u03F3\x070\x02\x02\u03F3\u03F8\x05^0\x02\u03F4\u03F5\x073\x02\x02"+
-		"\u03F5\u03F7\x05\x98M\x02\u03F6\u03F4\x03\x02\x02\x02\u03F7\u03FA\x03"+
-		"\x02\x02\x02\u03F8\u03F6\x03\x02\x02\x02\u03F8\u03F9\x03\x02\x02\x02\u03F9"+
-		"\u03FE\x03\x02\x02\x02\u03FA\u03F8\x03\x02\x02\x02\u03FB\u03FC\x073\x02"+
-		"\x02\u03FC\u03FD\x076\x02\x02\u03FD\u03FF\x05^0\x02\u03FE\u03FB\x03\x02"+
-		"\x02\x02\u03FE\u03FF\x03\x02\x02\x02\u03FF\u0403\x03\x02\x02\x02\u0400"+
-		"\u0401\x076\x02\x02\u0401\u0403\x05^0\x02\u0402\u03EE\x03\x02\x02\x02"+
-		"\u0402\u03F2\x03\x02\x02\x02\u0402\u0400\x03\x02\x02\x02\u0403\x97\x03"+
-		"\x02\x02\x02\u0404\u0406\x05^0\x02\u0405\u0407\x05\x9CO\x02\u0406\u0405"+
-		"\x03\x02\x02\x02\u0406\u0407\x03\x02\x02\x02\u0407\u040D\x03\x02\x02\x02"+
-		"\u0408\u0409\x05^0\x02\u0409\u040A\x077\x02\x02\u040A\u040B\x05^0\x02"+
-		"\u040B\u040D\x03\x02\x02\x02\u040C\u0404\x03\x02\x02\x02\u040C\u0408\x03"+
-		"\x02\x02\x02\u040D\x99\x03\x02\x02\x02\u040E\u0411\x05\x9CO\x02\u040F"+
-		"\u0411\x05\x9EP\x02\u0410\u040E\x03\x02\x02\x02\u0410\u040F\x03\x02\x02"+
-		"\x02\u0411\x9B\x03\x02\x02\x02\u0412\u0413\x07\x10\x02\x02\u0413\u0414"+
-		"\x05\x8EH\x02\u0414\u0415\x07\x11\x02\x02\u0415\u0417\x05f4\x02\u0416"+
-		"\u0418\x05\x9AN\x02\u0417\u0416\x03\x02\x02\x02\u0417\u0418\x03\x02\x02"+
-		"\x02\u0418\x9D\x03\x02\x02\x02\u0419\u041A\x07\f\x02\x02\u041A\u041C\x05"+
-		"`1\x02\u041B\u041D\x05\x9AN\x02\u041C\u041B\x03\x02\x02\x02\u041C\u041D"+
-		"\x03\x02\x02\x02\u041D\x9F\x03\x02\x02\x02\u041E\u0420\x07\x1F\x02\x02"+
-		"\u041F\u0421\x05\xA2R\x02\u0420\u041F\x03\x02\x02\x02\u0420\u0421\x03"+
-		"\x02\x02\x02\u0421\xA1\x03\x02\x02\x02\u0422\u0423\x07\x06\x02\x02\u0423"+
-		"\u0426\x05^0\x02\u0424\u0426\x05\x90I\x02\u0425\u0422\x03\x02\x02\x02"+
-		"\u0425\u0424\x03\x02\x02\x02\u0426\xA3\x03\x02\x02\x02\u0427\u0428\t\x04"+
-		"\x02\x02\u0428\xA5\x03\x02\x02\x02\u0429\u042D\x05\xA8U\x02\u042A\u042D"+
-		"\x07,\x02\x02\u042B\u042D\x07-\x02\x02\u042C\u0429\x03\x02\x02\x02\u042C"+
-		"\u042A\x03\x02\x02\x02\u042C\u042B\x03\x02\x02\x02\u042D\xA7\x03\x02\x02"+
-		"\x02\u042E\u042F\t\x05\x02\x02\u042F\xA9\x03\x02\x02\x02\x98\xAF\xB3\xB5"+
-		"\xBE\xC7\xCA\xD1\xD6\xDD\xE4\xEB\xF1\xF5\xFB\u0101\u0105\u010B\u010F\u0111"+
-		"\u0115\u011B\u011F\u0125\u0129\u012E\u0133\u0139\u013D\u0143\u0149\u014D"+
-		"\u0153\u0157\u0159\u015D\u0163\u0167\u016D\u0171\u0177\u017E\u0182\u018E"+
-		"\u0196\u019E\u01A2\u01A5\u01AB\u01B0\u01B4\u01B8\u01C6\u01CE\u01D6\u01D8"+
-		"\u01DC\u01E5\u01EC\u01EE\u01F7\u01FC\u0201\u0208\u020C\u0213\u021B\u0224"+
-		"\u022D\u0234\u023E\u024B\u0251\u025A\u0265\u0270\u0275\u027A\u027F\u0287"+
-		"\u0290\u0296\u0298\u02A0\u02A4\u02AC\u02AF\u02B3\u02B7\u02BE\u02C8\u02D0"+
-		"\u02D6\u02DE\u02EE\u02F1\u02FA\u0302\u030A\u0312\u0314\u031C\u031E\u032C"+
-		"\u032E\u0338\u033E\u0343\u0348\u034D\u0352\u035D\u0365\u036D\u0371\u0373"+
-		"\u0378\u0383\u038A\u038E\u0392\u0396\u0399\u039B\u039F\u03A6\u03AA\u03B1"+
-		"\u03B5\u03C2\u03C6\u03C8\u03D0\u03D4\u03D6\u03D8\u03DE\u03E1\u03EB\u03F0"+
-		"\u03F8\u03FE\u0402\u0406\u040C\u0410\u0417\u041C\u0420\u0425\u042C";
+		"\x03\x02\x02\x02\u037A\u037B\x072\x02\x02\u037B\u0386\bD\x01\x02\u037C"+
+		"\u037D\bD\x01\x02\u037D\u037E\x078\x02\x02\u037E\u037F\x05\x88E\x02\u037F"+
+		"\u0380\x079\x02\x02\u0380\u0381\bD\x01\x02\u0381\u0386\x03\x02\x02\x02"+
+		"\u0382\u0383\x07.\x02\x02\u0383\u0384\x07%\x02\x02\u0384\u0386\bD\x01"+
+		"\x02\u0385\u0375\x03\x02\x02\x02\u0385\u037C\x03\x02\x02\x02\u0385\u0382"+
+		"\x03\x02\x02\x02\u0386\x87\x03\x02\x02\x02\u0387\u038C\x05\x8AF\x02\u0388"+
+		"\u0389\x073\x02\x02\u0389\u038B\x05\x8AF\x02\u038A\u0388\x03\x02\x02\x02"+
+		"\u038B\u038E\x03\x02\x02\x02\u038C\u038A\x03\x02\x02\x02\u038C\u038D\x03"+
+		"\x02\x02\x02\u038D\u0390\x03\x02\x02\x02\u038E\u038C\x03\x02\x02\x02\u038F"+
+		"\u0391\x073\x02\x02\u0390\u038F\x03\x02\x02\x02\u0390\u0391\x03\x02\x02"+
+		"\x02\u0391\x89\x03\x02\x02\x02\u0392\u039E\x05^0\x02\u0393\u0395\x05^"+
+		"0\x02\u0394\u0393\x03\x02\x02\x02\u0394\u0395\x03\x02\x02\x02\u0395\u0396"+
+		"\x03\x02\x02\x02\u0396\u0398\x074\x02\x02\u0397\u0399\x05^0\x02\u0398"+
+		"\u0397\x03\x02\x02\x02\u0398\u0399\x03\x02\x02\x02\u0399\u039B\x03\x02"+
+		"\x02\x02\u039A\u039C\x05\x8CG\x02\u039B\u039A\x03\x02\x02\x02\u039B\u039C"+
+		"\x03\x02\x02\x02\u039C\u039E\x03\x02\x02\x02\u039D\u0392\x03\x02\x02\x02"+
+		"\u039D\u0394\x03\x02\x02\x02\u039E\x8B\x03\x02\x02\x02\u039F\u03A1\x07"+
+		"4\x02\x02\u03A0\u03A2\x05^0\x02\u03A1\u03A0\x03\x02\x02\x02\u03A1\u03A2"+
+		"\x03\x02\x02\x02\u03A2\x8D\x03\x02\x02\x02\u03A3\u03A8\x05p9\x02\u03A4"+
+		"\u03A5\x073\x02\x02\u03A5\u03A7\x05p9\x02\u03A6\u03A4\x03\x02\x02\x02"+
+		"\u03A7\u03AA\x03\x02\x02\x02\u03A8\u03A6\x03\x02\x02\x02\u03A8\u03A9\x03"+
+		"\x02\x02\x02\u03A9\u03AC\x03\x02\x02\x02\u03AA\u03A8\x03\x02\x02\x02\u03AB"+
+		"\u03AD\x073\x02\x02\u03AC\u03AB\x03\x02\x02\x02\u03AC\u03AD\x03\x02\x02"+
+		"\x02\u03AD\x8F\x03\x02\x02\x02\u03AE\u03B3\x05^0\x02\u03AF\u03B0\x073"+
+		"\x02\x02\u03B0\u03B2\x05^0\x02\u03B1\u03AF\x03\x02\x02\x02\u03B2\u03B5"+
+		"\x03\x02\x02\x02\u03B3\u03B1\x03\x02\x02\x02\u03B3\u03B4\x03\x02\x02\x02"+
+		"\u03B4\u03B7\x03\x02\x02\x02\u03B5\u03B3\x03\x02\x02\x02\u03B6\u03B8\x07"+
+		"3\x02\x02\u03B7\u03B6\x03\x02\x02\x02\u03B7\u03B8\x03\x02\x02\x02\u03B8"+
+		"\x91\x03\x02\x02\x02\u03B9\u03BA\x05^0\x02\u03BA\u03BB\x074\x02\x02\u03BB"+
+		"\u03CA\x05^0\x02\u03BC\u03CB\x05\x9CO\x02\u03BD\u03BE\x073\x02\x02\u03BE"+
+		"\u03BF\x05^0\x02\u03BF\u03C0\x074\x02\x02\u03C0\u03C1\x05^0\x02\u03C1"+
+		"\u03C3\x03\x02\x02\x02\u03C2\u03BD\x03\x02\x02\x02\u03C3\u03C6\x03\x02"+
+		"\x02\x02\u03C4\u03C2\x03\x02\x02\x02\u03C4\u03C5\x03\x02\x02\x02\u03C5"+
+		"\u03C8\x03\x02\x02\x02\u03C6\u03C4\x03\x02\x02\x02\u03C7\u03C9\x073\x02"+
+		"\x02\u03C8\u03C7\x03\x02\x02\x02\u03C8\u03C9\x03\x02\x02\x02\u03C9\u03CB"+
+		"\x03\x02\x02\x02\u03CA\u03BC\x03\x02\x02\x02\u03CA\u03C4\x03\x02\x02\x02"+
+		"\u03CB\u03DB\x03\x02\x02\x02\u03CC\u03D8\x05^0\x02\u03CD\u03D9\x05\x9C"+
+		"O\x02\u03CE\u03CF\x073\x02\x02\u03CF\u03D1\x05^0\x02\u03D0\u03CE\x03\x02"+
+		"\x02\x02\u03D1\u03D4\x03\x02\x02\x02\u03D2\u03D0\x03\x02\x02\x02\u03D2"+
+		"\u03D3\x03\x02\x02\x02\u03D3\u03D6\x03\x02\x02\x02\u03D4\u03D2\x03\x02"+
+		"\x02\x02\u03D5\u03D7\x073\x02\x02\u03D6\u03D5\x03\x02\x02\x02\u03D6\u03D7"+
+		"\x03\x02\x02\x02\u03D7\u03D9\x03\x02\x02\x02\u03D8\u03CD\x03\x02\x02\x02"+
+		"\u03D8\u03D2\x03\x02\x02\x02\u03D9\u03DB\x03\x02\x02\x02\u03DA\u03B9\x03"+
+		"\x02\x02\x02\u03DA\u03CC\x03\x02\x02\x02\u03DB\x93\x03\x02\x02\x02\u03DC"+
+		"\u03DD\x07\x1E\x02\x02\u03DD\u03E3\x07%\x02\x02\u03DE\u03E0\x071\x02\x02"+
+		"\u03DF\u03E1\x05\x96L\x02\u03E0\u03DF\x03\x02\x02\x02\u03E0\u03E1\x03"+
+		"\x02\x02\x02\u03E1\u03E2\x03\x02\x02\x02\u03E2\u03E4\x072\x02\x02\u03E3"+
+		"\u03DE\x03\x02\x02\x02\u03E3\u03E4\x03\x02\x02\x02\u03E4\u03E5\x03\x02"+
+		"\x02\x02\u03E5\u03E6\x074\x02\x02\u03E6\u03E7\x05\\/\x02\u03E7\x95\x03"+
+		"\x02\x02\x02\u03E8\u03E9\x05\x98M\x02\u03E9\u03EA\x073\x02\x02\u03EA\u03EC"+
+		"\x03\x02\x02\x02\u03EB\u03E8\x03\x02\x02\x02\u03EC\u03EF\x03\x02\x02\x02"+
+		"\u03ED\u03EB\x03\x02\x02\x02\u03ED\u03EE\x03\x02\x02\x02\u03EE\u0404\x03"+
+		"\x02\x02\x02\u03EF\u03ED\x03\x02\x02\x02\u03F0\u03F2\x05\x98M\x02\u03F1"+
+		"\u03F3\x073\x02\x02\u03F2\u03F1\x03\x02\x02\x02\u03F2\u03F3\x03\x02\x02"+
+		"\x02\u03F3\u0405\x03\x02\x02\x02\u03F4\u03F5\x070\x02\x02\u03F5\u03FA"+
+		"\x05^0\x02\u03F6\u03F7\x073\x02\x02\u03F7\u03F9\x05\x98M\x02\u03F8\u03F6"+
+		"\x03\x02\x02\x02\u03F9\u03FC\x03\x02\x02\x02\u03FA\u03F8\x03\x02\x02\x02"+
+		"\u03FA\u03FB\x03\x02\x02\x02\u03FB\u0400\x03\x02\x02\x02\u03FC\u03FA\x03"+
+		"\x02\x02\x02\u03FD\u03FE\x073\x02\x02\u03FE\u03FF\x076\x02\x02\u03FF\u0401"+
+		"\x05^0\x02\u0400\u03FD\x03\x02\x02\x02\u0400\u0401\x03\x02\x02\x02\u0401"+
+		"\u0405\x03\x02\x02\x02\u0402\u0403\x076\x02\x02\u0403\u0405\x05^0\x02"+
+		"\u0404\u03F0\x03\x02\x02\x02\u0404\u03F4\x03\x02\x02\x02\u0404\u0402\x03"+
+		"\x02\x02\x02\u0405\x97\x03\x02\x02\x02\u0406\u0408\x05^0\x02\u0407\u0409"+
+		"\x05\x9CO\x02\u0408\u0407\x03\x02\x02\x02\u0408\u0409\x03\x02\x02\x02"+
+		"\u0409\u040F\x03\x02\x02\x02\u040A\u040B\x05^0\x02\u040B\u040C\x077\x02"+
+		"\x02\u040C\u040D\x05^0\x02\u040D\u040F\x03\x02\x02\x02\u040E\u0406\x03"+
+		"\x02\x02\x02\u040E\u040A\x03\x02\x02\x02\u040F\x99\x03\x02\x02\x02\u0410"+
+		"\u0413\x05\x9CO\x02\u0411\u0413\x05\x9EP\x02\u0412\u0410\x03\x02\x02\x02"+
+		"\u0412\u0411\x03\x02\x02\x02\u0413\x9B\x03\x02\x02\x02\u0414\u0415\x07"+
+		"\x10\x02\x02\u0415\u0416\x05\x8EH\x02\u0416\u0417\x07\x11\x02\x02\u0417"+
+		"\u0419\x05f4\x02\u0418\u041A\x05\x9AN\x02\u0419\u0418\x03\x02\x02\x02"+
+		"\u0419\u041A\x03\x02\x02\x02\u041A\x9D\x03\x02\x02\x02\u041B\u041C\x07"+
+		"\f\x02\x02\u041C\u041E\x05`1\x02\u041D\u041F\x05\x9AN\x02\u041E\u041D"+
+		"\x03\x02\x02\x02\u041E\u041F\x03\x02\x02\x02\u041F\x9F\x03\x02\x02\x02"+
+		"\u0420\u0422\x07\x1F\x02\x02\u0421\u0423\x05\xA2R\x02\u0422\u0421\x03"+
+		"\x02\x02\x02\u0422\u0423\x03\x02\x02\x02\u0423\xA1\x03\x02\x02\x02\u0424"+
+		"\u0425\x07\x06\x02\x02\u0425\u0428\x05^0\x02\u0426\u0428\x05\x90I\x02"+
+		"\u0427\u0424\x03\x02\x02\x02\u0427\u0426\x03\x02\x02\x02\u0428\xA3\x03"+
+		"\x02\x02\x02\u0429\u042A\t\x04\x02\x02\u042A\xA5\x03\x02\x02\x02\u042B"+
+		"\u042F\x05\xA8U\x02\u042C\u042F\x07,\x02\x02\u042D\u042F\x07-\x02\x02"+
+		"\u042E\u042B\x03\x02\x02\x02\u042E\u042C\x03\x02\x02\x02\u042E\u042D\x03"+
+		"\x02\x02\x02\u042F\xA7\x03\x02\x02\x02\u0430\u0431\t\x05\x02\x02\u0431"+
+		"\xA9\x03\x02\x02\x02\x98\xAF\xB3\xB5\xBE\xC7\xCA\xD1\xD6\xDD\xE4\xEB\xF1"+
+		"\xF5\xFB\u0101\u0105\u010B\u010F\u0111\u0115\u011B\u011F\u0125\u0129\u012E"+
+		"\u0133\u0139\u013D\u0143\u0149\u014D\u0153\u0157\u0159\u015D\u0163\u0167"+
+		"\u016D\u0171\u0177\u017E\u0182\u018E\u0196\u019E\u01A2\u01A5\u01AB\u01B0"+
+		"\u01B4\u01B8\u01C6\u01CE\u01D6\u01D8\u01DC\u01E5\u01EC\u01EE\u01F7\u01FC"+
+		"\u0201\u0208\u020C\u0213\u021B\u0224\u022D\u0234\u023E\u024B\u0251\u025A"+
+		"\u0265\u0270\u0275\u027A\u027F\u0287\u0290\u0296\u0298\u02A0\u02A4\u02AC"+
+		"\u02AF\u02B3\u02B7\u02BE\u02C8\u02D0\u02D6\u02DE\u02EE\u02F1\u02FA\u0302"+
+		"\u030A\u0312\u0314\u031C\u031E\u032C\u032E\u0338\u033E\u0343\u0348\u034D"+
+		"\u0352\u035D\u0365\u036D\u0371\u0373\u0378\u0385\u038C\u0390\u0394\u0398"+
+		"\u039B\u039D\u03A1\u03A8\u03AC\u03B3\u03B7\u03C4\u03C8\u03CA\u03D2\u03D6"+
+		"\u03D8\u03DA\u03E0\u03E3\u03ED\u03F2\u03FA\u0400\u0404\u0408\u040E\u0412"+
+		"\u0419\u041E\u0422\u0427\u042E";
 	public static readonly _serializedATN: string = Utils.join(
 		[
 			Python3Parser._serializedATNSegment0,

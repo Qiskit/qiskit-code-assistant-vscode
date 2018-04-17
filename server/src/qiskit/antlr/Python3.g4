@@ -163,6 +163,7 @@ import { ArgumentsTester, ParserArgumentsErrorHandler } from './tools/argumentsT
 public symbolTable = QiskitSymbolTable.build();
 private statements = new StatementsStack();
 private argumentsScope = false;
+private arrayScope = false;
 private argumentsErrorHandler = new ParserArgumentsErrorHandler(this);
 
 declaredVariables(): string[] {
@@ -654,12 +655,22 @@ atom
  | NAME { 
    if (this.argumentsScope) {
     this.statements.addArgument($NAME, this.symbolTable.lookup($NAME.text));
-   } else {
+   } else if (this.arrayScope) { } else  {
     this.statements.addVariable($NAME); 
    }
  }
- | number { this.statements.addArgument($number.start, this.symbolTable.lookup('int')); }
- | str+ { this.statements.addArgument($str.start, this.symbolTable.lookup('string')); }
+ | number { 
+    if (this.arrayScope) {
+    } else {
+      this.statements.addArgument($number.start, this.symbolTable.lookup('int')); 
+    }
+   }
+ | str+ { 
+    if (this.arrayScope) {
+    } else {
+     this.statements.addArgument($str.start, this.symbolTable.lookup('string')); 
+    }
+   }
  | '...'
  | NONE
  | TRUE
@@ -676,7 +687,7 @@ testlist_comp
 /// trailer: '(' [arglist] ')' | '[' subscriptlist ']' | '.' NAME
 trailer
  : { this.argumentsScope = true; } '(' arglist? ')' { this.argumentsScope = false; }
- | '[' subscriptlist ']'
+ | { this.arrayScope = true; } '[' subscriptlist ']' { this.arrayScope = false; }
  | '.' NAME { this.statements.addTrailingMethod($NAME); }
  ;
 
