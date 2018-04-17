@@ -107,6 +107,11 @@
 				"command": "qstudio.discoverLocalBackends",
 				"title": "Discover local backends available",
 				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.launchQasm",
+				"title": "Launch QASM preview",
+				"category": "qstudio"
 			}
 		],
 		"keybindings": [
