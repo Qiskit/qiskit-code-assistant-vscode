@@ -30,7 +30,7 @@ export class QiskitParser implements Parser {
 
         let tree = parser.file_input();
 
-        TreePrinter.print(parser.ruleNames, tree);
+        // TreePrinter.print(parser.ruleNames, tree);
 
         parser.symbolTable.print();
 

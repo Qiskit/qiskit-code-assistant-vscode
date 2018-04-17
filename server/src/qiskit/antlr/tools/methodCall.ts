@@ -18,58 +18,6 @@
 import { Token } from "antlr4ts";
 import { Type } from "../../../tools/symbolTable";
 
-export class AssignmentsStack {
-
-    assignments: Assignment[] = [];
-
-    newAssignmentOn(symbol: Token): void {
-        this.assignments.push(new Assignment(symbol));
-    }
-
-    popLastAssignment(): Assignment {
-        return this.assignments.pop();
-    }
-
-    setVariable(variable: Token): void {
-        this.applyOnLastAssignment((assignment) => {
-            assignment.call = new MethodCall(variable);
-        });
-    }
-
-    addTrailingMethod(methodName: Token): void {
-        this.applyOnLastAssignment((assignment) => {
-            assignment.call.addTrailingMethod(methodName);
-        });
-    }
-
-    addArgument(argument: Token, type: Type): void {
-        this.applyOnLastAssignment((assignment) => {
-            assignment.call.addArgument(argument, type);
-        });
-    }
-
-    private applyOnLastAssignment(f: (lastAssignment: Assignment) => void): void {
-        let lastAssignment = this.assignments.pop();
-        if (lastAssignment) {
-            f(lastAssignment);
-        }
-        this.assignments.push(lastAssignment);
-    }
-
-}
-
-export class Assignment {
-
-    call: MethodCall;
-
-    constructor(public symbol: Token) {}
-
-    toString(): string {
-        return `{ symbol: ${this.symbol.text}, call: ${this.call} }`;
-    }
-
-}
-
 export class MethodCall {
 
     trailingMethods: Method[] = [];

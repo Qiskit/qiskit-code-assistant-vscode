@@ -168,8 +168,14 @@ declaredVariables(): string[] {
     return this.symbolTable.definedSymbols();
 }
 
+checkMethodInvocation(symbol: string): void {
+  console.log(`Checking method invocation on ${symbol}`);
+}
+
 applyAssignment(symbol: string): void {
   let lastAssignment = this.assignments.popLastAssignment();
+
+  console.log(`Assignment ${lastAssignment}`);
 
   if (this.isAssignmentAppliable(lastAssignment, symbol)) {
     this.verifyMethodCall(lastAssignment.call);
@@ -322,8 +328,8 @@ small_stmt
 /// expr_stmt: testlist_star_expr (augassign (yield_expr|testlist) |
 ///                      ('=' (yield_expr|testlist_star_expr))*)
 expr_stmt
- : symbol=testlist_star_expr ( augassign ( yield_expr | testlist)
-                      | ( '=' { this.assignments.newAssignmentOn($symbol.start); } ( yield_expr| assignment=testlist_star_expr { this.applyAssignment($symbol.text); } ) )* )  
+ : ls=testlist_star_expr { this.checkMethodInvocation($ls.start.text); }
+                      ( augassign ( yield_expr | testlist) | ( '=' { this.assignments.newAssignmentOn($ls.start); } ( yield_expr | testlist_star_expr { this.applyAssignment($ls.text); } ) )* )  
  ;
 
 /// testlist_star_expr: (test|star_expr) (',' (test|star_expr))* [',']
