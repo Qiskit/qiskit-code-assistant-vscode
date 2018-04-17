@@ -3,7 +3,8 @@
 
 import { QiskitSymbolTable, VariableSymbol, ClassSymbol } from '../compiler/qiskitSymbolTable';
 import { Symbol } from '../../tools/symbolTable';
-import { AssignmentsStack, Assignment, MethodCall } from './tools/assignmentsStack';
+import { StatementsStack, Statement } from './tools/statementsStack';
+import { MethodCall } from './tools/methodCall';
 import { ArgumentsTester, ParserArgumentsErrorHandler } from './tools/argumentsTester';
 
 

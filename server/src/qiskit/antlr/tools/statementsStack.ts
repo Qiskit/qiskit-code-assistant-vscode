@@ -31,6 +31,13 @@ export class StatementsStack {
         return this.stack.pop();
     }
 
+    last(): Statement {
+        let result: Statement;
+        this.applyOnLastStatement((statement) => result = statement);
+
+        return result;
+    }
+
     addVariable(variable: Token): void {
         this.applyOnLastStatement((statement) => statement.addVariable(variable));
     }
@@ -83,6 +90,10 @@ export class Statement {
 
     addArgument(argument: Token, type: Type): void {
         this.currentSide().addArgument(argument, type);
+    }
+
+    toString(): string {
+        return `{ leftSide: ${this.leftSide}, rightSide: ${this.rightSide} }`;
     }
 
     private currentSide(): MethodCall {

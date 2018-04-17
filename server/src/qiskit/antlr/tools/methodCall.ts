@@ -29,6 +29,10 @@ export class MethodCall {
     }
 
     addArgument(argument: Token, type: Type): void {
+        if (!this.hasTrailingMethods()) {
+            return;
+        }
+
         let lastTrailingMethod = this.trailingMethods.pop();
         lastTrailingMethod.addArgument(argument, type);
         this.trailingMethods.push(lastTrailingMethod);
