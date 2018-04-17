@@ -15,7 +15,7 @@
 
 'use strict';
 
-import { MethodCall, Method, Argument } from "./assignmentsStack";
+import { MethodCall, Method, Argument } from "./methodCall";
 import { SymbolTable, Symbol, BuiltInTypeSymbol } from "../../../tools/symbolTable";
 import { ClassSymbol, ArgumentSymbol } from "../../compiler/qiskitSymbolTable";
 import { Token, Parser } from "antlr4ts";
