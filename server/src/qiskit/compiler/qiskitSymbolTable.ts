@@ -26,12 +26,13 @@ export class QiskitSymbolTable {
         
         let classType = new BuiltInTypeSymbol('class');
 
+        symbolTable.define(new BuiltInTypeSymbol('void'));
         symbolTable.define(new BuiltInTypeSymbol('string'));
         symbolTable.define(new BuiltInTypeSymbol('int'));
         symbolTable.define(classType);
         symbolTable.define(new ClassSymbol('QuantumRegister', classType, []));
         symbolTable.define(new ClassSymbol('ClassicalRegister', classType, []));
-        symbolTable.define(new ClassSymbol('QuantumCircuit', classType, []));
+        symbolTable.define(this.createQuantumCircuitSymbol(symbolTable));
         symbolTable.define(this.createQuantumProgramSymbol(symbolTable));
         
         return symbolTable;
@@ -76,6 +77,45 @@ export class QiskitSymbolTable {
         ];
 
         return new MethodSymbol('create_circuit', type, requiredArguments);
+    }
+
+    private static createQuantumCircuitSymbol(symbolTable: SymbolTable): ClassSymbol {
+        let methods = [
+            this.createHMethod(symbolTable),
+            this.createCXMethod(symbolTable),
+            this.createMeasureMethod(symbolTable)
+        ];
+
+        return new ClassSymbol('QuantumCircuit', symbolTable.lookup('class'), methods);
+    }
+
+    private static createHMethod(symbolTable: SymbolTable): MethodSymbol {
+        let type = symbolTable.lookup('void');
+        let requiredArguments = [
+            new ArgumentSymbol('quantumRegister', symbolTable.lookup('QuantumRegister'))
+        ];
+
+        return new MethodSymbol('h', type, requiredArguments);
+    }
+
+    private static createCXMethod(symbolTable: SymbolTable): MethodSymbol {
+        let type = symbolTable.lookup('void');
+        let requiredArguments = [
+            new ArgumentSymbol('quantumRegister1', symbolTable.lookup('QuantumRegister')),
+            new ArgumentSymbol('quantumRegister2', symbolTable.lookup('QuantumRegister'))
+        ];
+
+        return new MethodSymbol('cx', type, requiredArguments);
+    }
+
+    private static createMeasureMethod(symbolTable: SymbolTable): MethodSymbol {
+        let type = symbolTable.lookup('void');
+        let requiredArguments = [
+            new ArgumentSymbol('quantumRegister', symbolTable.lookup('QuantumRegister')),
+            new ArgumentSymbol('classicalRegister', symbolTable.lookup('ClassicalRegister'))
+        ];
+
+        return new MethodSymbol('measure', type, requiredArguments);
     }
 
 }

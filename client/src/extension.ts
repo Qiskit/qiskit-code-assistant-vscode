@@ -15,18 +15,11 @@
 
 'use strict';
 
-import * as path from 'path';
 import * as vscode from 'vscode';
 import * as Q from "q";
-import {
-    LanguageClient,
-    LanguageClientOptions,
-    ServerOptions,
-    TransportKind
-} from 'vscode-languageclient';
-//import {CommandPaletteHelper} from "./commandPaletteHelper";
 import {DependencyMgr} from "./dependencyMgr";
 import {PackageMgr} from "./packageMgr";
+import { LanguagesActivation } from './languages';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -36,38 +29,13 @@ export function activate(context: vscode.ExtensionContext) {
 
     //registerQiskitCommands(context);
 
-    let serverModule = context.asAbsolutePath(path.join('server', 'server.js'));
-    
-    let debugOptions = {
-        execArgv: ["--nolazy", "--inspect=6009"]
-    };
+    let languagesActivation = new LanguagesActivation(context);
 
-    let serverOptions: ServerOptions = {
-        run: {
-            module: serverModule,
-            transport: TransportKind.ipc
-        },
-        debug: {
-            module: serverModule,
-            transport: TransportKind.ipc,
-            options: debugOptions
-        }
-    }
+    let qasmLanguage = languagesActivation.qasmLanguageClient().start();
+    context.subscriptions.push(qasmLanguage);
 
-    let clientOptions: LanguageClientOptions = {
-        documentSelector: [{
-            scheme: 'file',
-            language: 'qasm-lang'
-        }],
-        synchronize: {
-            configurationSection: 'qasmLang',
-            fileEvents: vscode.workspace.createFileSystemWatcher('**/.clientrc')
-        }
-    }
-
-    let disposable = new LanguageClient('qasmLang', 'QAsm Language support', serverOptions, clientOptions).start();
-
-    context.subscriptions.push(disposable);
+    let qiskitLanguage = languagesActivation.qiskitLanguageClient().start();
+    context.subscriptions.push(qiskitLanguage);
 
     vscode.languages.registerDocumentFormattingEditProvider('qasm-lang', {
         provideDocumentFormattingEdits(document: vscode.TextDocument): any {
