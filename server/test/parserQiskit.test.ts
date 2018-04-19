@@ -13,6 +13,8 @@
 // limitations under the License.
 // =============================================================================
 
+'use strict';
+
 import { expect } from 'chai';
 import { QiskitParser } from '../src/qiskit/parser';
 import { Parser, ParserResult, ParseErrorLevel, ParserError } from '../src/types';
