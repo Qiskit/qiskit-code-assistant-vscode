@@ -16,19 +16,23 @@
 'use strict';
 
 import { ANTLRInputStream, CommonTokenStream, ANTLRErrorListener, CommonToken, Token, Recognizer, RecognitionException, ConsoleErrorListener, ParserRuleContext } from 'antlr4ts';
-import { CodeCompletionCore } from 'antlr4-c3';
-import { Parser, ParserResult, ParserError, ParseErrorLevel } from '../types';
-import { QasmLexer } from './antlr/QasmLexer';
-import { QasmParser, CodeContext } from './antlr/QasmParser';
 import { Override } from 'antlr4ts/Decorators';
+import { Parser, ParserResult, ParserError, ParseErrorLevel } from "../types";
+import { Python3Parser } from './antlr/Python3Parser';
+import { Python3Lexer } from './antlr/Python3Lexer';
+import { TreePrinter } from '../tools';
 
-export class QASMParser implements Parser {
+export class QiskitParser implements Parser {
 
     parse(input: string): ParserResult {
         let errorListener = new ErrorListener();
-        let parser = this.buildQasmParser(input, errorListener);
+        let parser = this.buildQiskitParser(input, errorListener);
 
-        let tree = parser.code();
+        let tree = parser.file_input();
+
+        TreePrinter.print(parser.ruleNames, tree);
+
+        parser.symbolTable.print();
 
         return {
             ast: tree,
@@ -36,13 +40,13 @@ export class QASMParser implements Parser {
         };
     }
 
-    private buildQasmParser(input: string, errorListener: ErrorListener): QasmParser {
+    private buildQiskitParser(input: string, errorListener: ErrorListener): Python3Parser {
         let inputStream = new ANTLRInputStream(input);
-        let lexer = new QasmLexer(inputStream);
+        let lexer = new Python3Lexer(inputStream);
         lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
 
         let tokenStream = new CommonTokenStream(lexer);
-        let parser = new QasmParser(tokenStream);
+        let parser = new Python3Parser(tokenStream);
         parser.addErrorListener(errorListener);
 
         return parser;
@@ -63,25 +67,13 @@ class ErrorListener implements ANTLRErrorListener<CommonToken> {
         msg: string,
         _e: RecognitionException | undefined): void {
 
-        // _e contains the first token of the rule that failed
-
-        if (offendingSymbol.text === ')') {
-            this.errors.push({
-                line: line - 1,
-                start: charPositionInLine,
-                end: charPositionInLine + offendingSymbol.text.length,
-                message: 'Expecting arguments before symbol )',
-                level: ParseErrorLevel.ERROR
-            });
-        } else {
-            this.errors.push({
-                line: line - 1,
-                start: charPositionInLine,
-                end: charPositionInLine + offendingSymbol.text.length,
-                message: msg,
-                level: ParseErrorLevel.ERROR
-            });
-        }
+        this.errors.push({
+            line: line - 1,
+            start: charPositionInLine,
+            end: charPositionInLine + offendingSymbol.text.length,
+            message: msg,
+            level: ParseErrorLevel.ERROR
+        });
     }
 
 }
