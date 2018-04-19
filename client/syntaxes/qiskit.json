@@ -6,12 +6,12 @@
     "patterns": [
         {
             "name": "comment.line.solidity",
-            "match": "(?<!tp:)//.*?$"
+            "match": "(?<!tp:)#.*?$"
         },
         {
             "name": "comment.block.solidity",
-            "begin": "/\\*",
-            "end": "\\*/"
+            "begin": "'''",
+            "end": "'''"
         },
         {
             "captures": {
