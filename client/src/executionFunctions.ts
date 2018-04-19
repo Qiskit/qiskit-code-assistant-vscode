@@ -17,18 +17,15 @@
 
 import * as vscode from 'vscode';
 import * as Q from "q";
+import * as path from "path";
 import { CommandExecutor } from "./commandExecutor";
 
 export function runCodeOnQISKit(): Q.Promise<string> {
     return Q.Promise((resolve, reject) => {
         const codeFile = vscode.window.activeTextEditor.document;
         codeFile.save();
-        // console.log(codeFile);
-        // return Q.resolve(codeFile);
         (new CommandExecutor).exec("python", [codeFile.fileName.toString()])
             .then((stdout) => {
-                // console.log(stdout);
-                // vscode.window.showInformationMessage("Execution result:",stdout);
                 return resolve(stdout);
             }).catch(err => {
                 console.log(err);
@@ -38,16 +35,19 @@ export function runCodeOnQISKit(): Q.Promise<string> {
     });
 }
 
-export function runPythonScript(path:string): Q.Promise<void>{
+export function runPythonScript(scriptPath:string): Q.Promise<void>{
     return Q.Promise((resolve, reject) => {
-        console.log(path);
-        vscode.workspace.openTextDocument(path)
+        let execPath = path.join(__dirname,scriptPath);
+        if (process.platform === "win32") {
+            execPath = execPath.replace(/\\/g, "/");
+        }
+
+        vscode.workspace.openTextDocument(execPath)
             .then((document) => {
-                console.log(document);
                 (new CommandExecutor).exec("python", [document.fileName.toString()])
                     .then((stdout) => {
                         // console.log(stdout);
-                        // vscode.window.showInformationMessage("Execution result:",stdout);
+                        //vscode.window.showInformationMessage("Execution result:",stdout);
                         return resolve(stdout);
                     }).catch(err => {
                         console.log(err);
@@ -55,6 +55,5 @@ export function runPythonScript(path:string): Q.Promise<void>{
                         return reject(err);
                     });
             });
-        return reject("Error executing the code");
     });
 }

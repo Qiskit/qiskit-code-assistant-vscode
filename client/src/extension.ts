@@ -101,9 +101,9 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand("qstudio.reload", () => activate(context)),
         vscode.commands.registerCommand("qstudio.checkDependencies", () => checkDependencies()),
         vscode.workspace.registerTextDocumentContentProvider('qiskit-preview-result', resultProvider), 
-        vscode.commands.registerCommand("qstudio.runCode", () => executionFunctions.runCodeOnQISKit().then(stdout => {
-            let previewUri = vscode.Uri.parse(`qiskit-preview-result://authority/result-preview-bar`);
-            resultProvider.content = stdout;
+        vscode.commands.registerCommand("qstudio.runCode", () => executionFunctions.runCodeOnQISKit().then(codeResult => {
+            let previewUri = vscode.Uri.parse(`qiskit-preview-result://authority/result-preview`);
+            resultProvider.content = codeResult;
             console.log(previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Execution result")
@@ -112,9 +112,9 @@ export function activate(context: vscode.ExtensionContext) {
                     vscode.window.showErrorMessage(reason);
                 });
             })),
-        vscode.commands.registerCommand("qstudio.discoverLocalBackends", () => executionFunctions.runPythonScript('./qiskitScripts/listLocalBackends').then(stdout => {
-            let previewUri = vscode.Uri.parse(`qiskit-preview-result://authority/result-preview-bar`);
-            resultProvider.content = stdout;
+        vscode.commands.registerCommand("qstudio.discoverLocalBackends", () => executionFunctions.runPythonScript('../../resources/qiskitScripts/listLocalBackends.py').then(localBackends => {
+            let previewUri = vscode.Uri.parse(`qiskit-preview-result://authority/backends-preview`);
+            resultProvider.content = localBackends;
             console.log(previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Local backends available")

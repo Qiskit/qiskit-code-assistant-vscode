@@ -109,8 +109,8 @@
 				"category": "qstudio"
 			},
 			{
-				"command": "qstudio.launchQasm",
-				"title": "Launch QASM preview",
+				"command": "qstudio.discoverRemoteBackends",
+				"title": "Discover remote backends available",
 				"category": "qstudio"
 			}
 		],
