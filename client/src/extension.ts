@@ -112,7 +112,23 @@ export function activate(context: vscode.ExtensionContext) {
                     vscode.window.showErrorMessage(reason);
                 });
             })),
-        vscode.commands.registerCommand("qstudio.discoverLocalBackends", () => executionFunctions.listLocalBackends()),
+        vscode.commands.registerCommand("qstudio.discoverLocalBackends", () => executionFunctions.runPythonScript('./qiskitScripts/listLocalBackends').then(stdout => {
+            let previewUri = vscode.Uri.parse(`qiskit-preview-result://authority/result-preview-bar`);
+            resultProvider.content = stdout;
+            console.log(previewUri);
+            
+            vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Local backends available")
+                .then((_success) => {}, (reason) => {
+                    console.log(`Error: ${reason}`);
+                    vscode.window.showErrorMessage(reason);
+                });
+            })),
+        
+        //vscode.commands.registerCommand("qstudio.discoverRemoteBackends", () => executionFunctions.listRemoteBackends()),
+        //vscode.commands.registerCommand("qstudio.listPendingJobs", () => executionFunctions.listPendingJobs()),
+        //vscode.commands.registerCommand("qstudio.listExecutedJobs", () => executionFunctions.listExecutedJobs()),
+        //vscode.commands.registerCommand("qstudio.getQueueStatus", () => executionFunctions.getQueueStatus()),
+        //vscode.commands.registerCommand("qstudio.getUserCredits", () => executionFunctions.getUserCredits()),
     );
 }
 

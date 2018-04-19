@@ -38,33 +38,23 @@ export function runCodeOnQISKit(): Q.Promise<string> {
     });
 }
 
-export function listLocalBackends(): Q.Promise<void>{
-    //print("Local backends: ", qiskit.backends.discover_local_backends());
-    console.log("Not implemented!");
-    return Q.resolve("Not implemented!");
-}
-
-export function listRemoteBackends(): Q.Promise<void>{
-    console.log("Not implemented!");
-    return Q.resolve("Not implemented!");
-}
-
-export function listPendingJobs(): Q.Promise<void>{
-    console.log("Not implemented!");
-    return Q.resolve("Not implemented!");
-}
-
-export function listExecutedJobs(): Q.Promise<void>{
-    console.log("Not implemented!");
-    return Q.resolve("Not implemented!");
-}
-
-export function queueStatus(): Q.Promise<void>{
-    console.log("Not implemented!");
-    return Q.resolve("Not implemented!");
-}
-
-export function getUserCredits(): Q.Promise<void>{
-    console.log("Not implemented!");
-    return Q.resolve("Not implemented!");
+export function runPythonScript(path:string): Q.Promise<void>{
+    return Q.Promise((resolve, reject) => {
+        console.log(path);
+        vscode.workspace.openTextDocument(path)
+            .then((document) => {
+                console.log(document);
+                (new CommandExecutor).exec("python", [document.fileName.toString()])
+                    .then((stdout) => {
+                        // console.log(stdout);
+                        // vscode.window.showInformationMessage("Execution result:",stdout);
+                        return resolve(stdout);
+                    }).catch(err => {
+                        console.log(err);
+                        vscode.window.showErrorMessage(err);
+                        return reject(err);
+                    });
+            });
+        return reject("Error executing the code");
+    });
 }
