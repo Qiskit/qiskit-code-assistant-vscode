@@ -38,8 +38,38 @@ export function runCodeOnQISKit(): Q.Promise<string> {
     });
 }
 
-export function discoverQiskitLocalBackends(): Q.Promise<void>{
+export function listLocalBackends(): Q.Promise<void>{
     //print("Local backends: ", qiskit.backends.discover_local_backends());
+    console.log("Not implemented!");
+    return Q.resolve("Not implemented!");
+}
+
+export function listRemoteBackends(): Q.Promise<void>{
+    console.log("Not implemented!");
+    return Q.resolve("Not implemented!");
+}
+
+export function listPendingJobs(): Q.Promise<void>{
+    console.log("Not implemented!");
+    return Q.resolve("Not implemented!");
+}
+
+export function listExecutedJobs(): Q.Promise<void>{
+    console.log("Not implemented!");
+    return Q.resolve("Not implemented!");
+}
+
+export function listJobsPending(): Q.Promise<void>{
+    console.log("Not implemented!");
+    return Q.resolve("Not implemented!");
+}
+
+export function queueStatus(): Q.Promise<void>{
+    console.log("Not implemented!");
+    return Q.resolve("Not implemented!");
+}
+
+export function getUserCredits(): Q.Promise<void>{
     console.log("Not implemented!");
     return Q.resolve("Not implemented!");
 }

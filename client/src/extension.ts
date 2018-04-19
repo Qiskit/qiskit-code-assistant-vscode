@@ -112,7 +112,7 @@ export function activate(context: vscode.ExtensionContext) {
                     vscode.window.showErrorMessage(reason);
                 });
             })),
-        vscode.commands.registerCommand("qstudio.discoverLocalBackends", () => executionFunctions.discoverQiskitLocalBackends()),
+        vscode.commands.registerCommand("qstudio.discoverLocalBackends", () => executionFunctions.listLocalBackends()),
     );
 }
 
