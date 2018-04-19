@@ -32,7 +32,7 @@ export class QiskitParser implements Parser {
 
         TreePrinter.print(parser.ruleNames, tree);
 
-        parser.symbolTable.print();
+        // parser.symbolTable.print();
 
         return {
             ast: tree,

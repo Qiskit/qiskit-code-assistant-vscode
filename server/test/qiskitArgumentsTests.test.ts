@@ -20,7 +20,7 @@ import { mock, instance, verify, anyString, anything } from 'ts-mockito';
 import { SymbolTable } from "../src/tools/symbolTable";
 import { QiskitSymbolTable, VariableSymbol } from "../src/qiskit/compiler/qiskitSymbolTable";
 import { ArgumentsTester, ArgumentsErrorHandler } from "../src/qiskit/antlr/tools/argumentsTester";
-import { MethodCall } from '../src/qiskit/antlr/tools/assignmentsStack';
+import { MethodCall } from '../src/qiskit/antlr/tools/methodCall';
 import { Python3Lexer } from '../src/qiskit/antlr/Python3Lexer';
 import { Token } from './utils/tokens';
 

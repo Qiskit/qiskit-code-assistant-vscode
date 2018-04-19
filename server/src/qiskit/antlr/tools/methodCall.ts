@@ -18,54 +18,6 @@
 import { Token } from "antlr4ts";
 import { Type } from "../../../tools/symbolTable";
 
-export class AssignmentsStack {
-
-    assignments: Assignment[] = [];
-
-    newAssignmentOn(symbol: Token): void {
-        this.assignments.push(new Assignment(symbol));
-    }
-
-    popLastAssignment(): Assignment {
-        return this.assignments.pop();
-    }
-
-    setVariable(variable: Token): void {
-        this.applyOnLastAssignment((assignment) => {
-            assignment.call = new MethodCall(variable);
-        });
-    }
-
-    addTrailingMethod(methodName: Token): void {
-        this.applyOnLastAssignment((assignment) => {
-            assignment.call.addTrailingMethod(methodName);
-        });
-    }
-
-    addArgument(argument: Token, type: Type): void {
-        this.applyOnLastAssignment((assignment) => {
-            assignment.call.addArgument(argument, type);
-        });
-    }
-
-    private applyOnLastAssignment(f: (lastAssignment: Assignment) => void): void {
-        let lastAssignment = this.assignments.pop();
-        if (lastAssignment) {
-            f(lastAssignment);
-        }
-        this.assignments.push(lastAssignment);
-    }
-
-}
-
-export class Assignment {
-
-    call: MethodCall;
-
-    constructor(public symbol: Token) {}
-
-}
-
 export class MethodCall {
 
     trailingMethods: Method[] = [];
@@ -77,6 +29,10 @@ export class MethodCall {
     }
 
     addArgument(argument: Token, type: Type): void {
+        if (!this.hasTrailingMethods()) {
+            return;
+        }
+
         let lastTrailingMethod = this.trailingMethods.pop();
         lastTrailingMethod.addArgument(argument, type);
         this.trailingMethods.push(lastTrailingMethod);
@@ -84,6 +40,10 @@ export class MethodCall {
 
     hasTrailingMethods(): boolean {
         return this.trailingMethods.length > 0;
+    }
+
+    toString(): string {
+        return `{ variable: ${this.variable.text}, trailingMethods: ${this.trailingMethods.join(".")} }`;
     }
 
 }
@@ -102,10 +62,19 @@ export class Method {
         return this.arguments.length > 0;
     }
 
+    toString(): string {
+        return `${this.methodName.text}(${this.arguments.join(", ")})`;
+    }
+
 }
 
 export class Argument {
 
     constructor(public token: Token, public type: Type) {}
+
+    toString(): string {
+        let typeValue = this.type ? this.type.getName() : 'unknown';
+        return `${this.token.text}:${typeValue}`;
+    }
 
 }
