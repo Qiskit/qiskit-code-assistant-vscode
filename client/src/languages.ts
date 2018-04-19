@@ -25,7 +25,7 @@ export class LanguagesActivation {
     constructor(private context: ExtensionContext) {};
 
     qasmLanguageClient(): LanguageClient {
-        let serverModule = this.context.asAbsolutePath(path.join('server', 'server.js'));
+        let serverModule = this.context.asAbsolutePath(path.join('server', 'serverQasm.js'));
 
         let debugOptions = {
             execArgv: ["--nolazy", "--inspect=6009"]
