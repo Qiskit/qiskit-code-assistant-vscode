@@ -59,11 +59,6 @@ export function listExecutedJobs(): Q.Promise<void>{
     return Q.resolve("Not implemented!");
 }
 
-export function listJobsPending(): Q.Promise<void>{
-    console.log("Not implemented!");
-    return Q.resolve("Not implemented!");
-}
-
 export function queueStatus(): Q.Promise<void>{
     console.log("Not implemented!");
     return Q.resolve("Not implemented!");
