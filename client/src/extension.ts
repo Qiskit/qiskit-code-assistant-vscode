@@ -28,8 +28,8 @@ import {
 import {DependencyMgr} from "./dependencyMgr";
 import {PackageMgr} from "./packageMgr";
 
-import { CommandExecutor } from "./commandExecutor";
 import { ResultProvider } from "./resultProvider";
+import * as executionFunctions from "./executionFunctions"
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -101,17 +101,18 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand("qstudio.reload", () => activate(context)),
         vscode.commands.registerCommand("qstudio.checkDependencies", () => checkDependencies()),
         vscode.workspace.registerTextDocumentContentProvider('qiskit-preview-result', resultProvider), 
-        vscode.commands.registerCommand("qstudio.runCode", () => runCodeOnQISKit().then(stdout => {
-            let previewUri = vscode.Uri.parse(`qiskit-preview-result://authority/result-preview-bar?content=${stdout}`);
+        vscode.commands.registerCommand("qstudio.runCode", () => executionFunctions.runCodeOnQISKit().then(stdout => {
+            let previewUri = vscode.Uri.parse(`qiskit-preview-result://authority/result-preview-bar`);
+            resultProvider.content = stdout;
             console.log(previewUri);
             
-            vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, stdout)
+            vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Execution result")
                 .then((_success) => {}, (reason) => {
                     console.log(`Error: ${reason}`);
                     vscode.window.showErrorMessage(reason);
                 });
             })),
-        vscode.commands.registerCommand("qstudio.discoverLocalBackends", () => discoverQiskitLocalBackends()),
+        vscode.commands.registerCommand("qstudio.discoverLocalBackends", () => executionFunctions.discoverQiskitLocalBackends()),
     );
 }
 
@@ -156,34 +157,6 @@ function checkDependencies(): Q.Promise<string> {
             });
         }
     );
-}
-
-function runCodeOnQISKit(): Q.Promise<string> {
-    return Q.Promise((resolve, reject) => {
-        const codeFile = vscode.window.activeTextEditor.document;
-        codeFile.save();
-        //console.log(codeFile);
-        //return Q.resolve(codeFile);
-
-        (new CommandExecutor).exec("python", [codeFile.fileName.toString()])
-            .then((stdout) => {
-                console.log(stdout);
-                vscode.window.showInformationMessage("Execution result:",stdout);
-                return resolve(stdout);
-            }).catch(err => {
-                console.log(err);
-                vscode.window.showErrorMessage(err);
-                return reject(err);
-            });
-    });
-}
-
-function discoverQiskitLocalBackends(): Q.Promise<void>{
-    //print("Local backends: ", qiskit.backends.discover_local_backends());
-    console.log("Not implemented!");
-    return Q.resolve("Not implemented!");
-
-
 }
 
 export function deactivate() {

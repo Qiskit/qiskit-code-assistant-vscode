@@ -18,11 +18,12 @@
 import { TextDocumentContentProvider, EventEmitter, Uri, Event } from "vscode";
 
 export class ResultProvider implements TextDocumentContentProvider {
+    public content: string;
+
     private _onDidChange = new EventEmitter<Uri>();
 
-    public provideTextDocumentContent(uri: Uri): string {
-        let content = uri.query.toString().split("content=");
-        return `<pre>${content[1]}</pre>`;
+    public provideTextDocumentContent(): string {
+        return `<pre>${this.content}</pre>`;
     }
 
     get onDidChange(): Event<Uri> {
