@@ -1,7 +1,7 @@
 // Generated from Python3.g4 by ANTLR 4.6-SNAPSHOT
 
 
-import { QiskitSymbolTable, VariableSymbol, ClassSymbol } from '../compiler/qiskitSymbolTable';
+import { QiskitSymbolTable, VariableSymbol, ClassSymbol, VariableMetadata } from '../compiler/qiskitSymbolTable';
 import { Symbol } from '../../tools/symbolTable';
 import { StatementsStack, Statement } from './tools/statementsStack';
 import { MethodCall } from './tools/methodCall';
@@ -299,12 +299,43 @@ export class Python3Parser extends Parser {
 	  let statement = this.statements.last();
 
 	  if (this.isAssignmentAppliable(statement, symbol)) {
+	    let metadata = this.extractMetadata(statement.rightSide);
 	    let parentSymbol = this.findParentSymbolWith(statement);
 	    if (parentSymbol !== null) {
-	      let variable = new VariableSymbol(symbol, parentSymbol);
+	      let variable = new VariableSymbol(symbol, parentSymbol, metadata);
 	      this.symbolTable.define(variable);
 	    }
 	  }
+	}
+
+	private extractMetadata(_call: MethodCall): VariableMetadata {
+	  let metadata: any = {};
+
+	  let currentVariable = this.symbolTable.lookup(_call.variable.text); 
+	  let currentType = currentVariable.type as ClassSymbol;
+	  _call.trailingMethods.forEach((trailingMethod) => {
+	    if (currentType === null) {
+	      return null;
+	    }
+
+	    let methods = currentType.getMethods().filter(m => m.name === trailingMethod.methodName.text);
+	    if (methods.length === 0) {
+	      return null;
+	    }
+
+	    let methodDefinition = methods.pop();
+	    methodDefinition.arguments.forEach((a, position) => {
+	      metadata[a.getName()] = trailingMethod.arguments[position].token.text;
+	    });
+
+	    if (currentType.type instanceof ClassSymbol) {
+	      currentType = currentType.type as ClassSymbol; 
+	    } else {
+	      currentType = null;
+	    }
+	  });
+
+	  return null || metadata;
 	}
 
 	findParentSymbolWith(statement: Statement): Symbol {
@@ -4328,6 +4359,7 @@ export class Python3Parser extends Parser {
 				_localctx._number = this.number();
 				 
 				    if (this.arrayScope) {
+				      this.statements.addArrayDimension(+(_localctx._number!=null?this._input.getTextFromRange(_localctx._number._start,_localctx._number._stop):undefined));
 				    } else {
 				      this.statements.addArgument((_localctx._number!=null?(_localctx._number._start):undefined), this.symbolTable.lookup('int')); 
 				    }

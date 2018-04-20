@@ -181,9 +181,9 @@ export class ArgumentSymbol extends Symbol {
 
 export class VariableSymbol extends Symbol {
 
-    private metadata: VariableMetada = null;
+    private metadata: VariableMetadata = null;
 
-    constructor(name: string, type: Type, metadata?: VariableMetada) {
+    constructor(name: string, type: Type, metadata?: VariableMetadata) {
         super(name, type);
         
         if (metadata) {
@@ -205,7 +205,7 @@ export class VariableSymbol extends Symbol {
 
 }
 
-export interface VariableMetada {
+export interface VariableMetadata {
     name: string;
     size: number;
 }

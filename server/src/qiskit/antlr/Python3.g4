@@ -167,7 +167,7 @@ tokens { INDENT, DEDENT }
 }
 
 @parser::header {
-import { QiskitSymbolTable, VariableSymbol, ClassSymbol } from '../compiler/qiskitSymbolTable';
+import { QiskitSymbolTable, VariableSymbol, ClassSymbol, VariableMetadata } from '../compiler/qiskitSymbolTable';
 import { Symbol } from '../../tools/symbolTable';
 import { StatementsStack, Statement } from './tools/statementsStack';
 import { MethodCall } from './tools/methodCall';
@@ -196,12 +196,43 @@ applyAssignment(symbol: string): void {
   let statement = this.statements.last();
 
   if (this.isAssignmentAppliable(statement, symbol)) {
+    let metadata = this.extractMetadata(statement.rightSide);
     let parentSymbol = this.findParentSymbolWith(statement);
     if (parentSymbol !== null) {
-      let variable = new VariableSymbol(symbol, parentSymbol);
+      let variable = new VariableSymbol(symbol, parentSymbol, metadata);
       this.symbolTable.define(variable);
     }
   }
+}
+
+private extractMetadata(_call: MethodCall): VariableMetadata {
+  let metadata: any = {};
+
+  let currentVariable = this.symbolTable.lookup(_call.variable.text); 
+  let currentType = currentVariable.type as ClassSymbol;
+  _call.trailingMethods.forEach((trailingMethod) => {
+    if (currentType === null) {
+      return null;
+    }
+
+    let methods = currentType.getMethods().filter(m => m.name === trailingMethod.methodName.text);
+    if (methods.length === 0) {
+      return null;
+    }
+
+    let methodDefinition = methods.pop();
+    methodDefinition.arguments.forEach((a, position) => {
+      metadata[a.getName()] = trailingMethod.arguments[position].token.text;
+    });
+
+    if (currentType.type instanceof ClassSymbol) {
+      currentType = currentType.type as ClassSymbol; 
+    } else {
+      currentType = null;
+    }
+  });
+
+  return null || metadata;
 }
 
 findParentSymbolWith(statement: Statement): Symbol {
@@ -676,6 +707,7 @@ atom
  }
  | number { 
     if (this.arrayScope) {
+      this.statements.addArrayDimension(+$number.text);
     } else {
       this.statements.addArgument($number.start, this.symbolTable.lookup('int')); 
     }
