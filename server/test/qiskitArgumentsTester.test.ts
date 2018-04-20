@@ -41,58 +41,110 @@ describe('An arguments tester on a QISKit grammar', () => {
     let errorHandler: ArgumentsErrorHandler;
 
     let tester: ArgumentsTester;
+
+    describe('when checking for arguments type', () => {
+
+        beforeEach(() => {
+            symbolTable = QiskitSymbolTable.build();
+            symbolTable.define(new VariableSymbol('qp', symbolTable.lookup('QuantumProgram')));
     
-    beforeEach(() => {
-        symbolTable = QiskitSymbolTable.build();
-        symbolTable.define(new VariableSymbol('qp', symbolTable.lookup('QuantumProgram')));
+            errorHandler = new FakeErrorHandler();
+    
+            tester = new ArgumentsTester(symbolTable, errorHandler);
+    
+            sinon.spy(errorHandler, 'handleError');
+        });
+    
+        it('should detect errors on qr = qp.create_quamtum_register(2, "qr")', () => {
+            let call = new MethodCall(Token.build(Python3Lexer.NAME, 'qp', 1, 1));
+            call.addTrailingMethod(Token.build(Python3Lexer.NAME, 'create_quantum_register', 1, 1));
+            call.addArgument(
+                Token.build(Python3Lexer.BIN_INTEGER, '2', 1, 1),
+                symbolTable.lookup('int'));
+            call.addArgument(
+                Token.build(Python3Lexer.STRING_LITERAL, '"qr"', 1, 1),
+                symbolTable.lookup('string'));
+    
+            tester.check(call);
+    
+            chai.expect(errorHandler.handleError).to.have.been.calledTwice;
+        });
+    
+        it('should detect errors on qr = qp.create_quamtum_register("qr")', () => {
+            let call = new MethodCall(Token.build(Python3Lexer.NAME, 'qp', 1, 1));
+            call.addTrailingMethod(Token.build(Python3Lexer.NAME, 'create_quantum_register', 1, 1));
+            call.addArgument(
+                Token.build(Python3Lexer.STRING_LITERAL, '"qr"', 1, 1),
+                symbolTable.lookup('string'));
+    
+            tester.check(call);
+    
+            chai.expect(errorHandler.handleError).to.have.been.calledOnce;
+        });
+        
+        it('should do not detect errors on qr = qp.create_quantum_register("qr", 2)', () => {
+            let call = new MethodCall(Token.build(Python3Lexer.NAME, 'qp', 1, 1));
+            call.addTrailingMethod(Token.build(Python3Lexer.NAME, 'create_quantum_register', 1, 1));
+            call.addArgument(
+                Token.build(Python3Lexer.STRING_LITERAL, '"qr"', 1, 1),
+                symbolTable.lookup('string'));
+            call.addArgument(
+                Token.build(Python3Lexer.BIN_INTEGER, '2', 1, 1),
+                symbolTable.lookup('int'));
+    
+            tester.check(call);
+    
+            chai.expect(errorHandler.handleError).to.not.have.been.called;
+        });
 
-        errorHandler = new FakeErrorHandler();
-
-        tester = new ArgumentsTester(symbolTable, errorHandler);
-
-        sinon.spy(errorHandler, 'handleError');
-    });
-
-    it('detect errors on qr = qp.create_quamtum_register(2, "qr")', () => {
-        let call = new MethodCall(Token.build(Python3Lexer.NAME, 'qp', 1, 1));
-        call.addTrailingMethod(Token.build(Python3Lexer.NAME, 'create_quantum_register', 1, 1));
-        call.addArgument(
-            Token.build(Python3Lexer.BIN_INTEGER, '2', 1, 1),
-            symbolTable.lookup('int'));
-        call.addArgument(
-            Token.build(Python3Lexer.STRING_LITERAL, '"qr"', 1, 1),
-            symbolTable.lookup('string'));
-
-        tester.check(call);
-
-        chai.expect(errorHandler.handleError).to.have.been.calledTwice;
-    });
-
-    it('detect errors on qr = qp.create_quamtum_register("qr")', () => {
-        let call = new MethodCall(Token.build(Python3Lexer.NAME, 'qp', 1, 1));
-        call.addTrailingMethod(Token.build(Python3Lexer.NAME, 'create_quantum_register', 1, 1));
-        call.addArgument(
-            Token.build(Python3Lexer.STRING_LITERAL, '"qr"', 1, 1),
-            symbolTable.lookup('string'));
-
-        tester.check(call);
-
-        chai.expect(errorHandler.handleError).to.have.been.calledOnce;
     });
     
-    it('do not detect errors on qr = qp.create_quantum_register("qr", 2)', () => {
-        let call = new MethodCall(Token.build(Python3Lexer.NAME, 'qp', 1, 1));
-        call.addTrailingMethod(Token.build(Python3Lexer.NAME, 'create_quantum_register', 1, 1));
-        call.addArgument(
-            Token.build(Python3Lexer.STRING_LITERAL, '"qr"', 1, 1),
-            symbolTable.lookup('string'));
-        call.addArgument(
-            Token.build(Python3Lexer.BIN_INTEGER, '2', 1, 1),
-            symbolTable.lookup('int'));
+    describe('when checking for array arguments', () => {
 
-        tester.check(call);
+        beforeEach(() => {
+            let registerMetadata = {
+                name: 'qr',
+                size: 2
+            };
 
-        chai.expect(errorHandler.handleError).to.not.have.been.called;
+            symbolTable = QiskitSymbolTable.build();
+            symbolTable.define(new VariableSymbol('qp', symbolTable.lookup('QuantumProgram')));
+            symbolTable.define(new VariableSymbol('qr', symbolTable.lookup('QuantumRegister'), registerMetadata));
+            symbolTable.define(new VariableSymbol('qc', symbolTable.lookup('QuantumCircuit')));
+    
+            errorHandler = new FakeErrorHandler();
+    
+            tester = new ArgumentsTester(symbolTable, errorHandler);
+    
+            sinon.spy(errorHandler, 'handleError');
+        });
+
+        it('should detect when an array access a position larger than its size', () => {
+            let call = new MethodCall(Token.build(Python3Lexer.NAME, 'qc', 1, 1));
+            call.addTrailingMethod(Token.build(Python3Lexer.NAME, 'h', 1, 1));
+            call.addArgument(
+                Token.build(Python3Lexer.NAME, 'qr', 1, 1),
+                symbolTable.lookup('qr'));
+            call.addArrayDimension(2);
+    
+            tester.check(call);
+
+            chai.expect(errorHandler.handleError).to.have.been.calledOnce;
+        });
+
+        it('should do not detect errors if arrays are between limits', () => {
+            let call = new MethodCall(Token.build(Python3Lexer.NAME, 'qc', 1, 1));
+            call.addTrailingMethod(Token.build(Python3Lexer.NAME, 'h', 1, 1));
+            call.addArgument(
+                Token.build(Python3Lexer.NAME, 'qr', 1, 1),
+                symbolTable.lookup('qr'));
+            call.addArrayDimension(1);
+    
+            tester.check(call);
+
+            chai.expect(errorHandler.handleError).to.not.have.been.called;
+        });
+
     });
 
 });

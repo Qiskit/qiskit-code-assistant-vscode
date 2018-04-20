@@ -17,7 +17,7 @@
 
 import { MethodCall, Method, Argument } from "./methodCall";
 import { SymbolTable, Symbol, BuiltInTypeSymbol } from "../../../tools/symbolTable";
-import { ClassSymbol, ArgumentSymbol } from "../../compiler/qiskitSymbolTable";
+import { ClassSymbol, ArgumentSymbol, VariableSymbol } from "../../compiler/qiskitSymbolTable";
 import { Token, Parser } from "antlr4ts";
 
 export class ArgumentsTester {
@@ -61,6 +61,15 @@ export class ArgumentsTester {
             this.checkClassType(requiredArgument, argument);
         } else {
             this.checkPrimitiveType(requiredArgument, argument);
+        }
+
+        if (argument.isArray()) {
+            let definedSymbol = this.symbolTable.lookup(argument.token.text) as VariableSymbol;
+            if (definedSymbol.hasSize()) {
+                if (definedSymbol.size() <= argument.dimension) {
+                    this.errorHandler.indexOutOfBound(argument.token);
+                }
+            }
         }
     }
 
@@ -117,6 +126,11 @@ export abstract class ArgumentsErrorHandler {
 
     wrongArgumentsNumber(offendingToken: Token, expected: number, received: number): void {
         let message = `Expecting ${expected} arguments, but received ${received}`;
+        this.handleError(offendingToken, message);
+    }
+
+    indexOutOfBound(offendingToken: Token): void {
+        let message = `Index out of bound at symbol ${offendingToken.text}`;
         this.handleError(offendingToken, message);
     }
 

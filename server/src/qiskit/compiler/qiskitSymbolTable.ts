@@ -181,12 +181,31 @@ export class ArgumentSymbol extends Symbol {
 
 export class VariableSymbol extends Symbol {
 
-    constructor(name: string, type: Type) {
+    private metadata: VariableMetada = null;
+
+    constructor(name: string, type: Type, metadata?: VariableMetada) {
         super(name, type);
+        
+        if (metadata) {
+            this.metadata = metadata;
+        }
+    }
+
+    hasSize(): boolean {
+        return this.metadata !== null && this.metadata.size !== null;
+    }
+
+    size(): number {
+        return this.metadata.size;
     }
 
     toString() {
         return `{ name: ${this.name}, type: ${this.type.getName()} }`;
     }
 
+}
+
+export interface VariableMetada {
+    name: string;
+    size: number;
 }
