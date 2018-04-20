@@ -15,8 +15,9 @@
 
 'use strict';
 
-import { expect } from 'chai';
-import { mock, instance, verify, anyString, anything } from 'ts-mockito';
+import * as chai from 'chai';
+import * as sinon from 'sinon';
+import * as sinonChai from 'sinon-chai';
 import { SymbolTable } from "../src/tools/symbolTable";
 import { QiskitSymbolTable, VariableSymbol } from "../src/qiskit/compiler/qiskitSymbolTable";
 import { ArgumentsTester, ArgumentsErrorHandler } from "../src/qiskit/antlr/tools/argumentsTester";
@@ -24,11 +25,20 @@ import { MethodCall } from '../src/qiskit/antlr/tools/methodCall';
 import { Python3Lexer } from '../src/qiskit/antlr/Python3Lexer';
 import { Token } from './utils/tokens';
 
+chai.use(sinonChai);
+
+class FakeErrorHandler extends ArgumentsErrorHandler {
+
+    handleError(offendingToken: Token, message: string): void {
+    }
+
+}
+
 describe('An arguments tester on a QISKit grammar', () => {
 
     let symbolTable: SymbolTable;
 
-    let argumentsErrorHandlerSpy: ArgumentsErrorHandler;
+    let errorHandler: ArgumentsErrorHandler;
 
     let tester: ArgumentsTester;
     
@@ -36,12 +46,13 @@ describe('An arguments tester on a QISKit grammar', () => {
         symbolTable = QiskitSymbolTable.build();
         symbolTable.define(new VariableSymbol('qp', symbolTable.lookup('QuantumProgram')));
 
-        argumentsErrorHandlerSpy = mock(ArgumentsErrorHandler);
+        errorHandler = new FakeErrorHandler();
 
-        tester = new ArgumentsTester(symbolTable, instance(argumentsErrorHandlerSpy));
+        tester = new ArgumentsTester(symbolTable, errorHandler);
+
+        sinon.spy(errorHandler, 'handleError');
     });
 
-    /*
     it('detect errors on qr = qp.create_quamtum_register(2, "qr")', () => {
         let call = new MethodCall(Token.build(Python3Lexer.NAME, 'qp', 1, 1));
         call.addTrailingMethod(Token.build(Python3Lexer.NAME, 'create_quantum_register', 1, 1));
@@ -54,7 +65,7 @@ describe('An arguments tester on a QISKit grammar', () => {
 
         tester.check(call);
 
-        verify(argumentsErrorHandlerSpy.handleError(anything(), anything())).twice()
+        chai.expect(errorHandler.handleError).to.have.been.calledTwice;
     });
 
     it('detect errors on qr = qp.create_quamtum_register("qr")', () => {
@@ -66,9 +77,8 @@ describe('An arguments tester on a QISKit grammar', () => {
 
         tester.check(call);
 
-        verify(argumentsErrorHandlerSpy.handleError(anything(), anything())).once();
+        chai.expect(errorHandler.handleError).to.have.been.calledOnce;
     });
-    */
     
     it('do not detect errors on qr = qp.create_quantum_register("qr", 2)', () => {
         let call = new MethodCall(Token.build(Python3Lexer.NAME, 'qp', 1, 1));
@@ -82,7 +92,7 @@ describe('An arguments tester on a QISKit grammar', () => {
 
         tester.check(call);
 
-        verify(argumentsErrorHandlerSpy.handleError(anything(), anything())).never();
+        chai.expect(errorHandler.handleError).to.not.have.been.called;
     });
 
 });

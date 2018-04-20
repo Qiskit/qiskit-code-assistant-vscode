@@ -25,10 +25,13 @@
 		"typescript": "^2.7.2"
 	},
 	"devDependencies": {
-		"chai": "^4.1.1",
-		"chai-lint": "^0.1.1",
-		"@types/chai": "^4.1.1",
 		"mocha": "^3.5.0",
+		"chai": "^4.1.1",
+		"@types/chai": "^4.1.1",
+		"sinon": "^4.5.0",
+		"@types/sinon": "^4.3.1",
+		"sinon-chai": "^3.0.0",
+		"@types/sinon-chai": "^2.7.29",
 		"antlr4ts-cli": "^0.4.0-alpha.4",
 		"ts-mockito": "^2.3.0",
 		"tslint": "^5.9.1"
