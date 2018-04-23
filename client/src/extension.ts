@@ -29,7 +29,7 @@ import {DependencyMgr} from "./dependencyMgr";
 import {PackageMgr} from "./packageMgr";
 
 import { ResultProvider } from "./resultProvider";
-import * as executionFunctions from "./executionFunctions"
+import { CommandExecutor } from './commandExecutor';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -101,7 +101,7 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand("qstudio.reload", () => activate(context)),
         vscode.commands.registerCommand("qstudio.checkDependencies", () => checkDependencies()),
         vscode.workspace.registerTextDocumentContentProvider('qiskit-preview-result', resultProvider), 
-        vscode.commands.registerCommand("qstudio.runCode", () => executionFunctions.runCodeOnQISKit().then(codeResult => {
+        vscode.commands.registerCommand("qstudio.runCode", () => (new CommandExecutor).execPythonActiveEditor().then(codeResult => {
             let previewUri = vscode.Uri.parse(`qiskit-preview-result://authority/result-preview`);
             resultProvider.content = codeResult;
             console.log(previewUri);
@@ -112,7 +112,7 @@ export function activate(context: vscode.ExtensionContext) {
                     vscode.window.showErrorMessage(reason);
                 });
             })),
-        vscode.commands.registerCommand("qstudio.discoverLocalBackends", () => executionFunctions.runPythonScript('../../resources/qiskitScripts/listLocalBackends.py').then(localBackends => {
+        vscode.commands.registerCommand("qstudio.discoverLocalBackends", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listLocalBackends.py').then(localBackends => {
             let previewUri = vscode.Uri.parse(`qiskit-preview-result://authority/backends-preview`);
             resultProvider.content = localBackends;
             console.log(previewUri);

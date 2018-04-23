@@ -140,13 +140,6 @@
 					"command": "qstudio.runCode",
 					"group": "navigation"
 					}
-				],
-				"explorer/context": [
-					{
-						"when": "resourceLangId == 'python'",
-						"command": "qstudio.discoverLocalBackends",
-						"group": "navigation"
-					}
 				]
 		}
 	},
