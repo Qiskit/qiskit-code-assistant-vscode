@@ -31,5 +31,7 @@
 		"@types/node": "^7.0.61",
 		"typescript": "^2.8.3"
 	},
-	"dependencies": {}
+	"dependencies": {
+		"@types/q": "^1.5.0"
+	}
 }

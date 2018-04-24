@@ -67,7 +67,7 @@ export class CommandExecutor {
         });
     }
 
-    public execPythonFile(scriptPath:string): Q.Promise<void>{
+    public execPythonFile(scriptPath:string): Q.Promise<string>{
         return Q.Promise((resolve, reject) => {
             let execPath = path.join(__dirname,scriptPath);
             if (process.platform === "win32") {
