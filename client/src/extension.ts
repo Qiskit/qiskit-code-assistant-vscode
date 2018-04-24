@@ -126,7 +126,19 @@ export function activate(context: vscode.ExtensionContext) {
                 });
             })),
         
-        //vscode.commands.registerCommand("qstudio.discoverRemoteBackends", () => executionFunctions.listRemoteBackends()),
+        vscode.commands.registerCommand("qstudio.discoverRemoteBackends", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listRemoteBackends.py').then(remoteBackends => {
+            let resultProvider = new ResultProvider();
+            vscode.workspace.registerTextDocumentContentProvider('qiskit-remoteBackends-result', resultProvider)
+            let previewUri = vscode.Uri.parse(`qiskit-remoteBackends-result://authority/backends-preview`);
+            resultProvider.content = remoteBackends;
+            console.log(previewUri);
+            
+            vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Remote backends available")
+                .then((_success) => {}, (reason) => {
+                    console.log(`Error: ${reason}`);
+                    vscode.window.showErrorMessage(reason);
+                });
+            })),
         //vscode.commands.registerCommand("qstudio.listPendingJobs", () => executionFunctions.listPendingJobs()),
         //vscode.commands.registerCommand("qstudio.listExecutedJobs", () => executionFunctions.listExecutedJobs()),
         //vscode.commands.registerCommand("qstudio.getQueueStatus", () => executionFunctions.getQueueStatus()),
