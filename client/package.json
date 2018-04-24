@@ -132,6 +132,11 @@
 				"command": "qstudio.getQueueStatus",
 				"title": "Get the queue status",
 				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.getUserCredits",
+				"title": "Get the user's available credits",
+				"category": "qstudio"
 			}
 		],
 		"keybindings": [
