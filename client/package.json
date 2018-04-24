@@ -117,6 +117,11 @@
 				"command": "qstudio.discoverRemoteBackends",
 				"title": "Discover remote backends available",
 				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.listPendingJobs",
+				"title": "List the user's pending jobs",
+				"category": "qstudio"
 			}
 		],
 		"keybindings": [
