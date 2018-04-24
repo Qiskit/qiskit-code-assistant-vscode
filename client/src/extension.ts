@@ -95,13 +95,13 @@ export function activate(context: vscode.ExtensionContext) {
             return CommandPaletteHelper.run()
         }));
     }*/
-    let resultProvider = new ResultProvider();
 
     context.subscriptions.push(
         vscode.commands.registerCommand("qstudio.reload", () => activate(context)),
         vscode.commands.registerCommand("qstudio.checkDependencies", () => checkDependencies()),
-        vscode.workspace.registerTextDocumentContentProvider('qiskit-preview-result', resultProvider), 
         vscode.commands.registerCommand("qstudio.runCode", () => (new CommandExecutor).execPythonActiveEditor().then(codeResult => {
+            let resultProvider = new ResultProvider();
+            vscode.workspace.registerTextDocumentContentProvider('qiskit-preview-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-preview-result://authority/result-preview`);
             resultProvider.content = codeResult;
             console.log(previewUri);
@@ -113,7 +113,9 @@ export function activate(context: vscode.ExtensionContext) {
                 });
             })),
         vscode.commands.registerCommand("qstudio.discoverLocalBackends", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listLocalBackends.py').then(localBackends => {
-            let previewUri = vscode.Uri.parse(`qiskit-preview-result://authority/backends-preview`);
+            let resultProvider = new ResultProvider();
+            vscode.workspace.registerTextDocumentContentProvider('qiskit-localBackends-result', resultProvider)
+            let previewUri = vscode.Uri.parse(`qiskit-localBackends-result://authority/backends-preview`);
             resultProvider.content = localBackends;
             console.log(previewUri);
             
