@@ -224,20 +224,20 @@ function initQConfig(): Q.Promise<string> {
 function saveQConfig(apiToken:string, hub:string|undefined, 
     group:string|undefined, project:string|undefined, 
     url:string|undefined ): Q.Promise<string> {
-    vscode.window.showInformationMessage("Saving the QConfig.py...");
+    vscode.window.showInformationMessage("Saving the QConfig.py... (not implemented)");
     
     return Q.Promise((resolve, reject) => {
         try{    
-            apiToken;
-            hub;
-            group;
-            project;
-            url;
+            console.log(apiToken);
+            console.log(hub);
+            console.log(group);
+            console.log(project);
+            console.log(url);
             // outputs the content of the text file
-            return resolve("QConfig.py saved!")
+            return resolve("QConfig.py saved (not implemented)!")
 
         } catch (err) {
-            return reject("Error saving QConfig.py!")
+            return reject("Error saving QConfig.py! (not implemented)")
         };
     });
 }
