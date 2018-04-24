@@ -122,6 +122,11 @@
 				"command": "qstudio.listPendingJobs",
 				"title": "List the user's pending jobs",
 				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.listExecutedJobs",
+				"title": "List the user's executed jobs",
+				"category": "qstudio"
 			}
 		],
 		"keybindings": [

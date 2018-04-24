@@ -143,7 +143,7 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand("qstudio.listPendingJobs", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listPendingJobs.py').then(pendingJobs => {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-pendingJobs-result', resultProvider)
-            let previewUri = vscode.Uri.parse(`qiskit-pendingJobs-result://authority/backends-preview`);
+            let previewUri = vscode.Uri.parse(`qiskit-pendingJobs-result://authority/list-preview`);
             resultProvider.content = pendingJobs;
             console.log(previewUri);
             
@@ -153,7 +153,20 @@ export function activate(context: vscode.ExtensionContext) {
                     vscode.window.showErrorMessage(reason);
                 });
             })),
-        //vscode.commands.registerCommand("qstudio.listExecutedJobs", () => executionFunctions.listExecutedJobs()),
+
+        vscode.commands.registerCommand("qstudio.listExecutedJobs", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/executedJobs.py').then(executedJobs => {
+            let resultProvider = new ResultProvider();
+            vscode.workspace.registerTextDocumentContentProvider('qiskit-executedJobs-result', resultProvider)
+            let previewUri = vscode.Uri.parse(`qiskit-executedJobs-result://authority/list-preview`);
+            resultProvider.content = executedJobs;
+            console.log(previewUri);
+            
+            vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's pending jobs")
+                .then((_success) => {}, (reason) => {
+                    console.log(`Error: ${reason}`);
+                    vscode.window.showErrorMessage(reason);
+                });
+            })),
         //vscode.commands.registerCommand("qstudio.getQueueStatus", () => executionFunctions.getQueueStatus()),
         //vscode.commands.registerCommand("qstudio.getUserCredits", () => executionFunctions.getUserCredits()),
         vscode.commands.registerCommand("qstudio.initQConfig", () => initQConfig()
