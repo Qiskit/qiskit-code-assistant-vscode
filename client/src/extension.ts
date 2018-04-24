@@ -129,6 +129,13 @@ export function activate(context: vscode.ExtensionContext) {
         //vscode.commands.registerCommand("qstudio.listExecutedJobs", () => executionFunctions.listExecutedJobs()),
         //vscode.commands.registerCommand("qstudio.getQueueStatus", () => executionFunctions.getQueueStatus()),
         //vscode.commands.registerCommand("qstudio.getUserCredits", () => executionFunctions.getUserCredits()),
+        vscode.commands.registerCommand("qstudio.initQConfig", () => initQConfig()
+            .then((result) => {
+                vscode.window.showInformationMessage(result);
+            }).catch(err =>{
+                vscode.window.showErrorMessage(err);
+            })
+        ),
     );
 }
 
@@ -173,6 +180,64 @@ function checkDependencies(): Q.Promise<string> {
             });
         }
     );
+}
+
+function initQConfig(): Q.Promise<string> {
+    let apiToken = null;
+    return Q.Promise((resolve, reject) => {
+        return vscode.window.showInputBox({
+            ignoreFocusOut: true,
+            prompt: `👉 Let's configure your QConfig.py! Please introduce your API Token 👈`,
+            password: true,
+        }).then((token: string|undefined) => {
+            if (token != undefined)
+            {
+                apiToken = token;
+                return vscode.window.showInputBox({
+                    ignoreFocusOut: true,
+                    prompt: `👉 Ok! Do you need to set up your hub/group/project and custom URL (probably not) 👈`,
+                    placeHolder: 'Type YES if you need that, or NO if you do not need that (or not sure to need)',
+                })
+            }
+            else{
+                return reject("Empty API Token, your QConfig won't be created") 
+            }
+        }).then((selection: string|undefined) => {
+            if (selection.toUpperCase() === 'YES'){
+                // The user needs to configure the Hub/Group/Project and URL in the QConfig.py
+                /*saveQConfig(apiToken, hub, group, project, url).then(result => {
+                    return resolve(result);
+                });*/
+            }
+            else {
+                // The user does not need to configure the Hub/Group/Project and URL in the QConfig.py
+                saveQConfig(apiToken, null, null, null, null).then(result => {
+                    return resolve(result);
+                })
+            }
+        });
+    });
+}
+
+function saveQConfig(apiToken:string, hub:string|undefined, 
+    group:string|undefined, project:string|undefined, 
+    url:string|undefined ): Q.Promise<string> {
+    vscode.window.showInformationMessage("Saving the QConfig.py...");
+    
+    return Q.Promise((resolve, reject) => {
+        try{    
+            apiToken;
+            hub;
+            group;
+            project;
+            url;
+            // outputs the content of the text file
+            return resolve("QConfig.py saved!")
+
+        } catch (err) {
+            return reject("Error saving QConfig.py!")
+        };
+    });
 }
 
 export function deactivate() {

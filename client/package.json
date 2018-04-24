@@ -104,6 +104,11 @@
 				"category": "qstudio"
 			},
 			{
+				"command": "qstudio.initQConfig",
+				"title": "Init your QConfig.py file",
+				"category": "qstudio"
+			},
+			{
 				"command": "qstudio.discoverLocalBackends",
 				"title": "Discover local backends available",
 				"category": "qstudio"
