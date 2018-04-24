@@ -170,6 +170,7 @@ tokens { INDENT, DEDENT }
 import { QiskitSymbolTable, VariableSymbol, ClassSymbol, VariableMetadata } from '../compiler/qiskitSymbolTable';
 import { Symbol } from '../../tools/symbolTable';
 import { StatementsStack, Statement } from './tools/statementsStack';
+import { MetadataExtractor } from './tools/metadataExtractor';
 import { MethodCall } from './tools/methodCall';
 import { ArgumentsTester, ParserArgumentsErrorHandler } from './tools/argumentsTester';
 }
@@ -196,43 +197,14 @@ applyAssignment(symbol: string): void {
   let statement = this.statements.last();
 
   if (this.isAssignmentAppliable(statement, symbol)) {
-    let metadata = this.extractMetadata(statement.rightSide);
+    let extractor = new MetadataExtractor(this.symbolTable);
+    let metadata = extractor.from(statement.rightSide);
     let parentSymbol = this.findParentSymbolWith(statement);
     if (parentSymbol !== null) {
       let variable = new VariableSymbol(symbol, parentSymbol, metadata);
       this.symbolTable.define(variable);
     }
   }
-}
-
-private extractMetadata(_call: MethodCall): VariableMetadata {
-  let metadata: any = {};
-
-  let currentVariable = this.symbolTable.lookup(_call.variable.text); 
-  let currentType = currentVariable.type as ClassSymbol;
-  _call.trailingMethods.forEach((trailingMethod) => {
-    if (currentType === null) {
-      return null;
-    }
-
-    let methods = currentType.getMethods().filter(m => m.name === trailingMethod.methodName.text);
-    if (methods.length === 0) {
-      return null;
-    }
-
-    let methodDefinition = methods.pop();
-    methodDefinition.arguments.forEach((a, position) => {
-      metadata[a.getName()] = trailingMethod.arguments[position].token.text;
-    });
-
-    if (currentType.type instanceof ClassSymbol) {
-      currentType = currentType.type as ClassSymbol; 
-    } else {
-      currentType = null;
-    }
-  });
-
-  return null || metadata;
 }
 
 findParentSymbolWith(statement: Statement): Symbol {

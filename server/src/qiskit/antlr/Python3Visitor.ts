@@ -4,6 +4,7 @@
 import { QiskitSymbolTable, VariableSymbol, ClassSymbol, VariableMetadata } from '../compiler/qiskitSymbolTable';
 import { Symbol } from '../../tools/symbolTable';
 import { StatementsStack, Statement } from './tools/statementsStack';
+import { MetadataExtractor } from './tools/metadataExtractor';
 import { MethodCall } from './tools/methodCall';
 import { ArgumentsTester, ParserArgumentsErrorHandler } from './tools/argumentsTester';
 
