@@ -161,13 +161,26 @@ export function activate(context: vscode.ExtensionContext) {
             resultProvider.content = executedJobs;
             console.log(previewUri);
             
-            vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's pending jobs")
+            vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's executed jobs")
                 .then((_success) => {}, (reason) => {
                     console.log(`Error: ${reason}`);
                     vscode.window.showErrorMessage(reason);
                 });
             })),
-        //vscode.commands.registerCommand("qstudio.getQueueStatus", () => executionFunctions.getQueueStatus()),
+
+        vscode.commands.registerCommand("qstudio.getQueueStatus", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/getQueueStatus.py').then(queueStatus => {
+            let resultProvider = new ResultProvider();
+            vscode.workspace.registerTextDocumentContentProvider('qiskit-queueStatus-result', resultProvider)
+            let previewUri = vscode.Uri.parse(`qiskit-queueStatus-result://authority/status-preview`);
+            resultProvider.content = queueStatus;
+            console.log(previewUri);
+            
+            vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Queue status")
+                .then((_success) => {}, (reason) => {
+                    console.log(`Error: ${reason}`);
+                    vscode.window.showErrorMessage(reason);
+                });
+            })),
         //vscode.commands.registerCommand("qstudio.getUserCredits", () => executionFunctions.getUserCredits()),
         vscode.commands.registerCommand("qstudio.initQConfig", () => initQConfig()
             .then((result) => {

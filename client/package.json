@@ -127,6 +127,11 @@
 				"command": "qstudio.listExecutedJobs",
 				"title": "List the user's executed jobs",
 				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.getQueueStatus",
+				"title": "Get the queue status",
+				"category": "qstudio"
 			}
 		],
 		"keybindings": [

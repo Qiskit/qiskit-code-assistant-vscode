@@ -5,4 +5,4 @@ from qiskit import *
 
 #job_id = api.get_jobs()
 
-print("Retrieving pending jobs...")
+print("Retrieving pending jobs...(not implemented)")

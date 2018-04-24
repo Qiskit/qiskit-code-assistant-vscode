@@ -5,4 +5,4 @@ from qiskit import *
 
 #job_id = api.get_jobs()
 
-print("Retrieving executed jobs...")
+print("Retrieving executed jobs... (not implemented)")
