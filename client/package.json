@@ -65,6 +65,31 @@
 						"qiskit": "0.4.11"
 					},
 					"description": "QISKit and libraries related to run code"
+				},
+				"ibm-q-studio.qiskit.token": {
+					"type": "string",
+					"default": null,
+					"description": "QISKit & Q Experience API Token"
+				},
+				"ibm-q-studio.qiskit.url": {
+					"type": "string",
+					"default": "https://quantumexperience.ng.bluemix.net/api",
+					"description": "IBM Q Experience URL"
+				},
+				"ibm-q-studio.qiskit.hub": {
+					"type": "string",
+					"default": null,
+					"description": "User's QISKit & Q Experience hub"
+				},
+				"ibm-q-studio.qiskit.group": {
+					"type": "string",
+					"default": null,
+					"description": "User's QISKit & Q Experience group"
+				},
+				"ibm-q-studio.qiskit.project": {
+					"type": "string",
+					"default": null,
+					"description": "User's QISKit & Q Experience project"
 				}
 			}
 		},
@@ -105,7 +130,7 @@
 			},
 			{
 				"command": "qstudio.initQConfig",
-				"title": "Init your QConfig.py file",
+				"title": "Enter your QConfig (token, etc.)",
 				"category": "qstudio"
 			},
 			{

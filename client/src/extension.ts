@@ -24,7 +24,6 @@ import {
     ServerOptions,
     TransportKind
 } from 'vscode-languageclient';
-//import {CommandPaletteHelper} from "./commandPaletteHelper";
 import {DependencyMgr} from "./dependencyMgr";
 import {PackageMgr} from "./packageMgr";
 
@@ -36,8 +35,6 @@ export function activate(context: vscode.ExtensionContext) {
     console.log('Activating IBM Q Studio extension ...');
 
     vscode.window.showInformationMessage("✨ Activating IBM Q Studio extension... ✨");
-
-    //registerQiskitCommands(context);
 
     let serverModule = context.asAbsolutePath(path.join('server', 'server.js'));
     
@@ -145,7 +142,6 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.workspace.registerTextDocumentContentProvider('qiskit-pendingJobs-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-pendingJobs-result://authority/list-preview`);
             resultProvider.content = pendingJobs;
-            console.log(previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's pending jobs")
                 .then((_success) => {}, (reason) => {
@@ -159,7 +155,6 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.workspace.registerTextDocumentContentProvider('qiskit-executedJobs-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-executedJobs-result://authority/list-preview`);
             resultProvider.content = executedJobs;
-            console.log(previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's executed jobs")
                 .then((_success) => {}, (reason) => {
@@ -173,7 +168,6 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.workspace.registerTextDocumentContentProvider('qiskit-queueStatus-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-queueStatus-result://authority/status-preview`);
             resultProvider.content = queueStatus;
-            console.log(previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Queue status")
                 .then((_success) => {}, (reason) => {
@@ -187,7 +181,6 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.workspace.registerTextDocumentContentProvider('qiskit-userCredits-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-userCredits-result://authority/credits-preview`);
             resultProvider.content = userCredits;
-            console.log(previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's credits")
                 .then((_success) => {}, (reason) => {
@@ -240,7 +233,6 @@ function checkDependencies(): Q.Promise<string> {
             // Iterate over the list of packages
             }).catch(error => {
                 console.log('Seems like there was a problem: ' + error);
-                //vscode.window.showWarningMessage('Seems like there was a problem: ' + error);
                 vscode.window.showErrorMessage('Seems like there was a problem: ' + error);
                 return reject(error);
             });
@@ -250,10 +242,14 @@ function checkDependencies(): Q.Promise<string> {
 
 function initQConfig(): Q.Promise<string> {
     let apiToken = null;
+    let hub = null;
+    let group = null;
+    let project = null;
+    let url = null;
     return Q.Promise((resolve, reject) => {
         return vscode.window.showInputBox({
             ignoreFocusOut: true,
-            prompt: `👉 Let's configure your QConfig.py! Please introduce your API Token 👈`,
+            prompt: `👉 Let's configure your QConfig! Please introduce your API Token 👈`,
             password: true,
         }).then((token: string|undefined) => {
             if (token != undefined)
@@ -270,17 +266,57 @@ function initQConfig(): Q.Promise<string> {
             }
         }).then((selection: string|undefined) => {
             if (selection.toUpperCase() === 'YES'){
-                // The user needs to configure the Hub/Group/Project and URL in the QConfig.py
-                /*saveQConfig(apiToken, hub, group, project, url).then(result => {
-                    return resolve(result);
-                });*/
+                return vscode.window.showInputBox({
+                    ignoreFocusOut: true,
+                    prompt: `👉 Let's configure your QConfig! Please introduce your Hub 👈`,
+                    placeHolder: "Your hub's name",
+                })
             }
             else {
                 // The user does not need to configure the Hub/Group/Project and URL in the QConfig.py
                 saveQConfig(apiToken, null, null, null, null).then(result => {
                     return resolve(result);
+                }).catch((err) => {
+                    return reject(err);
                 })
+                return null;
             }
+        }).then((_hub: string|undefined) => {
+            if (_hub != "" || _hub != undefined){
+                hub = _hub;
+            }
+            return vscode.window.showInputBox({
+                ignoreFocusOut: true,
+                prompt: `👉 Let's configure your QConfig! Please introduce your Group 👈`,
+                placeHolder: "Your group's name",
+            })
+        }).then((_group: string|undefined) => {
+            if (_group != "" || _group != undefined){
+                group = _group;
+            }
+            return vscode.window.showInputBox({
+                ignoreFocusOut: true,
+                prompt: `👉 Let's configure your QConfig! Please introduce your Project 👈`,
+                placeHolder: "Your project's name",
+            })
+        }).then((_project: string|undefined) => {
+            if (_project != "" || _project != undefined){
+                project = _project;
+            }
+            return vscode.window.showInputBox({
+                ignoreFocusOut: true,
+                prompt: `👉 Let's configure your QConfig! Please introduce your custom URL 👈`,
+                placeHolder: "Your custom's URL",
+            })
+        }).then((_url: string|undefined) => {
+            if (_url != "" || _url != undefined){
+                url = _url;
+            }
+            saveQConfig(apiToken, hub, group, project, url).then(result => {
+                return resolve(result);
+            }).catch((err) => {
+                return reject(err);
+            })
         });
     });
 }
@@ -288,20 +324,45 @@ function initQConfig(): Q.Promise<string> {
 function saveQConfig(apiToken:string, hub:string|undefined, 
     group:string|undefined, project:string|undefined, 
     url:string|undefined ): Q.Promise<string> {
-    vscode.window.showInformationMessage("Saving the QConfig.py... (not implemented)");
+    vscode.window.showInformationMessage("Saving the QConfig... (not implemented)");
     
     return Q.Promise((resolve, reject) => {
-        try{    
-            console.log(apiToken);
-            console.log(hub);
-            console.log(group);
-            console.log(project);
-            console.log(url);
-            // outputs the content of the text file
-            return resolve("QConfig.py saved (not implemented)!")
-
+        try{           
+            const config = vscode.workspace.getConfiguration('ibm-q-studio');
+            try{
+                return config.update('qiskit.token', apiToken, true)
+                .then(() => {
+                    if (hub != undefined){
+                        return config.update('qiskit.hub', hub, true)
+                    } 
+                    return null;
+                })
+                .then(() => {
+                    if (url != undefined){
+                        return config.update('qiskit.url', url, true)
+                    } 
+                    return null;
+                })
+                .then(() => {
+                    if (group != undefined){
+                        return config.update('qiskit.group', group, true)
+                    } 
+                    return null;
+                })
+                .then(() => {
+                    if (project != undefined){
+                        return config.update('qiskit.project', project, true)
+                    } 
+                    return null;
+                })
+                .then(() => {
+                    return resolve("QConfig saved!")  
+                });
+            } catch (err) {
+                return reject("🙁 QConfig cannot be saved! 🙁")
+            }
         } catch (err) {
-            return reject("Error saving QConfig.py! (not implemented)")
+            return reject("Error saving QConfig!")
         };
     });
 }
