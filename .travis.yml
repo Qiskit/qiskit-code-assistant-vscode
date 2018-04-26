@@ -9,6 +9,8 @@ install:
 
 script:
   - npm run compile
+  - npm test
+  - npm run lint
 
 notifications:
   email:
