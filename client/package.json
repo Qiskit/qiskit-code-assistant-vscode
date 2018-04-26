@@ -9,7 +9,7 @@
 			"url": "http://www.apache.org/licenses/LICENSE-2.0"
 		}
 	],
-	"publisher": "IBM Research",
+	"publisher": "ibm-research",
 	"version": "0.0.1",
 	"repository": {
 		"type": "git",
@@ -144,7 +144,13 @@
 	"dependencies": {
 		"q": "^1.4.1",
 		"typed-rest-client": "^1.0.7",
-		"vscode": "^1.1.5",
 		"vscode-languageclient": "^3.5.0"
+	},
+	"devDependencies": {
+		"typescript": "^2.6.1",
+		"vscode": "^1.1.6",
+		"tslint": "^5.8.0",
+		"@types/node": "^7.0.43",
+		"@types/mocha": "^2.2.42"
 	}
 }
