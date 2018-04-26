@@ -50,8 +50,7 @@
 		"pretest": "npm run compile:parser && tsc test/*.test.ts --outDir out --module commonjs --target ES6 --experimentalDecorators && npm run exportQuantumLibraries ",
 		"test": "mocha out/test --recursive",
 		"clean": "rm -rf  out node_modules",
-		"lint": "tslint -c tslint.json 'src/**/*.ts' && tslint -c tslint.test.json 'test/**/*.ts'",
-		"precommit": "lint-staged"
+		"lint": "lint-staged && tslint -c tslint.json 'src/**/*.ts' && tslint -c tslint.test.json 'test/**/*.ts'"
 	},
 	"lint-staged": {
 		"src/**/*.ts": [
