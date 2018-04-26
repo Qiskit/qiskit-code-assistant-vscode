@@ -9,3 +9,11 @@ install:
 
 script:
   - npm run compile
+
+notifications:
+  email:
+    recipients:
+      - juan.cruz@ibm.com
+      - yeray.darias@ibm.com
+    on_success: change
+    on_failure: always
