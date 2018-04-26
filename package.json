@@ -23,9 +23,9 @@
 		"compile:parser": "cd server && npm run compile:parser && cd ..",
 		"watch:client": "tsc -w -p client/tsconfig.json",
 		"watch:server": "cd server && npm run installServer && cd .. && tsc -w -p server/tsconfig.json",
-		"test": "npm run compile && cd server && npm test",
+		"test": "cd server && npm test && cd ..",
 		"clean": "cd server && npm run clean && cd ../client && npm run clean && cd ..",
-		"lint": "cd server && npm run lint && cd .."
+		"lint": "cd server && npm run lint && cd ..",
 		"package": "npm run compile && cd client && vsce package && cd .."
 	},
 	"devDependencies": {
