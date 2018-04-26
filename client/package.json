@@ -1,9 +1,15 @@
 {
-	"name": "qasm-language-support",
-	"description": "QASM language support client",
-	"author": "Isma Development Team",
-	"license": "MIT",
-	"publisher": "Isma Development Team",
+	"name": "ibm-q-studio",
+	"description": "VSCode extension to develop using IBM Q suite",
+	"author": "IBM Research",
+	"license": "Apache-2.0",
+	"licenses": [
+		{
+			"type": "Apache-2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0"
+		}
+	],
+	"publisher": "ibm-research",
 	"version": "0.0.1",
 	"repository": {
 		"type": "git",
@@ -17,13 +23,17 @@
 		"Snippets"
 	],
 	"activationEvents": [
-		"onLanguage:qasm-lang"
+		"onLanguage:qasm-lang",
+		"onLanguage:qiskit-lang",
+		"onCommand:qstudio.reload",
+		"onCommand:qstudio.checkDependencies",
+		"*"
 	],
 	"main": "./out/src/extension",
 	"contributes": {
 		"configuration": {
 			"type": "object",
-			"title": "QASM configuration",
+			"title": "IBM Q Studio configuration",
 			"properties": {
 				"qasmLang.maxNumberOfProblems": {
 					"scope": "resource",
@@ -41,6 +51,38 @@
 					],
 					"default": "off",
 					"description": "Traces the communication between VSCode and the language server."
+				},
+				"qiskitLang.maxNumberOfProblems": {
+					"scope": "resource",
+					"type": "number",
+					"default": 100,
+					"description": "Controls the maximum number of problems produced by the server."
+				},
+				"qiskitLang.trace.server": {
+					"scope": "window",
+					"type": "string",
+					"enum": [
+						"off",
+						"messages",
+						"verbose"
+					],
+					"default": "off",
+					"description": "Traces the communication between VSCode and the language server."
+				},
+				"ibm-q-studio.python.dependencies": {
+					"type": "object",
+					"default": {
+						"python": "3.5",
+						"pip": "9.0.0"
+					},
+					"description": "Basic python dependencies required"
+				},
+				"ibm-q-studio.qiskit.packages": {
+					"type": "object",
+					"default": {
+						"qiskit": "0.4.11"
+					},
+					"description": "QISKit and libraries related to run code"
 				}
 			}
 		},
@@ -48,12 +90,22 @@
 			{
 				"id": "qasm-lang",
 				"aliases": [
-					"QAsm"
+					"QASM"
 				],
 				"extensions": [
 					".qasm"
 				],
 				"configuration": "./qasm.configuration.json"
+			},
+			{
+				"id": "qiskit-lang",
+				"aliases": [
+					"QISKit"
+				],
+				"extensions": [
+					".py"
+				],
+				"configuration": "./qiskit.configuration.json"
 			}
 		],
 		"grammars": [
@@ -61,6 +113,23 @@
 				"language": "qasm-lang",
 				"scopeName": "source.qasm",
 				"path": "./syntaxes/qasm.json"
+			},
+			{
+				"language": "qiskit-lang",
+				"scopeName": "source.qasm",
+				"path": "./syntaxes/qiskit.json"
+			}
+		],
+		"commands": [
+			{
+				"command": "qstudio.reload",
+				"title": "Reload IBM Q Studio",
+				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.checkDependencies",
+				"title": "Check IBM Q Studio dependencies",
+				"category": "qstudio"
 			}
 		]
 	},
@@ -75,7 +144,13 @@
 	"dependencies": {
 		"q": "^1.4.1",
 		"typed-rest-client": "^1.0.7",
-		"vscode": "^1.1.5",
 		"vscode-languageclient": "^3.5.0"
+	},
+	"devDependencies": {
+		"typescript": "^2.6.1",
+		"vscode": "^1.1.6",
+		"tslint": "^5.8.0",
+		"@types/node": "^7.0.43",
+		"@types/mocha": "^2.2.42"
 	}
 }

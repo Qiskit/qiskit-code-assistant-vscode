@@ -1,3 +1,18 @@
+// Copyright 2018 IBM RESEARCH. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// =============================================================================
+
 import * as Q from "q";
 import {CommandExecutor} from "./commandExecutor";
 import {IPackageInfo, IVersion} from "./interfaces";
@@ -43,6 +58,8 @@ export class PipWrapper implements IPackageInfo {
                                'pip show' command output!`);
             }
             return Q.resolve(pkg);
+        }).catch(err => {
+            return Q.reject(err);
         });
     }
 
@@ -54,15 +71,15 @@ export class PipWrapper implements IPackageInfo {
     }
 
     public search(pkg: string): Q.Promise<boolean> {
-        let parserFunc : ParserFunction = () => {
-            return "Need to implement this method!";
+        let parserFunc : ParserFunction = (stdout: string) => {
+            return stdout;
         };
         return this.exec("search", [pkg], parserFunc);
     }
 
     public install(pkg: string): Q.Promise<string>{
-        let parserFunc : ParserFunction = () => {
-            return "Need to implement this method!";
+        let parserFunc : ParserFunction = (stdout: string) => {
+            return stdout;
         };
         return this.exec("install", [pkg], parserFunc);
     }
@@ -74,13 +91,20 @@ export class PipWrapper implements IPackageInfo {
         return this.exec("install", ["-U", "--no-cache-dir", pkg], parserFunc);
     }
 
-
+    public list(): Q.Promise<string>{
+        let parserFunc : ParserFunction = (stdout: string) => {
+            return stdout;
+        };
+        return this.exec("list", [], parserFunc);
+    }
 
     private exec(command: string, args:string [], parser: ParserFunction): 
         Q.Promise<string> {
         return (new CommandExecutor).exec(PipWrapper.PIP_COMMAND,[command].concat(args))
-        .then((stdout) => {
-            return Q.resolve(parser(stdout));
-        });
+            .then((stdout) => {
+                return Q.resolve(parser(stdout));
+            }).catch(err => {
+                return Q.reject(err);
+            });
     }
 }

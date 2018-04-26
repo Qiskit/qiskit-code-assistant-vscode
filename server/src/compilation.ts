@@ -1,3 +1,18 @@
+// Copyright 2018 IBM RESEARCH. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// =============================================================================
+
 'use strict';
 
 import {
@@ -9,12 +24,9 @@ import {
     TextDocument,
     TextDocumentPositionParams
 } from 'vscode-languageserver';
-import { Parser } from './qasm/parser';
-import { Suggester } from './qasm/suggester';
-import { ParserError, ParseErrorLevel, Symbol } from './qasm/model';
+import { Parser, Suggester, ParserError, ParseErrorLevel, Symbol } from './types';
 
 export class CompilationTool {
-    connection: IConnection;
     currentDocument: TextDocument = null;
     currentSuggestions: CompletionItem[] = [];
 
@@ -26,29 +38,28 @@ export class CompilationTool {
             detail: symbol.detail,
             documentation: symbol.documentation   
         };
-    };
+    }
 
-    constructor(public _connection: IConnection) {
-        this.connection = _connection;
+    constructor(private connection: IConnection, private parser: Parser, private suggester: Suggester) {
     }
 
     validateDocument(document: TextDocument): void {
+        this.connection.console.log(`Validating document type ${document.languageId}`);
+
         this.currentDocument = document;
 
-        let parser = new Parser();
-        let result = parser.parse(document.getText());
+        let result = this.parser.parse(document.getText());
         this.launchCompilationErrors(document, result.errors);
     }
 
-    availableCompletions(_documentPosition: TextDocumentPositionParams): CompletionItem[] {
+    availableCompletions(documentPosition: TextDocumentPositionParams): CompletionItem[] {
         if (this.currentDocument === null) {
             return [];
         }
 
-        let textToCaret = this.currentDocument.getText().substring(0, this.currentDocument.offsetAt(_documentPosition.position));
+        let textToCaret = this.currentDocument.getText().substring(0, this.currentDocument.offsetAt(documentPosition.position));
 
-        let suggester = new Suggester();
-        this.currentSuggestions = suggester.calculateSuggestionsFor(textToCaret).map(this.toCompletionItem);
+        this.currentSuggestions = this.suggester.calculateSuggestionsFor(textToCaret).map(this.toCompletionItem);
 
         return this.currentSuggestions;
     }

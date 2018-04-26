@@ -1,10 +1,16 @@
 {
-	"name": "qasm-language-support",
-	"description": "QASM language support for Visual Studio Code",
-	"author": "Isma Development Team",
-	"license": "MIT",
+	"name": "ibm-q-studio",
+	"description": "VSCode extension to develop using IBM Q suite",
+	"author": "IBM Research",
+	"license": "Apache-2.0",
+	"licenses": [
+		{
+			"type": "Apache-2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0"
+		}
+	],
+	"publisher": "ibm-Research",
 	"version": "0.0.1",
-	"publisher": "Isma Development Team",
 	"repository": {
 		"type": "git",
 		"url": "https://github.ibm.com/IBMQuantum/qiskit-studio"
@@ -18,7 +24,8 @@
 		"watch:client": "tsc -w -p client/tsconfig.json",
 		"watch:server": "cd server && npm run installServer && cd .. && tsc -w -p server/tsconfig.json",
 		"test": "npm run compile && cd client && node ./node_modules/vscode/bin/test",
-		"clean": "cd server && npm run clean && cd ../client && npm run clean && cd .."
+		"clean": "cd server && npm run clean && cd ../client && npm run clean && cd ..",
+		"package": "npm run compile && cd client && vsce package && cd .."
 	},
 	"devDependencies": {
 		"@types/mocha": "^2.2.48",
