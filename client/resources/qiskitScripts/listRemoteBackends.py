@@ -12,7 +12,14 @@ def main():
     parser.add_argument('--project', default=None)
     
     args = vars(parser.parse_args())
-    api = IBMQuantumExperience(args['apiToken'], {'url': args['url'], 'hub': args['hub'], 'group': args['group'], 'project': args['project']})
+
+    if (args['url'] is None):
+        args['url'] = 'https://quantumexperience.ng.bluemix.net/api' 
+
+    if (args['hub'] is None) or (args['group'] is None) or (args['project'] is None):
+        api = IBMQuantumExperience(args['apiToken'], {'url': args['url']})
+    else:
+        api = IBMQuantumExperience(args['apiToken'], {'url': args['url'], 'hub': args['hub'], 'group': args['group'], 'project': args['project']})
 
     print(str(backends.discover_remote_backends(api)))
 

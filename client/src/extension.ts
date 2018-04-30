@@ -239,66 +239,65 @@ function initQConfig(): Q.Promise<string> {
             }
         }).then((selection: string|undefined) => {
             if (selection.toUpperCase() === 'YES'){
-                return vscode.window.showInputBox({
+                vscode.window.showInputBox({
                     ignoreFocusOut: true,
                     prompt: `👉 Let's configure your QConfig! Please introduce your Hub 👈`,
                     placeHolder: "Your hub's name",
-                })
+                }).then((_hub: string|undefined) => {
+                    if (_hub != "" || _hub != undefined){
+                        hub = _hub;
+                    }
+                    return vscode.window.showInputBox({
+                        ignoreFocusOut: true,
+                        prompt: `👉 Let's configure your QConfig! Please introduce your Group 👈`,
+                        placeHolder: "Your group's name",
+                    })
+                }).then((_group: string|undefined) => {
+                    if (_group != "" || _group != undefined){
+                        group = _group;
+                    }
+                    return vscode.window.showInputBox({
+                        ignoreFocusOut: true,
+                        prompt: `👉 Let's configure your QConfig! Please introduce your Project 👈`,
+                        placeHolder: "Your project's name",
+                    })
+                }).then((_project: string|undefined) => {
+                    if (_project != "" || _project != undefined){
+                        project = _project;
+                    }
+                    return vscode.window.showInputBox({
+                        ignoreFocusOut: true,
+                        prompt: `👉 Let's configure your QConfig! Please introduce your custom URL 👈`,
+                        placeHolder: "Your custom's URL",
+                    })
+                }).then((_url: string|undefined) => {
+                    if (_url != "" || _url != undefined){
+                        console.log('url',url)
+                        url = _url;
+                    } 
+                    saveQConfig(apiToken, hub, group, project, url).then(result => {
+                        return resolve(result);
+                    }).catch((err) => {
+                        return reject(err);
+                    })
+                });
             }
             else {
                 // The user does not need to configure the Hub/Group/Project and URL in the QConfig.py
-                saveQConfig(apiToken, null, null, null, null).then(result => {
+                saveQConfig(apiToken, '', '', '', '').then(result => {
                     return resolve(result);
                 }).catch((err) => {
                     return reject(err);
                 })
-                return null;
             }
-        }).then((_hub: string|undefined) => {
-            if (_hub != "" || _hub != undefined){
-                hub = _hub;
-            }
-            return vscode.window.showInputBox({
-                ignoreFocusOut: true,
-                prompt: `👉 Let's configure your QConfig! Please introduce your Group 👈`,
-                placeHolder: "Your group's name",
-            })
-        }).then((_group: string|undefined) => {
-            if (_group != "" || _group != undefined){
-                group = _group;
-            }
-            return vscode.window.showInputBox({
-                ignoreFocusOut: true,
-                prompt: `👉 Let's configure your QConfig! Please introduce your Project 👈`,
-                placeHolder: "Your project's name",
-            })
-        }).then((_project: string|undefined) => {
-            if (_project != "" || _project != undefined){
-                project = _project;
-            }
-            return vscode.window.showInputBox({
-                ignoreFocusOut: true,
-                prompt: `👉 Let's configure your QConfig! Please introduce your custom URL 👈`,
-                placeHolder: "Your custom's URL",
-            })
-        }).then((_url: string|undefined) => {
-            if (_url != "" || _url != undefined){
-                console.log('url',url)
-                url = _url;
-            } 
-            saveQConfig(apiToken, hub, group, project, url).then(result => {
-                return resolve(result);
-            }).catch((err) => {
-                return reject(err);
-            })
-        });
+        })
     });
 }
 
 function saveQConfig(apiToken:string, hub:string|undefined, 
     group:string|undefined, project:string|undefined, 
     url:string|undefined ): Q.Promise<string> {
-    vscode.window.showInformationMessage("Saving the QConfig...");
+    // vscode.window.showInformationMessage("Saving the QConfig...");
     
     return Q.Promise((resolve, reject) => {
         try{           
@@ -306,28 +305,32 @@ function saveQConfig(apiToken:string, hub:string|undefined,
             try{
                 return config.update('qiskit.token', apiToken, true)
                 .then(() => {
-                    if (hub != undefined){
+                    if (hub != undefined || hub != ""){
                         return config.update('qiskit.hub', hub, true)
-                    } 
-                    return null;
+                    } else {
+                        return config.update('qiskit.hub', '', true)
+                    }
                 })
                 .then(() => {
-                    if (url != undefined){
+                    if (url != undefined ||url != ""){
                         return config.update('qiskit.url', url, true)
-                    } 
-                    return null;
+                    } else {
+                        return config.update('qiskit.url', '', true)
+                    }
                 })
                 .then(() => {
-                    if (group != undefined){
+                    if (group != undefined || group != ""){
                         return config.update('qiskit.group', group, true)
-                    } 
-                    return null;
+                    } else {
+                        return config.update('qiskit.group', '', true)
+                    }
                 })
                 .then(() => {
-                    if (project != undefined){
+                    if (project != undefined || project != ""){
                         return config.update('qiskit.project', project, true)
-                    } 
-                    return null;
+                    } else {
+                        return config.update('qiskit.project', '', true)
+                    }
                 })
                 .then(() => {
                     return resolve("QConfig saved!")  
