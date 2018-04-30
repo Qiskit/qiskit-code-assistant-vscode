@@ -7,9 +7,9 @@ def main():
 
     parser.add_argument('--apiToken')
     parser.add_argument('--url', nargs='?', default='https://quantumexperience.ng.bluemix.net/api')
-    parser.add_argument('--hub', default=None)
-    parser.add_argument('--group', default=None)
-    parser.add_argument('--project', default=None)
+    parser.add_argument('--hub', nargs='?', default=None)
+    parser.add_argument('--group', nargs='?', default=None)
+    parser.add_argument('--project', nargs='?', default=None)
     
     args = vars(parser.parse_args())
 
