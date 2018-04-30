@@ -54,6 +54,7 @@ export class CommandExecutor {
 
     public execPythonActiveEditor(): Q.Promise<string> {
         return Q.Promise((resolve, reject) => {
+            vscode.window.showInformationMessage("⚡ Running... ⚡");
             const codeFile = vscode.window.activeTextEditor.document;
             codeFile.save();
             (new CommandExecutor).exec("python", [codeFile.fileName.toString()])
@@ -69,6 +70,7 @@ export class CommandExecutor {
 
     public execPythonFile(scriptPath:string, options:string[]): Q.Promise<string>{
         return Q.Promise((resolve, reject) => {
+            vscode.window.showInformationMessage("⚡ Running... ⚡");
             let execPath = path.join(__dirname,scriptPath);
             if (process.platform === "win32") {
                 execPath = execPath.replace(/\\/g, "/");
