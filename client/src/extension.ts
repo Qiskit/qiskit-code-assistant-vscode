@@ -110,7 +110,7 @@ export function activate(context: vscode.ExtensionContext) {
                 });
             })),
 
-        vscode.commands.registerCommand("qstudio.listPendingJobs", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listPendingJobs.py', []).then(pendingJobs => {
+        vscode.commands.registerCommand("qstudio.listPendingJobs", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listPendingJobs.py', ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(pendingJobs => {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-pendingJobs-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-pendingJobs-result://authority/list-preview`);
@@ -123,7 +123,7 @@ export function activate(context: vscode.ExtensionContext) {
                 });
             })),
 
-        vscode.commands.registerCommand("qstudio.listExecutedJobs", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/executedJobs.py', []).then(executedJobs => {
+        vscode.commands.registerCommand("qstudio.listExecutedJobs", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listExecutedJobs.py', ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(executedJobs => {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-executedJobs-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-executedJobs-result://authority/list-preview`);

@@ -25,7 +25,7 @@ def main():
 
     pending_jobs = []
     for job in jobs:
-        if job['status']=='PENDING':
+        if job['status']=='COMPLETED':
             pending_jobs.append(job)
 
     print(json.dumps(pending_jobs, indent=2, sort_keys=True))
