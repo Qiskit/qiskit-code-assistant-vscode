@@ -1,3 +1,4 @@
 from qiskit import backends
+import json
 
-print(backends.discover_local_backends())
+print(json.dumps(backends.discover_local_backends(), indent=2, sort_keys=True))

@@ -136,7 +136,7 @@ export function activate(context: vscode.ExtensionContext) {
                 });
             })),
 
-        vscode.commands.registerCommand("qstudio.getQueueStatus", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/getQueueStatus.py', []).then(queueStatus => {
+        vscode.commands.registerCommand("qstudio.getQueueStatus", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/getQueueStatus.py', ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(queueStatus => {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-queueStatus-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-queueStatus-result://authority/status-preview`);

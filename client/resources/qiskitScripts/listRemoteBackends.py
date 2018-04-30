@@ -1,6 +1,7 @@
 from qiskit import backends
 from IBMQuantumExperience import IBMQuantumExperience
 import argparse
+import json
 
 def main():
     parser = argparse.ArgumentParser()
@@ -21,7 +22,8 @@ def main():
     else:
         api = IBMQuantumExperience(args['apiToken'], {'url': args['url'], 'hub': args['hub'], 'group': args['group'], 'project': args['project']})
 
-    print(str(backends.discover_remote_backends(api)))
+    backs = backends.discover_remote_backends(api)
+    print(json.dumps(backs, indent=2, sort_keys=True))
 
 if __name__ == '__main__':
     main()
