@@ -15,17 +15,11 @@
 
 'use strict';
 
-import * as path from 'path';
 import * as vscode from 'vscode';
 import * as Q from "q";
-import {
-    LanguageClient,
-    LanguageClientOptions,
-    ServerOptions,
-    TransportKind
-} from 'vscode-languageclient';
 import {DependencyMgr} from "./dependencyMgr";
 import {PackageMgr} from "./packageMgr";
+import { LanguagesActivation } from './languages';
 
 import { ResultProvider } from "./resultProvider";
 import { CommandExecutor } from './commandExecutor';
@@ -36,38 +30,15 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.window.showInformationMessage("✨ Activating IBM Q Studio extension... ✨");
 
-    let serverModule = context.asAbsolutePath(path.join('server', 'server.js'));
-    
-    let debugOptions = {
-        execArgv: ["--nolazy", "--inspect=6009"]
-    };
+    //registerQiskitCommands(context);
 
-    let serverOptions: ServerOptions = {
-        run: {
-            module: serverModule,
-            transport: TransportKind.ipc
-        },
-        debug: {
-            module: serverModule,
-            transport: TransportKind.ipc,
-            options: debugOptions
-        }
-    }
+    let languagesActivation = new LanguagesActivation(context);
 
-    let clientOptions: LanguageClientOptions = {
-        documentSelector: [{
-            scheme: 'file',
-            language: 'qasm-lang'
-        }],
-        synchronize: {
-            configurationSection: 'qasmLang',
-            fileEvents: vscode.workspace.createFileSystemWatcher('**/.clientrc')
-        }
-    }
+    let qasmLanguage = languagesActivation.qasmLanguageClient().start();
+    context.subscriptions.push(qasmLanguage);
 
-    let disposable = new LanguageClient('qasmLang', 'QAsm Language support', serverOptions, clientOptions).start();
-
-    context.subscriptions.push(disposable);
+    let qiskitLanguage = languagesActivation.qiskitLanguageClient().start();
+    context.subscriptions.push(qiskitLanguage);
 
     vscode.languages.registerDocumentFormattingEditProvider('qasm-lang', {
         provideDocumentFormattingEdits(document: vscode.TextDocument): any {
@@ -209,11 +180,10 @@ function checkDependencies(): Q.Promise<string> {
                 //vscode.window.showInformationMessage("Checking for Python dependencies...");
                 let depsList :string = "";
                 deps.forEach(dep => {
-                    console.log("Package: " + dep.Name + " Version: " +
-                        dep.InstalledVersion);
-                        depsList+=("👌 " + dep.Name + " v " + dep.InstalledVersion+"\n");
+                    console.log(`Package: ${dep.Name} Version: ${dep.InstalledVersion}`);
+                        depsList+=(`👌 ${dep.Name} v ${dep.InstalledVersion}\n`);
                 });
-                vscode.window.showInformationMessage("IBM Q Studio dependencies found! "+depsList);
+                vscode.window.showInformationMessage(`IBM Q Studio dependencies found! ${depsList}`);
             // Check for pyhton packages!
             }).then(() => {
                 console.log('Check for required python packages...');
@@ -223,19 +193,20 @@ function checkDependencies(): Q.Promise<string> {
                 let packMgr = new PackageMgr();
                 return packMgr.check()
                     .then(results => {
-                        console.log("packMgr.check extension.ts",results);
+                        console.log(`packMgr.check extension.ts ${results}`);
                         vscode.window.showInformationMessage(results);
                         //return Q.resolve(results);
                         return resolve();
                     }).catch(err => {
-                        console.log("packMgr.check error extension.ts",err);
+                        console.log(`packMgr.check error extension.ts ${err}`);
                         return Q.reject(err);
                     });
                 
             // Iterate over the list of packages
             }).catch(error => {
-                console.log('Seems like there was a problem: ' + error);
-                vscode.window.showErrorMessage('Seems like there was a problem: ' + error);
+                console.log(`Seems like there was a problem: ${error}`);
+                //vscode.window.showWarningMessage('Seems like there was a problem: ' + error);
+                vscode.window.showErrorMessage(`Seems like there was a problem: ${error}`);
                 return reject(error);
             });
         }

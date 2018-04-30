@@ -32,10 +32,21 @@
             "preLaunchTask": "watch:client"
 		},
 		{
-			"name": "Attach to Server",
+			"name": "Attach to QASM Server",
 			"type": "node",
 			"request": "attach",
 			"port": 6009,
+			"sourceMaps": true,
+			"outFiles": [
+				"${workspaceRoot}/client/server/**/*.js"
+			],
+			"preLaunchTask": "watch:server"
+		},
+		{
+			"name": "Attach to QISKit Server",
+			"type": "node",
+			"request": "attach",
+			"port": 6010,
 			"sourceMaps": true,
 			"outFiles": [
 				"${workspaceRoot}/client/server/**/*.js"

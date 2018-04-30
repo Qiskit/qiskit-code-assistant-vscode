@@ -24,6 +24,7 @@
 	],
 	"activationEvents": [
 		"onLanguage:qasm-lang",
+		"onLanguage:qiskit-lang",
 		"onCommand:qstudio.reload",
 		"onCommand:qstudio.checkDependencies",
 		"onCommand:qstudio.initQConfig",
@@ -42,6 +43,23 @@
 					"description": "Controls the maximum number of problems produced by the server."
 				},
 				"qasmLang.trace.server": {
+					"scope": "window",
+					"type": "string",
+					"enum": [
+						"off",
+						"messages",
+						"verbose"
+					],
+					"default": "off",
+					"description": "Traces the communication between VSCode and the language server."
+				},
+				"qiskitLang.maxNumberOfProblems": {
+					"scope": "resource",
+					"type": "number",
+					"default": 100,
+					"description": "Controls the maximum number of problems produced by the server."
+				},
+				"qiskitLang.trace.server": {
 					"scope": "window",
 					"type": "string",
 					"enum": [
@@ -98,12 +116,22 @@
 			{
 				"id": "qasm-lang",
 				"aliases": [
-					"QAsm"
+					"QASM"
 				],
 				"extensions": [
 					".qasm"
 				],
 				"configuration": "./qasm.configuration.json"
+			},
+			{
+				"id": "qiskit-lang",
+				"aliases": [
+					"QISKit"
+				],
+				"extensions": [
+					".py"
+				],
+				"configuration": "./qiskit.configuration.json"
 			}
 		],
 		"grammars": [
@@ -111,6 +139,11 @@
 				"language": "qasm-lang",
 				"scopeName": "source.qasm",
 				"path": "./syntaxes/qasm.json"
+			},
+			{
+				"language": "qiskit-lang",
+				"scopeName": "source.qasm",
+				"path": "./syntaxes/qiskit.json"
 			}
 		],
 		"commands": [

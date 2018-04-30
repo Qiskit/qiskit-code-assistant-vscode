@@ -39,8 +39,7 @@ export class Dependency implements IDependency {
                    installedVersion.isEqual(this.RequiredVersion)) {
                      resolve(this);
                 } else {
-                    reject("Version >= " + this.RequiredVersion.toString() + "of " +
-                        "package " + this.Name + " is required");
+                    reject(`Version >= ${this.RequiredVersion.toString()} of package ${this.Name} is required`);
                 }
             });
         });
