@@ -28,7 +28,11 @@
 		"onCommand:qstudio.reload",
 		"onCommand:qstudio.checkDependencies",
 		"onCommand:qstudio.initQConfig",
-		"*"
+		"onCommand:qstudio.discoverLocalBackends",
+		"onCommand:qstudio.discoverRemoteBackends",
+		"onCommand:qstudio.listPendingJobs",
+		"onCommand:qstudio.getQueueStatus",
+		"onCommand:qstudio.getUserCredits"
 	],
 	"main": "./out/src/extension",
 	"contributes": {
@@ -215,7 +219,7 @@
 		"menus": {
 				"editor/title": [
 					{
-					"when": "editorLangId == 'python'",
+					"when": "editorLangId == 'qiskit-lang'",
 					"command": "qstudio.runCode",
 					"group": "navigation"
 					},
