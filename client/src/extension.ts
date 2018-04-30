@@ -93,6 +93,8 @@ export function activate(context: vscode.ExtensionContext) {
         }));
     }*/
 
+
+    const config = vscode.workspace.getConfiguration('ibm-q-studio');
     context.subscriptions.push(
         vscode.commands.registerCommand("qstudio.reload", () => activate(context)),
         vscode.commands.registerCommand("qstudio.checkDependencies", () => checkDependencies()),
@@ -109,7 +111,7 @@ export function activate(context: vscode.ExtensionContext) {
                     vscode.window.showErrorMessage(reason);
                 });
             })),
-        vscode.commands.registerCommand("qstudio.discoverLocalBackends", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listLocalBackends.py').then(localBackends => {
+        vscode.commands.registerCommand("qstudio.discoverLocalBackends", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listLocalBackends.py',[]).then(localBackends => {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-localBackends-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-localBackends-result://authority/backends-preview`);
@@ -123,7 +125,7 @@ export function activate(context: vscode.ExtensionContext) {
                 });
             })),
         
-        vscode.commands.registerCommand("qstudio.discoverRemoteBackends", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listRemoteBackends.py').then(remoteBackends => {
+        vscode.commands.registerCommand("qstudio.discoverRemoteBackends", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listRemoteBackends.py', ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url')]).then(remoteBackends => {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-remoteBackends-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-remoteBackends-result://authority/backends-preview`);
@@ -137,7 +139,7 @@ export function activate(context: vscode.ExtensionContext) {
                 });
             })),
 
-        vscode.commands.registerCommand("qstudio.listPendingJobs", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listPendingJobs.py').then(pendingJobs => {
+        vscode.commands.registerCommand("qstudio.listPendingJobs", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listPendingJobs.py', []).then(pendingJobs => {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-pendingJobs-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-pendingJobs-result://authority/list-preview`);
@@ -150,7 +152,7 @@ export function activate(context: vscode.ExtensionContext) {
                 });
             })),
 
-        vscode.commands.registerCommand("qstudio.listExecutedJobs", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/executedJobs.py').then(executedJobs => {
+        vscode.commands.registerCommand("qstudio.listExecutedJobs", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/executedJobs.py', []).then(executedJobs => {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-executedJobs-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-executedJobs-result://authority/list-preview`);
@@ -163,7 +165,7 @@ export function activate(context: vscode.ExtensionContext) {
                 });
             })),
 
-        vscode.commands.registerCommand("qstudio.getQueueStatus", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/getQueueStatus.py').then(queueStatus => {
+        vscode.commands.registerCommand("qstudio.getQueueStatus", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/getQueueStatus.py', []).then(queueStatus => {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-queueStatus-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-queueStatus-result://authority/status-preview`);
@@ -176,7 +178,7 @@ export function activate(context: vscode.ExtensionContext) {
                 });
             })),
 
-        vscode.commands.registerCommand("qstudio.getUserCredits", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/getUserCredits.py').then(userCredits => {
+        vscode.commands.registerCommand("qstudio.getUserCredits", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/getUserCredits.py', ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(userCredits => {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-userCredits-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-userCredits-result://authority/credits-preview`);
@@ -310,8 +312,9 @@ function initQConfig(): Q.Promise<string> {
             })
         }).then((_url: string|undefined) => {
             if (_url != "" || _url != undefined){
+                console.log('url',url)
                 url = _url;
-            }
+            } 
             saveQConfig(apiToken, hub, group, project, url).then(result => {
                 return resolve(result);
             }).catch((err) => {
@@ -324,7 +327,7 @@ function initQConfig(): Q.Promise<string> {
 function saveQConfig(apiToken:string, hub:string|undefined, 
     group:string|undefined, project:string|undefined, 
     url:string|undefined ): Q.Promise<string> {
-    vscode.window.showInformationMessage("Saving the QConfig... (not implemented)");
+    vscode.window.showInformationMessage("Saving the QConfig...");
     
     return Q.Promise((resolve, reject) => {
         try{           

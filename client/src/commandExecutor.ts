@@ -67,7 +67,7 @@ export class CommandExecutor {
         });
     }
 
-    public execPythonFile(scriptPath:string): Q.Promise<string>{
+    public execPythonFile(scriptPath:string, options:string[]): Q.Promise<string>{
         return Q.Promise((resolve, reject) => {
             let execPath = path.join(__dirname,scriptPath);
             if (process.platform === "win32") {
@@ -76,7 +76,7 @@ export class CommandExecutor {
     
             vscode.workspace.openTextDocument(execPath)
                 .then((document) => {
-                    (new CommandExecutor).exec("python", [document.fileName.toString()])
+                    (new CommandExecutor).exec("python", [document.fileName.toString()].concat(options))
                         .then((stdout) => {
                             // console.log(stdout);
                             //vscode.window.showInformationMessage("Execution result:",stdout);
