@@ -69,19 +69,36 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.commands.registerCommand("qstudio.reload", () => activate(context)),
         vscode.commands.registerCommand("qstudio.checkDependencies", () => checkDependencies()),
-        vscode.commands.registerCommand("qstudio.runCode", () => (new CommandExecutor).execPythonActiveEditor().then(codeResult => {
-            let resultProvider = new ResultProvider();
-            vscode.workspace.registerTextDocumentContentProvider('qiskit-preview-result', resultProvider)
-            let previewUri = vscode.Uri.parse(`qiskit-preview-result://authority/result-preview`);
-            resultProvider.content = codeResult;
-            console.log(previewUri);
-            
-            vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Execution result")
-                .then((_success) => {}, (reason) => {
-                    console.log(`Error: ${reason}`);
-                    vscode.window.showErrorMessage(reason);
-                });
-            })),
+        vscode.commands.registerCommand("qstudio.runQISKitCode", () => 
+            (new CommandExecutor).execPythonActiveEditor().then(codeResult => {
+                let resultProvider = new ResultProvider();
+                vscode.workspace.registerTextDocumentContentProvider('qiskit-preview-result', resultProvider)
+                let previewUri = vscode.Uri.parse(`qiskit-preview-result://authority/result-preview`);
+                resultProvider.content = codeResult;
+                console.log(previewUri);
+                
+                vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Execution result")
+                    .then((_success) => {}, (reason) => {
+                        console.log(`Error: ${reason}`);
+                        vscode.window.showErrorMessage(reason);
+                    });
+                })
+        ),
+        vscode.commands.registerCommand("qstudio.runQASMCode", () => 
+            (new CommandExecutor).execQasmActiveEditor('../../resources/qiskitScripts/executeQASM.py').then(codeResult => {
+                let resultProvider = new ResultProvider();
+                vscode.workspace.registerTextDocumentContentProvider('qasm-preview-result', resultProvider)
+                let previewUri = vscode.Uri.parse(`qasm-preview-result://authority/result-preview`);
+                resultProvider.content = codeResult;
+                console.log(previewUri);
+                
+                vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Execution result")
+                    .then((_success) => {}, (reason) => {
+                        console.log(`Error: ${reason}`);
+                        vscode.window.showErrorMessage(reason);
+                    });
+                })
+        ),
         vscode.commands.registerCommand("qstudio.discoverLocalBackends", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listLocalBackends.py',[]).then(localBackends => {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-localBackends-result', resultProvider)

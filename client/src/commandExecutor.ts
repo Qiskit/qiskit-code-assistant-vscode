@@ -68,6 +68,38 @@ export class CommandExecutor {
         });
     }
 
+    public execQasmActiveEditor(scriptPath:string): Q.Promise<string> {
+        return Q.Promise((resolve, reject) => {
+
+            let execPath = path.join(__dirname,scriptPath);
+            if (process.platform === "win32") {
+                execPath = execPath.replace(/\\/g, "/");
+            }
+
+            vscode.window.showInformationMessage("⚡ Running... ⚡");
+            const codeFile = vscode.window.activeTextEditor.document;
+            codeFile.save();
+
+            console.log("Let's go to execute that QASM")
+            console.log(execPath);
+
+            vscode.workspace.openTextDocument(execPath)
+                .then((document) => {
+                    console.log(document);
+                    console.log("python", [document.fileName.toString(), '--file', codeFile.fileName.toString()]);
+                    (new CommandExecutor).exec("python", [document.fileName.toString(), '--file', codeFile.fileName.toString()])
+                        .then((stdout) => {
+                            console.log(stdout);
+                            return resolve(stdout);
+                        }).catch(err => {
+                            console.log(err);
+                            vscode.window.showErrorMessage(err);
+                            return reject(err);
+                        });
+                });
+        });
+    }
+
     public execPythonFile(scriptPath:string, options:string[]): Q.Promise<string>{
         return Q.Promise((resolve, reject) => {
             vscode.window.showInformationMessage("⚡ Running... ⚡");
