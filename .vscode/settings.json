@@ -11,6 +11,5 @@
 		"out": true
 	},
 	"typescript.tsdk": "./node_modules/typescript/lib",
-	"typescript.tsc.autoDetect": "off",
-	"python.pythonPath": "/Users/JuanCB/anaconda3/bin/python"
+	"typescript.tsc.autoDetect": "off"
 }
