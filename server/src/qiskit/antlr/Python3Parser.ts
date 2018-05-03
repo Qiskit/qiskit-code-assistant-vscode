@@ -299,14 +299,18 @@ export class Python3Parser extends Parser {
 	applyAssignment(symbol: string): void {
 	  let statement = this.statements.last();
 
-	  if (this.isAssignmentAppliable(statement, symbol)) {
-	    let extractor = new MetadataExtractor(this.symbolTable);
-	    let metadata = extractor.from(statement.rightSide);
-	    let parentSymbol = this.findParentSymbolWith(statement);
-	    if (parentSymbol !== null) {
-	      let variable = new VariableSymbol(symbol, parentSymbol, metadata);
-	      this.symbolTable.define(variable);
+	  try {
+	    if (this.isAssignmentAppliable(statement, symbol)) {
+	      let extractor = new MetadataExtractor(this.symbolTable);
+	      let metadata = extractor.from(statement.rightSide);
+	      let parentSymbol = this.findParentSymbolWith(statement);
+	      if (parentSymbol !== null) {
+	        let variable = new VariableSymbol(symbol, parentSymbol, metadata);
+	        this.symbolTable.define(variable);
+	      }
 	    }
+	  } catch(err) {
+	    console.log(`ERROR: ${err}`);
 	  }
 	}
 
