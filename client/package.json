@@ -25,9 +25,16 @@
 	"activationEvents": [
 		"onLanguage:qasm-lang",
 		"onLanguage:qiskit-lang",
+		"onCommand:qstudio.runQISKitCode",
+		"onCommand:qstudio.runQASMCode",
 		"onCommand:qstudio.reload",
 		"onCommand:qstudio.checkDependencies",
-		"*"
+		"onCommand:qstudio.initQConfig",
+		"onCommand:qstudio.discoverLocalBackends",
+		"onCommand:qstudio.discoverRemoteBackends",
+		"onCommand:qstudio.listPendingJobs",
+		"onCommand:qstudio.getQueueStatus",
+		"onCommand:qstudio.getUserCredits"
 	],
 	"main": "./out/src/extension",
 	"contributes": {
@@ -83,6 +90,31 @@
 						"qiskit": "0.4.11"
 					},
 					"description": "QISKit and libraries related to run code"
+				},
+				"ibm-q-studio.qiskit.token": {
+					"type": "string",
+					"default": null,
+					"description": "QISKit & Q Experience API Token"
+				},
+				"ibm-q-studio.qiskit.url": {
+					"type": "string",
+					"default": "https://quantumexperience.ng.bluemix.net/api",
+					"description": "IBM Q Experience URL"
+				},
+				"ibm-q-studio.qiskit.hub": {
+					"type": "string",
+					"default": null,
+					"description": "User's QISKit & Q Experience hub"
+				},
+				"ibm-q-studio.qiskit.group": {
+					"type": "string",
+					"default": null,
+					"description": "User's QISKit & Q Experience group"
+				},
+				"ibm-q-studio.qiskit.project": {
+					"type": "string",
+					"default": null,
+					"description": "User's QISKit & Q Experience project"
 				}
 			}
 		},
@@ -130,8 +162,87 @@
 				"command": "qstudio.checkDependencies",
 				"title": "Check IBM Q Studio dependencies",
 				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.runQISKitCode",
+				"title": "▶ Run this Q code",
+				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.runQASMCode",
+				"title": "▶ Run this Q code",
+				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.initQConfig",
+				"title": "Enter your QConfig (token, etc.)",
+				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.discoverLocalBackends",
+				"title": "Discover local backends available",
+				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.discoverRemoteBackends",
+				"title": "Discover remote backends available",
+				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.listPendingJobs",
+				"title": "List the user's pending jobs",
+				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.listExecutedJobs",
+				"title": "List the user's executed jobs",
+				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.getQueueStatus",
+				"title": "Get the queue status",
+				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.getUserCredits",
+				"title": "Get the user's available credits",
+				"category": "qstudio"
 			}
-		]
+		],
+		"keybindings": [
+			{
+				"command": "qstudio.reload",
+				"key": "Ctrl+r",
+				"mac": "cmd+r",
+				"when": "editorTextFocus && editorLangId == 'qiskit-lang'"
+			},
+			{
+				"command": "qstudio.runQISKitCode",
+				"key": "shift+enter",
+				"mac": "shift+enter",
+				"when": "editorTextFocus && editorLangId == 'qiskit-lang'"
+			},
+			{
+				"command": "qstudio.runQASMCode",
+				"key": "shift+enter",
+				"mac": "shift+enter",
+				"when": "editorTextFocus && editorLangId == 'qasm-lang'"
+			}
+		],
+		"menus": {
+				"editor/title": [
+					{
+					"when": "editorLangId == 'qiskit-lang'",
+					"command": "qstudio.runQISKitCode",
+					"group": "navigation"
+					},
+					{
+					"when": "editorLangId == 'qasm-lang'",
+					"command": "qstudio.runQASMCode",
+					"group": "navigation"
+					}
+				]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "tsc -p ./",
