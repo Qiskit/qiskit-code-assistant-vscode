@@ -199,13 +199,13 @@
 				"command": "qstudio.reload",
 				"key": "Ctrl+r",
 				"mac": "cmd+r",
-				"when": "editorTextFocus && editorLangId == 'qiskit-lang'"
+				"when": "editorTextFocus && editorLangId == 'python'"
 			},
 			{
 				"command": "qstudio.runQISKitCode",
 				"key": "shift+enter",
 				"mac": "shift+enter",
-				"when": "editorTextFocus && editorLangId == 'qiskit-lang'"
+				"when": "editorTextFocus && editorLangId == 'python'"
 			},
 			{
 				"command": "qstudio.runQASMCode",
@@ -217,7 +217,7 @@
 		"menus": {
 			"editor/title": [
 				{
-					"when": "editorLangId == 'qiskit-lang'",
+					"when": "editorLangId == 'python'",
 					"command": "qstudio.runQISKitCode",
 					"group": "navigation"
 				},
