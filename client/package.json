@@ -24,7 +24,7 @@
 	],
 	"activationEvents": [
 		"onLanguage:qasm-lang",
-		"onLanguage:qiskit-lang",
+		"onLanguage:python",
 		"onCommand:qstudio.runQISKitCode",
 		"onCommand:qstudio.runQASMCode",
 		"onCommand:qstudio.reload",
@@ -128,16 +128,6 @@
 					".qasm"
 				],
 				"configuration": "./qasm.configuration.json"
-			},
-			{
-				"id": "qiskit-lang",
-				"aliases": [
-					"QISKit"
-				],
-				"extensions": [
-					".py"
-				],
-				"configuration": "./qiskit.configuration.json"
 			}
 		],
 		"grammars": [
@@ -145,11 +135,6 @@
 				"language": "qasm-lang",
 				"scopeName": "source.qasm",
 				"path": "./syntaxes/qasm.json"
-			},
-			{
-				"language": "qiskit-lang",
-				"scopeName": "source.qasm",
-				"path": "./syntaxes/qiskit.json"
 			}
 		],
 		"commands": [
@@ -230,18 +215,18 @@
 			}
 		],
 		"menus": {
-				"editor/title": [
-					{
+			"editor/title": [
+				{
 					"when": "editorLangId == 'qiskit-lang'",
 					"command": "qstudio.runQISKitCode",
 					"group": "navigation"
-					},
-					{
+				},
+				{
 					"when": "editorLangId == 'qasm-lang'",
 					"command": "qstudio.runQASMCode",
 					"group": "navigation"
-					}
-				]
+				}
+			]
 		}
 	},
 	"scripts": {
