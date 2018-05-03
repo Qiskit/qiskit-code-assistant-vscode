@@ -150,7 +150,7 @@
 			},
 			{
 				"command": "qstudio.runQISKitCode",
-				"title": "▶ Run this Python code",
+				"title": "▶ Run this Python",
 				"category": "qstudio"
 			},
 			{
