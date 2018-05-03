@@ -1,8 +1,8 @@
 # IBM Q Studio
 
-> IBM Q Studio is a tool that makes simple working with QASM files and QISKit SDK.
+> IBM Q Studio is a tool that makes simple working with [QASM files](https://github.com/QISKit/openqasm/) and [QISKit SDK](https://github.com/QISKit/qiskit-sdk-py).
 
-A Visual Studio Code extension with support for QISKit and the QASM language. It provides some useful commands to make easier launching jobs and visualizing results among others.
+A [Visual Studio Code](https://code.visualstudio.com/) extension with support for QISKit and the QASM language. It provides some useful commands to make easier launching jobs and visualizing results among others.
 
 ![alt text](./docs/images/execute-sample.gif "Example of running Q Studio")
 
