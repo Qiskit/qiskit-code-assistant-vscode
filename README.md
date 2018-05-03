@@ -32,7 +32,7 @@ The commands below are supported at the Command Palette (Command+Shift+P on macO
 Command | Description
 --- | ---
 ```QStudio: Check IBM Q Studio dependencies``` | Check that the required dependencies are properly installed.
-```QStudio: Enter your QConfig``` | Allow the user to configure her QISKit credentials.
+```QStudio: Enter your QConfig``` | Allow the user to configure her QISKit credentials. Please, note that you will need to run this command prior to use `QStudio: Discover remote backends available`, `QStudio: List the user's pending jobs`, `QStudio: List the user's executed jobs`, `QStudio: Get the queue status` and `QStudio: Get the user's available credits` or they will fail.
 ```QStudio: Run this Q code``` | Executes the code at the current editor tab (QISKit or QASM).
 ```QStudio: Discover local backends available``` | The local backend available will be presented in a new tab.
 ```QStudio: Discover remote backends available``` | The remote backends available for the current user will be presented in a new tab.
@@ -45,7 +45,7 @@ Command | Description
 
 IBM Q Studio was originally authored by Juan Cruz-Benito, Yeray Darias, Ismael Faro, Juan Gómez and Paco Martín.
 
-And continues to grow with the help and work of [many people](./CONTRIBUTORS.md) who contribute to the project at different levels.
+And continues to grow with the help and work of [many people](https://github.ibm.com/IBMQuantum/qiskit-studio/graphs/contributors) who contribute to the project at different levels.
 
 ## License 
 This project uses the [Apache License Version 2.0 software license](https://www.apache.org/licenses/LICENSE-2.0).
