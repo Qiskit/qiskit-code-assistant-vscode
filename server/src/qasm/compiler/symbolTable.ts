@@ -17,9 +17,9 @@
 
 import { SymbolTable, GlobalScope, Symbol, BuiltInTypeSymbol, Type } from '../../tools/symbolTable';
 
-export class SymbolTableBuilder {
+export namespace SymbolTableBuilder {
     
-    public static build(): SymbolTable {
+    export function build(): SymbolTable {
         let globalScope = new GlobalScope();
         let symbolTable = new SymbolTable(globalScope);
         symbolTable.define(new BuiltInTypeSymbol('Creg'));

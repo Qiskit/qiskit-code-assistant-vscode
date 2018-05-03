@@ -50,6 +50,10 @@ export class StatementsStack {
         this.applyOnLastStatement((statement) => statement.addArgument(argument, type));
     }
 
+    addArrayDimension(dimension: number): void {
+        this.applyOnLastStatement((statement) => statement.addArrayDimension(dimension));
+    }
+
     startAssignation(): void {
         this.applyOnLastStatement((statement) => statement.startAssignation());
     }
@@ -89,7 +93,15 @@ export class Statement {
     }
 
     addArgument(argument: Token, type: Type): void {
-        this.currentSide().addArgument(argument, type);
+        try {
+            this.currentSide().addArgument(argument, type);
+        } catch(err) {
+            console.log(`ERROR: ${err}`);
+        }
+    }
+
+    addArrayDimension(dimension: number): void {
+        this.currentSide().addArrayDimension(dimension);
     }
 
     toString(): string {

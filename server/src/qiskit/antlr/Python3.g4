@@ -1,18 +1,3 @@
-// Copyright 2018 IBM RESEARCH. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//    http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// =============================================================================
-
 /*
  * The MIT License (MIT)
  *
@@ -42,6 +27,7 @@
  * Project      : python3-parser; an ANTLR4 grammar for Python 3
  *                https://github.com/bkiers/python3-parser
  * Developed by : Bart Kiers, bart@big-o.nl
+ * Modified by: IBM Research 
  */
 grammar Python3;
 
@@ -167,9 +153,10 @@ tokens { INDENT, DEDENT }
 }
 
 @parser::header {
-import { QiskitSymbolTable, VariableSymbol, ClassSymbol } from '../compiler/qiskitSymbolTable';
+import { QiskitSymbolTable, VariableSymbol, ClassSymbol, VariableMetadata } from '../compiler/qiskitSymbolTable';
 import { Symbol } from '../../tools/symbolTable';
 import { StatementsStack, Statement } from './tools/statementsStack';
+import { MetadataExtractor } from './tools/metadataExtractor';
 import { MethodCall } from './tools/methodCall';
 import { ArgumentsTester, ParserArgumentsErrorHandler } from './tools/argumentsTester';
 }
@@ -195,12 +182,18 @@ checkMethodCall(call: MethodCall): void {
 applyAssignment(symbol: string): void {
   let statement = this.statements.last();
 
-  if (this.isAssignmentAppliable(statement, symbol)) {
-    let parentSymbol = this.findParentSymbolWith(statement);
-    if (parentSymbol !== null) {
-      let variable = new VariableSymbol(symbol, parentSymbol);
-      this.symbolTable.define(variable);
+  try {
+    if (this.isAssignmentAppliable(statement, symbol)) {
+      let extractor = new MetadataExtractor(this.symbolTable);
+      let metadata = extractor.from(statement.rightSide);
+      let parentSymbol = this.findParentSymbolWith(statement);
+      if (parentSymbol !== null) {
+        let variable = new VariableSymbol(symbol, parentSymbol, metadata);
+        this.symbolTable.define(variable);
+      }
     }
+  } catch(err) {
+    console.log(`ERROR: ${err}`);
   }
 }
 
@@ -676,6 +669,7 @@ atom
  }
  | number { 
     if (this.arrayScope) {
+      this.statements.addArrayDimension(+$number.text);
     } else {
       this.statements.addArgument($number.start, this.symbolTable.lookup('int')); 
     }

@@ -1,9 +1,10 @@
 // Generated from Python3.g4 by ANTLR 4.6-SNAPSHOT
 
 
-import { QiskitSymbolTable, VariableSymbol, ClassSymbol } from '../compiler/qiskitSymbolTable';
+import { QiskitSymbolTable, VariableSymbol, ClassSymbol, VariableMetadata } from '../compiler/qiskitSymbolTable';
 import { Symbol } from '../../tools/symbolTable';
 import { StatementsStack, Statement } from './tools/statementsStack';
+import { MetadataExtractor } from './tools/metadataExtractor';
 import { MethodCall } from './tools/methodCall';
 import { ArgumentsTester, ParserArgumentsErrorHandler } from './tools/argumentsTester';
 
@@ -298,12 +299,18 @@ export class Python3Parser extends Parser {
 	applyAssignment(symbol: string): void {
 	  let statement = this.statements.last();
 
-	  if (this.isAssignmentAppliable(statement, symbol)) {
-	    let parentSymbol = this.findParentSymbolWith(statement);
-	    if (parentSymbol !== null) {
-	      let variable = new VariableSymbol(symbol, parentSymbol);
-	      this.symbolTable.define(variable);
+	  try {
+	    if (this.isAssignmentAppliable(statement, symbol)) {
+	      let extractor = new MetadataExtractor(this.symbolTable);
+	      let metadata = extractor.from(statement.rightSide);
+	      let parentSymbol = this.findParentSymbolWith(statement);
+	      if (parentSymbol !== null) {
+	        let variable = new VariableSymbol(symbol, parentSymbol, metadata);
+	        this.symbolTable.define(variable);
+	      }
 	    }
+	  } catch(err) {
+	    console.log(`ERROR: ${err}`);
 	  }
 	}
 
@@ -4328,6 +4335,7 @@ export class Python3Parser extends Parser {
 				_localctx._number = this.number();
 				 
 				    if (this.arrayScope) {
+				      this.statements.addArrayDimension(+(_localctx._number!=null?this._input.getTextFromRange(_localctx._number._start,_localctx._number._stop):undefined));
 				    } else {
 				      this.statements.addArgument((_localctx._number!=null?(_localctx._number._start):undefined), this.symbolTable.lookup('int')); 
 				    }
