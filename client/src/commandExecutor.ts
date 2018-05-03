@@ -14,6 +14,8 @@
 // =============================================================================
 
 import * as Q from "q";
+import * as path from "path";
+import * as vscode from 'vscode';
 import * as nodeChildProcess from "child_process";
 
 interface IExecOptions {
@@ -48,5 +50,77 @@ export class CommandExecutor {
         });
         
         return outcome.promise;
+    }
+
+    public execPythonActiveEditor(): Q.Promise<string> {
+        return Q.Promise((resolve, reject) => {
+            vscode.window.showInformationMessage("⚡ Running... ⚡");
+            const codeFile = vscode.window.activeTextEditor.document;
+            codeFile.save();
+            (new CommandExecutor).exec("python", [codeFile.fileName.toString()])
+                .then((stdout) => {
+                    return resolve(stdout);
+                }).catch(err => {
+                    console.log(err);
+                    vscode.window.showErrorMessage(err);
+                    return reject(err);
+                });
+        });
+    }
+
+    public execQasmActiveEditor(scriptPath:string): Q.Promise<string> {
+        return Q.Promise((resolve, reject) => {
+
+            let execPath = path.join(__dirname,scriptPath);
+            if (process.platform === "win32") {
+                execPath = execPath.replace(/\\/g, "/");
+            }
+
+            vscode.window.showInformationMessage("⚡ Running... ⚡");
+            const codeFile = vscode.window.activeTextEditor.document;
+            codeFile.save();
+
+            console.log("Let's go to execute that QASM")
+            console.log(execPath);
+
+            vscode.workspace.openTextDocument(execPath)
+                .then((document) => {
+                    console.log(document);
+                    console.log("python", [document.fileName.toString(), '--file', codeFile.fileName.toString()]);
+                    (new CommandExecutor).exec("python", [document.fileName.toString(), '--file', codeFile.fileName.toString()])
+                        .then((stdout) => {
+                            console.log(stdout);
+                            return resolve(stdout);
+                        }).catch(err => {
+                            console.log(err);
+                            vscode.window.showErrorMessage(err);
+                            return reject(err);
+                        });
+                });
+        });
+    }
+
+    public execPythonFile(scriptPath:string, options:string[]): Q.Promise<string>{
+        return Q.Promise((resolve, reject) => {
+            vscode.window.showInformationMessage("⚡ Running... ⚡");
+            let execPath = path.join(__dirname,scriptPath);
+            if (process.platform === "win32") {
+                execPath = execPath.replace(/\\/g, "/");
+            }
+    
+            vscode.workspace.openTextDocument(execPath)
+                .then((document) => {
+                    (new CommandExecutor).exec("python", [document.fileName.toString()].concat(options))
+                        .then((stdout) => {
+                            // console.log(stdout);
+                            //vscode.window.showInformationMessage("Execution result:",stdout);
+                            return resolve(stdout);
+                        }).catch(err => {
+                            console.log(err);
+                            vscode.window.showErrorMessage(err);
+                            return reject(err);
+                        });
+                });
+        });
     }
 }

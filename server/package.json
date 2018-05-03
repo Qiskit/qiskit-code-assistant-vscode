@@ -25,12 +25,19 @@
 		"typescript": "^2.7.2"
 	},
 	"devDependencies": {
+		"mocha": "^3.5.0",
 		"chai": "^4.1.1",
 		"@types/chai": "^4.1.1",
-		"mocha": "^3.5.0",
+		"sinon": "^4.5.0",
+		"@types/sinon": "^4.3.1",
+		"sinon-chai": "^3.0.0",
+		"@types/sinon-chai": "^2.7.29",
 		"antlr4ts-cli": "^0.4.0-alpha.4",
 		"ts-mockito": "^2.3.0",
-		"tslint": "^5.9.1"
+		"tslint": "^5.9.1",
+		"prettier": "^1.12.1",
+		"lint-staged": "^7.0.4",
+		"husky": "^0.14.3"
 	},
 	"scripts": {
 		"installServer": "installServerIntoExtension ../client ./package.json ./tsconfig.json",
@@ -40,9 +47,15 @@
 		"compile:qiskitParser": "cd src/qiskit/antlr && antlr4ts -visitor Python3.g4 && cd ../../..",
 		"compile:parser": "npm run compile:qasmParser && npm run compile:qiskitParser",
 		"exportQuantumLibraries": "cp -R src/qasm/libs out/src/qasm",
-		"pretest": "npm run compile:parser && tsc test/*.test.ts --outDir out --module commonjs --target ES6 --experimentalDecorators && npm run exportQuantumLibraries ",
+		"pretest": "tsc test/*.test.ts --outDir out --module commonjs --target ES6 --experimentalDecorators && npm run exportQuantumLibraries ",
 		"test": "mocha out/test --recursive",
 		"clean": "rm -rf  out node_modules",
-		"lint": "tslint -c tslint.json 'src/**/*.ts' && tslint -c tslint.test.json 'test/**/*.ts'"
+		"lint": "lint-staged && tslint -c tslint.json 'src/**/*.ts' && tslint -c tslint.test.json 'test/**/*.ts'"
+	},
+	"lint-staged": {
+		"src/**/*.ts": [
+			"prettier --write",
+			"git add"
+		]
 	}
 }

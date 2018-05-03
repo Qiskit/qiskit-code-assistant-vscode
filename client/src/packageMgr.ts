@@ -27,7 +27,7 @@ export class PackageMgr {
             const config = workspace.getConfiguration('ibm-q-studio');
             const qiskitPacks = config.get("qiskit.packages");
             Object.keys(qiskitPacks).forEach(function(key) {
-                console.log(key.toString(), qiskitPacks[key].toString());
+                //console.log(key.toString(), qiskitPacks[key].toString());
                 PackageMgr._packages.push(new PipPackage(key.toString(), qiskitPacks[key].toString()));     
               });
         } catch (err){

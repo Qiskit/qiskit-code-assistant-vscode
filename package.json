@@ -23,13 +23,15 @@
 		"compile:parser": "cd server && npm run compile:parser && cd ..",
 		"watch:client": "tsc -w -p client/tsconfig.json",
 		"watch:server": "cd server && npm run installServer && cd .. && tsc -w -p server/tsconfig.json",
-		"test": "npm run compile && cd client && node ./node_modules/vscode/bin/test",
+		"test": "cd server && npm test && cd ..",
 		"clean": "cd server && npm run clean && cd ../client && npm run clean && cd ..",
+		"lint": "cd server && npm run lint && cd ..",
 		"package": "npm run compile && cd client && vsce package && cd .."
 	},
 	"devDependencies": {
 		"@types/mocha": "^2.2.48",
-		"@types/node": "^7.0.43",
-		"typescript": "^2.7.2"
-	}
+		"@types/node": "^7.0.61",
+		"typescript": "^2.8.3"
+	},
+	"dependencies": {}
 }

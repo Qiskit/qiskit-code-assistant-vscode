@@ -38,6 +38,16 @@ export class MethodCall {
         this.trailingMethods.push(lastTrailingMethod);
     }
 
+    addArrayDimension(dimension: number): void {
+        if (!this.hasTrailingMethods()) {
+            return;
+        }
+
+        let lastTrailingMethod = this.trailingMethods.pop();
+        lastTrailingMethod.addArrayDimension(dimension);
+        this.trailingMethods.push(lastTrailingMethod);
+    }
+
     hasTrailingMethods(): boolean {
         return this.trailingMethods.length > 0;
     }
@@ -54,8 +64,14 @@ export class Method {
 
     constructor(public methodName: Token) {}
 
-    addArgument(token: Token, type: Type) {
+    addArgument(token: Token, type: Type): void {
         this.arguments.push(new Argument(token, type));
+    }
+
+    addArrayDimension(dimension: number): void {
+        let lastArgument = this.arguments.pop();
+        lastArgument.addArrayDimension(dimension);
+        this.arguments.push(lastArgument);
     }
 
     hasArguments(): boolean {
@@ -70,7 +86,17 @@ export class Method {
 
 export class Argument {
 
+    dimension: number = null;
+
     constructor(public token: Token, public type: Type) {}
+
+    addArrayDimension(dimension: number): void {
+        this.dimension = dimension;
+    }
+
+    isArray(): boolean {
+        return this.dimension !== null;
+    }
 
     toString(): string {
         let typeValue = this.type ? this.type.getName() : 'unknown';
