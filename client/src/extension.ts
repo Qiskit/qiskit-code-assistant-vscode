@@ -52,7 +52,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     checkDependencies()
         .then(() => {
-            console.log('IBM Q Studio extension succesfully loaded!');
+            console.log('IBM Q Studio extension successfully loaded!');
             vscode.window.showInformationMessage("🚀 IBM Q Studio extension loaded! 🚀");
         })
         .catch(err => {
