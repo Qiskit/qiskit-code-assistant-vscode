@@ -24,7 +24,7 @@
 	],
 	"activationEvents": [
 		"onLanguage:qasm-lang",
-		"onLanguage:qiskit-lang",
+		"onLanguage:python",
 		"onCommand:qstudio.runQISKitCode",
 		"onCommand:qstudio.runQASMCode",
 		"onCommand:qstudio.reload",
@@ -128,16 +128,6 @@
 					".qasm"
 				],
 				"configuration": "./qasm.configuration.json"
-			},
-			{
-				"id": "qiskit-lang",
-				"aliases": [
-					"QISKit"
-				],
-				"extensions": [
-					".py"
-				],
-				"configuration": "./qiskit.configuration.json"
 			}
 		],
 		"grammars": [
@@ -145,11 +135,6 @@
 				"language": "qasm-lang",
 				"scopeName": "source.qasm",
 				"path": "./syntaxes/qasm.json"
-			},
-			{
-				"language": "qiskit-lang",
-				"scopeName": "source.qasm",
-				"path": "./syntaxes/qiskit.json"
 			}
 		],
 		"commands": [
@@ -165,12 +150,12 @@
 			},
 			{
 				"command": "qstudio.runQISKitCode",
-				"title": "▶ Run this Q code",
+				"title": "▶ Run this Python",
 				"category": "qstudio"
 			},
 			{
 				"command": "qstudio.runQASMCode",
-				"title": "▶ Run this Q code",
+				"title": "▶ Run this QASM",
 				"category": "qstudio"
 			},
 			{
@@ -214,13 +199,13 @@
 				"command": "qstudio.reload",
 				"key": "Ctrl+r",
 				"mac": "cmd+r",
-				"when": "editorTextFocus && editorLangId == 'qiskit-lang'"
+				"when": "editorTextFocus && editorLangId == 'python'"
 			},
 			{
 				"command": "qstudio.runQISKitCode",
 				"key": "shift+enter",
 				"mac": "shift+enter",
-				"when": "editorTextFocus && editorLangId == 'qiskit-lang'"
+				"when": "editorTextFocus && editorLangId == 'python'"
 			},
 			{
 				"command": "qstudio.runQASMCode",
@@ -232,7 +217,7 @@
 		"menus": {
 			"editor/title": [
 				{
-					"when": "editorLangId == 'qiskit-lang'",
+					"when": "editorLangId == 'python'",
 					"command": "qstudio.runQISKitCode",
 					"group": "navigation"
 				},
@@ -263,5 +248,8 @@
 		"tslint": "^5.8.0",
 		"@types/node": "^7.0.43",
 		"@types/mocha": "^2.2.42"
-	}
+	},
+	"extensionDependencies": [
+		"ms-python.python"
+	]
 }

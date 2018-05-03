@@ -40,6 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
     let qiskitLanguage = languagesActivation.qiskitLanguageClient().start();
     context.subscriptions.push(qiskitLanguage);
 
+    /*
     vscode.languages.registerDocumentFormattingEditProvider('qasm-lang', {
         provideDocumentFormattingEdits(document: vscode.TextDocument): any {
             const firstLine = document.lineAt(0);
@@ -47,10 +48,11 @@ export function activate(context: vscode.ExtensionContext) {
             return [vscode.TextEdit.insert(firstLine.range.start, 'Formatted QASM file\n')];
         }
     });
+    */
 
     checkDependencies()
         .then(() => {
-            console.log('IBM Q Studio extension succesfully loaded!');
+            console.log('IBM Q Studio extension successfully loaded!');
             vscode.window.showInformationMessage("🚀 IBM Q Studio extension loaded! 🚀");
         })
         .catch(err => {

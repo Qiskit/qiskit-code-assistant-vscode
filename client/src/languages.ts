@@ -47,7 +47,7 @@ export class LanguagesActivation {
 
         let serverOptions = this.buildServerOptions(serverModule, debugOptions);
 
-        let clientOptions = this.buildClientOptions('qiskit-lang', 'qiskitLang');
+        let clientOptions = this.buildClientOptions('python', 'qiskitLang');
 
         return new LanguageClient('qiskitLang', 'QISKit support', serverOptions, clientOptions);
     }
