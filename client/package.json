@@ -150,12 +150,12 @@
 			},
 			{
 				"command": "qstudio.runQISKitCode",
-				"title": "▶ Run this Q code",
+				"title": "▶ Run this Python code",
 				"category": "qstudio"
 			},
 			{
 				"command": "qstudio.runQASMCode",
-				"title": "▶ Run this Q code",
+				"title": "▶ Run this QASM",
 				"category": "qstudio"
 			},
 			{
