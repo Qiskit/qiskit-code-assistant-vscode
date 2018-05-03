@@ -88,17 +88,52 @@ export class PipPackage implements IPackage {
                 .then((selection: string|undefined) => {
                     //Getting the selection from last showInputBox
                     if(selection == 'Yes'){
-                        this.install(packageName);
+                        this.install(packageName)
+                        .then((result) => {
+                            return Q.resolve(result);
+                        }).catch((err)=>{
+                            return Q.reject(err);
+                        })
                     }
-                    return Q.resolve();
                 }).catch(err =>{
                     console.log(`Error: pip list ${err}`);
                     return Q.reject(err);   
                 });
         })
         .catch((err) => {
-            // If error in packages, reject the promise.
-            return Q.reject(err);  
+            console.log(err);
+            return this.pip.list()
+            .then(result => {
+                //console.log(`pip list ${result}`); 
+                if (result.search(packageName) == -1 ) { 
+                    console.log(`${packageName} not installed`); 
+                    return vscode.window.showInputBox({
+                        ignoreFocusOut: true,
+                        prompt: `👉 You don't have installed ${packageName}. Do you want to install it? 👈`,
+                        value: 'Yes',
+                    });
+                } else { 
+                    console.log(`${packageName} is already installed`); 
+                    vscode.window.showInformationMessage(`👌 ${packageName} is already installed`);
+                    return Q.resolve();
+                } 
+            })
+            .then((selection: string|undefined) => {
+                //Getting the selection from last showInputBox
+                if(selection == 'Yes'){
+                    this.install(packageName)
+                    .then((result) => {
+                        return Q.resolve(result);
+                    }).catch((err)=>{
+                        return Q.reject(err);
+                    })
+                } else {
+                    return Q.reject("QISKit not installed. The extension will not work properly");   
+                }
+            }).catch(err =>{
+                console.log(`Error: pip list ${err}`);
+                return Q.reject(err);   
+            });
             
         });
     }
@@ -125,7 +160,7 @@ export class PipPackage implements IPackage {
         return this.pip.install(packageName)
             .then((stdout) => {
                 console.log(stdout);
-                return Q.resolve();
+                //return Q.resolve();
             }).then(result => {
                 console.log(result);
                 vscode.window.showInformationMessage(`${packageName} installed! 🎉🎉🎉`);

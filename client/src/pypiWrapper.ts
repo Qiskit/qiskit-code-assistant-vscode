@@ -19,7 +19,7 @@ import { IPackageInfo, IVersion } from "./interfaces";
 import { PipPackage } from "./pipPackage";
 import { Version } from "./version";
 
-const PYPI_BASE_URL = 'http://pypi.python.org/pypi/';
+const PYPI_BASE_URL = 'https://pypi.python.org/pypi/';
 
 export class PyPiWrapper implements IPackageInfo {
     public Name: string;

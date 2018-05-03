@@ -93,7 +93,11 @@ export class Statement {
     }
 
     addArgument(argument: Token, type: Type): void {
-        this.currentSide().addArgument(argument, type);
+        try {
+            this.currentSide().addArgument(argument, type);
+        } catch(err) {
+            console.log(`ERROR: ${err}`);
+        }
     }
 
     addArrayDimension(dimension: number): void {
