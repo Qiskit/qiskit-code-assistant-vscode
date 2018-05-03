@@ -248,5 +248,8 @@
 		"tslint": "^5.8.0",
 		"@types/node": "^7.0.43",
 		"@types/mocha": "^2.2.42"
-	}
+	},
+	"extensionDependencies": [
+		"ms-python.python"
+	]
 }
