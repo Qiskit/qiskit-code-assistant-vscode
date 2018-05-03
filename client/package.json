@@ -230,18 +230,18 @@
 			}
 		],
 		"menus": {
-				"editor/title": [
-					{
+			"editor/title": [
+				{
 					"when": "editorLangId == 'qiskit-lang'",
 					"command": "qstudio.runQISKitCode",
 					"group": "navigation"
-					},
-					{
+				},
+				{
 					"when": "editorLangId == 'qasm-lang'",
 					"command": "qstudio.runQASMCode",
 					"group": "navigation"
-					}
-				]
+				}
+			]
 		}
 	},
 	"scripts": {

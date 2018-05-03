@@ -1,0 +1,21 @@
+language: node_js
+sudo: false
+
+node_js:
+  - "9.5.0"
+
+install:
+  - npm install
+
+script:
+  - npm run compile
+  - npm test
+  - npm run lint
+
+notifications:
+  email:
+    recipients:
+      - juan.cruz@ibm.com
+      - yeray.darias@ibm.com
+    on_success: change
+    on_failure: always
