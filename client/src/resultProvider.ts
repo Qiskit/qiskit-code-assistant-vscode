@@ -16,14 +16,59 @@
 'use strict';
 
 import { TextDocumentContentProvider, EventEmitter, Uri, Event } from "vscode";
+import * as fs from "fs";
+import * as path from "path";
 
 export class ResultProvider implements TextDocumentContentProvider {
     public content: string;
+    private static HTML_TEMPLATE_COUNTS = path.join(__dirname,'../../resources/html-templates/temp-plot-shots.html'); 
 
     private _onDidChange = new EventEmitter<Uri>();
 
     public provideTextDocumentContent(): string {
-        return `<pre>${this.content}</pre>`;
+        let templatePath = ResultProvider.HTML_TEMPLATE_COUNTS;
+
+        if (process.platform === "win32") {
+            templatePath = ResultProvider.HTML_TEMPLATE_COUNTS.replace(/\\/g, "/");
+        }
+
+        try{
+            let execResult = JSON.parse(this.content);
+            if (execResult.result[0].data.counts !== undefined){
+
+                const countsArray = execResult.result[0].data.counts;
+
+                let xArray = [];
+                let yArray = [];
+
+                const countsArrayOrd = {};
+                Object.keys(countsArray).sort().forEach(function(key) {
+                    countsArrayOrd[key] = countsArray[key];
+                  });
+
+                for(let element in countsArrayOrd) {
+                    xArray.push(element);
+                    yArray.push(countsArray[element]);
+                }
+
+                let html = undefined;                
+                html = fs.readFileSync(templatePath,{ encoding: 'utf8' });  
+                if (html !== undefined){
+                    let str2Replace = '"x": ["000", "001", "010", "011", "100", "101", "110", "111"], "y": [117, 136, 119, 119, 149, 142, 129, 113]';
+                    let replacement = `"x": ["${xArray}"], "y": [${yArray}]`;
+                    
+                    console.log(replacement);
+                    
+                    html = html.replace(str2Replace, replacement);
+
+                    return html;
+                }
+            }
+            return `<pre>${this.content}</pre>`;
+        } catch (err){
+            console.log(err);
+            return `<pre>${this.content}</pre>`;
+        }
     }
 
     get onDidChange(): Event<Uri> {
