@@ -114,7 +114,7 @@ class SymbolsDictionary {
         type: 'QasmDescriptor'
     },
     {
-        label: 'include "quelib1.inc";',
+        label: 'include "qelib1.inc";',
         detail: 'Include',
         documentation: 'Includes the selected library.',
         type: 'Include'
