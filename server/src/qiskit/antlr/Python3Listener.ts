@@ -11,9 +11,7 @@ import { ArgumentsTester, ParserArgumentsErrorHandler } from './tools/argumentsT
 
 import { ParseTreeListener } from 'antlr4ts/tree/ParseTreeListener';
 
-import { Single_inputContext } from './Python3Parser';
-import { File_inputContext } from './Python3Parser';
-import { Eval_inputContext } from './Python3Parser';
+import { ProgramContext } from './Python3Parser';
 import { DecoratorContext } from './Python3Parser';
 import { DecoratorsContext } from './Python3Parser';
 import { DecoratedContext } from './Python3Parser';
@@ -103,37 +101,15 @@ import { IntegerContext } from './Python3Parser';
  */
 export interface Python3Listener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by `Python3Parser.single_input`.
+	 * Enter a parse tree produced by `Python3Parser.program`.
 	 * @param ctx the parse tree
 	 */
-	enterSingle_input?: (ctx: Single_inputContext) => void;
+	enterProgram?: (ctx: ProgramContext) => void;
 	/**
-	 * Exit a parse tree produced by `Python3Parser.single_input`.
+	 * Exit a parse tree produced by `Python3Parser.program`.
 	 * @param ctx the parse tree
 	 */
-	exitSingle_input?: (ctx: Single_inputContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `Python3Parser.file_input`.
-	 * @param ctx the parse tree
-	 */
-	enterFile_input?: (ctx: File_inputContext) => void;
-	/**
-	 * Exit a parse tree produced by `Python3Parser.file_input`.
-	 * @param ctx the parse tree
-	 */
-	exitFile_input?: (ctx: File_inputContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `Python3Parser.eval_input`.
-	 * @param ctx the parse tree
-	 */
-	enterEval_input?: (ctx: Eval_inputContext) => void;
-	/**
-	 * Exit a parse tree produced by `Python3Parser.eval_input`.
-	 * @param ctx the parse tree
-	 */
-	exitEval_input?: (ctx: Eval_inputContext) => void;
+	exitProgram?: (ctx: ProgramContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `Python3Parser.decorator`.

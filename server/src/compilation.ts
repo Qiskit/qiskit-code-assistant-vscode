@@ -24,13 +24,13 @@ import {
     TextDocument,
     TextDocumentPositionParams
 } from 'vscode-languageserver';
-import { Parser, Suggester, ParserError, ParseErrorLevel, Symbol } from './types';
+import { Parser, Suggester, ParserError, ParseErrorLevel, SuggestionSymbol } from './types';
 
 export class CompilationTool {
     currentDocument: TextDocument = null;
     currentSuggestions: CompletionItem[] = [];
 
-    toCompletionItem = (symbol: Symbol, index: number) => {
+    toCompletionItem = (symbol: SuggestionSymbol, index: number) => {
         return {
             label: symbol.label,
             kind: CompletionItemKind.Text,

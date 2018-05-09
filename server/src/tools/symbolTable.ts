@@ -53,6 +53,10 @@ export class SymbolTable {
         return this.currentScope.definedSymbols().map((symbol) => symbol.name);
     }
 
+    currentSymbols(): Symbol[] {
+        return this.currentScope.definedSymbols();
+    }
+
     print() {
         console.log('Printing symbol table >>>>>>>>');
         this.currentScope.print();
