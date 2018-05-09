@@ -66,15 +66,7 @@ export class SuggestionsCalculator {
 
         let result: SuggestionSymbol[] = [];
         if (allowedSymbols.includes('trailer')) {
-            let atom = this.atomFinder.firstViableAtomFor(this.tokenStream);
-            if (atom.type instanceof ClassSymbol) {
-                let classType = atom.type as ClassSymbol;
-                let atomMethods = classType.getMethods().map(method => method.getName());    
-                let availableMethods = this.suggestionsDictionary.symbolsWithTypeIn(['method'])
-                    .filter(foo => atomMethods.includes(foo.label));
-
-                result.push(...availableMethods);
-            }
+            result.push(...this.availableMethodScopeSymbols());
         }
         if (allowedSymbols.includes('atom')) {
             result.push(...this.foundVariablesAt(this.parser));
@@ -84,6 +76,18 @@ export class SuggestionsCalculator {
         return result;
     }
 
+    private availableMethodScopeSymbols(): SuggestionSymbol[] {
+        let atom = this.atomFinder.firstViableAtomFor(this.tokenStream);
+        if (atom.type instanceof ClassSymbol) {
+            let classType = atom.type as ClassSymbol;
+            let atomMethods = classType.getMethods().map(method => method.getName());    
+            return this.suggestionsDictionary.symbolsWithTypeIn(['method'])
+                .filter(symbol => atomMethods.includes(symbol.label));
+        } else {
+            return this.suggestionsDictionary.symbolsWithTypeIn(['method']);
+        }
+    }
+    
     private foundVariablesAt(parser: Python3Parser): SuggestionSymbol[] {
         return parser.symbolTable
             .currentSymbols()
