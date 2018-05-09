@@ -21,6 +21,7 @@ import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts';
 import { Python3Lexer } from './antlr/Python3Lexer';
 import { Python3Parser } from './antlr/Python3Parser';
 import { CodeCompletionCore } from 'antlr4-c3';
+import { QiskitParser } from './parser';
 
 export class QiskitSuggester implements Suggester {
     dictionary: SymbolsDictionary = new SymbolsDictionary();
@@ -54,46 +55,77 @@ export class QiskitSuggester implements Suggester {
             Python3Lexer.NOT_OP,
             Python3Lexer.OPEN_PAREN,
             Python3Lexer.OPEN_BRACK,
-            Python3Lexer.OPEN_BRACE
+            Python3Lexer.OPEN_BRACE,
+            Python3Lexer.DECIMAL_INTEGER,
+            Python3Lexer.OCT_INTEGER,
+            Python3Lexer.HEX_INTEGER,
+            Python3Lexer.BIN_INTEGER,
+            Python3Lexer.FLOAT_NUMBER,
+            Python3Lexer.IMAG_NUMBER,
+            Python3Lexer.STRING_LITERAL,
+            Python3Lexer.BYTES_LITERAL,
+            Python3Lexer.ELLIPSIS,
+            Python3Lexer.LAMBDA,
+            Python3Lexer.DEL,
+            Python3Lexer.PASS,
+            Python3Lexer.BREAK,
+            Python3Lexer.CONTINUE,
+            Python3Lexer.RETURN,
+            Python3Lexer.RAISE,
+            Python3Lexer.YIELD,
+            Python3Lexer.IMPORT,
+            Python3Lexer.FROM,
+            Python3Lexer.GLOBAL,
+            Python3Lexer.NONLOCAL,
+            Python3Lexer.ASSERT,
+            Python3Lexer.IF,
+            Python3Lexer.WHILE,
+            Python3Lexer.FOR,
+            Python3Lexer.TRY,
+            Python3Lexer.WITH,
+            Python3Lexer.DEF,
+            Python3Lexer.CLASS,
+            Python3Lexer.AT,
+            Python3Lexer.NEWLINE
         ]);
 
         core.preferredRules = new Set([Python3Parser.RULE_atom, Python3Parser.RULE_trailer]);
 
         let candidates = core.collectCandidates(caretPosition);
 
-        let keywords: string[] = [];
+        let allowedSymbols: string[] = [];
         for (let candidate of candidates.tokens) {
-            console.log(`Candidate token ${parser.vocabulary.getSymbolicName(candidate[0])}`);
-
-            keywords.push(parser.vocabulary.getSymbolicName(candidate[0]));
+            allowedSymbols.push(parser.vocabulary.getSymbolicName(candidate[0]));
         }
 
-        let functionNames: string[] = [];
-        let variableNames: string[] = [];
         for (let candidate of candidates.rules) {
-            console.log(`Candidate rule ${parser.ruleNames[candidate[0]]}`);
-
-            keywords.push(parser.ruleNames[candidate[0]]);
+            allowedSymbols.push(parser.ruleNames[candidate[0]]);
         }
 
-        let suggestions: string[] = [];
-        suggestions.push(...keywords);
-        suggestions.push(...functionNames);
-        suggestions.push(...variableNames);
-
-        let result: SuggestionSymbol[] = [];
-        result.push(...this.dictionary.symbolsWithTypeIn(suggestions));
-        result.push(...this.foundVariablesAt(parser));
+        let result: SuggestionSymbol[] = this.calculateSuggestions(allowedSymbols, parser);
 
         console.log(`Available suggestions > ${this.print(result)}`);
 
         return result;
     }
 
+    private calculateSuggestions(allowedSymbols: string[], parser: Python3Parser): SuggestionSymbol[] {
+        console.log(`Allowed symbols > ${allowedSymbols}`);
+
+        let result: SuggestionSymbol[] = [];
+        result.push(...this.dictionary.symbolsWithTypeIn(allowedSymbols));
+        if (allowedSymbols.includes('atom')) {
+            result.push(...this.foundVariablesAt(parser));
+        }
+
+        return result;
+    }
+
     private foundVariablesAt(parser: Python3Parser): SuggestionSymbol[] {
-        return parser.symbolTable.currentSymbols()
-        .filter(symbol => 'class' !== symbol.type.getName())
-        .map(this.toSuggestionSymbol);
+        return parser.symbolTable
+            .currentSymbols()
+            .filter(symbol => 'class' !== symbol.type.getName())
+            .map(this.toSuggestionSymbol);
     }
 
     private toSuggestionSymbol = (input: Symbol): SuggestionSymbol => {
@@ -103,7 +135,7 @@ export class QiskitSuggester implements Suggester {
             documentation: 'This is a previously declared variable',
             type: 'Variable'
         };
-    }
+    };
 
     private print(symbols: SuggestionSymbol[]): String[] {
         return symbols.map(symbol => `${symbol.label}:${symbol.type}`);
