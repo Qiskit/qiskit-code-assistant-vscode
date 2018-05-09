@@ -20,11 +20,21 @@ import { SuggestionSymbol } from '../../types';
 import { SuggestionsDictionary } from './suggestionsDictionary';
 import { CodeCompletionCore } from 'antlr4-c3';
 import { Python3Lexer } from '../antlr/Python3Lexer';
-import { Token } from 'antlr4ts';
+import { Token, CommonTokenStream } from 'antlr4ts';
 import { Symbol } from '../../tools/symbolTable';
+import { AtomFinder } from './atomFinder';
+import { ClassSymbol } from '../compiler/qiskitSymbolTable';
 
 export class SuggestionsCalculator {
-    constructor(private parser: Python3Parser, private suggestionsDictionary: SuggestionsDictionary) {}
+    private atomFinder: AtomFinder;
+
+    constructor(
+        private parser: Python3Parser,
+        private tokenStream: CommonTokenStream,
+        private suggestionsDictionary: SuggestionsDictionary
+    ) {
+        this.atomFinder = new AtomFinder(parser.symbolTable);
+    }
 
     calculateAtPosition(tokenPosition: number): SuggestionSymbol[] {
         let core = new CodeCompletionCore(this.parser);
@@ -44,20 +54,27 @@ export class SuggestionsCalculator {
             allowedSymbols.push(rule);
         }
 
-        let result: SuggestionSymbol[] = this.calculateSuggestions(allowedSymbols, tokenPosition);
+        let result: SuggestionSymbol[] = this.calculateSuggestions(allowedSymbols);
 
         console.log(`Available suggestions > ${this.print(result)}`);
 
         return result;
     }
 
-    private calculateSuggestions(allowedSymbols: string[], tokenPosition: number): SuggestionSymbol[] {
+    private calculateSuggestions(allowedSymbols: string[]): SuggestionSymbol[] {
         console.log(`Allowed symbols > ${allowedSymbols}`);
 
         let result: SuggestionSymbol[] = [];
         if (allowedSymbols.includes('trailer')) {
-            let atom = this.findAtom(this.parser, tokenPosition);
-            result.push(...this.suggestionsDictionary.symbolsWithTypeIn(['method']));
+            let atom = this.atomFinder.firstViableAtomFor(this.tokenStream);
+            if (atom.type instanceof ClassSymbol) {
+                let classType = atom.type as ClassSymbol;
+                let atomMethods = classType.getMethods().map(method => method.getName());    
+                let availableMethods = this.suggestionsDictionary.symbolsWithTypeIn(['method'])
+                    .filter(foo => atomMethods.includes(foo.label));
+
+                result.push(...availableMethods);
+            }
         }
         if (allowedSymbols.includes('atom')) {
             result.push(...this.foundVariablesAt(this.parser));
@@ -65,12 +82,6 @@ export class SuggestionsCalculator {
         }
 
         return result;
-    }
-
-    private findAtom(parser: Python3Parser, tokenPosition: number): Token {
-        console.log(`Find atom before position ${tokenPosition} @ ${parser.inputStream}`);
-
-        return null;
     }
 
     private foundVariablesAt(parser: Python3Parser): SuggestionSymbol[] {
@@ -87,7 +98,7 @@ export class SuggestionsCalculator {
             documentation: 'This is a previously declared variable',
             type: 'Variable'
         };
-    }
+    };
 
     private print(symbols: SuggestionSymbol[]): String[] {
         return symbols.map(symbol => `${symbol.label}:${symbol.type}`);
@@ -95,7 +106,6 @@ export class SuggestionsCalculator {
 }
 
 namespace GrammarElements {
-
     export function ignorableTokens(): Set<number> {
         return new Set([
             Python3Lexer.EOF,

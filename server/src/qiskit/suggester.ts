@@ -34,7 +34,7 @@ export class QiskitSuggester implements Suggester {
         parser.program();
 
         let caretPosition = tokenStream.getTokens().length;
-        let suggestionCalculator = new SuggestionsCalculator(parser, this.dictionary);
+        let suggestionCalculator = new SuggestionsCalculator(parser, tokenStream, this.dictionary);
 
         return suggestionCalculator.calculateAtPosition(caretPosition);
     }
