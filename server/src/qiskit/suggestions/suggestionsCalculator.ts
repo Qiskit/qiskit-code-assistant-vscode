@@ -80,14 +80,15 @@ export class SuggestionsCalculator {
         let atom = this.atomFinder.firstViableAtomFor(this.tokenStream);
         if (atom.type instanceof ClassSymbol) {
             let classType = atom.type as ClassSymbol;
-            let atomMethods = classType.getMethods().map(method => method.getName());    
-            return this.suggestionsDictionary.symbolsWithTypeIn(['method'])
+            let atomMethods = classType.getMethods().map(method => method.getName());
+            return this.suggestionsDictionary
+                .symbolsWithTypeIn(['method'])
                 .filter(symbol => atomMethods.includes(symbol.label));
         } else {
             return this.suggestionsDictionary.symbolsWithTypeIn(['method']);
         }
     }
-    
+
     private foundVariablesAt(parser: Python3Parser): SuggestionSymbol[] {
         return parser.symbolTable
             .currentSymbols()
