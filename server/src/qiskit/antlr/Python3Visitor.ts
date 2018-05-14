@@ -11,9 +11,7 @@ import { ArgumentsTester, ParserArgumentsErrorHandler } from './tools/argumentsT
 
 import { ParseTreeVisitor } from 'antlr4ts/tree/ParseTreeVisitor';
 
-import { Single_inputContext } from './Python3Parser';
-import { File_inputContext } from './Python3Parser';
-import { Eval_inputContext } from './Python3Parser';
+import { ProgramContext } from './Python3Parser';
 import { DecoratorContext } from './Python3Parser';
 import { DecoratorsContext } from './Python3Parser';
 import { DecoratedContext } from './Python3Parser';
@@ -106,25 +104,11 @@ import { IntegerContext } from './Python3Parser';
  */
 export interface Python3Visitor<Result> extends ParseTreeVisitor<Result> {
 	/**
-	 * Visit a parse tree produced by `Python3Parser.single_input`.
+	 * Visit a parse tree produced by `Python3Parser.program`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	visitSingle_input?: (ctx: Single_inputContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `Python3Parser.file_input`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitFile_input?: (ctx: File_inputContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `Python3Parser.eval_input`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitEval_input?: (ctx: Eval_inputContext) => Result;
+	visitProgram?: (ctx: ProgramContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `Python3Parser.decorator`.

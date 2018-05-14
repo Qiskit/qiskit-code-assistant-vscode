@@ -168,10 +168,6 @@ private argumentsScope = false;
 private arrayScope = false;
 private argumentsErrorHandler = new ParserArgumentsErrorHandler(this);
 
-declaredVariables(): string[] {
-    return this.symbolTable.definedSymbols();
-}
-
 checkMethodCall(call: MethodCall): void {
   if (call !== null) {
     new ArgumentsTester(this.symbolTable, this.argumentsErrorHandler)
@@ -229,21 +225,9 @@ isAssignmentAppliable(statement: Statement, symbol: string): boolean {
  * parser rules
  */
 
-/// single_input: NEWLINE | simple_stmt | compound_stmt NEWLINE
-single_input
- : NEWLINE
- | simple_stmt
- | compound_stmt NEWLINE
- ;
-
-/// file_input: (NEWLINE | stmt)* ENDMARKER
-file_input
+/// program: (NEWLINE | stmt)* ENDMARKER
+program
  : ( NEWLINE | stmt )* EOF
- ;
-
-/// eval_input: testlist NEWLINE* ENDMARKER
-eval_input
- : testlist NEWLINE* EOF
  ;
 
 /// decorator: '@' dotted_name [ '(' [arglist] ')' ] NEWLINE

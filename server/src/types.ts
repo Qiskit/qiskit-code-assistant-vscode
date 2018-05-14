@@ -20,11 +20,11 @@ export interface Parser {
 }
 
 export interface Suggester {
-    calculateSuggestionsFor(input: string): Symbol[];
-    availableSymbols(): Symbol[];
+    calculateSuggestionsFor(input: string): SuggestionSymbol[];
+    availableSymbols(): SuggestionSymbol[];
 }
 
-export interface Symbol {
+export interface SuggestionSymbol {
 
     label: string;
     detail: string;

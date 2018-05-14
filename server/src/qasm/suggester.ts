@@ -19,13 +19,13 @@ import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts';
 import { CodeCompletionCore } from 'antlr4-c3';
 import { QasmLexer } from './antlr/QasmLexer';
 import { QasmParser } from './antlr/QasmParser';
-import { Symbol, Suggester } from '../types';
+import { Suggester, SuggestionSymbol } from '../types';
 
 export class QASMSuggester implements Suggester {
 
     dictionary: SymbolsDictionary = new SymbolsDictionary();
 
-    calculateSuggestionsFor(input: string): Symbol[] {
+    calculateSuggestionsFor(input: string): SuggestionSymbol[] {
         let inputStream = new ANTLRInputStream(input);
         let lexer = new QasmLexer(inputStream);
         let tokenStream = new CommonTokenStream(lexer);
@@ -36,7 +36,7 @@ export class QASMSuggester implements Suggester {
         return this.calculateCandidates(parser, tokenStream.getTokens().length);
     }
 
-    availableSymbols(): Symbol[] {
+    availableSymbols(): SuggestionSymbol[] {
         let inputStream = new ANTLRInputStream('');
         let lexer = new QasmLexer(inputStream);
         let tokenStream = new CommonTokenStream(lexer);
@@ -45,7 +45,7 @@ export class QASMSuggester implements Suggester {
         return this.dictionary.allSymbols();
     }
 
-    private calculateCandidates(parser: QasmParser, caretPosition: number): Symbol[] {
+    private calculateCandidates(parser: QasmParser, caretPosition: number): SuggestionSymbol[] {
         let core = new CodeCompletionCore(parser);
     
         core.ignoredTokens = new Set([
@@ -75,7 +75,7 @@ export class QASMSuggester implements Suggester {
         suggestions.push(...functionNames);
         suggestions.push(...variableNames);
     
-        let result: Symbol[] = [];
+        let result: SuggestionSymbol[] = [];
         result.push(...this.dictionary.symbolsWithTypeIn(suggestions));
         result.push(...this.foundVariablesAt(parser));
 
@@ -84,11 +84,11 @@ export class QASMSuggester implements Suggester {
         return result;
     }
 
-    private foundVariablesAt(parser: QasmParser): Symbol[] {
+    private foundVariablesAt(parser: QasmParser): SuggestionSymbol[] {
         return parser.declaredVariables().map(this.toSymbolVariable);
     }
 
-    private toSymbolVariable = (input: string): Symbol => {
+    private toSymbolVariable = (input: string): SuggestionSymbol => {
         return {
             label: input,
             detail: 'Declared variable',
@@ -114,7 +114,7 @@ class SymbolsDictionary {
         type: 'QasmDescriptor'
     },
     {
-        label: 'include "quelib1.inc";',
+        label: 'include "qelib1.inc";',
         detail: 'Include',
         documentation: 'Includes the selected library.',
         type: 'Include'
@@ -174,12 +174,12 @@ class SymbolsDictionary {
         type: 'Gate'
     }];    
 
-    allSymbols(): Symbol[] {
+    allSymbols(): SuggestionSymbol[] {
         return this.symbols;
     }
 
-    symbolsWithTypeIn(types: string[]): Symbol[] {
-        let isContainedInTypes = (symbol: Symbol) => types.indexOf(symbol.type) > -1;
+    symbolsWithTypeIn(types: string[]): SuggestionSymbol[] {
+        let isContainedInTypes = (symbol: SuggestionSymbol) => types.indexOf(symbol.type) > -1;
 
         return this.symbols.filter(isContainedInTypes);
     }

@@ -15,17 +15,31 @@
 
 'use strict';
 
-import { Symbol, Suggester } from '../types';
+import { Suggester, SuggestionSymbol } from '../types';
+import { SuggestionsDictionary } from './suggestions/suggestionsDictionary';
+import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts';
+import { Python3Lexer } from './antlr/Python3Lexer';
+import { Python3Parser } from './antlr/Python3Parser';
+import { SuggestionsCalculator } from './suggestions/suggestionsCalculator';
 
-// No suggestions will be given for the time being
 export class QiskitSuggester implements Suggester {
+    private dictionary = new SuggestionsDictionary();
 
-    calculateSuggestionsFor(_input: string): Symbol[] {
-        return [];
+    calculateSuggestionsFor(input: string): SuggestionSymbol[] {
+        let inputStream = new ANTLRInputStream(input);
+        let lexer = new Python3Lexer(inputStream);
+        let tokenStream = new CommonTokenStream(lexer);
+        let parser = new Python3Parser(tokenStream);
+
+        parser.program();
+
+        let caretPosition = tokenStream.getTokens().length;
+        let suggestionCalculator = new SuggestionsCalculator(parser, tokenStream, this.dictionary);
+
+        return suggestionCalculator.calculateAtPosition(caretPosition);
     }
 
-    availableSymbols(): Symbol[] {
-        return [];
+    availableSymbols(): SuggestionSymbol[] {
+        return this.dictionary.allSymbols();
     }
-
 }
