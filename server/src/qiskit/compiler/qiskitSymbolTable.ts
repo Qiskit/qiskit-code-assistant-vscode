@@ -16,7 +16,6 @@
 'use strict';
 
 import { SymbolTable, Symbol, GlobalScope, Type, BuiltInTypeSymbol } from "../../tools/symbolTable";
-import { lookup } from "dns";
 
 export namespace QiskitSymbolTable {
 
