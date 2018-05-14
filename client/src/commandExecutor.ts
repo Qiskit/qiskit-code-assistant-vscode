@@ -17,6 +17,7 @@ import * as Q from "q";
 import * as path from "path";
 import * as vscode from 'vscode';
 import * as nodeChildProcess from "child_process";
+import { Util } from "./utils";
 
 interface IExecOptions {
     cwd?: string;
@@ -71,10 +72,7 @@ export class CommandExecutor {
     public execQasmActiveEditor(scriptPath:string): Q.Promise<string> {
         return Q.Promise((resolve, reject) => {
 
-            let execPath = path.join(__dirname,scriptPath);
-            if (process.platform === "win32") {
-                execPath = execPath.replace(/\\/g, "/");
-            }
+            const execPath = (new Util).getSODependentPath(scriptPath);
 
             vscode.window.showInformationMessage("⚡ Running... ⚡");
             const codeFile = vscode.window.activeTextEditor.document;
@@ -103,10 +101,8 @@ export class CommandExecutor {
     public execPythonFile(scriptPath:string, options:string[]): Q.Promise<string>{
         return Q.Promise((resolve, reject) => {
             vscode.window.showInformationMessage("⚡ Running... ⚡");
-            let execPath = path.join(__dirname,scriptPath);
-            if (process.platform === "win32") {
-                execPath = execPath.replace(/\\/g, "/");
-            }
+            
+            const execPath = (new Util).getSODependentPath(scriptPath);
     
             vscode.workspace.openTextDocument(execPath)
                 .then((document) => {

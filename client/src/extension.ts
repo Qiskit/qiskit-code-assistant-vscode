@@ -24,6 +24,8 @@ import { LanguagesActivation } from './languages';
 import { ResultProvider } from "./resultProvider";
 import { CommandExecutor } from './commandExecutor';
 
+import { Util } from "./utils";
+
 export function activate(context: vscode.ExtensionContext) {
 
     console.log('Activating IBM Q Studio extension ...');
@@ -68,6 +70,14 @@ export function activate(context: vscode.ExtensionContext) {
 
 
     const config = vscode.workspace.getConfiguration('ibm-q-studio');
+    const executeQASMScript = (new Util).getSODependentPath('../../resources/qiskitScripts/executeQASM.py');
+    const localBackendsScript = (new Util).getSODependentPath('../../resources/qiskitScripts/listLocalBackends.py');
+    const remoteBackendsScript = (new Util).getSODependentPath('../../resources/qiskitScripts/listRemoteBackends.py');
+    const pendingJobsScript = (new Util).getSODependentPath('../../resources/qiskitScripts/listPendingJobs.py');
+    const executedJobsScript = (new Util).getSODependentPath('../../resources/qiskitScripts/listExecutedJobs.py');
+    const getQueueStatusScript = (new Util).getSODependentPath('../../resources/qiskitScripts/getQueueStatus.py');
+    const getUserCreditsScript = (new Util).getSODependentPath('../../resources/qiskitScripts/getUserCredits.py');
+
     context.subscriptions.push(
         vscode.commands.registerCommand("qstudio.reload", () => activate(context)),
         vscode.commands.registerCommand("qstudio.checkDependencies", () => checkDependencies()),
@@ -87,7 +97,7 @@ export function activate(context: vscode.ExtensionContext) {
                 })
         ),
         vscode.commands.registerCommand("qstudio.runQASMCode", () => 
-            (new CommandExecutor).execQasmActiveEditor('../../resources/qiskitScripts/executeQASM.py').then(codeResult => {
+            (new CommandExecutor).execQasmActiveEditor(executeQASMScript).then(codeResult => {
                 let resultProvider = new ResultProvider();
                 vscode.workspace.registerTextDocumentContentProvider('qasm-preview-result', resultProvider)
                 let previewUri = vscode.Uri.parse(`qasm-preview-result://authority/result-preview`);
@@ -101,7 +111,7 @@ export function activate(context: vscode.ExtensionContext) {
                     });
                 })
         ),
-        vscode.commands.registerCommand("qstudio.discoverLocalBackends", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listLocalBackends.py',[]).then(localBackends => {
+        vscode.commands.registerCommand("qstudio.discoverLocalBackends", () => (new CommandExecutor).execPythonFile(localBackendsScript,[]).then(localBackends => {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-localBackends-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-localBackends-result://authority/backends-preview`);
@@ -115,7 +125,7 @@ export function activate(context: vscode.ExtensionContext) {
                 });
             })),
         
-        vscode.commands.registerCommand("qstudio.discoverRemoteBackends", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listRemoteBackends.py', ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(remoteBackends => {
+        vscode.commands.registerCommand("qstudio.discoverRemoteBackends", () => (new CommandExecutor).execPythonFile(remoteBackendsScript, ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(remoteBackends => {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-remoteBackends-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-remoteBackends-result://authority/backends-preview`);
@@ -129,7 +139,7 @@ export function activate(context: vscode.ExtensionContext) {
                 });
             })),
 
-        vscode.commands.registerCommand("qstudio.listPendingJobs", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listPendingJobs.py', ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(pendingJobs => {
+        vscode.commands.registerCommand("qstudio.listPendingJobs", () => (new CommandExecutor).execPythonFile(pendingJobsScript, ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(pendingJobs => {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-pendingJobs-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-pendingJobs-result://authority/list-preview`);
@@ -142,7 +152,7 @@ export function activate(context: vscode.ExtensionContext) {
                 });
             })),
 
-        vscode.commands.registerCommand("qstudio.listExecutedJobs", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listExecutedJobs.py', ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(executedJobs => {
+        vscode.commands.registerCommand("qstudio.listExecutedJobs", () => (new CommandExecutor).execPythonFile(executedJobsScript, ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(executedJobs => {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-executedJobs-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-executedJobs-result://authority/list-preview`);
@@ -155,7 +165,7 @@ export function activate(context: vscode.ExtensionContext) {
                 });
             })),
 
-        vscode.commands.registerCommand("qstudio.getQueueStatus", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/getQueueStatus.py', ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(queueStatus => {
+        vscode.commands.registerCommand("qstudio.getQueueStatus", () => (new CommandExecutor).execPythonFile(getQueueStatusScript, ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(queueStatus => {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-queueStatus-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-queueStatus-result://authority/status-preview`);
@@ -168,7 +178,7 @@ export function activate(context: vscode.ExtensionContext) {
                 });
             })),
 
-        vscode.commands.registerCommand("qstudio.getUserCredits", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/getUserCredits.py', ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(userCredits => {
+        vscode.commands.registerCommand("qstudio.getUserCredits", () => (new CommandExecutor).execPythonFile(getUserCreditsScript, ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(userCredits => {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-userCredits-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-userCredits-result://authority/credits-preview`);
