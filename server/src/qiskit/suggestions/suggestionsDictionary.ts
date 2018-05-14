@@ -34,8 +34,8 @@ export class SuggestionsDictionary {
         qiskitSymbols.classes.forEach(qclass => {
             symbols.push({
                 label: qclass.name,
-                detail: qclass.info,
-                documentation: qclass.detail,
+                detail: qclass.detail,
+                documentation: qclass.documentation,
                 type: 'class'
             });
             symbols.push(...this.getMethods(qclass.methods));
@@ -48,8 +48,8 @@ export class SuggestionsDictionary {
         return methods.map(qmethod => {
             return {
                 label: qmethod.name,
-                detail: qmethod.info,
-                documentation: qmethod.detail,
+                detail: qmethod.detail,
+                documentation: qmethod.documentation,
                 type: 'method'
             };
         });
@@ -62,16 +62,16 @@ interface QiskitSDK {
 
 interface QiskitClass {
     name: string;
-    info: string;
     detail: string;
+    documentation: string;
     methods: QiskitMethod[];
 }
 
 interface QiskitMethod {
     name: string;
     type: string;
-    info: string;
     detail: string;
+    documentation: string;
     arguments: QiskitArgument[];
 }
 

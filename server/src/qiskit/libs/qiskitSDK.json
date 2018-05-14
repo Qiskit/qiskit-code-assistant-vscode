@@ -1,29 +1,139 @@
 {
-    "classes": [
-       {
-           "name": "ClassicalRegister",
-           "info": "Implement a classical register",
-           "detail": "Implement a classical register.",
-           "methods": [
-               {
-                   "name": "check_range",
-                   "type": "boolean",
-                   "info": "Check range at current register",
-                   "detail": "cr.check_range(j: int)\nCheck that j is a valid index into self.",
-                   "arguments": [
-                       {
-                           "name": "position",
-                           "type": "int"
-                       }
-                   ]
-               },
-               {
-                   "name": "qasm",
-                   "type": "string",
-                   "info": "Returns the QASM representation",
-                   "detail": "cr.qasm()\nReturn OPENQASM string for this register."
-               }
-           ]
-       } 
-    ]
+    "classes": [{
+        "name": "ClassicalRegister",
+        "detail": "Implement a classical register",
+        "documentation": "Implement a classical register.",
+        "arguments": [{
+                "name": "size",
+                "type": "int"
+            },
+            {
+                "name": "name",
+                "type": "string",
+                "optional": true
+            }
+        ],
+        "methods": [{
+                "name": "check_range",
+                "type": "boolean",
+                "detail": "Check range at current register",
+                "documentation": "cr.check_range(j: int)\nCheck that j is a valid index into self.",
+                "arguments": [{
+                    "name": "position",
+                    "type": "int"
+                }]
+            },
+            {
+                "name": "qasm",
+                "type": "string",
+                "detail": "Returns the QASM representation",
+                "documentation": "cr.qasm()\nReturn OPENQASM string for this register."
+            }
+        ]
+    }, {
+        "name": "QuantumRegister",
+        "detail": "Implement a quantum register",
+        "documentation": "Implement a quantum register.",
+        "arguments": [{
+                "name": "size",
+                "type": "int"
+            },
+            {
+                "name": "name",
+                "type": "string",
+                "optional": true
+            }
+        ],
+        "methods": [{
+                "name": "check_range",
+                "type": "boolean",
+                "detail": "Check range at current register",
+                "documentation": "cr.check_range(j: int)\nCheck that j is a valid index into self.",
+                "arguments": [{
+                    "name": "position",
+                    "type": "int"
+                }]
+            },
+            {
+                "name": "qasm",
+                "type": "string",
+                "detail": "Returns the QASM representation",
+                "documentation": "cr.qasm()\nReturn OPENQASM string for this register."
+            }
+        ]
+    }, {
+        "name": "QuantumCircuit",
+        "detail": "Quantum circuit",
+        "documentation": "Quantum circuit.",
+        "arguments": [{
+                "name": "*regs",
+                "type": "object"
+            },
+            {
+                "name": "name",
+                "type": "string",
+                "optional": true
+            }
+        ],
+        "methods": [{
+            "name": "add",
+            "type": "void",
+            "detail": "Add registers",
+            "documentation": "Add registers.",
+            "arguments": [{
+                "name": "*regs",
+                "type": "object"
+            }]
+        }, {
+            "name": "barrier",
+            "type": "void",
+            "detail": "Apply barrier to circuit",
+            "documentation": "Apply barrier to circuit. If args is None, applies to all the qbits. Args is a list of QuantumRegister or single qubits. For QuantumRegister, applies barrier to all the qbits in that register.",
+            "arguments": [{
+                "name": "*args",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "ccx",
+            "type": "void",
+            "detail": "Apply Toffoli to from ctl1 and ctl2 to tgt",
+            "documentation": "Apply Toffoli to from ctl1 and ctl2 to tgt.",
+            "arguments": [{
+                "name": "ctl1",
+                "type": "QuantumRegister"
+            }, {
+                "name": "ctl2",
+                "type": "QuantumRegister"
+            }, {
+                "name": "tgt",
+                "type": "QuantumRegister"
+            }]
+        }]
+    }, {
+        "name": "CompositeGate",
+        "detail": "Implement a composite gate",
+        "documentation": "Composite gate, a sequence of unitary gates.",
+        "methods": [{
+            "name": "barrier",
+            "type": "void",
+            "detail": "Apply barrier to circuit",
+            "documentation": "Apply barrier to circuit. If args is None, applies to all the qbits. Args is a list of QuantumRegister or single qubits. For QuantumRegister, applies barrier to all the qbits in that register.",
+            "arguments": [{
+                "name": "*args",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "c_if",
+            "type": "void",
+            "detail": "Add classical control register",
+            "documentation": "Add classical control register.",
+            "arguments": [{
+                "name": "classical",
+                "type": "ClassicalRegister"
+            }, {
+                "name": "val",
+                "type": "float"
+            }]
+        }]
+    }]
 }

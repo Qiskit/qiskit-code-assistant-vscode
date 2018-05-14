@@ -17,7 +17,7 @@
 
 import { MethodCall, Method, Argument } from "./methodCall";
 import { SymbolTable, Symbol, BuiltInTypeSymbol } from "../../../tools/symbolTable";
-import { ClassSymbol, ArgumentSymbol, VariableSymbol } from "../../compiler/qiskitSymbolTable";
+import { ClassSymbol, ArgumentSymbol, VariableSymbol, MethodSymbol } from "../../compiler/qiskitSymbolTable";
 import { Token, Parser } from "antlr4ts";
 
 export class ArgumentsTester {
@@ -105,12 +105,21 @@ export class ArgumentsTester {
             return;
         }
 
+        if (this.hasVariableNumberOfArguments(searchedMethod)) {
+            return;
+        }
+
         if (method.arguments.length !== searchedMethod.arguments.length) {
             let expectedArguments = searchedMethod.arguments.length;
             let receivedArguments = method.arguments.length;
 
             this.errorHandler.wrongArgumentsNumber(method.methodName, expectedArguments, receivedArguments);
         }
+    }
+
+    private hasVariableNumberOfArguments(method: MethodSymbol): boolean {
+        let argumentsWithVariable = method.arguments.filter(arg => arg.name.startsWith('*'));
+        return argumentsWithVariable.length > 0;
     }
 
 }
