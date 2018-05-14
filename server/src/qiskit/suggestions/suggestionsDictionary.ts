@@ -19,6 +19,26 @@ import { SuggestionSymbol } from '../../types';
 
 export class SuggestionsDictionary {
     symbols = [
+        // Classical register class and methods
+        {
+            label: 'ClassicalRegister',
+            detail: 'Implement a classical register',
+            documentation: '<pre>ClassicalRegister(size: int)</pre>\nImplement a classical register.',
+            type: 'class'
+        },
+        {
+            label: 'check_range',
+            detail: 'Check if it is a valid range',
+            documentation: 'cr.check_range(j: int)\nCheck that j is a valid index into self.',
+            type: 'method'
+        },
+        {
+            label: 'qasm',
+            detail: 'Return OPENQASM string',
+            documentation: 'Return OPENQASM string for this register.',
+            type: 'method'
+        },
+
         {
             label: 'QuantumProgram',
             detail: 'Quantum Program Class',
@@ -59,12 +79,6 @@ export class SuggestionsDictionary {
             label: 'QuantumRegister',
             detail: 'Quantum register',
             documentation: 'Implement a quantum register.',
-            type: 'class'
-        },
-        {
-            label: 'ClassicalRegister',
-            detail: 'Classical register',
-            documentation: 'Implement a classical register.',
             type: 'class'
         }
     ];

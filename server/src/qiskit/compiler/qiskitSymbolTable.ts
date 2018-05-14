@@ -62,7 +62,7 @@ export namespace QiskitSymbolTable {
         let type = symbolTable.lookup('string');
         let requiredArguments: ArgumentSymbol[] = [];
 
-        return new MethodSymbol('check_range', type, requiredArguments);
+        return new MethodSymbol('qasm', type, requiredArguments);
     }
 
     function createQuantumProgramSymbol(symbolTable: SymbolTable): ClassSymbol {
