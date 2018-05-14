@@ -15,26 +15,20 @@
 
 'use strict';
 
-import { ClassSymbol, MethodSymbol, ArgumentSymbol } from "../qiskitSymbolTable";
-import { SymbolTable } from "../../../tools/symbolTable";
+import { ClassSymbol, MethodSymbol, ArgumentSymbol } from '../qiskitSymbolTable';
+import { SymbolTable } from '../../../tools/symbolTable';
 
 export namespace ClassicalRegister {
-
     export function createFor(symbolTable: SymbolTable): ClassSymbol {
         let classType = symbolTable.lookup('class');
-        let methods = [
-            createCheckRangeMethod(symbolTable),
-            createQasmMethod(symbolTable)
-        ];
+        let methods = [createCheckRangeMethod(symbolTable), createQasmMethod(symbolTable)];
 
         return new ClassSymbol('ClassicalRegister', classType, methods);
     }
 
     function createCheckRangeMethod(symbolTable: SymbolTable): MethodSymbol {
         let type = symbolTable.lookup('boolean');
-        let requiredArguments = [
-            new ArgumentSymbol('position', symbolTable.lookup('int'))
-        ];
+        let requiredArguments = [new ArgumentSymbol('position', symbolTable.lookup('int'))];
 
         return new MethodSymbol('check_range', type, requiredArguments);
     }
@@ -45,5 +39,4 @@ export namespace ClassicalRegister {
 
         return new MethodSymbol('qasm', type, requiredArguments);
     }
-
 }

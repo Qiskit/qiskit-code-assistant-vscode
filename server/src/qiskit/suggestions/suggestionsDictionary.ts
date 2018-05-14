@@ -18,78 +18,64 @@
 import { SuggestionSymbol } from '../../types';
 
 export class SuggestionsDictionary {
-    symbols = [
-        // Classical register class and methods
-        {
-            label: 'ClassicalRegister',
-            detail: 'Implement a classical register',
-            documentation: '<pre>ClassicalRegister(size: int)</pre>\nImplement a classical register.',
-            type: 'class'
-        },
-        {
-            label: 'check_range',
-            detail: 'Check if it is a valid range',
-            documentation: 'cr.check_range(j: int)\nCheck that j is a valid index into self.',
-            type: 'method'
-        },
-        {
-            label: 'qasm',
-            detail: 'Return OPENQASM string',
-            documentation: 'Return OPENQASM string for this register.',
-            type: 'method'
-        },
-
-        {
-            label: 'QuantumProgram',
-            detail: 'Quantum Program Class',
-            documentation: 'Quantum Program Class.',
-            type: 'class'
-        },
-        {
-            label: 'create_quantum_register',
-            detail: 'Creates a quantum register',
-            documentation: "create_quantum_register('register_name', size)",
-            type: 'method'
-        },
-        {
-            label: 'create_classical_register',
-            detail: 'Creates a classical register',
-            documentation: "create_classical_register('register_name', size)",
-            type: 'method'
-        },
-        {
-            label: 'create_circuit',
-            detail: 'Creates a quantum circuit',
-            documentation: "create_circuit('circuit_name', quantum_registers, classical_registers)",
-            type: 'method'
-        },
-        {
-            label: 'QuantumCircuit',
-            detail: 'Quantum circuit',
-            documentation: 'Quantum circuit.',
-            type: 'class'
-        },
-        {
-            label: 'h',
-            detail: 'Applies a Hadamard gate',
-            documentation: 'h(quantum_register)',
-            type: 'method'
-        },
-        {
-            label: 'QuantumRegister',
-            detail: 'Quantum register',
-            documentation: 'Implement a quantum register.',
-            type: 'class'
-        }
-    ];
-
     allSymbols(): SuggestionSymbol[] {
-        return this.symbols;
+        return this.getSymbols();
     }
 
     symbolsWithTypeIn(types: string[]): SuggestionSymbol[] {
         let isContainedInTypes = (symbol: SuggestionSymbol) => types.indexOf(symbol.type) > -1;
 
-        return this.symbols.filter(isContainedInTypes);
+        return this.getSymbols().filter(isContainedInTypes);
     }
+
+    private getSymbols(): SuggestionSymbol[] {
+        const qiskitSymbols: QiskitSDK = require('../libs/qiskitSDK.json');
+        let symbols: SuggestionSymbol[] = [];
+        qiskitSymbols.classes.forEach(qclass => {
+            symbols.push({
+                label: qclass.name,
+                detail: qclass.info,
+                documentation: qclass.detail,
+                type: 'class'
+            });
+            symbols.push(...this.getMethods(qclass.methods));
+        });
+
+        return symbols;
+    }
+
+    private getMethods(methods: QiskitMethod[]): SuggestionSymbol[] {
+        return methods.map(qmethod => {
+            return {
+                label: qmethod.name,
+                detail: qmethod.info,
+                documentation: qmethod.detail,
+                type: 'method'
+            };
+        });
+    }
+}
+
+interface QiskitSDK {
+    classes: QiskitClass[];
+}
+
+interface QiskitClass {
+    name: string;
+    info: string;
+    detail: string;
+    methods: QiskitMethod[];
+}
+
+interface QiskitMethod {
+    name: string;
+    type: string;
+    info: string;
+    detail: string;
+    arguments: QiskitArgument[];
+}
+
+interface QiskitArgument {
+    name: string;
+    type: string;
 }

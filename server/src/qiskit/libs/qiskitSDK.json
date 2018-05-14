@@ -1,0 +1,29 @@
+{
+    "classes": [
+       {
+           "name": "ClassicalRegister",
+           "info": "Implement a classical register",
+           "detail": "Implement a classical register.",
+           "methods": [
+               {
+                   "name": "check_range",
+                   "type": "boolean",
+                   "info": "Check range at current register",
+                   "detail": "cr.check_range(j: int)\nCheck that j is a valid index into self.",
+                   "arguments": [
+                       {
+                           "name": "position",
+                           "type": "int"
+                       }
+                   ]
+               },
+               {
+                   "name": "qasm",
+                   "type": "string",
+                   "info": "Returns the QASM representation",
+                   "detail": "cr.qasm()\nReturn OPENQASM string for this register."
+               }
+           ]
+       } 
+    ]
+}
