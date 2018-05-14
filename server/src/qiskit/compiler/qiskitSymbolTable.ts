@@ -28,13 +28,41 @@ export namespace QiskitSymbolTable {
         symbolTable.define(new BuiltInTypeSymbol('void'));
         symbolTable.define(new BuiltInTypeSymbol('string'));
         symbolTable.define(new BuiltInTypeSymbol('int'));
+        symbolTable.define(new BuiltInTypeSymbol('boolean'));
         symbolTable.define(classType);
-        symbolTable.define(new ClassSymbol('QuantumRegister', classType, []));
-        symbolTable.define(new ClassSymbol('ClassicalRegister', classType, []));
-        symbolTable.define(createQuantumCircuitSymbol(symbolTable));
-        symbolTable.define(createQuantumProgramSymbol(symbolTable));
+        symbolTable.define(createClassicalRegisterFrom(symbolTable));
+        // symbolTable.define(new ClassSymbol('QuantumRegister', classType, []));
+        // symbolTable.define(new ClassSymbol('ClassicalRegister', classType, []));
+        // symbolTable.define(createQuantumCircuitSymbol(symbolTable));
+        // symbolTable.define(createQuantumProgramSymbol(symbolTable));
         
         return symbolTable;
+    }
+
+    function createClassicalRegisterFrom(symbolTable: SymbolTable): ClassSymbol {
+        let classType = symbolTable.lookup('class');
+        let methods = [
+            createCheckRangeMethod(symbolTable),
+            createQasmMethod(symbolTable)
+        ];
+
+        return new ClassSymbol('ClassicalRegister', classType, methods);
+    }
+
+    function createCheckRangeMethod(symbolTable: SymbolTable): MethodSymbol {
+        let type = symbolTable.lookup('boolean');
+        let requiredArguments = [
+            new ArgumentSymbol('position', symbolTable.lookup('int'))
+        ];
+
+        return new MethodSymbol('check_range', type, requiredArguments);
+    }
+
+    function createQasmMethod(symbolTable: SymbolTable): MethodSymbol {
+        let type = symbolTable.lookup('string');
+        let requiredArguments: ArgumentSymbol[] = [];
+
+        return new MethodSymbol('check_range', type, requiredArguments);
     }
 
     function createQuantumProgramSymbol(symbolTable: SymbolTable): ClassSymbol {
