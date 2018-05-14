@@ -17,11 +17,11 @@ import * as path from "path";
 export class Util {
     
     public getSODependentPath(_path: string) : string {
-        let pathInSO = path.join(__dirname,_path);
+        let pathInOS = path.join(__dirname,_path);
         if (process.platform === "win32") {
-            pathInSO = pathInSO.replace(/\\/g, "/");
+            pathInOS = pathInOS.replace(/\\/g, "/");
         }
-        return pathInSO;    
+        return pathInOS;    
     }
 
 }
