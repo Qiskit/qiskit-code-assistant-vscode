@@ -14,7 +14,6 @@
 // =============================================================================
 
 import * as Q from "q";
-import * as path from "path";
 import * as vscode from 'vscode';
 import * as nodeChildProcess from "child_process";
 import { Util } from "./utils";

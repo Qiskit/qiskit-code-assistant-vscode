@@ -21,6 +21,7 @@ export class Util {
         if (process.platform === "win32") {
             pathInSO = pathInSO.replace(/\\/g, "/");
         }
-        return pathInSO;    }
+        return pathInSO;    
+    }
 
 }
