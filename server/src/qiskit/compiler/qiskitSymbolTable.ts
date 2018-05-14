@@ -16,6 +16,7 @@
 'use strict';
 
 import { SymbolTable, Symbol, GlobalScope, Type, BuiltInTypeSymbol } from "../../tools/symbolTable";
+import { ClassicalRegister } from "./symbols/classicalRegister";
 
 export namespace QiskitSymbolTable {
 
@@ -23,46 +24,18 @@ export namespace QiskitSymbolTable {
         let globalScope = new GlobalScope();
         let symbolTable = new SymbolTable(globalScope);
         
-        let classType = new BuiltInTypeSymbol('class');
-
         symbolTable.define(new BuiltInTypeSymbol('void'));
         symbolTable.define(new BuiltInTypeSymbol('string'));
         symbolTable.define(new BuiltInTypeSymbol('int'));
         symbolTable.define(new BuiltInTypeSymbol('boolean'));
-        symbolTable.define(classType);
-        symbolTable.define(createClassicalRegisterFrom(symbolTable));
+        symbolTable.define(new BuiltInTypeSymbol('class'));
+        symbolTable.define(ClassicalRegister.createFor(symbolTable));
         // symbolTable.define(new ClassSymbol('QuantumRegister', classType, []));
         // symbolTable.define(new ClassSymbol('ClassicalRegister', classType, []));
         // symbolTable.define(createQuantumCircuitSymbol(symbolTable));
         // symbolTable.define(createQuantumProgramSymbol(symbolTable));
         
         return symbolTable;
-    }
-
-    function createClassicalRegisterFrom(symbolTable: SymbolTable): ClassSymbol {
-        let classType = symbolTable.lookup('class');
-        let methods = [
-            createCheckRangeMethod(symbolTable),
-            createQasmMethod(symbolTable)
-        ];
-
-        return new ClassSymbol('ClassicalRegister', classType, methods);
-    }
-
-    function createCheckRangeMethod(symbolTable: SymbolTable): MethodSymbol {
-        let type = symbolTable.lookup('boolean');
-        let requiredArguments = [
-            new ArgumentSymbol('position', symbolTable.lookup('int'))
-        ];
-
-        return new MethodSymbol('check_range', type, requiredArguments);
-    }
-
-    function createQasmMethod(symbolTable: SymbolTable): MethodSymbol {
-        let type = symbolTable.lookup('string');
-        let requiredArguments: ArgumentSymbol[] = [];
-
-        return new MethodSymbol('qasm', type, requiredArguments);
     }
 
     function createQuantumProgramSymbol(symbolTable: SymbolTable): ClassSymbol {
