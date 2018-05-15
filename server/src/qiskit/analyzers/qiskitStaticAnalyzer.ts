@@ -57,11 +57,35 @@ export class QiskitStaticAnalyzer extends AbstractParseTreeVisitor<void> impleme
 
 class ExpressionVisitor extends AbstractParseTreeVisitor<Expression> implements Python3Visitor<Expression> {
     defaultResult(): Expression {
-        return new Expression('');
+        return new Expression();
     }
 
     visitPower(ctx: PowerContext): Expression {
-        return new Expression(ctx.text);
+        console.log(`ExpressionVisitor visiting power > ${ctx.text}`);
+
+        let trailerVisitor = new TrailerVisitor();
+
+        let expression = new Expression();
+        expression.atom = ctx.atom().text;
+        expression.trailing = ctx.trailer().map(trailer => trailer.accept(trailerVisitor));
+
+        return expression;
+    }
+}
+
+class TrailerVisitor extends AbstractParseTreeVisitor<string> implements Python3Visitor<string> {
+    defaultResult(): string {
+        return '';
+    }
+
+    visitAtom(ctx: AtomContext): string {
+        console.log(`TrailerVisitor visiting atom > ${ctx.text}`);
+        return ctx.text;
+    }
+
+    visitTrailer(ctx: TrailerContext): string {
+        console.log(`TrailerVisitor visiting trailer > ${ctx.text}`);
+        return ctx.text;
     }
 }
 
@@ -74,9 +98,10 @@ class Statement {
 }
 
 class Expression {
-    constructor(private value: string) {}
+    atom: string; 
+    trailing: string[];
 
     toString(): string {
-        return `{ value: ${this.value} }`;
+        return `{ atom: ${this.atom}, trailing: [ ${this.trailing.join(', ')} ] }`;
     }
 }
