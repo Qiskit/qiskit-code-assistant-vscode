@@ -21,6 +21,7 @@ import { Parser, ParserResult, ParserError, ParseErrorLevel } from "../types";
 import { Python3Parser } from './antlr/Python3Parser';
 import { Python3Lexer } from './antlr/Python3Lexer';
 import { TreePrinter } from '../tools';
+import { QiskitStaticAnalyzer } from './analyzers/qiskitStaticAnalyzer';
 
 export class QiskitParser implements Parser {
 
@@ -30,7 +31,10 @@ export class QiskitParser implements Parser {
 
         let tree = parser.program();
 
-        // TreePrinter.print(parser.ruleNames, tree);
+        let analyzer = new QiskitStaticAnalyzer();
+        analyzer.visit(tree);
+
+        TreePrinter.print(parser.ruleNames, tree);
 
         // parser.symbolTable.print();
 

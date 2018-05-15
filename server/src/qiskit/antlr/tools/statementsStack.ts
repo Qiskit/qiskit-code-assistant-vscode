@@ -117,3 +117,37 @@ export class Statement {
     }
 
 }
+
+export class Statement_v2 {
+
+    methodCalls: MethodCall[] = [];
+
+    addVariable(variable: Token): void {
+        this.methodCalls.push(new MethodCall(variable));
+    }
+
+    addTrailingMethod(method: Token): void {
+        this.applyOnLastMethodCall(methodCall => methodCall.addTrailingMethod(method));
+    }
+
+    addArgument(argument: Token, type: Type): void {
+        this.applyOnLastMethodCall(methodCall => methodCall.addArgument(argument, type));
+    }
+
+    addArrayDimension(dimension: number): void {
+        this.applyOnLastMethodCall(methodCall => methodCall.addArrayDimension(dimension));
+    }
+
+    private applyOnLastMethodCall(f: (methodCall: MethodCall) => void): void {
+        let lastMethodCall = this.methodCalls.pop();
+        if (lastMethodCall) {
+            f(lastMethodCall);
+        }
+        this.methodCalls.push(lastMethodCall);
+    }
+
+    toString(): string {
+        return `{ methodCalls: [ ${this.methodCalls.join(",  ")} ]`;
+    }
+
+}
