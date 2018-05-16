@@ -1,4 +1,4 @@
-from qiskit import backends
+from qiskit import available_backends, register
 from IBMQuantumExperience import IBMQuantumExperience
 import argparse
 import json
@@ -19,14 +19,19 @@ def main():
 
     if (args['hub'] is None) or (args['group'] is None) or (args['project'] is None):
         api = IBMQuantumExperience(args['apiToken'], {'url': args['url']})
+        register(args['apiToken'], args['url'])
     else:
         api = IBMQuantumExperience(args['apiToken'], {'url': args['url'], 'hub': args['hub'], 'group': args['group'], 'project': args['project']})
+        register(args['apiToken'], args['url'], args['hub'], args['group'], args['project'])
 
-    backs = backends.discover_remote_backends(api)
+    backs = available_backends()
 
     for back in backs:
-        back_status = api.backend_status(back)
-        print(json.dumps(back_status, indent=2, sort_keys=True))
+        try: 
+            back_status = api.backend_status(back)
+            print(json.dumps(back_status, indent=2, sort_keys=True))
+        except:
+            pass
 
 if __name__ == '__main__':
     main()
