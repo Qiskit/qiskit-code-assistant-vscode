@@ -39,7 +39,7 @@ export class PackageMgr {
     check() : Q.Promise<void> {
         let packages: Q.Promise<IPackage>[] = [];
         PackageMgr._packages.forEach(pkg => {
-            packages.push(pkg.checkVersion());
+            packages.push(pkg.checkVersion(pkg.Info.Version));
         });
         return Q.all(packages);   
     }
