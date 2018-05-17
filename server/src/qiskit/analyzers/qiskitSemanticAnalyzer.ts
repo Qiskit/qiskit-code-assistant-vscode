@@ -15,31 +15,15 @@
 
 'use strict';
 
-import { ParseTree, AbstractParseTreeVisitor, TerminalNode } from 'antlr4ts/tree';
-import { Python3Visitor } from '../antlr/Python3Visitor';
-import { ANTLRErrorListener, CommonToken } from 'antlr4ts';
-import { SymbolTable, Type } from '../../tools/symbolTable';
-import { QiskitSymbolTable, VariableSymbol } from '../compiler/qiskitSymbolTable';
-import { stat } from 'fs';
-import {
-    AtomContext,
-    TrailerContext,
-    TermContext,
-    Testlist_star_exprContext,
-    StmtContext,
-    ProgramContext,
-    Expr_stmtContext,
-    Star_exprContext,
-    NumberContext,
-    StrContext,
-    ArglistContext,
-    SubscriptlistContext,
-    PowerContext
-} from '../antlr/Python3Parser';
-import { Python3Lexer } from '../antlr/Python3Lexer';
-import { SymbolsTable } from '../../qasm/antlr/utils';
+import { AbstractParseTreeVisitor, TerminalNode } from "antlr4ts/tree";
+import { Python3Visitor } from "../antlr/Python3Visitor";
+import { SymbolTable } from "../../tools/symbolTable";
+import { ANTLRErrorListener, CommonToken } from "antlr4ts";
+import { ProgramContext, Expr_stmtContext, PowerContext, AtomContext, TrailerContext, NumberContext, StrContext } from "../antlr/Python3Parser";
+import { QiskitSymbolTable } from "../compiler/qiskitSymbolTable";
+import { Python3Lexer } from "../antlr/Python3Lexer";
 
-export class QiskitSemanticAnalyzerV2 extends AbstractParseTreeVisitor<void> implements Python3Visitor<void> {
+export class QiskitSemanticAnalyzer extends AbstractParseTreeVisitor<void> implements Python3Visitor<void> {
     private symbolTable: SymbolTable;
 
     constructor(private errorListener: ANTLRErrorListener<CommonToken>) {
@@ -105,9 +89,46 @@ class ExpressionAnalyzer extends AbstractParseTreeVisitor<Expression> implements
             .filter(term => term.type !== TermType.empty);
         terms.push(... trailers);
         
-        console.log('<<< power');
+        let reducedTerms = this.reduceArrayReferences(terms);
 
-        return Expression.withTerms(terms);
+        return Expression.withTerms(reducedTerms);
+    }
+
+    private reduceArrayReferences(terms: Term[]): Term[] {
+        if (!this.isArrayReference(terms)) {
+            return terms;
+        }
+
+        let arrayReference = this.toArrayReference(terms);
+
+        return [Term.asArrayReference(this.toArrayReference(terms))];
+    }
+
+    private isArrayReference(terms: Term[]): boolean {
+        if (terms.length !== 2) {
+            return false;
+        }
+
+        if (terms[0].type !== TermType.variable) {
+            return false;
+        }
+
+        if (terms[1].type !== TermType.arrayDimension) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private toArrayReference(terms: Term[]): ArrayReference {
+        let instance = new ArrayReference();
+        instance.variable = terms[0].value;
+
+        let arrayDimension = terms[1].value[0] as Expression;
+        instance.position = arrayDimension.terms[0].value;
+        instance.positionType = arrayDimension.terms[0].type;
+
+        return instance;
     }
 }
 
@@ -197,168 +218,6 @@ class TermResolver extends AbstractParseTreeVisitor<Term> implements Python3Visi
     }
 }
 
-// // Initializes the symbol table and starts the process
-// export class QiskitSemanticAnalyzer extends AbstractParseTreeVisitor<void> implements Python3Visitor<void> {
-//     defaultResult() {}
-
-//     visitProgram(ctx: ProgramContext) {
-//         let symbolTable = QiskitSymbolTable.build();
-//         let statementProcessor = new StatementProcessor(symbolTable);
-//         ctx.stmt().forEach(statement => statement.accept(statementProcessor));
-//     }
-// }
-
-// // Checks the statement and updates the symbol table with new symbols
-// class StatementProcessor extends AbstractParseTreeVisitor<void> implements Python3Visitor<void> {
-//     constructor(private symbolTable: SymbolTable) {
-//         super();
-//     }
-
-//     defaultResult() {}
-
-//     visitExpr_stmt(ctx: Expr_stmtContext) {
-//         let expressionProcessor = new ExpressionProcessor();
-//         let expressions = ctx.testlist_star_expr().map(expression => expression.accept(expressionProcessor));
-
-//         console.log(`Detected statement ${expressions.join(', ')}`);
-//     }
-// }
-
-// // Extracts the expression with all its terms
-// class ExpressionProcessor extends AbstractParseTreeVisitor<Expression> implements Python3Visitor<Expression> {
-//     defaultResult(): Expression {
-//         return Expression.empty();
-//     }
-
-//     visitStar_expr(ctx: Star_exprContext): Expression {
-//         let termsProcessor = new TermsProcessor();
-//         let terms = termsProcessor.visit(ctx);
-
-//         return Expression.withTerms(terms);
-//     }
-// }
-
-// // Extracts all the terminals at the term
-// class TermsProcessor extends AbstractParseTreeVisitor<Term[]> implements Python3Visitor<Term[]> {
-//     private terms: Term[] = [];
-
-//     defaultResult(): Term[] {
-//         return this.terms;
-//     }
-
-//     visitTerm(ctx: TermContext): Term[] {
-//         let terminalSymbolsProcessor = new TerminalSymbolsProcessor();
-//         let terminals = terminalSymbolsProcessor.visit(ctx);
-
-//         console.log(`Processed terminals ${terminals.join(', ')}`);
-//         terminals.map(terminal => {
-//             console.log(`\tTerminal ${terminal}`);
-//             console.log(JSON.stringify(terminal));
-//         });
-
-//         this.terms.push(Term.withTerminals(terminals));
-
-//         return this.terms;
-//     }
-// }
-
-// class TerminalSymbolsProcessor extends AbstractParseTreeVisitor<TerminalSymbol[]>
-//     implements Python3Visitor<TerminalSymbol[]> {
-//     private terminals: TerminalSymbol[] = [];
-
-//     defaultResult(): TerminalSymbol[] {
-//         return this.terminals;
-//     }
-
-//     visitAtom(ctx: AtomContext): TerminalSymbol[] {
-//         let atomProcessor = new TerminalAtomProcessor();
-//         let terminal = atomProcessor.visit(ctx);
-
-//         this.terminals.push(terminal);
-
-//         return this.terminals;
-//     }
-
-//     visitTrailer(ctx: TrailerContext): TerminalSymbol[] {
-//         let trailerProcessor = new TerminalTrailerProcessor();
-//         let terminals = trailerProcessor.visit(ctx);
-
-//         this.terminals.push(...terminals);
-
-//         return this.terminals;
-//     }
-// }
-
-// class TerminalAtomProcessor extends AbstractParseTreeVisitor<TerminalSymbol> implements Python3Visitor<TerminalSymbol> {
-//     defaultResult(): TerminalSymbol {
-//         return TerminalSymbol.empty();
-//     }
-
-//     visitTerminal(node: TerminalNode): TerminalSymbol {
-//         if (node.symbol.type === Python3Lexer.NAME) {
-//             return TerminalSymbol.asVariable(node.text);
-//         }
-
-//         return TerminalSymbol.empty();
-//     }
-
-//     visitNumber(ctx: NumberContext): TerminalSymbol {
-//         return TerminalSymbol.asNumber(ctx.text);
-//     }
-
-//     visitStr(ctx: StrContext): TerminalSymbol {
-//         return TerminalSymbol.asString(ctx.text);
-//     }
-// }
-
-// class TerminalTrailerProcessor extends AbstractParseTreeVisitor<TerminalSymbol[]>
-//     implements Python3Visitor<TerminalSymbol[]> {
-//     private terminals: TerminalSymbol[] = [];
-
-//     defaultResult(): TerminalSymbol[] {
-//         return this.terminals;
-//     }
-
-//     visitTerminal(node: TerminalNode): TerminalSymbol[] {
-//         if (node.symbol.type === Python3Lexer.NAME) {
-//             this.terminals.push(TerminalSymbol.asVariable(node.text));
-//         }
-
-//         return this.terminals;
-//     }
-
-//     visitArglist(ctx: ArglistContext): TerminalSymbol[] {
-//         let argumentProcessor = new ArgumentProcessor();
-//         let args = ctx.argument().map(arg => arg.accept(argumentProcessor));
-
-//         this.terminals.push(TerminalSymbol.asArguments(args));
-
-//         return this.terminals;
-//     }
-
-//     visitSubscriptlist(ctx: SubscriptlistContext): TerminalSymbol[] {
-//         let argumentProcessor = new ArgumentProcessor();
-//         let references = ctx.subscript().map(ref => ref.accept(argumentProcessor));
-
-//         this.terminals.push(TerminalSymbol.asArrayDimension(references));
-
-//         return this.terminals;
-//     }
-// }
-
-// class ArgumentProcessor extends AbstractParseTreeVisitor<Term> implements Python3Visitor<Term> {
-//     defaultResult(): Term {
-//         return Term.empty();
-//     }
-
-//     visitTerm(ctx: TermContext): Term {
-//         let terminalSymbolsProcessor = new TerminalSymbolsProcessor();
-//         let terminals = terminalSymbolsProcessor.visit(ctx);
-
-//         return Term.withTerminals(terminals);
-//     }
-// }
-
 class Expression {
     terms: Term[] = [];
 
@@ -427,82 +286,17 @@ class Term {
     }
 }
 
-interface ArrayReference {
+class ArrayReference {
     variable: string;
     position: string;
     positionType: TermType;
+
+    toString(): string {
+        return `ArrayReference(${this.variable}[${this.position}] | ${this.positionType})`;
+    }
 }
 
-// export class Term {
-//     terminals: TerminalSymbol[] = [];
-
-//     static empty(): Term {
-//         return new Term();
-//     }
-
-//     static withTerminals(terminals: TerminalSymbol[]): Term {
-//         let entity = new Term();
-//         entity.terminals = terminals;
-
-//         return entity;
-//     }
-
-//     toString(): string {
-//         return `Term(${this.terminals.join(', ')})`;
-//     }
-// }
-
-// export class ArrayReference {
-//     variable: string;
-//     position: TerminalSymbol;
-// }
-
-// export class TerminalSymbol {
-//     value: any;
-//     type: TerminalType;
-
-//     static empty(): TerminalSymbol {
-//         return this._builder('');
-//     }
-
-//     static asNumber(value: string): TerminalSymbol {
-//         return this._builder(value, TerminalType.number);
-//     }
-
-//     static asString(value: string): TerminalSymbol {
-//         return this._builder(value, TerminalType.string);
-//     }
-
-//     static asVariable(value: string): TerminalSymbol {
-//         return this._builder(value, TerminalType.variable);
-//     }
-
-//     static asArguments(value: any): TerminalSymbol {
-//         return this._builder(value, TerminalType.arguments);
-//     }
-
-//     static asArrayReference(value: ArrayReference): TerminalSymbol {
-//         return this._builder(value, TerminalType.arrayReference);
-//     }
-
-//     static asArrayDimension(value: Term[]): TerminalSymbol {
-//         return this._builder(value, TerminalType.arrayDimension);
-//     }
-
-//     private static _builder(value: any, type?: TerminalType): TerminalSymbol {
-//         let entity = new TerminalSymbol();
-//         entity.value = value;
-//         entity.type = type || TerminalType.empty;
-
-//         return entity;
-//     }
-
-//     toString(): string {
-//         return `Terminal(${this.value} | ${this.type})`;
-//     }
-// }
-
-export enum TermType {
+enum TermType {
     empty = 'EMPTY',
     number = 'NUMBER',
     string = 'STRING',
@@ -512,13 +306,3 @@ export enum TermType {
     arrayReference = 'ARRAY_REFERENCE',
     expression = 'EXPRESSION'
 }
-
-// export enum TerminalType {
-//     empty = 'EMPTY',
-//     number = 'NUMBER',
-//     string = 'STRING',
-//     variable = 'VARIABLE',
-//     arguments = 'ARGUMENTS',
-//     arrayDimension = 'ARRAY_DIMENSION',
-//     arrayReference = 'ARRAY_REFERENCE'
-// }
