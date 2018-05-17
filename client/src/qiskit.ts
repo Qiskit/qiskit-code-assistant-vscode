@@ -14,7 +14,7 @@
 // =============================================================================
 
 import * as Q from "q";
-import {IPackage} from "./interfaces"
+import {IPackage} from "./interfaces";
 
 export class Qiskit implements IPackage {
     public Info;
