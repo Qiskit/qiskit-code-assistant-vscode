@@ -23,7 +23,7 @@ import { Python3Lexer } from './antlr/Python3Lexer';
 import { TreePrinter } from '../tools';
 import { QiskitStaticAnalyzer } from './analyzers/qiskitStaticAnalyzer';
 import { ParseTreeWalker } from 'antlr4ts/tree';
-import { QiskitSemanticAnalyzer } from './analyzers/qiskitSemanticAnalyzer';
+import { QiskitSemanticAnalyzerV2 } from './analyzers/qiskitSemanticAnalyzer';
 
 export class QiskitParser implements Parser {
 
@@ -33,12 +33,12 @@ export class QiskitParser implements Parser {
 
         let tree = parser.program();
 
-        // TreePrinter.print(parser.ruleNames, tree);
+        TreePrinter.print(parser.ruleNames, tree);
         
         // let analyzer = new QiskitStaticAnalyzer();
         // analyzer.visit(tree);
 
-        let semanticAnalyzer = new QiskitSemanticAnalyzer();
+        let semanticAnalyzer = new QiskitSemanticAnalyzerV2(errorListener);
         semanticAnalyzer.visit(tree);
 
         return {
