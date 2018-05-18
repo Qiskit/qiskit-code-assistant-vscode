@@ -100,7 +100,6 @@ export function activate(context: vscode.ExtensionContext) {
                 if (process.platform === "win32") {
                     execPath = execPath.replace(/\\/g, "/");
                 }
-
                 resultProvider.displayContent((new VizManager).createViz(execPath, codeResult), previewUri);
                 // console.log(previewUri);
                 
@@ -120,11 +119,8 @@ export function activate(context: vscode.ExtensionContext) {
                 if (process.platform === "win32") {
                     execPath = execPath.replace(/\\/g, "/");
                 }
-
             resultProvider.displayContent((new VizManager).createViz(execPath, localBackends), previewUri);
-            
             //resultProvider.displayContent(localBackends, previewUri);
-            //console.log(previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Local backends available")
                 .then((_success) => {}, (reason) => {
@@ -137,16 +133,12 @@ export function activate(context: vscode.ExtensionContext) {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-remoteBackends-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-remoteBackends-result://authority/backends-preview`);
-            //resultProvider.displayContent(remoteBackends, previewUri);
-            //console.log(previewUri);
-            
             let execPath = path.join(__dirname,'../../resources/qiskitScripts/listRemoteBackends.py');
                 if (process.platform === "win32") {
                     execPath = execPath.replace(/\\/g, "/");
                 }
-
             resultProvider.displayContent((new VizManager).createViz(execPath, remoteBackends), previewUri);
-           
+            //resultProvider.displayContent(remoteBackends, previewUri);
 
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Remote backends available")
                 .then((_success) => {}, (reason) => {
@@ -166,7 +158,6 @@ export function activate(context: vscode.ExtensionContext) {
                 }
 
             resultProvider.displayContent((new VizManager).createViz(execPath, pendingJobs), previewUri);
-           
             //resultProvider.displayContent(pendingJobs, previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's pending jobs")
@@ -207,7 +198,6 @@ export function activate(context: vscode.ExtensionContext) {
                 }
 
             resultProvider.displayContent((new VizManager).createViz(execPath, queueStatus), previewUri);
-            //resultProvider.displayContent(executedJobs, previewUri);
             //resultProvider.displayContent(queueStatus, previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Queue status")
