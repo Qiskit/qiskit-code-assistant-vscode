@@ -22,6 +22,8 @@ import { ANTLRErrorListener, CommonToken } from "antlr4ts";
 import { ProgramContext, Expr_stmtContext, PowerContext, AtomContext, TrailerContext, NumberContext, StrContext } from "../antlr/Python3Parser";
 import { QiskitSymbolTable } from "../compiler/qiskitSymbolTable";
 import { Python3Lexer } from "../antlr/Python3Lexer";
+import { StatementValidator } from "./statementValidator";
+import { Expression, Term, TermType, ArrayReference } from "./types";
 
 export class QiskitSemanticAnalyzer extends AbstractParseTreeVisitor<void> implements Python3Visitor<void> {
     private symbolTable: SymbolTable;
@@ -33,15 +35,12 @@ export class QiskitSemanticAnalyzer extends AbstractParseTreeVisitor<void> imple
     defaultResult() {}
 
     visitProgram(ctx: ProgramContext) {
-        console.log('>>> Visiting program');
-
-        console.log('\tInitializing symbol table');
         this.symbolTable = QiskitSymbolTable.build();
+
+        // this.symbolTable.print();
 
         let statementAnalyzer = new StatementAnalyzer(this.symbolTable, this.errorListener);
         ctx.stmt().forEach(statement => statement.accept(statementAnalyzer));
-
-        console.log('<<< program');
     }
 }
 
@@ -53,15 +52,14 @@ class StatementAnalyzer extends AbstractParseTreeVisitor<void> implements Python
     defaultResult() {}
 
     visitExpr_stmt(ctx: Expr_stmtContext) {
-        console.log('>>> Visiting expr_stmt');
-
         let expressionAnalyzer = new ExpressionAnalyzer(this.symbolTable, this.errorListener);
         let expressions = ctx.testlist_star_expr()
             .map(expression => expression.accept(expressionAnalyzer));
-
+        
         console.log(`Expressions => ${expressions.join(', ')}`);
 
-        console.log('<<< expr_stmt');
+        let statementValidator = new StatementValidator(this.symbolTable, this.errorListener);
+        statementValidator.validate(expressions);
     }
 }
 
@@ -75,8 +73,6 @@ class ExpressionAnalyzer extends AbstractParseTreeVisitor<Expression> implements
     }
 
     visitPower(ctx: PowerContext): Expression {
-        console.log('>>> Visiting power');
-
         let terms: Term[] = [];
 
         let atomAnalyzer = new ExpressionAtomAnalyzer(this.symbolTable, this.errorListener);
@@ -142,14 +138,9 @@ class ExpressionAtomAnalyzer extends AbstractParseTreeVisitor<Term> implements P
     }
 
     visitAtom(ctx: AtomContext): Term {
-        console.log('>>> Visiting atom');
-
         let termResolver = new TermResolver();
-        let result = ctx.accept(termResolver);
-
-        console.log('<<< atom');
-
-        return result;
+        
+        return ctx.accept(termResolver);
     }
 }
 
@@ -163,12 +154,9 @@ class ExpressionTrailerAnalyzer extends AbstractParseTreeVisitor<Term> implement
     }
 
     visitTrailer(ctx: TrailerContext): Term {
-        console.log(`>>> Visiting trailer ${ctx.text}`);
-        
-        let termResolver = new TermResolver();
         if (ctx.text.startsWith('(')) {
             if (ctx.arglist() === undefined) {
-                return Term.empty();                
+                return Term.empty();
             }
 
             let expressionAnalyzer = new ExpressionAnalyzer(this.symbolTable, this.errorListener);
@@ -186,6 +174,7 @@ class ExpressionTrailerAnalyzer extends AbstractParseTreeVisitor<Term> implement
             return Term.asArrayDimension(expressions);
         }
 
+        let termResolver = new TermResolver();
         return ctx.NAME().accept(termResolver);
     }
 }
@@ -196,8 +185,6 @@ class TermResolver extends AbstractParseTreeVisitor<Term> implements Python3Visi
     }
 
     visitTerminal(node: TerminalNode): Term {
-        console.log('\tTerm is terminal');
-
         if (node.symbol.type === Python3Lexer.NAME) {
             return Term.asVariable(node.text);
         }
@@ -206,103 +193,10 @@ class TermResolver extends AbstractParseTreeVisitor<Term> implements Python3Visi
     }
 
     visitNumber(ctx: NumberContext): Term {
-        console.log('\tTerm is number');
-
         return Term.asNumber(ctx.text);
     }
 
     visitStr(ctx: StrContext): Term {
-        console.log('\tTerm is string');
-
         return Term.asString(ctx.text);
     }
-}
-
-class Expression {
-    terms: Term[] = [];
-
-    static empty(): Expression {
-        return new Expression();
-    }
-
-    static withTerms(terms: Term[]): Expression {
-        let entity = new Expression();
-        entity.terms = terms;
-
-        return entity;
-    }
-
-    toString(): string {
-        return `Expression(${this.terms.join(', ')})`;
-    }
-}
-
-class Term {
-    value: any;
-    type: TermType;
-
-    static empty(): Term {
-        return this._builder('');
-    }
-
-    static asString(value: string): Term {
-        return this._builder(value, TermType.string);
-    }
-
-    static asVariable(value: string): Term {
-        return this._builder(value, TermType.variable);
-    }
-
-    static asNumber(value: string): Term {
-        return this._builder(value, TermType.number);
-    }
-
-    static asArguments(value: Expression[]): Term {
-        return this._builder(value, TermType.arguments);
-    }
-
-    static asArrayReference(value: ArrayReference): Term {
-        return this._builder(value, TermType.arrayReference);
-    }
-
-    static asArrayDimension(value: Expression[]): Term {
-        return this._builder(value, TermType.arrayDimension);
-    }
-
-    static asExpression(value: Expression): Term {
-        return this._builder(value, TermType.expression);
-    }
-
-    private static _builder(value: any, type?: TermType): Term {
-        let entity = new Term();
-        entity.value = value;
-        entity.type = type || TermType.empty;
-
-        return entity;
-    }
-
-    toString(): string {
-        return `Term(${this.value} | ${this.type})`;
-    }
-}
-
-class ArrayReference {
-    variable: string;
-    position: string;
-    positionType: TermType;
-
-    toString(): string {
-        return `ArrayReference(${this.variable}[${this.position}] | ${this.positionType})`;
-    }
-}
-
-enum TermType {
-    empty = 'EMPTY',
-    number = 'NUMBER',
-    string = 'STRING',
-    variable = 'VARIABLE',
-    arguments = 'ARGUMENTS',
-    arrayDimension = 'ARRAY_DIMENSION',
-    arrayReference = 'ARRAY_REFERENCE',
-    expression = 'EXPRESSION'
 }

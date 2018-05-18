@@ -21,7 +21,6 @@ import { Parser, ParserResult, ParserError, ParseErrorLevel } from "../types";
 import { Python3Parser } from './antlr/Python3Parser';
 import { Python3Lexer } from './antlr/Python3Lexer';
 import { TreePrinter } from '../tools';
-import { QiskitStaticAnalyzer } from './analyzers/qiskitStaticAnalyzer';
 import { ParseTreeWalker } from 'antlr4ts/tree';
 import { QiskitSemanticAnalyzer } from './analyzers/qiskitSemanticAnalyzer';
 
