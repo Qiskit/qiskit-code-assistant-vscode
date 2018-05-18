@@ -82,8 +82,9 @@ export function activate(context: vscode.ExtensionContext) {
                 const codeFile = vscode.window.activeTextEditor.document;
                 codeFile.save();
                 resultProvider.content = (new VizManager).createViz(codeFile.fileName.toString(), codeResult);
+                resultProvider.update(previewUri);
                 
-                vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Execution result")
+                vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Execution result - QISKit")
                     .then((_success) => {}, (reason) => {
                         console.log(`Error: ${reason}`);
                         vscode.window.showErrorMessage(reason);
@@ -101,9 +102,10 @@ export function activate(context: vscode.ExtensionContext) {
                     execPath = execPath.replace(/\\/g, "/");
                 }
                 resultProvider.content = (new VizManager).createViz(execPath, codeResult);
-                console.log(previewUri);
+                resultProvider.update(previewUri);
+                // console.log(previewUri);
                 
-                vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Execution result")
+                vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Execution result - QASM")
                     .then((_success) => {}, (reason) => {
                         console.log(`Error: ${reason}`);
                         vscode.window.showErrorMessage(reason);
@@ -115,7 +117,8 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.workspace.registerTextDocumentContentProvider('qiskit-localBackends-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-localBackends-result://authority/backends-preview`);
             resultProvider.content = localBackends;
-            console.log(previewUri);
+            resultProvider.update(previewUri);
+            //console.log(previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Local backends available")
                 .then((_success) => {}, (reason) => {
@@ -129,7 +132,8 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.workspace.registerTextDocumentContentProvider('qiskit-remoteBackends-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-remoteBackends-result://authority/backends-preview`);
             resultProvider.content = remoteBackends;
-            console.log(previewUri);
+            resultProvider.update(previewUri);
+            //console.log(previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Remote backends available")
                 .then((_success) => {}, (reason) => {
@@ -143,6 +147,7 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.workspace.registerTextDocumentContentProvider('qiskit-pendingJobs-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-pendingJobs-result://authority/list-preview`);
             resultProvider.content = pendingJobs;
+            resultProvider.update(previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's pending jobs")
                 .then((_success) => {}, (reason) => {
@@ -156,6 +161,7 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.workspace.registerTextDocumentContentProvider('qiskit-executedJobs-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-executedJobs-result://authority/list-preview`);
             resultProvider.content = executedJobs;
+            resultProvider.update(previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's executed jobs")
                 .then((_success) => {}, (reason) => {
@@ -169,6 +175,7 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.workspace.registerTextDocumentContentProvider('qiskit-queueStatus-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-queueStatus-result://authority/status-preview`);
             resultProvider.content = queueStatus;
+            resultProvider.update(previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Queue status")
                 .then((_success) => {}, (reason) => {
@@ -182,6 +189,7 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.workspace.registerTextDocumentContentProvider('qiskit-userCredits-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-userCredits-result://authority/credits-preview`);
             resultProvider.content = userCredits;
+            resultProvider.update(previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's credits")
                 .then((_success) => {}, (reason) => {
