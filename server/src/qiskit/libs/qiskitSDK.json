@@ -135,5 +135,11 @@
                 "type": "float"
             }]
         }]
+    }, {
+        "name": "QuantumProgram",
+        "detail": "Quantum program",
+        "documentation": "Quantum program.",
+        "arguments": [],
+        "methods": []
     }]
 }

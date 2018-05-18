@@ -15,12 +15,23 @@
 
 'use strict';
 
-import { SymbolTable } from '../../tools/symbolTable';
+import { SymbolTable, Symbol } from '../../tools/symbolTable';
 import { ANTLRErrorListener, CommonToken } from 'antlr4ts';
 import { Expression } from './types';
 
 export class StatementValidator {
     constructor(private symbolTable: SymbolTable, private errorListener: ANTLRErrorListener<CommonToken>) {}
 
-    validate(_expressions: Expression[]) {}
+    validate(expressions: Expression[]) {
+        if (this.isAnAssignment(expressions)) {
+            let type = this.symbolTable.lookup(expressions[1].terms[0].value);
+            let value = expressions[0].terms[0].value;
+
+            this.symbolTable.define(new Symbol(value, type));
+        }
+    }
+
+    private isAnAssignment(expressions: Expression[]) {
+        return expressions.length > 1;
+    }
 }

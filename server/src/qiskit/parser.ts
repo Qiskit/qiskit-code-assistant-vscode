@@ -15,9 +15,19 @@
 
 'use strict';
 
-import { ANTLRInputStream, CommonTokenStream, ANTLRErrorListener, CommonToken, Token, Recognizer, RecognitionException, ConsoleErrorListener, ParserRuleContext } from 'antlr4ts';
+import {
+    ANTLRInputStream,
+    CommonTokenStream,
+    ANTLRErrorListener,
+    CommonToken,
+    Token,
+    Recognizer,
+    RecognitionException,
+    ConsoleErrorListener,
+    ParserRuleContext
+} from 'antlr4ts';
 import { Override } from 'antlr4ts/Decorators';
-import { Parser, ParserResult, ParserError, ParseErrorLevel } from "../types";
+import { Parser, ParserResult, ParserError, ParseErrorLevel } from '../types';
 import { Python3Parser } from './antlr/Python3Parser';
 import { Python3Lexer } from './antlr/Python3Lexer';
 import { TreePrinter } from '../tools';
@@ -25,7 +35,6 @@ import { ParseTreeWalker } from 'antlr4ts/tree';
 import { QiskitSemanticAnalyzer } from './analyzers/qiskitSemanticAnalyzer';
 
 export class QiskitParser implements Parser {
-
     parse(input: string): ParserResult {
         let errorListener = new ErrorListener();
         let parser = this.buildQiskitParser(input, errorListener);
@@ -33,7 +42,7 @@ export class QiskitParser implements Parser {
         let tree = parser.program();
 
         // TreePrinter.print(parser.ruleNames, tree);
-        
+
         let semanticAnalyzer = new QiskitSemanticAnalyzer(errorListener);
         semanticAnalyzer.visit(tree);
 
@@ -54,11 +63,9 @@ export class QiskitParser implements Parser {
 
         return parser;
     }
-
 }
 
-class ErrorListener implements ANTLRErrorListener<CommonToken> {
-
+export class ErrorListener implements ANTLRErrorListener<CommonToken> {
     errors: ParserError[] = [];
 
     @Override
@@ -68,8 +75,8 @@ class ErrorListener implements ANTLRErrorListener<CommonToken> {
         line: number,
         charPositionInLine: number,
         msg: string,
-        _e: RecognitionException | undefined): void {
-
+        _e: RecognitionException | undefined
+    ): void {
         this.errors.push({
             line: line - 1,
             start: charPositionInLine,
@@ -78,5 +85,4 @@ class ErrorListener implements ANTLRErrorListener<CommonToken> {
             level: ParseErrorLevel.ERROR
         });
     }
-
 }
