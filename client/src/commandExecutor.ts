@@ -80,16 +80,16 @@ export class CommandExecutor {
             const codeFile = vscode.window.activeTextEditor.document;
             codeFile.save();
 
-            console.log("Let's go to execute that QASM")
-            console.log(execPath);
+            //console.log("Let's go to execute that QASM")
+            //console.log(execPath);
 
             vscode.workspace.openTextDocument(execPath)
                 .then((document) => {
-                    console.log(document);
-                    console.log("python", [document.fileName.toString(), '--file', codeFile.fileName.toString()]);
+                    //console.log(document);
+                    //console.log("python", [document.fileName.toString(), '--file', codeFile.fileName.toString()]);
                     (new CommandExecutor).exec("python", [document.fileName.toString(), '--file', codeFile.fileName.toString()])
                         .then((stdout) => {
-                            console.log(stdout);
+                            //console.log(stdout);
                             return resolve(stdout);
                         }).catch(err => {
                             console.log(err);
