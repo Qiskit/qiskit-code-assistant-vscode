@@ -23,6 +23,8 @@ import { LanguagesActivation } from './languages';
 
 import { ResultProvider } from "./resultProvider";
 import { CommandExecutor } from './commandExecutor';
+import { VizManager } from './visualizations';
+import * as path from "path";
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -76,8 +78,10 @@ export function activate(context: vscode.ExtensionContext) {
                 let resultProvider = new ResultProvider();
                 vscode.workspace.registerTextDocumentContentProvider('qiskit-preview-result', resultProvider)
                 let previewUri = vscode.Uri.parse(`qiskit-preview-result://authority/result-preview`);
-                resultProvider.content = codeResult;
-                console.log(previewUri);
+
+                const codeFile = vscode.window.activeTextEditor.document;
+                codeFile.save();
+                resultProvider.content = (new VizManager).createViz(codeFile.fileName.toString(), codeResult);
                 
                 vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Execution result")
                     .then((_success) => {}, (reason) => {
@@ -91,7 +95,12 @@ export function activate(context: vscode.ExtensionContext) {
                 let resultProvider = new ResultProvider();
                 vscode.workspace.registerTextDocumentContentProvider('qasm-preview-result', resultProvider)
                 let previewUri = vscode.Uri.parse(`qasm-preview-result://authority/result-preview`);
-                resultProvider.content = codeResult;
+                //resultProvider.content = codeResult;
+                let execPath = path.join(__dirname,'../../resources/qiskitScripts/executeQASM.py');
+                if (process.platform === "win32") {
+                    execPath = execPath.replace(/\\/g, "/");
+                }
+                resultProvider.content = (new VizManager).createViz(execPath, codeResult);
                 console.log(previewUri);
                 
                 vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Execution result")
