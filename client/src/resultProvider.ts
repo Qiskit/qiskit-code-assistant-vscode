@@ -22,6 +22,11 @@ export class ResultProvider implements TextDocumentContentProvider {
     
     private _onDidChange = new EventEmitter<Uri>();
 
+    public displayContent(content: string, uri: Uri){
+        this.content = content;
+        this.update(uri);
+    }
+
     public provideTextDocumentContent(): string {
         return this.content;
     }
