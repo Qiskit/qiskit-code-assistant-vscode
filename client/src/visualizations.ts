@@ -22,6 +22,8 @@ export class VizManager {
     private static HTML_TEMPLATE_COUNTS = path.join(__dirname,'../../resources/html-templates/temp-plot-shots.html'); 
 
     public createViz(codePath:string, result:object): string {
+
+        console.log("histogram detected");
         if (this.detectProperViz(codePath) === 'HISTOGRAM') {
             let templatePath = VizManager.HTML_TEMPLATE_COUNTS;
 
@@ -42,8 +44,11 @@ export class VizManager {
             }
         }
         else if (this.detectProperViz(codePath) === 'TEXT') {
+            console.log("Text detected");
             return `<pre>${result}</pre>`; 
         } else {
+
+            console.log("none detected");
             return `${result}`; 
         }
     }

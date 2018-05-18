@@ -115,7 +115,15 @@ export function activate(context: vscode.ExtensionContext) {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-localBackends-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-localBackends-result://authority/backends-preview`);
-            resultProvider.displayContent(localBackends, previewUri);
+            
+            let execPath = path.join(__dirname,'../../resources/qiskitScripts/listLocalBackends.py');
+                if (process.platform === "win32") {
+                    execPath = execPath.replace(/\\/g, "/");
+                }
+
+            resultProvider.displayContent((new VizManager).createViz(execPath, localBackends), previewUri);
+            
+            //resultProvider.displayContent(localBackends, previewUri);
             //console.log(previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Local backends available")
@@ -129,9 +137,17 @@ export function activate(context: vscode.ExtensionContext) {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-remoteBackends-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-remoteBackends-result://authority/backends-preview`);
-            resultProvider.displayContent(remoteBackends, previewUri);
+            //resultProvider.displayContent(remoteBackends, previewUri);
             //console.log(previewUri);
             
+            let execPath = path.join(__dirname,'../../resources/qiskitScripts/listRemoteBackends.py');
+                if (process.platform === "win32") {
+                    execPath = execPath.replace(/\\/g, "/");
+                }
+
+            resultProvider.displayContent((new VizManager).createViz(execPath, remoteBackends), previewUri);
+           
+
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Remote backends available")
                 .then((_success) => {}, (reason) => {
                     console.log(`Error: ${reason}`);
@@ -143,7 +159,15 @@ export function activate(context: vscode.ExtensionContext) {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-pendingJobs-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-pendingJobs-result://authority/list-preview`);
-            resultProvider.displayContent(pendingJobs, previewUri);
+            
+            let execPath = path.join(__dirname,'../../resources/qiskitScripts/listPendingJobs.py');
+                if (process.platform === "win32") {
+                    execPath = execPath.replace(/\\/g, "/");
+                }
+
+            resultProvider.displayContent((new VizManager).createViz(execPath, pendingJobs), previewUri);
+           
+            //resultProvider.displayContent(pendingJobs, previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's pending jobs")
                 .then((_success) => {}, (reason) => {
@@ -156,7 +180,14 @@ export function activate(context: vscode.ExtensionContext) {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-executedJobs-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-executedJobs-result://authority/list-preview`);
-            resultProvider.displayContent(executedJobs, previewUri);
+            
+            let execPath = path.join(__dirname,'../../resources/qiskitScripts/listExecutedJobs.py');
+                if (process.platform === "win32") {
+                    execPath = execPath.replace(/\\/g, "/");
+                }
+
+            resultProvider.displayContent((new VizManager).createViz(execPath, executedJobs), previewUri);
+            //resultProvider.displayContent(executedJobs, previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's executed jobs")
                 .then((_success) => {}, (reason) => {
@@ -169,7 +200,15 @@ export function activate(context: vscode.ExtensionContext) {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-queueStatus-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-queueStatus-result://authority/status-preview`);
-            resultProvider.displayContent(queueStatus, previewUri);
+            
+            let execPath = path.join(__dirname,'../../resources/qiskitScripts/getQueueStatus.py');
+                if (process.platform === "win32") {
+                    execPath = execPath.replace(/\\/g, "/");
+                }
+
+            resultProvider.displayContent((new VizManager).createViz(execPath, queueStatus), previewUri);
+            //resultProvider.displayContent(executedJobs, previewUri);
+            //resultProvider.displayContent(queueStatus, previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Queue status")
                 .then((_success) => {}, (reason) => {
@@ -182,7 +221,14 @@ export function activate(context: vscode.ExtensionContext) {
             let resultProvider = new ResultProvider();
             vscode.workspace.registerTextDocumentContentProvider('qiskit-userCredits-result', resultProvider)
             let previewUri = vscode.Uri.parse(`qiskit-userCredits-result://authority/credits-preview`);
-            resultProvider.displayContent(userCredits, previewUri);
+            
+            let execPath = path.join(__dirname,'../../resources/qiskitScripts/getUserCredits.py');
+                if (process.platform === "win32") {
+                    execPath = execPath.replace(/\\/g, "/");
+                }
+
+            resultProvider.displayContent((new VizManager).createViz(execPath, userCredits), previewUri);
+            //resultProvider.displayContent(userCredits, previewUri);
             
             vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's credits")
                 .then((_success) => {}, (reason) => {
