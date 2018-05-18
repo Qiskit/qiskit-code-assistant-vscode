@@ -71,7 +71,7 @@ export class CommandExecutor {
     public execQasmActiveEditor(scriptPath:string): Q.Promise<string> {
         return Q.Promise((resolve, reject) => {
 
-            const execPath = (new Util).getSODependentPath(scriptPath);
+            const execPath = (new Util).getOSDependentPath(scriptPath);
 
             vscode.window.showInformationMessage("⚡ Running... ⚡");
             const codeFile = vscode.window.activeTextEditor.document;
@@ -101,7 +101,7 @@ export class CommandExecutor {
         return Q.Promise((resolve, reject) => {
             vscode.window.showInformationMessage("⚡ Running... ⚡");
             
-            const execPath = (new Util).getSODependentPath(scriptPath);
+            const execPath = (new Util).getOSDependentPath(scriptPath);
     
             vscode.workspace.openTextDocument(execPath)
                 .then((document) => {

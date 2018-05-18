@@ -70,13 +70,13 @@ export function activate(context: vscode.ExtensionContext) {
 
 
     const config = vscode.workspace.getConfiguration('ibm-q-studio');
-    const executeQASMScript = (new Util).getSODependentPath('../../resources/qiskitScripts/executeQASM.py');
-    const localBackendsScript = (new Util).getSODependentPath('../../resources/qiskitScripts/listLocalBackends.py');
-    const remoteBackendsScript = (new Util).getSODependentPath('../../resources/qiskitScripts/listRemoteBackends.py');
-    const pendingJobsScript = (new Util).getSODependentPath('../../resources/qiskitScripts/listPendingJobs.py');
-    const executedJobsScript = (new Util).getSODependentPath('../../resources/qiskitScripts/listExecutedJobs.py');
-    const getQueueStatusScript = (new Util).getSODependentPath('../../resources/qiskitScripts/getQueueStatus.py');
-    const getUserCreditsScript = (new Util).getSODependentPath('../../resources/qiskitScripts/getUserCredits.py');
+    const executeQASMScript = (new Util).getOSDependentPath('../../resources/qiskitScripts/executeQASM.py');
+    const localBackendsScript = (new Util).getOSDependentPath('../../resources/qiskitScripts/listLocalBackends.py');
+    const remoteBackendsScript = (new Util).getOSDependentPath('../../resources/qiskitScripts/listRemoteBackends.py');
+    const pendingJobsScript = (new Util).getOSDependentPath('../../resources/qiskitScripts/listPendingJobs.py');
+    const executedJobsScript = (new Util).getOSDependentPath('../../resources/qiskitScripts/listExecutedJobs.py');
+    const getQueueStatusScript = (new Util).getOSDependentPath('../../resources/qiskitScripts/getQueueStatus.py');
+    const getUserCreditsScript = (new Util).getOSDependentPath('../../resources/qiskitScripts/getUserCredits.py');
 
     context.subscriptions.push(
         vscode.commands.registerCommand("qstudio.reload", () => activate(context)),

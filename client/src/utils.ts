@@ -16,7 +16,7 @@ import * as path from "path";
 
 export class Util {
     
-    public getSODependentPath(_path: string) : string {
+    public getOSDependentPath(_path: string) : string {
         let pathInOS = path.join(__dirname,_path);
         if (process.platform === "win32") {
             pathInOS = pathInOS.replace(/\\/g, "/");
