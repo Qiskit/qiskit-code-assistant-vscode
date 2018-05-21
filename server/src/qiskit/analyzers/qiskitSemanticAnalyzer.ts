@@ -15,15 +15,23 @@
 
 'use strict';
 
-import { AbstractParseTreeVisitor, TerminalNode } from "antlr4ts/tree";
-import { Python3Visitor } from "../antlr/Python3Visitor";
-import { SymbolTable } from "../../tools/symbolTable";
-import { ANTLRErrorListener, CommonToken } from "antlr4ts";
-import { ProgramContext, Expr_stmtContext, PowerContext, AtomContext, TrailerContext, NumberContext, StrContext } from "../antlr/Python3Parser";
-import { QiskitSymbolTable } from "../compiler/qiskitSymbolTable";
-import { Python3Lexer } from "../antlr/Python3Lexer";
-import { StatementValidator } from "./statementValidator";
-import { Expression, Term, TermType, ArrayReference } from "./types";
+import { AbstractParseTreeVisitor, TerminalNode } from 'antlr4ts/tree';
+import { Python3Visitor } from '../antlr/Python3Visitor';
+import { SymbolTable } from '../../tools/symbolTable';
+import { ANTLRErrorListener, CommonToken } from 'antlr4ts';
+import {
+    ProgramContext,
+    Expr_stmtContext,
+    PowerContext,
+    AtomContext,
+    TrailerContext,
+    NumberContext,
+    StrContext
+} from '../antlr/Python3Parser';
+import { QiskitSymbolTable } from '../compiler/qiskitSymbolTable';
+import { Python3Lexer } from '../antlr/Python3Lexer';
+import { StatementValidator } from './statementValidator';
+import { Expression, Term, TermType, ArrayReference } from './types';
 
 export class QiskitSemanticAnalyzer extends AbstractParseTreeVisitor<void> implements Python3Visitor<void> {
     private symbolTable: SymbolTable;
@@ -36,8 +44,6 @@ export class QiskitSemanticAnalyzer extends AbstractParseTreeVisitor<void> imple
 
     visitProgram(ctx: ProgramContext) {
         this.symbolTable = QiskitSymbolTable.build();
-
-        // this.symbolTable.print();
 
         let statementAnalyzer = new StatementAnalyzer(this.symbolTable, this.errorListener);
         ctx.stmt().forEach(statement => statement.accept(statementAnalyzer));
@@ -53,9 +59,8 @@ class StatementAnalyzer extends AbstractParseTreeVisitor<void> implements Python
 
     visitExpr_stmt(ctx: Expr_stmtContext) {
         let expressionAnalyzer = new ExpressionAnalyzer(this.symbolTable, this.errorListener);
-        let expressions = ctx.testlist_star_expr()
-            .map(expression => expression.accept(expressionAnalyzer));
-        
+        let expressions = ctx.testlist_star_expr().map(expression => expression.accept(expressionAnalyzer));
+
         console.log(`Expressions => ${expressions.join(', ')}`);
 
         let statementValidator = new StatementValidator(this.symbolTable, this.errorListener);
@@ -78,13 +83,14 @@ class ExpressionAnalyzer extends AbstractParseTreeVisitor<Expression> implements
         let atomAnalyzer = new ExpressionAtomAnalyzer(this.symbolTable, this.errorListener);
         let atom = ctx.atom().accept(atomAnalyzer);
         terms.push(atom);
-        
+
         let trailerAnalyzer = new ExpressionTrailerAnalyzer(this.symbolTable, this.errorListener);
-        let trailers = ctx.trailer()
+        let trailers = ctx
+            .trailer()
             .map(trailer => trailer.accept(trailerAnalyzer))
             .filter(term => term.type !== TermType.empty);
-        terms.push(... trailers);
-        
+        terms.push(...trailers);
+
         let reducedTerms = this.reduceArrayReferences(terms);
 
         return Expression.withTerms(reducedTerms);
@@ -139,7 +145,7 @@ class ExpressionAtomAnalyzer extends AbstractParseTreeVisitor<Term> implements P
 
     visitAtom(ctx: AtomContext): Term {
         let termResolver = new TermResolver();
-        
+
         return ctx.accept(termResolver);
     }
 }
@@ -160,16 +166,22 @@ class ExpressionTrailerAnalyzer extends AbstractParseTreeVisitor<Term> implement
             }
 
             let expressionAnalyzer = new ExpressionAnalyzer(this.symbolTable, this.errorListener);
-            let expressions = ctx.arglist().argument().map(argument => argument.accept(expressionAnalyzer));
+            let expressions = ctx
+                .arglist()
+                .argument()
+                .map(argument => argument.accept(expressionAnalyzer));
 
             return Term.asArguments(expressions);
         } else if (ctx.text.startsWith('[')) {
             if (ctx.subscriptlist() === undefined) {
                 return Term.empty();
-            } 
+            }
 
             let expressionAnalyzer = new ExpressionAnalyzer(this.symbolTable, this.errorListener);
-            let expressions = ctx.subscriptlist().subscript().map(subscript => subscript.accept(expressionAnalyzer));
+            let expressions = ctx
+                .subscriptlist()
+                .subscript()
+                .map(subscript => subscript.accept(expressionAnalyzer));
 
             return Term.asArrayDimension(expressions);
         }

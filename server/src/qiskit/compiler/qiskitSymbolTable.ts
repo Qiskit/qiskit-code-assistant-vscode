@@ -26,6 +26,7 @@ export namespace QiskitSymbolTable {
         symbolTable.define(new BuiltInTypeSymbol('object'));
         symbolTable.define(new BuiltInTypeSymbol('string'));
         symbolTable.define(new BuiltInTypeSymbol('int'));
+        symbolTable.define(new BuiltInTypeSymbol('float'));
         symbolTable.define(new BuiltInTypeSymbol('boolean'));
         symbolTable.define(new BuiltInTypeSymbol('class'));
 
@@ -118,6 +119,10 @@ export class ArgumentSymbol extends Symbol {
     }
 
     toString() {
+        if (this.type === null) {
+            return `{ name: ${this.name}, type: NULL }`;
+        }
+
         return `{ name: ${this.name}, type: ${this.type.getName()} }`;
     }
 }
@@ -142,6 +147,10 @@ export class VariableSymbol extends Symbol {
     }
 
     toString() {
+        if (this.type === null) {
+            return `{ name: ${this.name}, type: NULL }`;
+        }
+
         return `{ name: ${this.name}, type: ${this.type.getName()} }`;
     }
 }

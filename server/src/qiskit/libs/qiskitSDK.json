@@ -140,6 +140,22 @@
         "detail": "Quantum program",
         "documentation": "Quantum program.",
         "arguments": [],
-        "methods": []
+        "methods": [{
+            "name": "create_quantum_register",
+            "type": "QuantumRegister",
+            "detail": "Create a new Quantum Register",
+            "documentation": "Create a new Quantum Register.",
+            "arguments": [{
+                "name": "name",
+                "type": "string",
+                "optional": true,
+                "defaultValue": "None"
+            }, {
+                "name": "size",
+                "type": "int",
+                "optional": true,
+                "defaultValue": "1"
+            }]
+        }]
     }]
 }

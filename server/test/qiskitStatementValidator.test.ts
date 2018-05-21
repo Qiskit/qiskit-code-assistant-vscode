@@ -16,15 +16,23 @@
 'use strict';
 
 import { expect } from 'chai';
-import { QiskitSymbolTable } from '../src/qiskit/compiler/qiskitSymbolTable';
+import { QiskitSymbolTable, VariableSymbol } from '../src/qiskit/compiler/qiskitSymbolTable';
 import { StatementValidator } from '../src/qiskit/analyzers/statementValidator';
 import { ErrorListener } from '../src/qiskit/parser';
-import { Expression, Term } from '../src/qiskit/analyzers/types';
+import { Expression, Term, ArrayReference, TermType } from '../src/qiskit/analyzers/types';
+import { ParseErrorLevel } from '../src/types';
+import { SymbolTable } from '../src/tools/symbolTable';
 
 describe('A statement validator with QISKit symbol table', () => {
-    let symbolTable = QiskitSymbolTable.build();
-    let errorListener = new ErrorListener();
-    let statementValidator = new StatementValidator(symbolTable, errorListener);
+    let symbolTable: SymbolTable;
+    let errorListener;
+    let statementValidator;
+
+    beforeEach(() => {
+        symbolTable = QiskitSymbolTable.build();
+        errorListener = new ErrorListener();
+        statementValidator = new StatementValidator(symbolTable, errorListener);
+    });
 
     describe('with input qp = QuamtumProgram()', () => {
         let expressions = [
@@ -38,6 +46,77 @@ describe('A statement validator with QISKit symbol table', () => {
             expect(symbolTable.lookup('qp')).to.include({
                 name: 'qp',
                 type: symbolTable.lookup('QuantumProgram')
+            });
+        });
+    });
+
+    describe('with input qr = qp.create_quantum_register("qr", 2)', () => {
+        let expressions = [
+            Expression.withTerms([Term.asVariable('qr')]),
+            Expression.withTerms([
+                Term.asVariable('qp'),
+                Term.asVariable('create_quantum_register'),
+                Term.asArguments([Expression.withTerms([Term.asString('"qr'), Term.asNumber('2')])])
+            ])
+        ];
+
+        it('should introduce new symbol into the symbol table', () => {
+            let type = symbolTable.lookup('QuantumProgram');
+            let symbol = new VariableSymbol('qp', type);
+            symbolTable.define(symbol);
+
+            statementValidator.validate(expressions);
+
+            expect(symbolTable.lookup('qr')).to.include({
+                name: 'qr',
+                type: symbolTable.lookup('QuantumRegister')
+            });
+        });
+    });
+
+    describe('with input execute(qc, "circuit_name', () => {
+        // Update the symbol table
+
+        let expressions = [
+            Expression.withTerms([
+                Term.asVariable('execute'),
+                Term.asArguments([Expression.withTerms([Term.asVariable('qc'), Term.asString('"circuit_name"')])])
+            ])
+        ];
+
+        xit('should return error if qc is not quantum circuit', () => {
+            statementValidator.validate(expressions);
+
+            expect(errorListener.errors[0]).to.include({
+                message: 'blah blah',
+                level: ParseErrorLevel.ERROR
+            });
+        });
+    });
+
+    describe('with input qc.h(q[3])', () => {
+        // Update symbol table
+
+        // Possible builder
+        let arrayReference = new ArrayReference();
+        arrayReference.variable = 'q';
+        arrayReference.position = '3';
+        arrayReference.positionType = TermType.number;
+
+        let expressions = [
+            Expression.withTerms([
+                Term.asVariable('qc'),
+                Term.asVariable('h'),
+                Term.asArguments([Expression.withTerms([Term.asArrayReference(arrayReference)])])
+            ])
+        ];
+
+        xit('should return error if q register has no position 3', () => {
+            statementValidator.validate(expressions);
+
+            expect(errorListener.errors[0]).to.include({
+                message: 'blah blah',
+                level: ParseErrorLevel.ERROR
             });
         });
     });
