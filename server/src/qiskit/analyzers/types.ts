@@ -1,3 +1,5 @@
+import { Token } from 'antlr4ts';
+
 // Copyright 2018 IBM RESEARCH. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,46 +44,52 @@ export class Expression {
     }
 }
 
-export class Term {
+export class Term implements Position {
     value: any;
     type: TermType;
+    line: number;
+    start: number;
+    end: number;
 
     static empty(): Term {
         return this._builder('');
     }
 
-    static asString(value: string): Term {
-        return this._builder(value, TermType.string);
+    static asString(value: string, position: Position): Term {
+        return this._builder(value, TermType.string, position);
     }
 
-    static asVariable(value: string): Term {
-        return this._builder(value, TermType.variable);
+    static asVariable(value: string, position: Position): Term {
+        return this._builder(value, TermType.variable, position);
     }
 
-    static asNumber(value: string): Term {
-        return this._builder(value, TermType.number);
+    static asNumber(value: string, position: Position): Term {
+        return this._builder(value, TermType.number, position);
     }
 
-    static asArguments(value: Expression[]): Term {
-        return this._builder(value, TermType.arguments);
+    static asArguments(value: Expression[], position: Position): Term {
+        return this._builder(value, TermType.arguments, position);
     }
 
-    static asArrayReference(value: ArrayReference): Term {
-        return this._builder(value, TermType.arrayReference);
+    static asArrayReference(value: ArrayReference, position: Position): Term {
+        return this._builder(value, TermType.arrayReference, position);
     }
 
-    static asArrayDimension(value: Expression[]): Term {
-        return this._builder(value, TermType.arrayDimension);
+    static asArrayDimension(value: Expression[], position: Position): Term {
+        return this._builder(value, TermType.arrayDimension, position);
     }
 
-    static asExpression(value: Expression): Term {
-        return this._builder(value, TermType.expression);
+    static asExpression(value: Expression, position: Position): Term {
+        return this._builder(value, TermType.expression, position);
     }
 
-    private static _builder(value: any, type?: TermType): Term {
+    private static _builder(value: any, type?: TermType, position?: Position): Term {
         let entity = new Term();
         entity.value = value;
         entity.type = type || TermType.empty;
+        entity.line = position ? position.line : 0;
+        entity.start = position ? position.start : 0;
+        entity.end = position ? position.end : 0;
 
         return entity;
     }
@@ -89,6 +97,12 @@ export class Term {
     toString(): string {
         return `Term(${this.value} | ${this.type})`;
     }
+}
+
+export interface Position {
+    line: number;
+    start: number;
+    end: number;
 }
 
 export class ArrayReference {

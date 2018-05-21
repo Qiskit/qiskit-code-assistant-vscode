@@ -86,18 +86,7 @@ export class ErrorListener implements ANTLRErrorListener<CommonToken> {
         });
     }
 
-    semanticError<T extends Token>(
-        offendingSymbol: T | undefined,
-        line: number,
-        charPositionInLine: number,
-        msg: string
-    ): void {
-        this.errors.push({
-            line: line - 1,
-            start: charPositionInLine,
-            end: charPositionInLine + offendingSymbol.text.length,
-            message: msg,
-            level: ParseErrorLevel.WARNING
-        });
+    semanticError(error: ParserError): void {
+        this.errors.push(error);
     }
 }

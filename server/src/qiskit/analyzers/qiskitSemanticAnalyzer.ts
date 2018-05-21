@@ -30,8 +30,9 @@ import {
 import { QiskitSymbolTable } from '../compiler/qiskitSymbolTable';
 import { Python3Lexer } from '../antlr/Python3Lexer';
 import { StatementValidator } from './statementValidator';
-import { Expression, Term, TermType, ArrayReference } from './types';
+import { Expression, Term, TermType, ArrayReference, Position } from './types';
 import { ErrorListener } from '../parser';
+import { CommonToken } from 'antlr4ts';
 
 export class QiskitSemanticAnalyzer extends AbstractParseTreeVisitor<void> implements Python3Visitor<void> {
     private symbolTable: SymbolTable;
@@ -103,7 +104,12 @@ class ExpressionAnalyzer extends AbstractParseTreeVisitor<Expression> implements
 
         let arrayReference = this.toArrayReference(terms);
 
-        return [Term.asArrayReference(this.toArrayReference(terms))];
+        let position = {
+            line: terms[0].line,
+            start: terms[0].start,
+            end: terms[terms.length - 1].end
+        } as Position;
+        return [Term.asArrayReference(this.toArrayReference(terms), position)];
     }
 
     private isArrayReference(terms: Term[]): boolean {
@@ -171,7 +177,12 @@ class ExpressionTrailerAnalyzer extends AbstractParseTreeVisitor<Term> implement
                 .argument()
                 .map(argument => argument.accept(expressionAnalyzer));
 
-            return Term.asArguments(expressions);
+            let position = {
+                line: ctx.start.line,
+                start: ctx.start.startIndex,
+                end: ctx.stop.stopIndex
+            } as Position;
+            return Term.asArguments(expressions, position);
         } else if (ctx.text.startsWith('[')) {
             if (ctx.subscriptlist() === undefined) {
                 return Term.empty();
@@ -183,7 +194,12 @@ class ExpressionTrailerAnalyzer extends AbstractParseTreeVisitor<Term> implement
                 .subscript()
                 .map(subscript => subscript.accept(expressionAnalyzer));
 
-            return Term.asArrayDimension(expressions);
+            let position = {
+                line: ctx.start.line,
+                start: ctx.start.startIndex,
+                end: ctx.stop.stopIndex
+            } as Position;
+            return Term.asArrayDimension(expressions, position);
         }
 
         let termResolver = new TermResolver();
@@ -198,17 +214,32 @@ class TermResolver extends AbstractParseTreeVisitor<Term> implements Python3Visi
 
     visitTerminal(node: TerminalNode): Term {
         if (node.symbol.type === Python3Lexer.NAME) {
-            return Term.asVariable(node.text);
+            let position = {
+                line: node.symbol.line,
+                start: node.symbol.startIndex,
+                end: node.symbol.stopIndex
+            } as Position;
+            return Term.asVariable(node.text, position);
         }
 
         return Term.empty();
     }
 
     visitNumber(ctx: NumberContext): Term {
-        return Term.asNumber(ctx.text);
+        let position = {
+            line: ctx.start.line,
+            start: ctx.start.startIndex,
+            end: ctx.stop.stopIndex
+        } as Position;
+        return Term.asNumber(ctx.text, position);
     }
 
     visitStr(ctx: StrContext): Term {
-        return Term.asString(ctx.text);
+        let position = {
+            line: ctx.start.line,
+            start: ctx.start.startIndex,
+            end: ctx.stop.stopIndex
+        } as Position;
+        return Term.asString(ctx.text, position);
     }
 }

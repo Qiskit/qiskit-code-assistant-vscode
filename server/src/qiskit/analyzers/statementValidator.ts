@@ -19,6 +19,7 @@ import { SymbolTable, Symbol, Type, BuiltInTypeSymbol } from '../../tools/symbol
 import { Expression, Term, TermType, ArrayReference } from './types';
 import { VariableSymbol, ClassSymbol, VariableMetadata, MethodSymbol } from '../compiler/qiskitSymbolTable';
 import { ErrorListener } from '../parser';
+import { ParseErrorLevel, ParserError } from '../../types';
 
 export class StatementValidator {
     constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {}
@@ -206,14 +207,30 @@ export class ArgumentsChecker {
 
             let mandatoryArguments = methodSymbol.getArguments().filter(arg => arg.optional === false).length;
             if (args.length < mandatoryArguments) {
-                this.errorListener.semanticError(undefined, 1, 1, 'bla bla');
+                let error = {
+                    line: args[0].line,
+                    start: args[0].start,
+                    end: args[args.length - 1].end,
+                    message: 'Error bla bla bla',
+                    level: ParseErrorLevel.WARNING
+                } as ParserError;
+
+                this.errorListener.semanticError(error);
             }
 
             args.forEach(arg => {
                 let argumentType = this.calculateArgumentType(arg);
                 let matchedTypes = methodSymbol.getArguments().filter(arg => arg.type === argumentType);
                 if (matchedTypes.length < 1) {
-                    this.errorListener.semanticError(undefined, 1, 1, 'ble ble');
+                    let error = {
+                        line: arg.line,
+                        start: arg.start,
+                        end: arg.end,
+                        message: 'Error ble ble ble',
+                        level: ParseErrorLevel.WARNING
+                    } as ParserError;
+
+                    this.errorListener.semanticError(error);
                 }
             });
         }

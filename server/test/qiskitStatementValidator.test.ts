@@ -19,7 +19,7 @@ import { expect } from 'chai';
 import { QiskitSymbolTable, VariableSymbol } from '../src/qiskit/compiler/qiskitSymbolTable';
 import { StatementValidator } from '../src/qiskit/analyzers/statementValidator';
 import { ErrorListener } from '../src/qiskit/parser';
-import { Expression, Term, ArrayReference, TermType } from '../src/qiskit/analyzers/types';
+import { Expression, Term, ArrayReference, TermType, Position } from '../src/qiskit/analyzers/types';
 import { ParseErrorLevel } from '../src/types';
 import { SymbolTable } from '../src/tools/symbolTable';
 
@@ -27,6 +27,11 @@ describe('A statement validator with QISKit symbol table', () => {
     let symbolTable: SymbolTable;
     let errorListener;
     let statementValidator;
+    let defaultPosition = {
+        line: 1,
+        start: 1,
+        end: 1
+    } as Position;
 
     beforeEach(() => {
         symbolTable = QiskitSymbolTable.build();
@@ -36,8 +41,8 @@ describe('A statement validator with QISKit symbol table', () => {
 
     describe('with input qp = QuamtumProgram()', () => {
         let expressions = [
-            Expression.withTerms([Term.asVariable('qp')]),
-            Expression.withTerms([Term.asVariable('QuantumProgram')])
+            Expression.withTerms([Term.asVariable('qp', defaultPosition)]),
+            Expression.withTerms([Term.asVariable('QuantumProgram', defaultPosition)])
         ];
 
         it('should introduce new symbol into the symbol table', () => {
@@ -52,11 +57,14 @@ describe('A statement validator with QISKit symbol table', () => {
 
     describe('with input qr = qp.create_quantum_register("qr", 2)', () => {
         let expressions = [
-            Expression.withTerms([Term.asVariable('qr')]),
+            Expression.withTerms([Term.asVariable('qr', defaultPosition)]),
             Expression.withTerms([
-                Term.asVariable('qp'),
-                Term.asVariable('create_quantum_register'),
-                Term.asArguments([Expression.withTerms([Term.asString('qr'), Term.asNumber('2')])])
+                Term.asVariable('qp', defaultPosition),
+                Term.asVariable('create_quantum_register', defaultPosition),
+                Term.asArguments(
+                    [Expression.withTerms([Term.asString('qr', defaultPosition), Term.asNumber('2', defaultPosition)])],
+                    defaultPosition
+                )
             ])
         ];
 
@@ -73,58 +81,6 @@ describe('A statement validator with QISKit symbol table', () => {
             expect(qrVariable.metadata).to.include({
                 name: 'qr',
                 size: 2
-            });
-        });
-    });
-
-    describe('with input qc.h(q[1])', () => {
-        let expressions = [
-            Expression.withTerms([
-                Term.asVariable('execute'),
-                Term.asArguments([Expression.withTerms([Term.asVariable('qc'), Term.asString('"circuit_name"')])])
-            ])
-        ];
-
-        xit('should return error if q is not quantum register', () => {
-            let type = symbolTable.lookup('QuantumCircuit');
-            let symbol = new VariableSymbol('qc', type);
-            symbolTable.define(symbol);
-
-            statementValidator.validate(expressions);
-
-            console.log(`${JSON.stringify(errorListener.errors)}`);
-
-            expect(errorListener.errors.lenght === 1);
-            expect(errorListener.errors[0]).to.include({
-                message: 'blah blah',
-                level: ParseErrorLevel.ERROR
-            });
-        });
-    });
-
-    describe('with input qc.h(q[3])', () => {
-        // Update symbol table
-
-        // Possible builder
-        let arrayReference = new ArrayReference();
-        arrayReference.variable = 'q';
-        arrayReference.position = '3';
-        arrayReference.positionType = TermType.number;
-
-        let expressions = [
-            Expression.withTerms([
-                Term.asVariable('qc'),
-                Term.asVariable('h'),
-                Term.asArguments([Expression.withTerms([Term.asArrayReference(arrayReference)])])
-            ])
-        ];
-
-        xit('should return error if q register has no position 3', () => {
-            statementValidator.validate(expressions);
-
-            expect(errorListener.errors[0]).to.include({
-                message: 'blah blah',
-                level: ParseErrorLevel.ERROR
             });
         });
     });

@@ -17,15 +17,20 @@
 
 import { expect } from 'chai';
 import { SymbolTable } from '../src/tools/symbolTable';
-import { QiskitSymbolTable } from '../src/qiskit/compiler/qiskitSymbolTable';
+import { QiskitSymbolTable, VariableSymbol } from '../src/qiskit/compiler/qiskitSymbolTable';
 import { ErrorListener } from '../src/qiskit/parser';
 import { ArgumentsChecker } from '../src/qiskit/analyzers/statementValidator';
-import { ArrayReference, TermType, Expression, Term } from '../src/qiskit/analyzers/types';
+import { ArrayReference, TermType, Expression, Term, Position } from '../src/qiskit/analyzers/types';
 
 describe('An arguments checker with QISKit symbol table', () => {
     let symbolTable: SymbolTable;
-    let errorListener;
-    let argumentsChecker;
+    let errorListener: ErrorListener;
+    let argumentsChecker: ArgumentsChecker;
+    let defaultPosition = {
+        line: 1,
+        start: 1,
+        end: 1
+    } as Position;
 
     beforeEach(() => {
         symbolTable = QiskitSymbolTable.build();
@@ -35,20 +40,26 @@ describe('An arguments checker with QISKit symbol table', () => {
 
     describe('with input qc.h(c[1])', () => {
         let arrayReference = new ArrayReference();
-        arrayReference.variable = 'q';
+        arrayReference.variable = 'c';
         arrayReference.position = '1';
         arrayReference.positionType = TermType.number;
 
-        let expressions = [
-            Expression.withTerms([
-                Term.asVariable('qc'),
-                Term.asVariable('h'),
-                Term.asArguments([Expression.withTerms([Term.asArrayReference(arrayReference)])])
-            ])
+        let terms = [
+            Term.asVariable('qc', defaultPosition),
+            Term.asVariable('h', defaultPosition),
+            Term.asArguments(
+                [Expression.withTerms([Term.asArrayReference(arrayReference, defaultPosition)])],
+                defaultPosition
+            )
         ];
 
         it('should detect an error if c is not QuantumRegister type', () => {
-            argumentsChecker.check(expressions);
+            symbolTable.define(new VariableSymbol('qc', symbolTable.lookup('QuantumCircuit')));
+            symbolTable.define(new VariableSymbol('c', symbolTable.lookup('ClassicalRegister')));
+
+            symbolTable.print();
+
+            argumentsChecker.check(terms);
 
             expect(errorListener.errors.length).to.be.equal(1);
         });
