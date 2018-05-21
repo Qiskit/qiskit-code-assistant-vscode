@@ -56,7 +56,7 @@ describe('A statement validator with QISKit symbol table', () => {
             Expression.withTerms([
                 Term.asVariable('qp'),
                 Term.asVariable('create_quantum_register'),
-                Term.asArguments([Expression.withTerms([Term.asString('"qr'), Term.asNumber('2')])])
+                Term.asArguments([Expression.withTerms([Term.asString('qr'), Term.asNumber('2')])])
             ])
         ];
 
@@ -66,10 +66,13 @@ describe('A statement validator with QISKit symbol table', () => {
             symbolTable.define(symbol);
 
             statementValidator.validate(expressions);
+            let qrVariable = symbolTable.lookup('qr') as VariableSymbol;
 
-            expect(symbolTable.lookup('qr')).to.include({
+            expect(qrVariable.name).to.be.equal('qr');
+            expect(qrVariable.type).to.be.equal(symbolTable.lookup('QuantumRegister'));
+            expect(qrVariable.metadata).to.include({
                 name: 'qr',
-                type: symbolTable.lookup('QuantumRegister')
+                size: 2
             });
         });
     });

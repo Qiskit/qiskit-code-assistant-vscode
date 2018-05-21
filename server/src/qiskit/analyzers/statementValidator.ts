@@ -18,54 +18,112 @@
 import { SymbolTable, Symbol, Type, BuiltInTypeSymbol } from '../../tools/symbolTable';
 import { ANTLRErrorListener, CommonToken } from 'antlr4ts';
 import { Expression, Term, TermType } from './types';
-import { VariableSymbol, ClassSymbol } from '../compiler/qiskitSymbolTable';
+import { VariableSymbol, ClassSymbol, VariableMetadata } from '../compiler/qiskitSymbolTable';
 
 export class StatementValidator {
     constructor(private symbolTable: SymbolTable, private errorListener: ANTLRErrorListener<CommonToken>) {}
 
     validate(expressions: Expression[]) {
         if (this.isAnAssignment(expressions)) {
-            let type = this.typeOf(expressions[1].terms); // this.symbolTable.lookup(expressions[1].terms[0].value);
+            let termsFold = this.foldTerms(expressions[1].terms);
+            if (termsFold === null) {
+                return;
+            }
             let value = expressions[0].terms[0].value;
 
-            this.symbolTable.define(new VariableSymbol(value, type));
+            this.symbolTable.define(new VariableSymbol(value, termsFold.type, termsFold.metadata));
         }
-
-        this.symbolTable.print();
     }
 
     private isAnAssignment(expressions: Expression[]) {
         return expressions.length > 1;
     }
 
-    private typeOf(terms: Term[]): Type {
-        let identity = this.symbolTable.lookup('void');
-        let typeDiscovery = (a: Type, b: Term) => {
-            if (b.type === TermType.variable) {
-                let currentSymbol = this.symbolTable.lookup(b.value);
-                if (currentSymbol !== null) {
-                    if (currentSymbol.type instanceof BuiltInTypeSymbol) {
-                        return currentSymbol;
-                    } else {
-                        return currentSymbol.type;
-                    }
-                }
-
-                if (a instanceof ClassSymbol) {
-                    let variable = a as ClassSymbol;
-                    let compatibleMethod = variable.methods.filter(m => m.getName() === b.value);
-                    if (compatibleMethod.length > 0) {
-                        return this.symbolTable.lookup(compatibleMethod[0].type.getName());
-                    }
-                }
-
-                return identity;
+    private foldTerms(terms: Term[]): TermsFold {
+        let identity = {} as TermsFold;
+        let termWalker = (fold: TermsFold, term: Term) => {
+            if (term.type === TermType.variable) {
+                fold.type = this.typeForTerm(term, fold.type);
             }
-
-            return a;
+            if (term.type === TermType.arguments) {
+                fold.metadata = this.metadataForTerm(term, fold.type);
+            }
+            return fold;
         };
 
-        return this.fold(identity, typeDiscovery, terms);
+        return this.fold(identity, termWalker, terms);
+    }
+
+    private typeForTerm(term: Term, currentType: Type): Type {
+        if (currentType instanceof ClassSymbol) {
+            let variable = currentType as ClassSymbol;
+            let compatibleMethod = variable.methods.filter(m => m.getName() === term.value);
+            if (compatibleMethod.length > 0) {
+                return this.symbolTable.lookup(compatibleMethod[0].type.getName());
+            }
+        }
+
+        let currentSymbol = this.symbolTable.lookup(term.value);
+        if (currentSymbol !== null) {
+            if (currentSymbol.type instanceof BuiltInTypeSymbol) {
+                return currentSymbol;
+            } else {
+                return currentSymbol.type;
+            }
+        }
+
+        return this.symbolTable.lookup('void');
+    }
+
+    private metadataForTerm(_term: Term, currentType: Type): VariableMetadata {
+        if (currentType instanceof ClassSymbol) {
+            let classSymbol = currentType as ClassSymbol;
+            let declaredArguments = (_term.value[0] as Expression).terms;
+            // check arguments number
+            let toMetada = (metadata: VariableMetadata, argument: Term) => {
+                if (this.declaredSizeArgument(classSymbol, argument)) {
+                    if (metadata === null) {
+                        metadata = {
+                            size: +argument.value
+                        } as VariableMetadata;
+                    } else {
+                        metadata.size = +argument.value;
+                    }
+                }
+                if (this.declaredNameArgument(classSymbol, argument)) {
+                    if (metadata === null) {
+                        metadata = {
+                            name: argument.value
+                        } as VariableMetadata;
+                    } else {
+                        metadata.name = argument.value;
+                    }
+                }
+
+                return metadata;
+            };
+
+            return this.fold(null, toMetada, declaredArguments);
+        }
+        return null;
+    }
+
+    private declaredSizeArgument(classSymbol: ClassSymbol, argument: Term): boolean {
+        let sizeArguments = classSymbol.requiredArguments.filter(arg => arg.name === 'size');
+        if (sizeArguments.length > 0) {
+            return argument.type === TermType.number;
+        }
+
+        return false;
+    }
+
+    private declaredNameArgument(classSymbol: ClassSymbol, argument: Term): boolean {
+        let nameArguments = classSymbol.requiredArguments.filter(arg => arg.name === 'name');
+        if (nameArguments.length > 0) {
+            return argument.type === TermType.string;
+        }
+
+        return false;
     }
 
     private fold(identity: any, operation: any, list: any[]) {
@@ -74,4 +132,9 @@ export class StatementValidator {
 
         return accumulator;
     }
+}
+
+interface TermsFold {
+    type: Type;
+    metadata: VariableMetadata;
 }

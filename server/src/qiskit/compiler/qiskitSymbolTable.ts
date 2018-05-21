@@ -128,12 +128,12 @@ export class ArgumentSymbol extends Symbol {
 }
 
 export class VariableSymbol extends Symbol {
-    private metadata: VariableMetadata = null;
+    metadata: VariableMetadata = null;
 
     constructor(name: string, type: Type, metadata?: VariableMetadata) {
         super(name, type);
 
-        if (metadata) {
+        if (metadata && metadata !== null) {
             this.metadata = metadata;
         }
     }
