@@ -20,7 +20,7 @@ import { Expression, Term, TermType, ArrayReference } from './types';
 import { VariableSymbol, ClassSymbol, VariableMetadata, MethodSymbol } from '../compiler/qiskitSymbolTable';
 import { ErrorListener } from '../parser';
 import { ParseErrorLevel, ParserError } from '../../types';
-import { ArgumentsValidator } from './argumentsVaildator';
+import { ArgumentsValidator } from './argumentsValidator';
 
 export class StatementValidator {
     constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {}

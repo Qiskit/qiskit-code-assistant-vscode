@@ -20,7 +20,7 @@ import { SymbolTable } from '../src/tools/symbolTable';
 import { QiskitSymbolTable, VariableSymbol } from '../src/qiskit/compiler/qiskitSymbolTable';
 import { ErrorListener } from '../src/qiskit/parser';
 import { ArrayReference, TermType, Expression, Term, Position } from '../src/qiskit/analyzers/types';
-import { ArgumentsValidator } from '../src/qiskit/analyzers/argumentsVaildator';
+import { ArgumentsValidator } from '../src/qiskit/analyzers/argumentsValidator';
 
 describe('An arguments checker with QISKit symbol table', () => {
     let symbolTable: SymbolTable;

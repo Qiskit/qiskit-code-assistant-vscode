@@ -68,6 +68,7 @@ export class ArgumentsValidator {
         }
     }
 
+    // TODO refactor to general validation rules interface
     private validateNumberOfArguments(methodSymbol: MethodSymbol, args: Term[]): void {
         let mandatoryArguments = methodSymbol.getArguments().filter(arg => arg.optional === false).length;
         if (args.length < mandatoryArguments) {
