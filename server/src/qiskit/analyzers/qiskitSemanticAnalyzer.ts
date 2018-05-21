@@ -32,7 +32,7 @@ import { Python3Lexer } from '../antlr/Python3Lexer';
 import { StatementValidator } from './statementValidator';
 import { Expression, Term, TermType, ArrayReference, Position } from './types';
 import { ErrorListener } from '../parser';
-import { CommonToken } from 'antlr4ts';
+import { CommonToken, ParserRuleContext, Token } from 'antlr4ts';
 
 export class QiskitSemanticAnalyzer extends AbstractParseTreeVisitor<void> implements Python3Visitor<void> {
     private symbolTable: SymbolTable;
@@ -177,12 +177,7 @@ class ExpressionTrailerAnalyzer extends AbstractParseTreeVisitor<Term> implement
                 .argument()
                 .map(argument => argument.accept(expressionAnalyzer));
 
-            let position = {
-                line: ctx.start.line,
-                start: ctx.start.startIndex,
-                end: ctx.stop.stopIndex
-            } as Position;
-            return Term.asArguments(expressions, position);
+            return Term.asArguments(expressions, PositionFrom.context(ctx));
         } else if (ctx.text.startsWith('[')) {
             if (ctx.subscriptlist() === undefined) {
                 return Term.empty();
@@ -194,12 +189,7 @@ class ExpressionTrailerAnalyzer extends AbstractParseTreeVisitor<Term> implement
                 .subscript()
                 .map(subscript => subscript.accept(expressionAnalyzer));
 
-            let position = {
-                line: ctx.start.line,
-                start: ctx.start.startIndex,
-                end: ctx.stop.stopIndex
-            } as Position;
-            return Term.asArrayDimension(expressions, position);
+            return Term.asArrayDimension(expressions, PositionFrom.context(ctx));
         }
 
         let termResolver = new TermResolver();
@@ -214,32 +204,35 @@ class TermResolver extends AbstractParseTreeVisitor<Term> implements Python3Visi
 
     visitTerminal(node: TerminalNode): Term {
         if (node.symbol.type === Python3Lexer.NAME) {
-            let position = {
-                line: node.symbol.line,
-                start: node.symbol.startIndex,
-                end: node.symbol.stopIndex
-            } as Position;
-            return Term.asVariable(node.text, position);
+            return Term.asVariable(node.text, PositionFrom.token(node.symbol));
         }
 
         return Term.empty();
     }
 
     visitNumber(ctx: NumberContext): Term {
-        let position = {
-            line: ctx.start.line,
-            start: ctx.start.startIndex,
-            end: ctx.stop.stopIndex
-        } as Position;
-        return Term.asNumber(ctx.text, position);
+        return Term.asNumber(ctx.text, PositionFrom.context(ctx));
     }
 
     visitStr(ctx: StrContext): Term {
-        let position = {
-            line: ctx.start.line,
+        return Term.asString(ctx.text, PositionFrom.context(ctx));
+    }
+}
+
+namespace PositionFrom {
+    export function context(ctx: ParserRuleContext): Position {
+        return {
+            line: ctx.start.line - 1,
             start: ctx.start.startIndex,
             end: ctx.stop.stopIndex
-        } as Position;
-        return Term.asString(ctx.text, position);
+        };
+    }
+
+    export function token(token: Token): Position {
+        return {
+            line: token.line - 1,
+            start: token.startIndex,
+            end: token.stopIndex
+        };
     }
 }
