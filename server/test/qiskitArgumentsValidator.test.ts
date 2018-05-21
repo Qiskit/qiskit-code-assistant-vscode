@@ -19,13 +19,13 @@ import { expect } from 'chai';
 import { SymbolTable } from '../src/tools/symbolTable';
 import { QiskitSymbolTable, VariableSymbol } from '../src/qiskit/compiler/qiskitSymbolTable';
 import { ErrorListener } from '../src/qiskit/parser';
-import { ArgumentsChecker } from '../src/qiskit/analyzers/statementValidator';
 import { ArrayReference, TermType, Expression, Term, Position } from '../src/qiskit/analyzers/types';
+import { ArgumentsValidator } from '../src/qiskit/analyzers/argumentsVaildator';
 
 describe('An arguments checker with QISKit symbol table', () => {
     let symbolTable: SymbolTable;
     let errorListener: ErrorListener;
-    let argumentsChecker: ArgumentsChecker;
+    let validator: ArgumentsValidator;
     let defaultPosition = {
         line: 1,
         start: 1,
@@ -35,7 +35,7 @@ describe('An arguments checker with QISKit symbol table', () => {
     beforeEach(() => {
         symbolTable = QiskitSymbolTable.build();
         errorListener = new ErrorListener();
-        argumentsChecker = new ArgumentsChecker(symbolTable, errorListener);
+        validator = new ArgumentsValidator(symbolTable, errorListener);
     });
 
     describe('with input qc.h(c[1])', () => {
@@ -59,7 +59,7 @@ describe('An arguments checker with QISKit symbol table', () => {
 
             symbolTable.print();
 
-            argumentsChecker.check(terms);
+            validator.validate(terms);
 
             expect(errorListener.errors.length).to.be.equal(1);
         });
