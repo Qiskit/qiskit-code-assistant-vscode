@@ -77,9 +77,7 @@ describe('A statement validator with QISKit symbol table', () => {
         });
     });
 
-    describe('with input execute(qc, "circuit_name', () => {
-        // Update the symbol table
-
+    describe('with input qc.h(q[1])', () => {
         let expressions = [
             Expression.withTerms([
                 Term.asVariable('execute'),
@@ -87,9 +85,16 @@ describe('A statement validator with QISKit symbol table', () => {
             ])
         ];
 
-        xit('should return error if qc is not quantum circuit', () => {
+        xit('should return error if q is not quantum register', () => {
+            let type = symbolTable.lookup('QuantumCircuit');
+            let symbol = new VariableSymbol('qc', type);
+            symbolTable.define(symbol);
+
             statementValidator.validate(expressions);
 
+            console.log(`${JSON.stringify(errorListener.errors)}`);
+
+            expect(errorListener.errors.lenght === 1);
             expect(errorListener.errors[0]).to.include({
                 message: 'blah blah',
                 level: ParseErrorLevel.ERROR

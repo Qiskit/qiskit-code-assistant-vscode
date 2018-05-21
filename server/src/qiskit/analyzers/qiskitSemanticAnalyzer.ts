@@ -18,7 +18,6 @@
 import { AbstractParseTreeVisitor, TerminalNode } from 'antlr4ts/tree';
 import { Python3Visitor } from '../antlr/Python3Visitor';
 import { SymbolTable } from '../../tools/symbolTable';
-import { ANTLRErrorListener, CommonToken } from 'antlr4ts';
 import {
     ProgramContext,
     Expr_stmtContext,
@@ -32,11 +31,12 @@ import { QiskitSymbolTable } from '../compiler/qiskitSymbolTable';
 import { Python3Lexer } from '../antlr/Python3Lexer';
 import { StatementValidator } from './statementValidator';
 import { Expression, Term, TermType, ArrayReference } from './types';
+import { ErrorListener } from '../parser';
 
 export class QiskitSemanticAnalyzer extends AbstractParseTreeVisitor<void> implements Python3Visitor<void> {
     private symbolTable: SymbolTable;
 
-    constructor(private errorListener: ANTLRErrorListener<CommonToken>) {
+    constructor(private errorListener: ErrorListener) {
         super();
     }
 
@@ -51,7 +51,7 @@ export class QiskitSemanticAnalyzer extends AbstractParseTreeVisitor<void> imple
 }
 
 class StatementAnalyzer extends AbstractParseTreeVisitor<void> implements Python3Visitor<void> {
-    constructor(private symbolTable: SymbolTable, private errorListener: ANTLRErrorListener<CommonToken>) {
+    constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {
         super();
     }
 
@@ -69,7 +69,7 @@ class StatementAnalyzer extends AbstractParseTreeVisitor<void> implements Python
 }
 
 class ExpressionAnalyzer extends AbstractParseTreeVisitor<Expression> implements Python3Visitor<Expression> {
-    constructor(private symbolTable: SymbolTable, private errorListener: ANTLRErrorListener<CommonToken>) {
+    constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {
         super();
     }
 
@@ -135,7 +135,7 @@ class ExpressionAnalyzer extends AbstractParseTreeVisitor<Expression> implements
 }
 
 class ExpressionAtomAnalyzer extends AbstractParseTreeVisitor<Term> implements Python3Visitor<Term> {
-    constructor(private symbolTable: SymbolTable, private errorListener: ANTLRErrorListener<CommonToken>) {
+    constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {
         super();
     }
 
@@ -151,7 +151,7 @@ class ExpressionAtomAnalyzer extends AbstractParseTreeVisitor<Term> implements P
 }
 
 class ExpressionTrailerAnalyzer extends AbstractParseTreeVisitor<Term> implements Python3Visitor<Term> {
-    constructor(private symbolTable: SymbolTable, private errorListener: ANTLRErrorListener<CommonToken>) {
+    constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {
         super();
     }
 

@@ -283,11 +283,11 @@ export class Python3Parser extends Parser {
 	private arrayScope = false;
 	private argumentsErrorHandler = new ParserArgumentsErrorHandler(this);
 
-	checkMethodCall(call: MethodCall): void {
-	  if (call !== null) {
-	    new ArgumentsTester(this.symbolTable, this.argumentsErrorHandler)
-	      .check(call);
-	  }
+	checkMethodCall(_call: MethodCall): void {
+	  // if (call !== null) {
+	  //   new ArgumentsTester(this.symbolTable, this.argumentsErrorHandler)
+	  //     .check(call);
+	  // }
 	}
 
 	applyAssignment(symbol: string): void {

@@ -108,6 +108,15 @@
                 "name": "tgt",
                 "type": "QuantumRegister"
             }]
+        }, {
+            "name": "h",
+            "type": "void",
+            "detail": "h(q)",
+            "documentation": "Apply H to q.",
+            "arguments": [{
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
         }]
     }, {
         "name": "CompositeGate",
