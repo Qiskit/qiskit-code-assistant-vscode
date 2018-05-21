@@ -34,7 +34,8 @@ export class PipWrapper implements IPackageInfo {
     public getPackageInfo(pkgStr: string) : Q.Promise<IPackageInfo> {
         return this.show(pkgStr)
         .then((stdout: string) => {
-            let regEx = new RegExp(/(Name:\ |Version:\ |Summary:\ |Location:\ |Requires:\ )(.+?(?=\n))/g);
+            console.log("stdout",stdout);
+            let regEx = new RegExp(/(Name:\ |Version:\ |Summary:\ |Location:\ |Requires:\ )(.*)/g);
             let pkg = new PipWrapper();
             let pkgInfo;
             let failed: boolean = false;
