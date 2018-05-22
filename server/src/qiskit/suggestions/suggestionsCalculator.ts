@@ -24,14 +24,15 @@ import { Token, CommonTokenStream } from 'antlr4ts';
 import { Symbol, SymbolTable } from '../../tools/symbolTable';
 import { AtomFinder } from './atomFinder';
 import { ClassSymbol } from '../compiler/qiskitSymbolTable';
+import { MethodsDictionary } from './methodsDictionary';
+import { VariablesDictionary } from './variablesDictionary';
 
 export class SuggestionsCalculator {
     constructor(
         private parser: Python3Parser,
-        private tokenStream: CommonTokenStream,
         private suggestionsDictionary: SuggestionsDictionary,
-        private atomFinder: AtomFinder,
-        private symbolTable: SymbolTable
+        private methodsDictionary: MethodsDictionary,
+        private variablesDictionary: VariablesDictionary
     ) {}
 
     calculateAtPosition(tokenPosition: number): SuggestionSymbol[] {
@@ -54,8 +55,6 @@ export class SuggestionsCalculator {
 
         let result: SuggestionSymbol[] = this.calculateSuggestions(allowedSymbols);
 
-        console.log(`Available suggestions > ${this.print(result)}`);
-
         return result;
     }
 
@@ -64,47 +63,14 @@ export class SuggestionsCalculator {
 
         let result: SuggestionSymbol[] = [];
         if (allowedSymbols.includes('trailer')) {
-            result.push(...this.availableMethodScopeSymbols());
+            result.push(...this.methodsDictionary.currentMethods());
         }
         if (allowedSymbols.includes('atom')) {
-            result.push(...this.foundVariablesAt());
+            result.push(...this.variablesDictionary.currentVariables());
             result.push(...this.suggestionsDictionary.symbolsWithTypeIn(['class']));
         }
 
         return result;
-    }
-
-    private availableMethodScopeSymbols(): SuggestionSymbol[] {
-        let atom = this.atomFinder.firstViableAtomFor(this.tokenStream);
-        if (atom.type instanceof ClassSymbol) {
-            let classType = atom.type as ClassSymbol;
-            let atomMethods = classType.getMethods().map(method => method.getName());
-            return this.suggestionsDictionary
-                .symbolsWithTypeIn(['method'])
-                .filter(symbol => atomMethods.includes(symbol.label));
-        } else {
-            return this.suggestionsDictionary.symbolsWithTypeIn(['method']);
-        }
-    }
-
-    private foundVariablesAt(): SuggestionSymbol[] {
-        return this.symbolTable
-            .currentSymbols()
-            .filter(symbol => 'class' !== symbol.type.getName())
-            .map(this.toSuggestionSymbol);
-    }
-
-    private toSuggestionSymbol = (input: Symbol): SuggestionSymbol => {
-        return {
-            label: input.getName(),
-            detail: 'Declared variable',
-            documentation: 'This is a previously declared variable',
-            type: 'Variable'
-        };
-    };
-
-    private print(symbols: SuggestionSymbol[]): String[] {
-        return symbols.map(symbol => `${symbol.label}:${symbol.type}`);
     }
 }
 

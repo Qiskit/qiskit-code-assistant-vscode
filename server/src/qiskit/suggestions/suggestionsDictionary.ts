@@ -28,6 +28,14 @@ export class SuggestionsDictionary {
         return this.getSymbols().filter(isContainedInTypes);
     }
 
+    methodsIn(names: string[]): SuggestionSymbol[] {
+        return this.symbolsWithTypeIn(['method']).filter(symbol => names.includes(symbol.label));
+    }
+
+    allMethods(): SuggestionSymbol[] {
+        return this.symbolsWithTypeIn(['method']);
+    }
+
     private getSymbols(): SuggestionSymbol[] {
         const qiskitSymbols: QiskitSDK = require('../libs/qiskitSDK.json');
         let symbols: SuggestionSymbol[] = [];
