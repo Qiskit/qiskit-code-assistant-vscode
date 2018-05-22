@@ -21,6 +21,8 @@ import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts';
 import { Python3Lexer } from './antlr/Python3Lexer';
 import { Python3Parser } from './antlr/Python3Parser';
 import { SuggestionsCalculator } from './suggestions/suggestionsCalculator';
+import { AtomFinder } from './suggestions/atomFinder';
+import { QiskitSemanticAnalyzer } from './analyzers/qiskitSemanticAnalyzer';
 
 export class QiskitSuggester implements Suggester {
     private dictionary = new SuggestionsDictionary();
@@ -31,10 +33,20 @@ export class QiskitSuggester implements Suggester {
         let tokenStream = new CommonTokenStream(lexer);
         let parser = new Python3Parser(tokenStream);
 
-        parser.program();
+        let tree = parser.program();
+
+        let semanticAnalyzer = new QiskitSemanticAnalyzer();
+        let symbolTable = semanticAnalyzer.visit(tree);
 
         let caretPosition = tokenStream.getTokens().length;
-        let suggestionCalculator = new SuggestionsCalculator(parser, tokenStream, this.dictionary);
+        let atomFinder = new AtomFinder(symbolTable);
+        let suggestionCalculator = new SuggestionsCalculator(
+            parser,
+            tokenStream,
+            this.dictionary,
+            atomFinder,
+            symbolTable
+        );
 
         return suggestionCalculator.calculateAtPosition(caretPosition);
     }

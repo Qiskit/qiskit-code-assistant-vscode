@@ -1,14 +1,6 @@
 // Generated from Python3.g4 by ANTLR 4.6-SNAPSHOT
 
 
-import { QiskitSymbolTable, VariableSymbol, ClassSymbol, VariableMetadata } from '../compiler/qiskitSymbolTable';
-import { Symbol } from '../../tools/symbolTable';
-import { StatementsStack, Statement } from './tools/statementsStack';
-import { MetadataExtractor } from './tools/metadataExtractor';
-import { MethodCall } from './tools/methodCall';
-import { ArgumentsTester, ParserArgumentsErrorHandler } from './tools/argumentsTester';
-
-
 import { ParseTreeListener } from 'antlr4ts/tree/ParseTreeListener';
 
 import { ProgramContext } from './Python3Parser';

@@ -152,75 +152,6 @@ tokens { INDENT, DEDENT }
   }
 }
 
-@parser::header {
-import { QiskitSymbolTable, VariableSymbol, ClassSymbol, VariableMetadata } from '../compiler/qiskitSymbolTable';
-import { Symbol } from '../../tools/symbolTable';
-import { StatementsStack, Statement } from './tools/statementsStack';
-import { MetadataExtractor } from './tools/metadataExtractor';
-import { MethodCall } from './tools/methodCall';
-import { ArgumentsTester, ParserArgumentsErrorHandler } from './tools/argumentsTester';
-}
-
-@parser::members {
-public symbolTable = QiskitSymbolTable.build();
-private statements = new StatementsStack();
-private argumentsScope = false;
-private arrayScope = false;
-private argumentsErrorHandler = new ParserArgumentsErrorHandler(this);
-
-checkMethodCall(_call: MethodCall): void {
-  // if (call !== null) {
-  //   new ArgumentsTester(this.symbolTable, this.argumentsErrorHandler)
-  //     .check(call);
-  // }
-}
-
-applyAssignment(symbol: string): void {
-  let statement = this.statements.last();
-
-  try {
-    if (this.isAssignmentAppliable(statement, symbol)) {
-      let extractor = new MetadataExtractor(this.symbolTable);
-      let metadata = extractor.from(statement.rightSide);
-      let parentSymbol = this.findParentSymbolWith(statement);
-      if (parentSymbol !== null) {
-        let variable = new VariableSymbol(symbol, parentSymbol, metadata);
-        this.symbolTable.define(variable);
-      }
-    }
-  } catch(err) {
-    console.log(`ERROR: ${err}`);
-  }
-}
-
-findParentSymbolWith(statement: Statement): Symbol {
-  let currentSymbol = this.symbolTable.lookup(statement.rightSide.variable.text);
-  if (currentSymbol === null) {
-    return null;
-  }
-  statement.rightSide.trailingMethods.forEach((method) => {
-    let classType = currentSymbol.type as ClassSymbol;
-    let compatibleMethod = classType.getMethods().find((m) => m.getName() === method.methodName.text);
-    if (compatibleMethod) {
-      currentSymbol = this.symbolTable.lookup(compatibleMethod.type.getName());
-    } 
-  });
-
-  return currentSymbol;
-}
-
-isAssignmentAppliable(statement: Statement, symbol: string): boolean {
-  if (statement === null) {
-    return false;
-  }
-  if (statement.leftSide.variable.text !== symbol) {
-    return false;
-  }
-
-  return true;
-}
-}
-
 /*
  * parser rules
  */
@@ -316,14 +247,9 @@ small_stmt
 /// expr_stmt: testlist_star_expr (augassign (yield_expr|testlist) |
 ///                      ('=' (yield_expr|testlist_star_expr))*)
 expr_stmt
- : { this.statements.push(); } 
-   ls=testlist_star_expr { this.checkMethodCall(this.statements.last().leftSide); }
-   ( augassign ( yield_expr | testlist) | 
-     ( '=' { this.statements.startAssignation(); } ( yield_expr | testlist_star_expr { this.applyAssignment($ls.text); } ) )* ) 
-     { 
-       let lastStatement = this.statements.pop();
-       this.checkMethodCall(lastStatement.rightSide); 
-     } 
+ : ls=testlist_star_expr 
+      ( augassign ( yield_expr | testlist) | 
+      ( '='  ( yield_expr | testlist_star_expr ) )* ) 
  ;
 
 /// testlist_star_expr: (test|star_expr) (',' (test|star_expr))* [',']
@@ -644,26 +570,9 @@ atom
  : '(' ( yield_expr | testlist_comp )? ')'
  | '[' testlist_comp? ']' 
  | '{' dictorsetmaker? '}'
- | NAME { 
-   if (this.argumentsScope) {
-    this.statements.addArgument($NAME, this.symbolTable.lookup($NAME.text));
-   } else if (this.arrayScope) { } else  {
-    this.statements.addVariable($NAME); 
-   }
- }
- | number { 
-    if (this.arrayScope) {
-      this.statements.addArrayDimension(+$number.text);
-    } else {
-      this.statements.addArgument($number.start, this.symbolTable.lookup('int')); 
-    }
-   }
- | str+ { 
-    if (this.arrayScope) {
-    } else {
-     this.statements.addArgument($str.start, this.symbolTable.lookup('string')); 
-    }
-   }
+ | NAME 
+ | number 
+ | str+ 
  | '...'
  | NONE
  | TRUE
@@ -679,9 +588,9 @@ testlist_comp
 
 /// trailer: '(' [arglist] ')' | '[' subscriptlist ']' | '.' NAME
 trailer
- : { this.argumentsScope = true; } '(' arglist? ')' { this.argumentsScope = false; }
- | { this.arrayScope = true; } '[' subscriptlist ']' { this.arrayScope = false; }
- | '.' NAME { this.statements.addTrailingMethod($NAME); }
+ : '(' arglist? ')'
+ | '[' subscriptlist ']'
+ | '.' NAME 
  ;
 
 /// subscriptlist: subscript (',' subscript)* [',']

@@ -21,20 +21,18 @@ import { SuggestionsDictionary } from './suggestionsDictionary';
 import { CodeCompletionCore } from 'antlr4-c3';
 import { Python3Lexer } from '../antlr/Python3Lexer';
 import { Token, CommonTokenStream } from 'antlr4ts';
-import { Symbol } from '../../tools/symbolTable';
+import { Symbol, SymbolTable } from '../../tools/symbolTable';
 import { AtomFinder } from './atomFinder';
 import { ClassSymbol } from '../compiler/qiskitSymbolTable';
 
 export class SuggestionsCalculator {
-    private atomFinder: AtomFinder;
-
     constructor(
         private parser: Python3Parser,
         private tokenStream: CommonTokenStream,
-        private suggestionsDictionary: SuggestionsDictionary
-    ) {
-        this.atomFinder = new AtomFinder(parser.symbolTable);
-    }
+        private suggestionsDictionary: SuggestionsDictionary,
+        private atomFinder: AtomFinder,
+        private symbolTable: SymbolTable
+    ) {}
 
     calculateAtPosition(tokenPosition: number): SuggestionSymbol[] {
         let core = new CodeCompletionCore(this.parser);
@@ -69,7 +67,7 @@ export class SuggestionsCalculator {
             result.push(...this.availableMethodScopeSymbols());
         }
         if (allowedSymbols.includes('atom')) {
-            result.push(...this.foundVariablesAt(this.parser));
+            result.push(...this.foundVariablesAt());
             result.push(...this.suggestionsDictionary.symbolsWithTypeIn(['class']));
         }
 
@@ -89,8 +87,8 @@ export class SuggestionsCalculator {
         }
     }
 
-    private foundVariablesAt(parser: Python3Parser): SuggestionSymbol[] {
-        return parser.symbolTable
+    private foundVariablesAt(): SuggestionSymbol[] {
+        return this.symbolTable
             .currentSymbols()
             .filter(symbol => 'class' !== symbol.type.getName())
             .map(this.toSuggestionSymbol);

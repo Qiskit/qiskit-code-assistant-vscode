@@ -34,20 +34,28 @@ import { Expression, Term, TermType, ArrayReference, Position } from './types';
 import { ErrorListener } from '../parser';
 import { CommonToken, ParserRuleContext, Token } from 'antlr4ts';
 
-export class QiskitSemanticAnalyzer extends AbstractParseTreeVisitor<void> implements Python3Visitor<void> {
+export class QiskitSemanticAnalyzer extends AbstractParseTreeVisitor<SymbolTable>
+    implements Python3Visitor<SymbolTable> {
     private symbolTable: SymbolTable;
+    private errorListener: ErrorListener;
 
-    constructor(private errorListener: ErrorListener) {
+    constructor(errorListener?: ErrorListener) {
         super();
+
+        this.errorListener = errorListener || new ErrorListener();
     }
 
-    defaultResult() {}
+    defaultResult(): SymbolTable {
+        return QiskitSymbolTable.build();
+    }
 
     visitProgram(ctx: ProgramContext) {
         this.symbolTable = QiskitSymbolTable.build();
 
         let statementAnalyzer = new StatementAnalyzer(this.symbolTable, this.errorListener);
         ctx.stmt().forEach(statement => statement.accept(statementAnalyzer));
+
+        return this.symbolTable;
     }
 }
 
