@@ -38,7 +38,7 @@ export class ArgumentsValidator {
             if (term.type === TermType.variable) {
                 currentType = this.calculateVariableType(currentType, term.value);
             }
-            if ([TermType.arguments, TermType.emptyArgs].includes(term.type)) {
+            if (term.type === TermType.arguments || term.type === TermType.emptyArgs) {
                 this.argumentsValidations.forEach(validation => validation.validate(currentType, term));
             }
         });
