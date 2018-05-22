@@ -16,10 +16,10 @@
 'use strict';
 
 import * as fs from "fs";
-import * as path from "path";
+import { Util } from "./utils";
 
 export class VizManager {
-    private static HTML_TEMPLATE_COUNTS = path.join(__dirname,'../../resources/html-templates/temp-plot-shots.html'); 
+    private static HTML_TEMPLATE_COUNTS = (new Util).getOSDependentPath('../../resources/html-templates/temp-plot-shots.html'); 
 
     public createViz(codePath:string, result:object): string {
 
@@ -27,9 +27,6 @@ export class VizManager {
         if (this.detectProperViz(codePath) === 'HISTOGRAM') {
             let templatePath = VizManager.HTML_TEMPLATE_COUNTS;
 
-            if (process.platform === "win32") {
-                templatePath = VizManager.HTML_TEMPLATE_COUNTS.replace(/\\/g, "/");
-            }
             let resultString = result.toString().replace(/'/g,"\"");
             try{
                 let execResult = JSON.parse(String(resultString));
