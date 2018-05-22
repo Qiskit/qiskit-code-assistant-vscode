@@ -57,8 +57,6 @@ describe('An arguments checker with QISKit symbol table', () => {
             symbolTable.define(new VariableSymbol('qc', symbolTable.lookup('QuantumCircuit')));
             symbolTable.define(new VariableSymbol('c', symbolTable.lookup('ClassicalRegister')));
 
-            symbolTable.print();
-
             validator.validate(terms);
 
             expect(errorListener.errors.length).to.be.equal(1);
