@@ -26,13 +26,14 @@ export class StatementValidator {
     constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {}
 
     validate(statement: Statement) {
-        console.log(`Validating ${statement}`);
-
-        if (statement.expressions.length < 1) {
+        if (statement.isEmpty()) {
             return;
         }
 
-        if (this.isAnAssignment(statement.expressions)) {
+        let argumentsValidator = new ArgumentsValidator(this.symbolTable, this.errorListener);
+        statement.expressions.forEach(expression => argumentsValidator.validate(expression.terms));
+
+        if (statement.isAnAssignment()) {
             let termsFold = this.foldTerms(statement.expressions[1].terms);
             if (termsFold === null) {
                 return;
@@ -40,14 +41,7 @@ export class StatementValidator {
             let value = statement.expressions[0].terms[0].value;
 
             this.symbolTable.define(new VariableSymbol(value, termsFold.type, termsFold.metadata));
-        } else {
-            let argumentsChecker = new ArgumentsValidator(this.symbolTable, this.errorListener);
-            argumentsChecker.validate(statement.expressions[0].terms);
         }
-    }
-
-    private isAnAssignment(expressions: Expression[]) {
-        return expressions.length > 1;
     }
 
     private foldTerms(terms: Term[]): TermsFold {

@@ -29,6 +29,14 @@ export class Statement {
         return entity;
     }
 
+    isEmpty(): boolean {
+        return this.expressions.length < 1;
+    }
+
+    isAnAssignment(): boolean {
+        return this.expressions.length > 1;
+    }
+
     toString(): string {
         return `Statement(${this.expressions.join(', ')})`;
     }
@@ -70,6 +78,10 @@ export class Term implements Position {
 
     static empty(): Term {
         return this._builder('');
+    }
+
+    static emptyArguments(position: Position): Term {
+        return this._builder([], TermType.emptyArgs, position);
     }
 
     static asString(value: string, position: Position): Term {
@@ -134,6 +146,7 @@ export class ArrayReference {
 
 export enum TermType {
     empty = 'EMPTY',
+    emptyArgs = 'EMPTY_ARGS',
     number = 'NUMBER',
     string = 'STRING',
     variable = 'VARIABLE',

@@ -23,7 +23,13 @@ import { ParseErrorLevel, ParserError } from '../../types';
 import { createServerSocketTransport } from 'vscode-jsonrpc';
 
 export class ArgumentsValidator {
-    constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {}
+    argumentsValidations: ArgumentValidation[] = [];
+    constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {
+        this.argumentsValidations = [
+            new ArgumentsNumberValidation(errorListener),
+            new ArgumentsTypeValidation(symbolTable, errorListener)
+        ];
+    }
 
     validate(terms: Term[]): void {
         let currentType: Type = null;
@@ -32,16 +38,15 @@ export class ArgumentsValidator {
             if (term.type === TermType.variable) {
                 currentType = this.calculateVariableType(currentType, term.value);
             }
-            if (term.type === TermType.arguments) {
-                let args = (term.value[0] as Expression).terms;
-                this.validateArguments(currentType, args);
+            if ([TermType.arguments, TermType.emptyArgs].includes(term.type)) {
+                this.argumentsValidations.forEach(validation => validation.validate(currentType, term));
             }
         });
     }
 
     private calculateVariableType(currentType: Type, symbolReference: string): Type {
         if (currentType === null) {
-            return this.safeSymbol(symbolReference);
+            return this.symbolTable.lookup(symbolReference);
         }
 
         if (currentType instanceof VariableSymbol) {
@@ -59,24 +64,67 @@ export class ArgumentsValidator {
 
         return this.symbolTable.lookup('void');
     }
+}
 
-    private validateArguments(currentType: Type, args: Term[]): void {
-        if (currentType instanceof MethodSymbol) {
-            let methodSymbol = currentType as MethodSymbol;
-            this.validateNumberOfArguments(methodSymbol, args);
-            this.validateArgumentsType(methodSymbol, args);
+abstract class ArgumentValidation {
+    abstract validate(currentType: Type, argsTerm: Term): void;
+
+    unfoldArgs(argsTerm: Term): Term[] {
+        if (argsTerm.type === TermType.arguments) {
+            return (argsTerm.value[0] as Expression).terms;
         }
+
+        return [];
     }
 
-    // TODO refactor to general validation rules interface
-    private validateNumberOfArguments(methodSymbol: MethodSymbol, args: Term[]): void {
+    isMethodSymbol(currentType: Type): boolean {
+        return currentType instanceof MethodSymbol;
+    }
+}
+
+class ArgumentsNumberValidation extends ArgumentValidation {
+    constructor(private errorListener: ErrorListener) {
+        super();
+    }
+
+    validate(currentType: Type, argsTerm: Term): void {
+        if (!this.isMethodSymbol(currentType)) {
+            return;
+        }
+
+        let methodSymbol = currentType as MethodSymbol;
+        let args = this.unfoldArgs(argsTerm);
         let mandatoryArguments = methodSymbol.getArguments().filter(arg => arg.optional === false).length;
         if (args.length < mandatoryArguments) {
-            this.wrongNumberOfArgumentsError(args, mandatoryArguments);
+            this.wrongNumberOfArgumentsError(argsTerm, args, mandatoryArguments);
         }
     }
 
-    private validateArgumentsType(methodSymbol: MethodSymbol, args: Term[]): void {
+    private wrongNumberOfArgumentsError(argsTerm: Term, args: Term[], mandatoryArguments: number): void {
+        let error = {
+            line: argsTerm.line,
+            start: argsTerm.start,
+            end: argsTerm.end,
+            message: `Expecting ${mandatoryArguments} arguments but ${args.length} received`,
+            level: ParseErrorLevel.WARNING
+        } as ParserError;
+
+        this.errorListener.semanticError(error);
+    }
+}
+
+class ArgumentsTypeValidation extends ArgumentValidation {
+    constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {
+        super();
+    }
+
+    validate(currentType: Type, argsTerm: Term): void {
+        if (!this.isMethodSymbol(currentType)) {
+            return;
+        }
+
+        let methodSymbol = currentType as MethodSymbol;
+        let args = this.unfoldArgs(argsTerm);
         args.forEach(arg => {
             let argumentType = this.calculateArgumentType(arg);
             let matchedTypes = methodSymbol.getArguments().filter(arg => arg.type === argumentType);
@@ -84,30 +132,6 @@ export class ArgumentsValidator {
                 this.wrongTypeOfArgumentError(arg, argumentType);
             }
         });
-    }
-
-    private wrongNumberOfArgumentsError(args: Term[], mandatoryArguments: number): void {
-        let error = {
-            line: args[0].line,
-            start: args[0].start,
-            end: args[args.length - 1].end,
-            message: `Expecting ${mandatoryArguments} arguments but ${args.length} received`,
-            level: ParseErrorLevel.WARNING
-        } as ParserError;
-
-        this.errorListener.semanticError(error);
-    }
-
-    private wrongTypeOfArgumentError(arg: Term, argumentType: Type): void {
-        let error = {
-            line: arg.line,
-            start: arg.start,
-            end: arg.end,
-            message: `Expecting argument of type ${argumentType.getName()}, but ${arg.value} doesn't match it`,
-            level: ParseErrorLevel.WARNING
-        } as ParserError;
-
-        this.errorListener.semanticError(error);
     }
 
     private calculateArgumentType(arg: Term): Type {
@@ -119,7 +143,7 @@ export class ArgumentsValidator {
                 return this.symbolTable.lookup('int');
             }
             case TermType.variable: {
-                let symbol = this.safeSymbol(arg.value);
+                let symbol = this.symbolTable.lookup(arg.value);
                 if (symbol instanceof VariableSymbol) {
                     return symbol.type;
                 }
@@ -128,7 +152,7 @@ export class ArgumentsValidator {
             }
             case TermType.arrayReference: {
                 let arrayReference = arg.value as ArrayReference;
-                let symbol = this.safeSymbol(arrayReference.variable);
+                let symbol = this.symbolTable.lookup(arrayReference.variable);
                 if (symbol instanceof VariableSymbol) {
                     return symbol.type;
                 }
@@ -141,12 +165,20 @@ export class ArgumentsValidator {
         }
     }
 
-    private safeSymbol(name: string): Type {
-        let symbol = this.symbolTable.lookup(name);
-        if (symbol === null) {
-            symbol = this.symbolTable.lookup('void');
-        }
+    private wrongTypeOfArgumentError(arg: Term, argumentType: Type): void {
+        let argValue = arg.type === TermType.arrayReference ? (arg.value as ArrayReference).variable : arg.value;
+        let errorMessage =
+            argumentType !== null
+                ? `Expecting argument of type ${argumentType.getName()}, but ${argValue} doesn't match it`
+                : `${argValue} does not match the expected type`;
+        let error = {
+            line: arg.line,
+            start: arg.start,
+            end: arg.end,
+            message: errorMessage,
+            level: ParseErrorLevel.WARNING
+        } as ParserError;
 
-        return symbol;
+        this.errorListener.semanticError(error);
     }
 }

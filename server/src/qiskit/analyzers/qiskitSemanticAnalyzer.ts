@@ -155,7 +155,7 @@ class ExpressionTrailerAnalyzer extends AbstractParseTreeVisitor<Term> implement
     visitTrailer(ctx: TrailerContext): Term {
         if (ctx.text.startsWith('(')) {
             if (ctx.arglist() === undefined) {
-                return Term.empty();
+                return Term.emptyArguments(PositionFrom.context(ctx));
             }
 
             let expressionAnalyzer = new ExpressionAnalyzer();
@@ -210,16 +210,16 @@ namespace PositionFrom {
     export function context(ctx: ParserRuleContext): Position {
         return {
             line: ctx.start.line - 1,
-            start: ctx.start.startIndex,
-            end: ctx.stop.stopIndex
+            start: ctx.start.charPositionInLine,
+            end: ctx.stop.charPositionInLine + 1
         };
     }
 
     export function token(token: Token): Position {
         return {
             line: token.line - 1,
-            start: token.startIndex,
-            end: token.stopIndex
+            start: token.charPositionInLine,
+            end: token.charPositionInLine + token.text.length + 1
         };
     }
 }
