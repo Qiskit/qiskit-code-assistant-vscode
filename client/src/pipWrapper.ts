@@ -39,19 +39,19 @@ export class PipWrapper implements IPackageInfo {
             let pkgInfo;
             let failed: boolean = false;
             pkgInfo = regEx.exec(stdout);
-            failed = failed || pkgInfo == null;
+            failed = failed || pkgInfo === null;
             pkg.Name = pkgInfo[2];
             pkgInfo = regEx.exec(stdout);
-            failed = failed || pkgInfo == null;
+            failed = failed || pkgInfo === null;
             pkg.Version = Version.fromString(pkgInfo[2]);
             pkgInfo = regEx.exec(stdout);
-            failed = failed || pkgInfo == null;
+            failed = failed || pkgInfo === null;
             pkg.Summary = pkgInfo[2];
             pkgInfo = regEx.exec(stdout);
-            failed = failed || pkgInfo == null;
+            failed = failed || pkgInfo === null;
             pkg.Location = pkgInfo[2];
             pkgInfo = regEx.exec(stdout);
-            failed = failed || pkgInfo == null;
+            failed = failed || pkgInfo === null;
             pkg.Dependencies = pkgInfo[2];
             if(failed){
                 return Q.reject(`ERROR: Couldn't parse package information from

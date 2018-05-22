@@ -63,7 +63,7 @@ export class LanguagesActivation {
                 transport: TransportKind.ipc,
                 options: debugOptions
             }
-        }
+        };
     }
 
     private buildClientOptions(language: string, configurationSection: string): LanguageClientOptions {
@@ -76,7 +76,7 @@ export class LanguagesActivation {
                 configurationSection: configurationSection,
                 fileEvents: vscode.workspace.createFileSystemWatcher('**/.clientrc')
             }
-        }
+        };
     }
 
 }
