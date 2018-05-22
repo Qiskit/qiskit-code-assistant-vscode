@@ -25,12 +25,13 @@ import {
     AtomContext,
     TrailerContext,
     NumberContext,
-    StrContext
+    StrContext,
+    StmtContext
 } from '../antlr/Python3Parser';
 import { QiskitSymbolTable } from '../compiler/qiskitSymbolTable';
 import { Python3Lexer } from '../antlr/Python3Lexer';
 import { StatementValidator } from './statementValidator';
-import { Expression, Term, TermType, ArrayReference, Position } from './types';
+import { Expression, Term, TermType, ArrayReference, Position, Statement } from './types';
 import { ErrorListener } from '../parser';
 import { CommonToken, ParserRuleContext, Token } from 'antlr4ts';
 
@@ -49,39 +50,25 @@ export class QiskitSemanticAnalyzer extends AbstractParseTreeVisitor<SymbolTable
         return QiskitSymbolTable.build();
     }
 
-    visitProgram(ctx: ProgramContext) {
+    visitProgram(ctx: ProgramContext): SymbolTable {
         this.symbolTable = QiskitSymbolTable.build();
 
-        let statementAnalyzer = new StatementAnalyzer(this.symbolTable, this.errorListener);
-        ctx.stmt().forEach(statement => statement.accept(statementAnalyzer));
+        return this.visitChildren(ctx);
+    }
+
+    visitExpr_stmt(ctx: Expr_stmtContext): SymbolTable {
+        let expressionAnalyzer = new ExpressionAnalyzer();
+        let expressions = ctx.testlist_star_expr().map(expression => expression.accept(expressionAnalyzer));
+        let statement = Statement.withExpressions(expressions);
+
+        let statementValidator = new StatementValidator(this.symbolTable, this.errorListener);
+        statementValidator.validate(statement);
 
         return this.symbolTable;
     }
 }
 
-class StatementAnalyzer extends AbstractParseTreeVisitor<void> implements Python3Visitor<void> {
-    constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {
-        super();
-    }
-
-    defaultResult() {}
-
-    visitExpr_stmt(ctx: Expr_stmtContext) {
-        let expressionAnalyzer = new ExpressionAnalyzer(this.symbolTable, this.errorListener);
-        let expressions = ctx.testlist_star_expr().map(expression => expression.accept(expressionAnalyzer));
-
-        console.log(`Expressions => ${expressions.join(', ')}`);
-
-        let statementValidator = new StatementValidator(this.symbolTable, this.errorListener);
-        statementValidator.validate(expressions);
-    }
-}
-
 class ExpressionAnalyzer extends AbstractParseTreeVisitor<Expression> implements Python3Visitor<Expression> {
-    constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {
-        super();
-    }
-
     defaultResult(): Expression {
         return Expression.empty();
     }
@@ -89,11 +76,11 @@ class ExpressionAnalyzer extends AbstractParseTreeVisitor<Expression> implements
     visitPower(ctx: PowerContext): Expression {
         let terms: Term[] = [];
 
-        let atomAnalyzer = new ExpressionAtomAnalyzer(this.symbolTable, this.errorListener);
+        let atomAnalyzer = new ExpressionAtomAnalyzer();
         let atom = ctx.atom().accept(atomAnalyzer);
         terms.push(atom);
 
-        let trailerAnalyzer = new ExpressionTrailerAnalyzer(this.symbolTable, this.errorListener);
+        let trailerAnalyzer = new ExpressionTrailerAnalyzer();
         let trailers = ctx
             .trailer()
             .map(trailer => trailer.accept(trailerAnalyzer))
@@ -149,10 +136,6 @@ class ExpressionAnalyzer extends AbstractParseTreeVisitor<Expression> implements
 }
 
 class ExpressionAtomAnalyzer extends AbstractParseTreeVisitor<Term> implements Python3Visitor<Term> {
-    constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {
-        super();
-    }
-
     defaultResult(): Term {
         return Term.empty();
     }
@@ -165,10 +148,6 @@ class ExpressionAtomAnalyzer extends AbstractParseTreeVisitor<Term> implements P
 }
 
 class ExpressionTrailerAnalyzer extends AbstractParseTreeVisitor<Term> implements Python3Visitor<Term> {
-    constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {
-        super();
-    }
-
     defaultResult(): Term {
         return Term.empty();
     }
@@ -179,7 +158,7 @@ class ExpressionTrailerAnalyzer extends AbstractParseTreeVisitor<Term> implement
                 return Term.empty();
             }
 
-            let expressionAnalyzer = new ExpressionAnalyzer(this.symbolTable, this.errorListener);
+            let expressionAnalyzer = new ExpressionAnalyzer();
             let expressions = ctx
                 .arglist()
                 .argument()
@@ -191,7 +170,7 @@ class ExpressionTrailerAnalyzer extends AbstractParseTreeVisitor<Term> implement
                 return Term.empty();
             }
 
-            let expressionAnalyzer = new ExpressionAnalyzer(this.symbolTable, this.errorListener);
+            let expressionAnalyzer = new ExpressionAnalyzer();
             let expressions = ctx
                 .subscriptlist()
                 .subscript()

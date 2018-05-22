@@ -15,6 +15,25 @@
 
 'use strict';
 
+export class Statement {
+    expressions: Expression[] = [];
+
+    static empty(): Statement {
+        return new Statement();
+    }
+
+    static withExpressions(expressions: Expression[]): Statement {
+        let entity = new Statement();
+        entity.expressions = expressions;
+
+        return entity;
+    }
+
+    toString(): string {
+        return `Statement(${this.expressions.join(', ')})`;
+    }
+}
+
 export class Expression {
     terms: Term[] = [];
 

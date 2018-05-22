@@ -19,7 +19,7 @@ import { expect } from 'chai';
 import { QiskitSymbolTable, VariableSymbol } from '../src/qiskit/compiler/qiskitSymbolTable';
 import { StatementValidator } from '../src/qiskit/analyzers/statementValidator';
 import { ErrorListener } from '../src/qiskit/parser';
-import { Expression, Term, ArrayReference, TermType, Position } from '../src/qiskit/analyzers/types';
+import { Expression, Term, ArrayReference, TermType, Position, Statement } from '../src/qiskit/analyzers/types';
 import { ParseErrorLevel } from '../src/types';
 import { SymbolTable } from '../src/tools/symbolTable';
 
@@ -46,7 +46,7 @@ describe('A statement validator with QISKit symbol table', () => {
         ];
 
         it('should introduce new symbol into the symbol table', () => {
-            statementValidator.validate(expressions);
+            statementValidator.validate(Statement.withExpressions(expressions));
 
             expect(symbolTable.lookup('qp')).to.include({
                 name: 'qp',
@@ -73,7 +73,7 @@ describe('A statement validator with QISKit symbol table', () => {
             let symbol = new VariableSymbol('qp', type);
             symbolTable.define(symbol);
 
-            statementValidator.validate(expressions);
+            statementValidator.validate(Statement.withExpressions(expressions));
             let qrVariable = symbolTable.lookup('qr') as VariableSymbol;
 
             expect(qrVariable.name).to.be.equal('qr');

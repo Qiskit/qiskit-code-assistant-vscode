@@ -16,7 +16,7 @@
 'use strict';
 
 import { SymbolTable, Symbol, Type, BuiltInTypeSymbol } from '../../tools/symbolTable';
-import { Expression, Term, TermType, ArrayReference } from './types';
+import { Expression, Term, TermType, ArrayReference, Statement } from './types';
 import { VariableSymbol, ClassSymbol, VariableMetadata, MethodSymbol } from '../compiler/qiskitSymbolTable';
 import { ErrorListener } from '../parser';
 import { ParseErrorLevel, ParserError } from '../../types';
@@ -25,18 +25,24 @@ import { ArgumentsValidator } from './argumentsValidator';
 export class StatementValidator {
     constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {}
 
-    validate(expressions: Expression[]) {
-        if (this.isAnAssignment(expressions)) {
-            let termsFold = this.foldTerms(expressions[1].terms);
+    validate(statement: Statement) {
+        console.log(`Validating ${statement}`);
+
+        if (statement.expressions.length < 1) {
+            return;
+        }
+
+        if (this.isAnAssignment(statement.expressions)) {
+            let termsFold = this.foldTerms(statement.expressions[1].terms);
             if (termsFold === null) {
                 return;
             }
-            let value = expressions[0].terms[0].value;
+            let value = statement.expressions[0].terms[0].value;
 
             this.symbolTable.define(new VariableSymbol(value, termsFold.type, termsFold.metadata));
         } else {
             let argumentsChecker = new ArgumentsValidator(this.symbolTable, this.errorListener);
-            argumentsChecker.validate(expressions[0].terms);
+            argumentsChecker.validate(statement.expressions[0].terms);
         }
     }
 
