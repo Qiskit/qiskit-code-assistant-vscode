@@ -18,27 +18,24 @@
 import * as fs from "fs";
 import { Util } from "./utils";
 
-export class VizManager {
-    private static HTML_TEMPLATE_COUNTS = Util.getOSDependentPath(
-        "../../resources/html-templates/temp-plot-shots.html"
-    );
+export namespace VizManager {
 
-    public createViz(codePath: string, result: object): string {
+    export function createViz(codePath: string, result: object): string {
         console.log("histogram detected");
         if (this.detectProperViz(codePath) === "HISTOGRAM") {
-            let templatePath = VizManager.HTML_TEMPLATE_COUNTS;
+            let templatePath = Util.getOSDependentPath("../../resources/html-templates/temp-plot-shots.html");
 
             let resultString = result.toString().replace(/'/g, '"');
             try {
                 let execResult = JSON.parse(String(resultString));
-                return new VizManager().createHistogram(
+                return VizManager.createHistogram(
                     execResult.result[0].data.counts,
                     templatePath
                 );
             } catch (err) {
                 try {
                     let execResult = JSON.parse(String(resultString));
-                    return new VizManager().createHistogram(
+                    return VizManager.createHistogram(
                         execResult,
                         templatePath
                     );
@@ -55,7 +52,7 @@ export class VizManager {
         }
     }
 
-    private detectProperViz(codePath: string): string {
+    export function detectProperViz(codePath: string): string {
         let codeFile = undefined;
         codeFile = fs.readFileSync(codePath, { encoding: "utf8" });
         if (codeFile !== undefined) {
@@ -103,7 +100,7 @@ export class VizManager {
         }
     }
 
-    private createHistogram(
+    export function createHistogram(
         countsArray: object | string,
         templatePath: string
     ): string {
@@ -113,7 +110,7 @@ export class VizManager {
         const countsArrayOrd = {};
         Object.keys(countsArray)
             .sort()
-            .forEach(function(key) {
+            .forEach(function (key) {
                 countsArrayOrd[key] = countsArray[key];
             });
 

@@ -115,7 +115,7 @@ export function activate(context: vscode.ExtensionContext) {
                 const codeFile = vscode.window.activeTextEditor.document;
                 codeFile.save();
                 resultProvider.displayContent(
-                    new VizManager().createViz(
+                    VizManager.createViz(
                         codeFile.fileName.toString(),
                         codeResult
                     ),
@@ -130,7 +130,7 @@ export function activate(context: vscode.ExtensionContext) {
                         "Execution result - QISKit"
                     )
                     .then(
-                        _success => {},
+                        _success => { },
                         reason => {
                             console.log(`Error: ${reason}`);
                             vscode.window.showErrorMessage(reason);
@@ -153,7 +153,7 @@ export function activate(context: vscode.ExtensionContext) {
                         "../../resources/qiskitScripts/executeQASM.py"
                     );
                     resultProvider.displayContent(
-                        new VizManager().createViz(execPath, codeResult),
+                        VizManager.createViz(execPath, codeResult),
                         previewUri
                     );
 
@@ -165,7 +165,7 @@ export function activate(context: vscode.ExtensionContext) {
                             "Execution result - QASM"
                         )
                         .then(
-                            _success => {},
+                            _success => { },
                             reason => {
                                 console.log(`Error: ${reason}`);
                                 vscode.window.showErrorMessage(reason);
@@ -190,7 +190,7 @@ export function activate(context: vscode.ExtensionContext) {
                         "../../resources/qiskitScripts/listLocalBackends.py"
                     );
                     resultProvider.displayContent(
-                        new VizManager().createViz(execPath, localBackends),
+                        VizManager.createViz(execPath, localBackends),
                         previewUri
                     );
 
@@ -202,7 +202,7 @@ export function activate(context: vscode.ExtensionContext) {
                             "Local backends available"
                         )
                         .then(
-                            _success => {},
+                            _success => { },
                             reason => {
                                 console.log(`Error: ${reason}`);
                                 vscode.window.showErrorMessage(reason);
@@ -237,7 +237,7 @@ export function activate(context: vscode.ExtensionContext) {
                     "../../resources/qiskitScripts/listRemoteBackends.py"
                 );
                 resultProvider.displayContent(
-                    new VizManager().createViz(execPath, remoteBackends),
+                    VizManager.createViz(execPath, remoteBackends),
                     previewUri
                 );
 
@@ -249,7 +249,7 @@ export function activate(context: vscode.ExtensionContext) {
                         "Remote backends available"
                     )
                     .then(
-                        _success => {},
+                        _success => { },
                         reason => {
                             console.log(`Error: ${reason}`);
                             vscode.window.showErrorMessage(reason);
@@ -284,7 +284,7 @@ export function activate(context: vscode.ExtensionContext) {
                     "../../resources/qiskitScripts/listPendingJobs.py"
                 );
                 resultProvider.displayContent(
-                    new VizManager().createViz(execPath, pendingJobs),
+                    VizManager.createViz(execPath, pendingJobs),
                     previewUri
                 );
 
@@ -296,7 +296,7 @@ export function activate(context: vscode.ExtensionContext) {
                         "User's pending jobs"
                     )
                     .then(
-                        _success => {},
+                        _success => { },
                         reason => {
                             console.log(`Error: ${reason}`);
                             vscode.window.showErrorMessage(reason);
@@ -331,7 +331,7 @@ export function activate(context: vscode.ExtensionContext) {
                     "../../resources/qiskitScripts/listExecutedJobs.py"
                 );
                 resultProvider.displayContent(
-                    new VizManager().createViz(execPath, executedJobs),
+                    VizManager.createViz(execPath, executedJobs),
                     previewUri
                 );
 
@@ -343,7 +343,7 @@ export function activate(context: vscode.ExtensionContext) {
                         "User's executed jobs"
                     )
                     .then(
-                        _success => {},
+                        _success => { },
                         reason => {
                             console.log(`Error: ${reason}`);
                             vscode.window.showErrorMessage(reason);
@@ -378,7 +378,7 @@ export function activate(context: vscode.ExtensionContext) {
                     "../../resources/qiskitScripts/getQueueStatus.py"
                 );
                 resultProvider.displayContent(
-                    new VizManager().createViz(execPath, queueStatus),
+                    VizManager.createViz(execPath, queueStatus),
                     previewUri
                 );
 
@@ -390,7 +390,7 @@ export function activate(context: vscode.ExtensionContext) {
                         "Queue status"
                     )
                     .then(
-                        _success => {},
+                        _success => { },
                         reason => {
                             console.log(`Error: ${reason}`);
                             vscode.window.showErrorMessage(reason);
@@ -425,7 +425,7 @@ export function activate(context: vscode.ExtensionContext) {
                     "../../resources/qiskitScripts/getUserCredits.py"
                 );
                 resultProvider.displayContent(
-                    new VizManager().createViz(execPath, userCredits),
+                    VizManager.createViz(execPath, userCredits),
                     previewUri
                 );
 
@@ -437,7 +437,7 @@ export function activate(context: vscode.ExtensionContext) {
                         "User's credits"
                     )
                     .then(
-                        _success => {},
+                        _success => { },
                         reason => {
                             console.log(`Error: ${reason}`);
                             vscode.window.showErrorMessage(reason);
