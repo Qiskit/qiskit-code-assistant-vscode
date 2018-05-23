@@ -75,8 +75,9 @@ export class PipPackage implements IPackage {
             //Getting the selection from last showInputBox
             if(selection === 'Yes'){
                 return this.update(packageName);
-            }
-            else {
+            } else if (selection === null){
+                return null;
+            } else {
                 return Q.reject(`The ${packageName} version you have installed is older than the version required (v.${pkgVersion}). The extension will not work properly`);
             }
         }).then(() => {
