@@ -32,6 +32,7 @@
 		"onCommand:qstudio.initQConfig",
 		"onCommand:qstudio.discoverLocalBackends",
 		"onCommand:qstudio.discoverRemoteBackends",
+		"onCommand:qstudio.getDevicesStatus",
 		"onCommand:qstudio.listPendingJobs",
 		"onCommand:qstudio.getQueueStatus",
 		"onCommand:qstudio.getUserCredits"
@@ -171,6 +172,11 @@
 			{
 				"command": "qstudio.discoverRemoteBackends",
 				"title": "Discover remote backends available",
+				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.getDevicesStatus",
+				"title": "Get the status of remote devices available",
 				"category": "qstudio"
 			},
 			{
