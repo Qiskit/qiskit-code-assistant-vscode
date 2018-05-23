@@ -150,7 +150,7 @@ export function activate(context: vscode.ExtensionContext) {
                         `qasm-preview-result://authority/result-preview`
                     );
                     let execPath = Util.getOSDependentPath(
-                        "../../resources/qiskitScripts/executeQASM.py"
+                        executeQASMScript
                     );
                     resultProvider.displayContent(
                         VizManager.createViz(execPath, codeResult),
@@ -187,7 +187,7 @@ export function activate(context: vscode.ExtensionContext) {
                     );
 
                     let execPath = Util.getOSDependentPath(
-                        "../../resources/qiskitScripts/listLocalBackends.py"
+                        localBackendsScript
                     );
                     resultProvider.displayContent(
                         VizManager.createViz(execPath, localBackends),
@@ -234,7 +234,7 @@ export function activate(context: vscode.ExtensionContext) {
                     `qiskit-remoteBackends-result://authority/backends-preview`
                 );
                 let execPath = Util.getOSDependentPath(
-                    "../../resources/qiskitScripts/listRemoteBackends.py"
+                    remoteBackendsScript
                 );
                 resultProvider.displayContent(
                     VizManager.createViz(execPath, remoteBackends),
@@ -258,21 +258,52 @@ export function activate(context: vscode.ExtensionContext) {
             })
         ),
 
-        vscode.commands.registerCommand("qstudio.getDevicesStatus", () => CommandExecutor.execPythonFile('../../resources/qiskitScripts/listRemoteBackends.py', ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project'), "--status", "True"]).then(remoteDevicesStatus => {
-            let resultProvider = new ResultProvider();
-            vscode.workspace.registerTextDocumentContentProvider('qiskit-remoteBackends-result', resultProvider);
-            let previewUri = vscode.Uri.parse(`qiskit-remoteBackends-result://authority/backends-preview`);
-            let execPath = Util.getOSDependentPath(
-                "../../resources/qiskitScripts/listRemoteBackends.py"
-            );
-            resultProvider.displayContent(VizManager.createViz(execPath, remoteDevicesStatus), previewUri);
+        vscode.commands.registerCommand("qstudio.getDevicesStatus", () =>
+            CommandExecutor.execPythonFile(remoteBackendsScript, [
+                "--apiToken",
+                config.get("qiskit.token"),
+                "--url",
+                config.get('qiskit.url'),
+                "--hub",
+                config.get('qiskit.hub'),
+                "--group",
+                config.get('qiskit.group'),
+                "--project",
+                config.get('qiskit.project'),
+                "--status", "True"
+            ]).then(remoteDevicesStatus => {
+                let resultProvider = new ResultProvider();
+                vscode.workspace.registerTextDocumentContentProvider(
+                    'qiskit-remoteBackends-result',
+                    resultProvider
+                );
+                let previewUri = vscode.Uri.parse(
+                    `qiskit-remoteBackends-result://authority/backends-preview`
+                );
+                let execPath = Util.getOSDependentPath(
+                    remoteBackendsScript
+                );
+                resultProvider.displayContent(
+                    VizManager.createViz(execPath, remoteDevicesStatus),
+                    previewUri
+                );
 
-            vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Status for remote devices")
-                .then((_success) => { }, (reason) => {
-                    console.log(`Error: ${reason}`);
-                    vscode.window.showErrorMessage(reason);
-                });
-        })),
+                vscode.commands
+                    .executeCommand(
+                        'vscode.previewHtml',
+                        previewUri,
+                        vscode.ViewColumn.Two,
+                        "Status for remote devices"
+                    )
+                    .then(
+                        _success => { },
+                        reason => {
+                            console.log(`Error: ${reason}`);
+                            vscode.window.showErrorMessage(reason);
+                        }
+                    );
+            })
+        ),
 
         vscode.commands.registerCommand("qstudio.listPendingJobs", () =>
             CommandExecutor.execPythonFile(pendingJobsScript, [
@@ -297,7 +328,7 @@ export function activate(context: vscode.ExtensionContext) {
                 );
 
                 let execPath = Util.getOSDependentPath(
-                    "../../resources/qiskitScripts/listPendingJobs.py"
+                    pendingJobsScript
                 );
                 resultProvider.displayContent(
                     VizManager.createViz(execPath, pendingJobs),
@@ -344,7 +375,7 @@ export function activate(context: vscode.ExtensionContext) {
                 );
 
                 let execPath = Util.getOSDependentPath(
-                    "../../resources/qiskitScripts/listExecutedJobs.py"
+                    executedJobsScript
                 );
                 resultProvider.displayContent(
                     VizManager.createViz(execPath, executedJobs),
@@ -391,7 +422,7 @@ export function activate(context: vscode.ExtensionContext) {
                 );
 
                 let execPath = Util.getOSDependentPath(
-                    "../../resources/qiskitScripts/getQueueStatus.py"
+                    getQueueStatusScript
                 );
                 resultProvider.displayContent(
                     VizManager.createViz(execPath, queueStatus),
@@ -438,7 +469,7 @@ export function activate(context: vscode.ExtensionContext) {
                 );
 
                 let execPath = Util.getOSDependentPath(
-                    "../../resources/qiskitScripts/getUserCredits.py"
+                    getUserCreditsScript
                 );
                 resultProvider.displayContent(
                     VizManager.createViz(execPath, userCredits),
