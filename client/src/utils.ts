@@ -12,21 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // =============================================================================
+import * as path from "path";
 
-import * as Q from "q";
-import {IPackage} from "./interfaces";
-
-export class Qiskit implements IPackage {
-    public Info;
-    update() : Q.Promise<string> {
-        return Q.reject("Not implemented!");
-    }
-
-    checkVersion() : Q.Promise<void> {
-        return Q.reject("Not implemented!");
-    }
-
-    install() : Q.Promise<void> {
-        return Q.reject("Not implemented!");
+export namespace Util {
+    export function getOSDependentPath(_path: string): string {
+        let pathInOS = path.resolve(__dirname, _path);
+        if (process.platform === "win32") {
+            pathInOS = pathInOS.replace(/\\/g, "/");
+        }
+        return pathInOS;
     }
 }

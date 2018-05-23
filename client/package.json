@@ -87,7 +87,7 @@
 				"ibm-q-studio.qiskit.packages": {
 					"type": "object",
 					"default": {
-						"qiskit": "0.4.11"
+						"qiskit": "0.5.1"
 					},
 					"description": "QISKit and libraries related to run code"
 				},

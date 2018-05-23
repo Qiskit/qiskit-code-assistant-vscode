@@ -48,7 +48,7 @@ export interface IPackage {
     Info: IPackageInfo;
     // Checks whether or not the package is installed, and if installed, check
     // for newer versions
-    checkVersion(): Q.Promise<void>;
+    checkVersion(pkgVersion: string): Q.Promise<void>;
     update(pkg: string): Q.Promise<string>;
     install(pkg: string): Q.Promise<string>;
 }

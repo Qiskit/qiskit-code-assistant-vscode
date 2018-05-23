@@ -39,7 +39,7 @@ export class PipPackage implements IPackage {
         this.Info.Version = Version.fromString(version);
     }
 
-    public checkVersion(): Q.Promise<void> {
+    public checkVersion(pkgVersion:string): Q.Promise<void> {
         //console.log(this.Info.Name);
         let packageName = this.Info.Name;
         return this.pip.getPackageInfo(this.Info.Name)
@@ -51,28 +51,41 @@ export class PipPackage implements IPackage {
         })
         .then((pkgInfo: IPackageInfo) => {
             // If there is a new version, offer to the user the update.
-            if(pkgInfo.Version.isGreater(this.Info.Version)){
-                console.log(`New version ${pkgInfo.Version.toString()}`);
+
+            if (this.Info.Version.isLesser(Version.fromString(pkgVersion.toString()))){
+                console.log(`New mandatory version ${pkgInfo.Version.toString()}`);
                 return vscode.window.showInputBox({
                     ignoreFocusOut: true,
-                    prompt: `👉 There's a new ${packageName} release: ${pkgInfo.Version.toString()}. Do you want to upgrade? 👈`,
+                    prompt: `👉 There's a new mandatory ${packageName} release: ${pkgInfo.Version.toString()}. You must upgrade it to enjoy this extension 👈`,
                     value: 'Yes',
                 });
+            } else {
+                if(pkgInfo.Version.isGreater(this.Info.Version)){
+                    console.log(`New version ${pkgInfo.Version.toString()}`);
+                    return vscode.window.showInputBox({
+                        ignoreFocusOut: true,
+                        prompt: `👉 There's a new ${packageName} release: ${pkgInfo.Version.toString()}. Do you want to upgrade? 👈`,
+                        value: 'Yes',
+                    });
+                }
+                return null;
             }
-            return null;
         // There's a new version... If user want to update, do that!
         }).then((selection: string|undefined) => {
             //Getting the selection from last showInputBox
-            if(selection == 'Yes'){
+            if(selection === 'Yes'){
                 return this.update(packageName);
+            } else if (selection === null){
+                return null;
+            } else {
+                return Q.reject(`The ${packageName} version you have installed is older than the version required (v.${pkgVersion}). The extension will not work properly`);
             }
-            return null;
         }).then(() => {
             // Check if the software is installed, if not offer the install
             return this.pip.list()
                 .then(result => {
                     //console.log(`pip list ${result}`); 
-                    if (result.search(packageName) == -1 ) { 
+                    if (result.search(packageName) === -1 ) { 
                         console.log(`${packageName} not installed`); 
                         return vscode.window.showInputBox({
                             ignoreFocusOut: true,
@@ -87,13 +100,13 @@ export class PipPackage implements IPackage {
                 })
                 .then((selection: string|undefined) => {
                     //Getting the selection from last showInputBox
-                    if(selection == 'Yes'){
+                    if(selection === 'Yes'){
                         this.install(packageName)
                         .then((result) => {
                             return Q.resolve(result);
                         }).catch((err)=>{
                             return Q.reject(err);
-                        })
+                        });
                     }
                 }).catch(err =>{
                     console.log(`Error: pip list ${err}`);
@@ -102,38 +115,42 @@ export class PipPackage implements IPackage {
         })
         .catch((err) => {
             console.log(err);
-            return this.pip.list()
-            .then(result => {
-                //console.log(`pip list ${result}`); 
-                if (result.search(packageName) == -1 ) { 
-                    console.log(`${packageName} not installed`); 
-                    return vscode.window.showInputBox({
-                        ignoreFocusOut: true,
-                        prompt: `👉 You don't have installed ${packageName}. Do you want to install it? 👈`,
-                        value: 'Yes',
-                    });
-                } else { 
-                    console.log(`${packageName} is already installed`); 
-                    vscode.window.showInformationMessage(`👌 ${packageName} is already installed`);
-                    return Q.resolve();
-                } 
-            })
-            .then((selection: string|undefined) => {
-                //Getting the selection from last showInputBox
-                if(selection == 'Yes'){
-                    this.install(packageName)
-                    .then((result) => {
-                        return Q.resolve(result);
-                    }).catch((err)=>{
-                        return Q.reject(err);
-                    })
-                } else {
-                    return Q.reject("QISKit not installed. The extension will not work properly");   
-                }
-            }).catch(err =>{
-                console.log(`Error: pip list ${err}`);
-                return Q.reject(err);   
-            });
+            if (String(err).includes("version you have installed is older than the version required")=== false) {
+                return this.pip.list()
+                .then(result => {
+                    //console.log(`pip list ${result}`); 
+                    if (result.search(packageName) === -1 ) { 
+                        console.log(`${packageName} not installed`); 
+                        return vscode.window.showInputBox({
+                            ignoreFocusOut: true,
+                            prompt: `👉 You don't have installed ${packageName}. Do you want to install it? 👈`,
+                            value: 'Yes',
+                        });
+                    } else { 
+                        console.log(`${packageName} is already installed`); 
+                        vscode.window.showInformationMessage(`👌 ${packageName} is already installed`);
+                        return Q.resolve();
+                    } 
+                })
+                .then((selection: string|undefined) => {
+                    //Getting the selection from last showInputBox
+                    if(selection === 'Yes'){
+                        this.install(packageName)
+                        .then((result) => {
+                            return Q.resolve(result);
+                        }).catch((err)=>{
+                            return Q.reject(err);
+                        });
+                    } else {
+                        return Q.reject("QISKit not installed. The extension will not work properly");   
+                    }
+                }).catch(err =>{
+                    console.log(`Error: pip list ${err}`);
+                    return Q.reject(err);   
+                });
+            } else {
+                return Q.reject(err);
+            }
             
         });
     }

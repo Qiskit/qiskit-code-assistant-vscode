@@ -1,4 +1,4 @@
-from qiskit import backends
+from qiskit import register, available_backends
 from IBMQuantumExperience import IBMQuantumExperience
 import argparse
 import json
@@ -18,11 +18,13 @@ def main():
         args['url'] = 'https://quantumexperience.ng.bluemix.net/api' 
 
     if (args['hub'] is None) or (args['group'] is None) or (args['project'] is None):
-        api = IBMQuantumExperience(args['apiToken'], {'url': args['url']})
+        # api = IBMQuantumExperience(args['apiToken'], {'url': args['url']})
+        register(args['apiToken'], args['url'])
     else:
-        api = IBMQuantumExperience(args['apiToken'], {'url': args['url'], 'hub': args['hub'], 'group': args['group'], 'project': args['project']})
+        # api = IBMQuantumExperience(args['apiToken'], {'url': args['url'], 'hub': args['hub'], 'group': args['group'], 'project': args['project']})
+        register(args['apiToken'], args['url'], args['hub'], args['group'], args['project'])
 
-    backs = backends.discover_remote_backends(api)
+    backs = available_backends({'local': False})
     print(json.dumps(backs, indent=2, sort_keys=True))
 
 if __name__ == '__main__':
