@@ -13,24 +13,25 @@
 // limitations under the License.
 // =============================================================================
 
-'use strict';
+"use strict";
 
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 import * as Q from "q";
-import {DependencyMgr} from "./dependencyMgr";
-import {PackageMgr} from "./packageMgr";
-import { LanguagesActivation } from './languages';
+import { DependencyMgr } from "./dependencyMgr";
+import { PackageMgr } from "./packageMgr";
+import { LanguagesActivation } from "./languages";
 
 import { ResultProvider } from "./resultProvider";
-import { CommandExecutor } from './commandExecutor';
-import { VizManager } from './visualizations';
-import * as path from "path";
+import { CommandExecutor } from "./commandExecutor";
+import { VizManager } from "./visualizations";
+import { Util } from "./utils";
 
 export function activate(context: vscode.ExtensionContext) {
+    console.log("Activating IBM Q Studio extension ...");
 
-    console.log('Activating IBM Q Studio extension ...');
-
-    vscode.window.showInformationMessage("✨ Activating IBM Q Studio extension... ✨");
+    vscode.window.showInformationMessage(
+        "✨ Activating IBM Q Studio extension... ✨"
+    );
 
     //registerQiskitCommands(context);
 
@@ -54,13 +55,15 @@ export function activate(context: vscode.ExtensionContext) {
 
     checkDependencies()
         .then(() => {
-            console.log('IBM Q Studio extension successfully loaded!');
-            vscode.window.showInformationMessage("🚀 IBM Q Studio extension loaded! 🚀");
+            console.log("IBM Q Studio extension successfully loaded!");
+            vscode.window.showInformationMessage(
+                "🚀 IBM Q Studio extension loaded! 🚀"
+            );
         })
         .catch(err => {
-            console.log('Dependencies error:',err);
+            console.log("Dependencies error:", err);
             vscode.window.showErrorMessage(err);
-        })
+        });
 
     /*function registerQiskitCommands(context: vscode.ExtensionContext): void {
         context.subscriptions.push(vscode.commands.registerCommand(`qiskitRun`, () => {
@@ -68,202 +71,442 @@ export function activate(context: vscode.ExtensionContext) {
         }));
     }*/
 
+    const config = vscode.workspace.getConfiguration("ibm-q-studio");
+    const executeQASMScript = Util.getOSDependentPath(
+        "../../resources/qiskitScripts/executeQASM.py"
+    );
+    const localBackendsScript = Util.getOSDependentPath(
+        "../../resources/qiskitScripts/listLocalBackends.py"
+    );
+    const remoteBackendsScript = Util.getOSDependentPath(
+        "../../resources/qiskitScripts/listRemoteBackends.py"
+    );
+    const pendingJobsScript = Util.getOSDependentPath(
+        "../../resources/qiskitScripts/listPendingJobs.py"
+    );
+    const executedJobsScript = Util.getOSDependentPath(
+        "../../resources/qiskitScripts/listExecutedJobs.py"
+    );
+    const getQueueStatusScript = Util.getOSDependentPath(
+        "../../resources/qiskitScripts/getQueueStatus.py"
+    );
+    const getUserCreditsScript = Util.getOSDependentPath(
+        "../../resources/qiskitScripts/getUserCredits.py"
+    );
 
-    const config = vscode.workspace.getConfiguration('ibm-q-studio');
     context.subscriptions.push(
-        vscode.commands.registerCommand("qstudio.reload", () => activate(context)),
-        vscode.commands.registerCommand("qstudio.checkDependencies", () => checkDependencies()),
-        vscode.commands.registerCommand("qstudio.runQISKitCode", () => 
-            (new CommandExecutor).execPythonActiveEditor().then(codeResult => {
+        vscode.commands.registerCommand("qstudio.reload", () =>
+            activate(context)
+        ),
+        vscode.commands.registerCommand("qstudio.checkDependencies", () =>
+            checkDependencies()
+        ),
+        vscode.commands.registerCommand("qstudio.runQISKitCode", () =>
+            CommandExecutor.execPythonActiveEditor().then(codeResult => {
                 let resultProvider = new ResultProvider();
-                vscode.workspace.registerTextDocumentContentProvider('qiskit-preview-result', resultProvider)
-                let previewUri = vscode.Uri.parse(`qiskit-preview-result://authority/result-preview`);
+                vscode.workspace.registerTextDocumentContentProvider(
+                    "qiskit-preview-result",
+                    resultProvider
+                );
+                let previewUri = vscode.Uri.parse(
+                    `qiskit-preview-result://authority/result-preview`
+                );
 
                 const codeFile = vscode.window.activeTextEditor.document;
                 codeFile.save();
-                resultProvider.displayContent((new VizManager).createViz(codeFile.fileName.toString(), codeResult), previewUri);
-                
-                vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Execution result - QISKit")
-                    .then((_success) => {}, (reason) => {
-                        console.log(`Error: ${reason}`);
-                        vscode.window.showErrorMessage(reason);
-                    });
-                })
-        ),
-        vscode.commands.registerCommand("qstudio.runQASMCode", () => 
-            (new CommandExecutor).execQasmActiveEditor('../../resources/qiskitScripts/executeQASM.py').then(codeResult => {
-                let resultProvider = new ResultProvider();
-                vscode.workspace.registerTextDocumentContentProvider('qasm-preview-result', resultProvider)
-                let previewUri = vscode.Uri.parse(`qasm-preview-result://authority/result-preview`);
-                let execPath = path.join(__dirname,'../../resources/qiskitScripts/executeQASM.py');
-                if (process.platform === "win32") {
-                    execPath = execPath.replace(/\\/g, "/");
-                }
-                resultProvider.displayContent((new VizManager).createViz(execPath, codeResult), previewUri);
-                
-                vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Execution result - QASM")
-                    .then((_success) => {}, (reason) => {
-                        console.log(`Error: ${reason}`);
-                        vscode.window.showErrorMessage(reason);
-                    });
-                })
-        ),
-        vscode.commands.registerCommand("qstudio.discoverLocalBackends", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listLocalBackends.py',[]).then(localBackends => {
-            let resultProvider = new ResultProvider();
-            vscode.workspace.registerTextDocumentContentProvider('qiskit-localBackends-result', resultProvider)
-            let previewUri = vscode.Uri.parse(`qiskit-localBackends-result://authority/backends-preview`);
-            
-            let execPath = path.join(__dirname,'../../resources/qiskitScripts/listLocalBackends.py');
-            if (process.platform === "win32") {
-                execPath = execPath.replace(/\\/g, "/");
-            }
-            resultProvider.displayContent((new VizManager).createViz(execPath, localBackends), previewUri);
-            
-            vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Local backends available")
-                .then((_success) => {}, (reason) => {
-                    console.log(`Error: ${reason}`);
-                    vscode.window.showErrorMessage(reason);
-                });
-            })),
-        
-        vscode.commands.registerCommand("qstudio.discoverRemoteBackends", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listRemoteBackends.py', ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(remoteBackends => {
-            let resultProvider = new ResultProvider();
-            vscode.workspace.registerTextDocumentContentProvider('qiskit-remoteBackends-result', resultProvider)
-            let previewUri = vscode.Uri.parse(`qiskit-remoteBackends-result://authority/backends-preview`);
-            let execPath = path.join(__dirname,'../../resources/qiskitScripts/listRemoteBackends.py');
-            if (process.platform === "win32") {
-                execPath = execPath.replace(/\\/g, "/");
-            }
-            resultProvider.displayContent((new VizManager).createViz(execPath, remoteBackends), previewUri);
+                resultProvider.displayContent(
+                    VizManager.createViz(
+                        codeFile.fileName.toString(),
+                        codeResult
+                    ),
+                    previewUri
+                );
 
-            vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Remote backends available")
-                .then((_success) => {}, (reason) => {
-                    console.log(`Error: ${reason}`);
-                    vscode.window.showErrorMessage(reason);
-                });
-            })),
-
-        vscode.commands.registerCommand("qstudio.listPendingJobs", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listPendingJobs.py', ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(pendingJobs => {
-            let resultProvider = new ResultProvider();
-            vscode.workspace.registerTextDocumentContentProvider('qiskit-pendingJobs-result', resultProvider)
-            let previewUri = vscode.Uri.parse(`qiskit-pendingJobs-result://authority/list-preview`);
-            
-            let execPath = path.join(__dirname,'../../resources/qiskitScripts/listPendingJobs.py');
-            if (process.platform === "win32") {
-                execPath = execPath.replace(/\\/g, "/");
-            }
-            resultProvider.displayContent((new VizManager).createViz(execPath, pendingJobs), previewUri);
-            
-            vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's pending jobs")
-                .then((_success) => {}, (reason) => {
-                    console.log(`Error: ${reason}`);
-                    vscode.window.showErrorMessage(reason);
-                });
-            })),
-
-        vscode.commands.registerCommand("qstudio.listExecutedJobs", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/listExecutedJobs.py', ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(executedJobs => {
-            let resultProvider = new ResultProvider();
-            vscode.workspace.registerTextDocumentContentProvider('qiskit-executedJobs-result', resultProvider)
-            let previewUri = vscode.Uri.parse(`qiskit-executedJobs-result://authority/list-preview`);
-            
-            let execPath = path.join(__dirname,'../../resources/qiskitScripts/listExecutedJobs.py');
-            if (process.platform === "win32") {
-                execPath = execPath.replace(/\\/g, "/");
-            }
-            resultProvider.displayContent((new VizManager).createViz(execPath, executedJobs), previewUri);
-            
-            vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's executed jobs")
-                .then((_success) => {}, (reason) => {
-                    console.log(`Error: ${reason}`);
-                    vscode.window.showErrorMessage(reason);
-                });
-            })),
-
-        vscode.commands.registerCommand("qstudio.getQueueStatus", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/getQueueStatus.py', ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(queueStatus => {
-            let resultProvider = new ResultProvider();
-            vscode.workspace.registerTextDocumentContentProvider('qiskit-queueStatus-result', resultProvider)
-            let previewUri = vscode.Uri.parse(`qiskit-queueStatus-result://authority/status-preview`);
-            
-            let execPath = path.join(__dirname,'../../resources/qiskitScripts/getQueueStatus.py');
-            if (process.platform === "win32") {
-                execPath = execPath.replace(/\\/g, "/");
-            }
-            resultProvider.displayContent((new VizManager).createViz(execPath, queueStatus), previewUri);
-            
-            vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "Queue status")
-                .then((_success) => {}, (reason) => {
-                    console.log(`Error: ${reason}`);
-                    vscode.window.showErrorMessage(reason);
-                });
-            })),
-
-        vscode.commands.registerCommand("qstudio.getUserCredits", () => (new CommandExecutor).execPythonFile('../../resources/qiskitScripts/getUserCredits.py', ["--apiToken", config.get("qiskit.token"), "--url", config.get('qiskit.url'), "--hub", config.get('qiskit.hub'), "--group", config.get('qiskit.group'), "--project", config.get('qiskit.project')]).then(userCredits => {
-            let resultProvider = new ResultProvider();
-            vscode.workspace.registerTextDocumentContentProvider('qiskit-userCredits-result', resultProvider)
-            let previewUri = vscode.Uri.parse(`qiskit-userCredits-result://authority/credits-preview`);
-            
-            let execPath = path.join(__dirname,'../../resources/qiskitScripts/getUserCredits.py');
-            if (process.platform === "win32") {
-                execPath = execPath.replace(/\\/g, "/");
-            }
-            resultProvider.displayContent((new VizManager).createViz(execPath, userCredits), previewUri);
-            
-            vscode.commands.executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's credits")
-                .then((_success) => {}, (reason) => {
-                    console.log(`Error: ${reason}`);
-                    vscode.window.showErrorMessage(reason);
-                });
-            })),
-        vscode.commands.registerCommand("qstudio.initQConfig", () => initQConfig()
-            .then((result) => {
-                vscode.window.showInformationMessage(result);
-            }).catch(err =>{
-                vscode.window.showErrorMessage(err);
+                vscode.commands
+                    .executeCommand(
+                        "vscode.previewHtml",
+                        previewUri,
+                        vscode.ViewColumn.Two,
+                        "Execution result - QISKit"
+                    )
+                    .then(
+                        _success => { },
+                        reason => {
+                            console.log(`Error: ${reason}`);
+                            vscode.window.showErrorMessage(reason);
+                        }
+                    );
             })
         ),
+        vscode.commands.registerCommand("qstudio.runQASMCode", () =>
+            CommandExecutor.execQasmActiveEditor(executeQASMScript).then(
+                codeResult => {
+                    let resultProvider = new ResultProvider();
+                    vscode.workspace.registerTextDocumentContentProvider(
+                        "qasm-preview-result",
+                        resultProvider
+                    );
+                    let previewUri = vscode.Uri.parse(
+                        `qasm-preview-result://authority/result-preview`
+                    );
+                    let execPath = Util.getOSDependentPath(
+                        "../../resources/qiskitScripts/executeQASM.py"
+                    );
+                    resultProvider.displayContent(
+                        VizManager.createViz(execPath, codeResult),
+                        previewUri
+                    );
+
+                    vscode.commands
+                        .executeCommand(
+                            "vscode.previewHtml",
+                            previewUri,
+                            vscode.ViewColumn.Two,
+                            "Execution result - QASM"
+                        )
+                        .then(
+                            _success => { },
+                            reason => {
+                                console.log(`Error: ${reason}`);
+                                vscode.window.showErrorMessage(reason);
+                            }
+                        );
+                }
+            )
+        ),
+        vscode.commands.registerCommand("qstudio.discoverLocalBackends", () =>
+            CommandExecutor.execPythonFile(localBackendsScript, []).then(
+                localBackends => {
+                    let resultProvider = new ResultProvider();
+                    vscode.workspace.registerTextDocumentContentProvider(
+                        "qiskit-localBackends-result",
+                        resultProvider
+                    );
+                    let previewUri = vscode.Uri.parse(
+                        `qiskit-localBackends-result://authority/backends-preview`
+                    );
+
+                    let execPath = Util.getOSDependentPath(
+                        "../../resources/qiskitScripts/listLocalBackends.py"
+                    );
+                    resultProvider.displayContent(
+                        VizManager.createViz(execPath, localBackends),
+                        previewUri
+                    );
+
+                    vscode.commands
+                        .executeCommand(
+                            "vscode.previewHtml",
+                            previewUri,
+                            vscode.ViewColumn.Two,
+                            "Local backends available"
+                        )
+                        .then(
+                            _success => { },
+                            reason => {
+                                console.log(`Error: ${reason}`);
+                                vscode.window.showErrorMessage(reason);
+                            }
+                        );
+                }
+            )
+        ),
+
+        vscode.commands.registerCommand("qstudio.discoverRemoteBackends", () =>
+            CommandExecutor.execPythonFile(remoteBackendsScript, [
+                "--apiToken",
+                config.get("qiskit.token"),
+                "--url",
+                config.get("qiskit.url"),
+                "--hub",
+                config.get("qiskit.hub"),
+                "--group",
+                config.get("qiskit.group"),
+                "--project",
+                config.get("qiskit.project")
+            ]).then(remoteBackends => {
+                let resultProvider = new ResultProvider();
+                vscode.workspace.registerTextDocumentContentProvider(
+                    "qiskit-remoteBackends-result",
+                    resultProvider
+                );
+                let previewUri = vscode.Uri.parse(
+                    `qiskit-remoteBackends-result://authority/backends-preview`
+                );
+                let execPath = Util.getOSDependentPath(
+                    "../../resources/qiskitScripts/listRemoteBackends.py"
+                );
+                resultProvider.displayContent(
+                    VizManager.createViz(execPath, remoteBackends),
+                    previewUri
+                );
+
+                vscode.commands
+                    .executeCommand(
+                        "vscode.previewHtml",
+                        previewUri,
+                        vscode.ViewColumn.Two,
+                        "Remote backends available"
+                    )
+                    .then(
+                        _success => { },
+                        reason => {
+                            console.log(`Error: ${reason}`);
+                            vscode.window.showErrorMessage(reason);
+                        }
+                    );
+            })
+        ),
+
+        vscode.commands.registerCommand("qstudio.listPendingJobs", () =>
+            CommandExecutor.execPythonFile(pendingJobsScript, [
+                "--apiToken",
+                config.get("qiskit.token"),
+                "--url",
+                config.get("qiskit.url"),
+                "--hub",
+                config.get("qiskit.hub"),
+                "--group",
+                config.get("qiskit.group"),
+                "--project",
+                config.get("qiskit.project")
+            ]).then(pendingJobs => {
+                let resultProvider = new ResultProvider();
+                vscode.workspace.registerTextDocumentContentProvider(
+                    "qiskit-pendingJobs-result",
+                    resultProvider
+                );
+                let previewUri = vscode.Uri.parse(
+                    `qiskit-pendingJobs-result://authority/list-preview`
+                );
+
+                let execPath = Util.getOSDependentPath(
+                    "../../resources/qiskitScripts/listPendingJobs.py"
+                );
+                resultProvider.displayContent(
+                    VizManager.createViz(execPath, pendingJobs),
+                    previewUri
+                );
+
+                vscode.commands
+                    .executeCommand(
+                        "vscode.previewHtml",
+                        previewUri,
+                        vscode.ViewColumn.Two,
+                        "User's pending jobs"
+                    )
+                    .then(
+                        _success => { },
+                        reason => {
+                            console.log(`Error: ${reason}`);
+                            vscode.window.showErrorMessage(reason);
+                        }
+                    );
+            })
+        ),
+
+        vscode.commands.registerCommand("qstudio.listExecutedJobs", () =>
+            CommandExecutor.execPythonFile(executedJobsScript, [
+                "--apiToken",
+                config.get("qiskit.token"),
+                "--url",
+                config.get("qiskit.url"),
+                "--hub",
+                config.get("qiskit.hub"),
+                "--group",
+                config.get("qiskit.group"),
+                "--project",
+                config.get("qiskit.project")
+            ]).then(executedJobs => {
+                let resultProvider = new ResultProvider();
+                vscode.workspace.registerTextDocumentContentProvider(
+                    "qiskit-executedJobs-result",
+                    resultProvider
+                );
+                let previewUri = vscode.Uri.parse(
+                    `qiskit-executedJobs-result://authority/list-preview`
+                );
+
+                let execPath = Util.getOSDependentPath(
+                    "../../resources/qiskitScripts/listExecutedJobs.py"
+                );
+                resultProvider.displayContent(
+                    VizManager.createViz(execPath, executedJobs),
+                    previewUri
+                );
+
+                vscode.commands
+                    .executeCommand(
+                        "vscode.previewHtml",
+                        previewUri,
+                        vscode.ViewColumn.Two,
+                        "User's executed jobs"
+                    )
+                    .then(
+                        _success => { },
+                        reason => {
+                            console.log(`Error: ${reason}`);
+                            vscode.window.showErrorMessage(reason);
+                        }
+                    );
+            })
+        ),
+
+        vscode.commands.registerCommand("qstudio.getQueueStatus", () =>
+            CommandExecutor.execPythonFile(getQueueStatusScript, [
+                "--apiToken",
+                config.get("qiskit.token"),
+                "--url",
+                config.get("qiskit.url"),
+                "--hub",
+                config.get("qiskit.hub"),
+                "--group",
+                config.get("qiskit.group"),
+                "--project",
+                config.get("qiskit.project")
+            ]).then(queueStatus => {
+                let resultProvider = new ResultProvider();
+                vscode.workspace.registerTextDocumentContentProvider(
+                    "qiskit-queueStatus-result",
+                    resultProvider
+                );
+                let previewUri = vscode.Uri.parse(
+                    `qiskit-queueStatus-result://authority/status-preview`
+                );
+
+                let execPath = Util.getOSDependentPath(
+                    "../../resources/qiskitScripts/getQueueStatus.py"
+                );
+                resultProvider.displayContent(
+                    VizManager.createViz(execPath, queueStatus),
+                    previewUri
+                );
+
+                vscode.commands
+                    .executeCommand(
+                        "vscode.previewHtml",
+                        previewUri,
+                        vscode.ViewColumn.Two,
+                        "Queue status"
+                    )
+                    .then(
+                        _success => { },
+                        reason => {
+                            console.log(`Error: ${reason}`);
+                            vscode.window.showErrorMessage(reason);
+                        }
+                    );
+            })
+        ),
+
+        vscode.commands.registerCommand("qstudio.getUserCredits", () =>
+            CommandExecutor.execPythonFile(getUserCreditsScript, [
+                "--apiToken",
+                config.get("qiskit.token"),
+                "--url",
+                config.get("qiskit.url"),
+                "--hub",
+                config.get("qiskit.hub"),
+                "--group",
+                config.get("qiskit.group"),
+                "--project",
+                config.get("qiskit.project")
+            ]).then(userCredits => {
+                let resultProvider = new ResultProvider();
+                vscode.workspace.registerTextDocumentContentProvider(
+                    "qiskit-userCredits-result",
+                    resultProvider
+                );
+                let previewUri = vscode.Uri.parse(
+                    `qiskit-userCredits-result://authority/credits-preview`
+                );
+
+                let execPath = Util.getOSDependentPath(
+                    "../../resources/qiskitScripts/getUserCredits.py"
+                );
+                resultProvider.displayContent(
+                    VizManager.createViz(execPath, userCredits),
+                    previewUri
+                );
+
+                vscode.commands
+                    .executeCommand(
+                        "vscode.previewHtml",
+                        previewUri,
+                        vscode.ViewColumn.Two,
+                        "User's credits"
+                    )
+                    .then(
+                        _success => { },
+                        reason => {
+                            console.log(`Error: ${reason}`);
+                            vscode.window.showErrorMessage(reason);
+                        }
+                    );
+            })
+        ),
+        vscode.commands.registerCommand("qstudio.initQConfig", () =>
+            initQConfig()
+                .then(result => {
+                    vscode.window.showInformationMessage(result);
+                })
+                .catch(err => {
+                    vscode.window.showErrorMessage(err);
+                })
+        )
     );
 }
 
 function checkDependencies(): Q.Promise<string> {
     let depMgr = new DependencyMgr();
     return Q.Promise((resolve, reject) => {
-        return depMgr.checkDependencies()
-            .then((deps) => {
-                console.log('Checking for Python dependencies...');
+        return depMgr
+            .checkDependencies()
+            .then(deps => {
+                console.log("Checking for Python dependencies...");
                 //vscode.window.showInformationMessage("Checking for Python dependencies...");
-                let depsList :string = "";
+                let depsList: string = "";
                 deps.forEach(dep => {
-                    console.log(`Package: ${dep.Name} Version: ${dep.InstalledVersion}`);
-                        depsList+=(`👌 ${dep.Name} v ${dep.InstalledVersion}\n`);
+                    console.log(
+                        `Package: ${dep.Name} Version: ${dep.InstalledVersion}`
+                    );
+                    depsList += `👌 ${dep.Name} v ${dep.InstalledVersion}\n`;
                 });
-                vscode.window.showInformationMessage(`IBM Q Studio dependencies found! ${depsList}`);
-            // Check for pyhton packages!
-            }).then(() => {
-                console.log('Check for required python packages...');
+                vscode.window.showInformationMessage(
+                    `IBM Q Studio dependencies found! ${depsList}`
+                );
+                // Check for pyhton packages!
+            })
+            .then(() => {
+                console.log("Check for required python packages...");
 
                 //vscode.window.showInformationMessage("Checking for required python packages...");
-                
+
                 let packMgr = new PackageMgr();
-                return packMgr.check()
+                return packMgr
+                    .check()
                     .then(results => {
                         console.log(`packMgr.check extension.ts ${results}`);
                         vscode.window.showInformationMessage(results);
                         //return Q.resolve(results);
                         return resolve();
-                    }).catch(err => {
+                    })
+                    .catch(err => {
                         console.log(`packMgr.check error extension.ts ${err}`);
                         return Q.reject(err);
                     });
-                
-            // Iterate over the list of packages
-            }).catch(error => {
+
+                // Iterate over the list of packages
+            })
+            .catch(error => {
                 console.log(`Seems like there was a problem: ${error}`);
                 //vscode.window.showWarningMessage('Seems like there was a problem: ' + error);
-                vscode.window.showErrorMessage(`Seems like there was a problem: ${error}`);
+                vscode.window.showErrorMessage(
+                    `Seems like there was a problem: ${error}`
+                );
                 return reject(error);
             });
-        }
-    );
+    });
 }
 
 function initQConfig(): Q.Promise<string> {
@@ -273,130 +516,151 @@ function initQConfig(): Q.Promise<string> {
     let project = null;
     let url = null;
     return Q.Promise((resolve, reject) => {
-        return vscode.window.showInputBox({
-            ignoreFocusOut: true,
-            prompt: `👉 Let's configure your QConfig! Please introduce your API Token 👈`,
-            password: true,
-        }).then((token: string|undefined) => {
-            if (token != undefined)
-            {
-                apiToken = token;
-                return vscode.window.showInputBox({
-                    ignoreFocusOut: true,
-                    prompt: `👉 Ok! Do you need to set up your hub/group/project and custom URL (probably not) 👈`,
-                    placeHolder: 'Type YES if you need that, or NO if you do not need that (or not sure to need)',
-                })
-            }
-            else{
-                return reject("Empty API Token, your QConfig won't be created") 
-            }
-        }).then((selection: string|undefined) => {
-            if (selection.toUpperCase() === 'YES'){
-                vscode.window.showInputBox({
-                    ignoreFocusOut: true,
-                    prompt: `👉 Let's configure your QConfig! Please introduce your Hub 👈`,
-                    placeHolder: "Your hub's name",
-                }).then((_hub: string|undefined) => {
-                    if (_hub != "" || _hub != undefined){
-                        hub = _hub;
-                    }
+        return vscode.window
+            .showInputBox({
+                ignoreFocusOut: true,
+                prompt: `👉 Let's configure your QConfig! Please introduce your API Token 👈`,
+                password: true
+            })
+            .then((token: string | undefined) => {
+                if (token !== undefined) {
+                    apiToken = token;
                     return vscode.window.showInputBox({
                         ignoreFocusOut: true,
-                        prompt: `👉 Let's configure your QConfig! Please introduce your Group 👈`,
-                        placeHolder: "Your group's name",
-                    })
-                }).then((_group: string|undefined) => {
-                    if (_group != "" || _group != undefined){
-                        group = _group;
-                    }
-                    return vscode.window.showInputBox({
-                        ignoreFocusOut: true,
-                        prompt: `👉 Let's configure your QConfig! Please introduce your Project 👈`,
-                        placeHolder: "Your project's name",
-                    })
-                }).then((_project: string|undefined) => {
-                    if (_project != "" || _project != undefined){
-                        project = _project;
-                    }
-                    return vscode.window.showInputBox({
-                        ignoreFocusOut: true,
-                        prompt: `👉 Let's configure your QConfig! Please introduce your custom URL 👈`,
-                        placeHolder: "Your custom's URL",
-                    })
-                }).then((_url: string|undefined) => {
-                    if (_url != "" || _url != undefined){
-                        console.log('url',url)
-                        url = _url;
-                    } 
-                    saveQConfig(apiToken, hub, group, project, url).then(result => {
-                        return resolve(result);
-                    }).catch((err) => {
-                        return reject(err);
-                    })
-                });
-            }
-            else {
-                // The user does not need to configure the Hub/Group/Project and URL in the QConfig.py
-                saveQConfig(apiToken, '', '', '', '').then(result => {
-                    return resolve(result);
-                }).catch((err) => {
-                    return reject(err);
-                })
-            }
-        })
+                        prompt: `👉 Ok! Do you need to set up your hub/group/project and custom URL (probably not) 👈`,
+                        placeHolder:
+                            "Type YES if you need that, or NO if you do not need that (or not sure to need)"
+                    });
+                } else {
+                    return reject(
+                        "Empty API Token, your QConfig won't be created"
+                    );
+                }
+            })
+            .then((selection: string | undefined) => {
+                if (selection.toUpperCase() === "YES") {
+                    vscode.window
+                        .showInputBox({
+                            ignoreFocusOut: true,
+                            prompt: `👉 Let's configure your QConfig! Please introduce your Hub 👈`,
+                            placeHolder: "Your hub's name"
+                        })
+                        .then((_hub: string | undefined) => {
+                            if (_hub !== "" || _hub !== undefined) {
+                                hub = _hub;
+                            }
+                            return vscode.window.showInputBox({
+                                ignoreFocusOut: true,
+                                prompt: `👉 Let's configure your QConfig! Please introduce your Group 👈`,
+                                placeHolder: "Your group's name"
+                            });
+                        })
+                        .then((_group: string | undefined) => {
+                            if (_group !== "" || _group !== undefined) {
+                                group = _group;
+                            }
+                            return vscode.window.showInputBox({
+                                ignoreFocusOut: true,
+                                prompt: `👉 Let's configure your QConfig! Please introduce your Project 👈`,
+                                placeHolder: "Your project's name"
+                            });
+                        })
+                        .then((_project: string | undefined) => {
+                            if (_project !== "" || _project !== undefined) {
+                                project = _project;
+                            }
+                            return vscode.window.showInputBox({
+                                ignoreFocusOut: true,
+                                prompt: `👉 Let's configure your QConfig! Please introduce your custom URL 👈`,
+                                placeHolder: "Your custom's URL"
+                            });
+                        })
+                        .then((_url: string | undefined) => {
+                            if (_url !== "" || _url !== undefined) {
+                                console.log("url", url);
+                                url = _url;
+                            }
+                            saveQConfig(apiToken, hub, group, project, url)
+                                .then(result => {
+                                    return resolve(result);
+                                })
+                                .catch(err => {
+                                    return reject(err);
+                                });
+                        });
+                } else {
+                    // The user does not need to configure the Hub/Group/Project and URL in the QConfig.py
+                    saveQConfig(apiToken, "", "", "", "")
+                        .then(result => {
+                            return resolve(result);
+                        })
+                        .catch(err => {
+                            return reject(err);
+                        });
+                }
+            });
     });
 }
 
-function saveQConfig(apiToken:string, hub:string|undefined, 
-    group:string|undefined, project:string|undefined, 
-    url:string|undefined ): Q.Promise<string> {
+function saveQConfig(
+    apiToken: string,
+    hub: string | undefined,
+    group: string | undefined,
+    project: string | undefined,
+    url: string | undefined
+): Q.Promise<string> {
     // vscode.window.showInformationMessage("Saving the QConfig...");
-    
+
     return Q.Promise((resolve, reject) => {
-        try{           
-            const config = vscode.workspace.getConfiguration('ibm-q-studio');
-            try{
-                return config.update('qiskit.token', apiToken, true)
-                .then(() => {
-                    if (hub != undefined || hub != ""){
-                        return config.update('qiskit.hub', hub, true)
-                    } else {
-                        return config.update('qiskit.hub', '', true)
-                    }
-                })
-                .then(() => {
-                    if (url != undefined ||url != ""){
-                        return config.update('qiskit.url', url, true)
-                    } else {
-                        return config.update('qiskit.url', '', true)
-                    }
-                })
-                .then(() => {
-                    if (group != undefined || group != ""){
-                        return config.update('qiskit.group', group, true)
-                    } else {
-                        return config.update('qiskit.group', '', true)
-                    }
-                })
-                .then(() => {
-                    if (project != undefined || project != ""){
-                        return config.update('qiskit.project', project, true)
-                    } else {
-                        return config.update('qiskit.project', '', true)
-                    }
-                })
-                .then(() => {
-                    return resolve("QConfig saved!")  
-                });
+        try {
+            const config = vscode.workspace.getConfiguration("ibm-q-studio");
+            try {
+                return config
+                    .update("qiskit.token", apiToken, true)
+                    .then(() => {
+                        if (hub !== undefined || hub !== "") {
+                            return config.update("qiskit.hub", hub, true);
+                        } else {
+                            return config.update("qiskit.hub", "", true);
+                        }
+                    })
+                    .then(() => {
+                        if (url !== undefined || url !== "") {
+                            return config.update("qiskit.url", url, true);
+                        } else {
+                            return config.update("qiskit.url", "", true);
+                        }
+                    })
+                    .then(() => {
+                        if (group !== undefined || group !== "") {
+                            return config.update("qiskit.group", group, true);
+                        } else {
+                            return config.update("qiskit.group", "", true);
+                        }
+                    })
+                    .then(() => {
+                        if (project !== undefined || project !== "") {
+                            return config.update(
+                                "qiskit.project",
+                                project,
+                                true
+                            );
+                        } else {
+                            return config.update("qiskit.project", "", true);
+                        }
+                    })
+                    .then(() => {
+                        return resolve("QConfig saved!");
+                    });
             } catch (err) {
-                return reject("🙁 QConfig cannot be saved! 🙁")
+                return reject("🙁 QConfig cannot be saved! 🙁");
             }
         } catch (err) {
-            return reject("Error saving QConfig!")
-        };
+            return reject("Error saving QConfig!");
+        }
     });
 }
 
 export function deactivate() {
-    console.log('Deactivating Qiskit extension ...');
+    console.log("Deactivating Qiskit extension ...");
 }

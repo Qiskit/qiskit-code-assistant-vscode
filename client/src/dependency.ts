@@ -14,9 +14,9 @@
 // =============================================================================
 
 import * as Q from "q";
-import {CommandExecutor} from "./commandExecutor";
-import {Version} from "./version";
-import {IDependency, IVersion} from "./interfaces";
+import { CommandExecutor } from "./commandExecutor";
+import { Version } from "./version";
+import { IDependency, IVersion } from "./interfaces";
 
 export class Dependency implements IDependency {
     Name: string;
@@ -35,11 +35,17 @@ export class Dependency implements IDependency {
         // --version option.
         return Q.Promise((resolve, reject) => {
             return this.getInstalledVersion().then(installedVersion => {
-                if(installedVersion.isGreater(this.RequiredVersion) ||
-                   installedVersion.isEqual(this.RequiredVersion)) {
-                     resolve(this);
+                if (
+                    installedVersion.isGreater(this.RequiredVersion) ||
+                    installedVersion.isEqual(this.RequiredVersion)
+                ) {
+                    resolve(this);
                 } else {
-                    reject(`Version >= ${this.RequiredVersion.toString()} of package ${this.Name} is required`);
+                    reject(
+                        `Version >= ${this.RequiredVersion.toString()} of package ${
+                            this.Name
+                        } is required`
+                    );
                 }
             });
         });
@@ -47,19 +53,20 @@ export class Dependency implements IDependency {
 
     private getInstalledVersion(force: boolean = false): Q.Promise<IVersion> {
         return Q.Promise((resolve, reject) => {
-            if(!force && this.InstalledVersion !== null) {
+            if (!force && this.InstalledVersion !== null) {
                 return resolve(this.InstalledVersion);
             }
 
-            return (new CommandExecutor).exec(this.Name,["--version"])
-            .then((stdout) => {
-                this.InstalledVersion = Version.fromString(stdout.split(" ")[1]);
-                resolve(this.InstalledVersion);
-            })
-            .catch((err) => {
-                reject(err);
-            });
+            return CommandExecutor.exec(this.Name, ["--version"])
+                .then(stdout => {
+                    this.InstalledVersion = Version.fromString(
+                        stdout.split(" ")[1]
+                    );
+                    resolve(this.InstalledVersion);
+                })
+                .catch(err => {
+                    reject(err);
+                });
         });
     }
-
 }
