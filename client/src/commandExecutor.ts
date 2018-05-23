@@ -28,17 +28,15 @@ interface IExecOptions {
     killSignal?: string;
 }
 
-export class CommandExecutor {
-    private childProcess = nodeChildProcess;
-
-    public exec(
+export namespace CommandExecutor {
+    export function exec(
         command: string,
         args: string[] = [],
         options: IExecOptions = {}
     ): Q.Promise<string> {
         let outcome = Q.defer<string>();
 
-        this.childProcess.exec(
+        nodeChildProcess.exec(
             command + " " + args.join(" "),
             options,
             (error: Error, stdout: string, stderr: string) => {
@@ -59,13 +57,12 @@ export class CommandExecutor {
         return outcome.promise;
     }
 
-    public execPythonActiveEditor(): Q.Promise<string> {
+    export function execPythonActiveEditor(): Q.Promise<string> {
         return Q.Promise((resolve, reject) => {
             vscode.window.showInformationMessage("⚡ Running... ⚡");
             const codeFile = vscode.window.activeTextEditor.document;
             codeFile.save();
-            new CommandExecutor()
-                .exec("python", [codeFile.fileName.toString()])
+            CommandExecutor.exec("python", [codeFile.fileName.toString()])
                 .then(stdout => {
                     return resolve(stdout);
                 })
@@ -77,7 +74,9 @@ export class CommandExecutor {
         });
     }
 
-    public execQasmActiveEditor(scriptPath: string): Q.Promise<string> {
+    export function execQasmActiveEditor(
+        scriptPath: string
+    ): Q.Promise<string> {
         return Q.Promise((resolve, reject) => {
             const execPath = Util.getOSDependentPath(scriptPath);
 
@@ -91,12 +90,12 @@ export class CommandExecutor {
             vscode.workspace.openTextDocument(execPath).then(document => {
                 //console.log(document);
                 //console.log("python", [document.fileName.toString(), '--file', codeFile.fileName.toString()]);
-                new CommandExecutor()
-                    .exec("python", [
-                        document.fileName.toString(),
-                        "--file",
-                        codeFile.fileName.toString()
-                    ])
+
+                CommandExecutor.exec("python", [
+                    document.fileName.toString(),
+                    "--file",
+                    codeFile.fileName.toString()
+                ])
                     .then(stdout => {
                         //console.log(stdout);
                         return resolve(stdout);
@@ -110,7 +109,7 @@ export class CommandExecutor {
         });
     }
 
-    public execPythonFile(
+    export function execPythonFile(
         scriptPath: string,
         options: string[]
     ): Q.Promise<string> {
@@ -120,11 +119,10 @@ export class CommandExecutor {
             const execPath = Util.getOSDependentPath(scriptPath);
 
             vscode.workspace.openTextDocument(execPath).then(document => {
-                new CommandExecutor()
-                    .exec(
-                        "python",
-                        [document.fileName.toString()].concat(options)
-                    )
+                CommandExecutor.exec(
+                    "python",
+                    [document.fileName.toString()].concat(options)
+                )
                     .then(stdout => {
                         // console.log(stdout);
                         //vscode.window.showInformationMessage("Execution result:",stdout);
