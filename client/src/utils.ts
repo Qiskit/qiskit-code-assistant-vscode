@@ -14,14 +14,12 @@
 // =============================================================================
 import * as path from "path";
 
-export class Util {
-    
-    public getOSDependentPath(_path: string) : string {
-        let pathInOS = path.resolve(__dirname,_path);
+export namespace Util {
+    export function getOSDependentPath(_path: string): string {
+        let pathInOS = path.resolve(__dirname, _path);
         if (process.platform === "win32") {
             pathInOS = pathInOS.replace(/\\/g, "/");
         }
-        return pathInOS;    
+        return pathInOS;
     }
-
 }
