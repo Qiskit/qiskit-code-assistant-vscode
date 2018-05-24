@@ -125,7 +125,7 @@ class ArgumentsTypeValidation extends ArgumentValidation {
         (term as ArgumentsTerm).arguments().forEach((expression, position) => {
             let requiredArgument = methodSymbol.getArguments()[position];
             let argumentType = this.calculateArgumentType(expression.terms[0]);
-            if (argumentType === null || argumentType.getName() !== requiredArgument.type.getName()) {
+            if (argumentType !== null && argumentType.getName() !== requiredArgument.type.getName()) {
                 this.wrongTypeOfArgumentError(expression.terms[0], requiredArgument.type);
             }
         });

@@ -27,6 +27,8 @@ export namespace QiskitSymbolTable {
         symbolTable.define(new BuiltInTypeSymbol('string'));
         symbolTable.define(new BuiltInTypeSymbol('number'));
         symbolTable.define(new BuiltInTypeSymbol('boolean'));
+        symbolTable.define(new BuiltInTypeSymbol('dict'));
+        symbolTable.define(new BuiltInTypeSymbol('qubit_pol'));
         symbolTable.define(new BuiltInTypeSymbol('class'));
 
         const qiskitSymbols: QiskitSDK = require('../libs/qiskitSDK.json');
