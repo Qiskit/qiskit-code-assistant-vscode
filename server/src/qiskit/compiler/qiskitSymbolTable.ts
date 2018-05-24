@@ -50,7 +50,7 @@ export namespace QiskitSymbolTable {
 
     function getMethodsSymbols(qmethods: QiskitMethod[], symbolTable: SymbolTable): MethodSymbol[] {
         return qmethods.map(qmethod => {
-            let type = symbolTable.lookup(qmethod.type);
+            let type = symbolTable.lookup(qmethod.type) || symbolTable.lookup('void');
             let requiredArguments: ArgumentSymbol[] = getArgumentsSymbols(qmethod.arguments, symbolTable);
 
             return new MethodSymbol(qmethod.name, type, requiredArguments);
@@ -63,9 +63,9 @@ export namespace QiskitSymbolTable {
         }
 
         return qarguments.map(qargument => {
-            let type = symbolTable.lookup(qargument.type);
+            let type = symbolTable.lookup(qargument.type) || symbolTable.lookup('void');
 
-            return new ArgumentSymbol(qargument.name, type);
+            return new ArgumentSymbol(qargument.name, type, qargument.optional);
         });
     }
 }

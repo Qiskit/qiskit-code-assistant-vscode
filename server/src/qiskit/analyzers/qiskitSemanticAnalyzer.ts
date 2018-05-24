@@ -53,7 +53,9 @@ export class QiskitSemanticAnalyzer extends AbstractParseTreeVisitor<SymbolTable
     visitProgram(ctx: ProgramContext): SymbolTable {
         this.symbolTable = QiskitSymbolTable.build();
 
-        return this.visitChildren(ctx);
+        this.visitChildren(ctx);
+
+        return this.symbolTable;
     }
 
     visitExpr_stmt(ctx: Expr_stmtContext): SymbolTable {

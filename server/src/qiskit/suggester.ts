@@ -76,6 +76,8 @@ export class QiskitSuggester implements Suggester {
         let semanticAnalyzer = new QiskitSemanticAnalyzer();
         let symbolTable = semanticAnalyzer.visit(tree);
 
+        symbolTable.print();
+
         return symbolTable;
     }
 }

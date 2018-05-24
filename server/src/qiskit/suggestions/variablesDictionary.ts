@@ -27,7 +27,8 @@ export class VariablesDictionary {
                 label: input.getName(),
                 detail: 'Declared variable',
                 documentation: 'This is a previously declared variable',
-                type: 'Variable'
+                type: 'Variable',
+                parent: input.getName()
             };
         };
 

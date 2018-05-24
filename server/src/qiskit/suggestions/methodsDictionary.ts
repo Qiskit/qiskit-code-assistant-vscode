@@ -15,7 +15,7 @@
 
 'use strict';
 
-import { SuggestionSymbol } from '../../types';
+import { SuggestionSymbol, SuggestionSymbolType } from '../../types';
 import { AtomFinder } from './atomFinder';
 import { CommonTokenStream } from 'antlr4ts';
 import { ClassSymbol } from '../compiler/qiskitSymbolTable';
@@ -30,11 +30,14 @@ export class MethodsDictionary {
 
     currentMethods(): SuggestionSymbol[] {
         let atom = this.atomFinder.firstViableAtomFor(this.tokenStream);
-        if (atom.type instanceof ClassSymbol) {
+        if (atom && atom.type instanceof ClassSymbol) {
             let classType = atom.type as ClassSymbol;
             let atomMethods = classType.getMethods().map(method => method.getName());
 
-            return this.suggestionsDictionary.methodsIn(atomMethods);
+            return this.suggestionsDictionary
+                .allMethods()
+                .filter(suggestion => suggestion.parent === atom.type.getName())
+                .filter(suggestion => suggestion.type === SuggestionSymbolType.method);
         } else {
             return this.suggestionsDictionary.allMethods();
         }

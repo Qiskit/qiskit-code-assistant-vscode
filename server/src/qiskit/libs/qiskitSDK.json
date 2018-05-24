@@ -120,8 +120,22 @@
         }]
     }, {
         "name": "CompositeGate",
-        "detail": "Implement a composite gate",
+        "detail": "Composite gate",
         "documentation": "Composite gate, a sequence of unitary gates.",
+        "arguments": [{
+            "name": "name",
+            "type": "string"
+        }, {
+            "name": "params",
+            "type": "list<string>"
+        }, {
+            "name": "args",
+            "type": "list<QuantumRegister>"
+        }, {
+            "name": "circuit",
+            "type": "QuantumCircuit|CompositeGate",
+            "optional": true
+        }],
         "methods": [{
             "name": "barrier",
             "type": "void",
@@ -142,6 +156,549 @@
             }, {
                 "name": "val",
                 "type": "float"
+            }]
+        }, {
+            "name": "ccx",
+            "type": "void",
+            "detail": "Toffoli",
+            "documentation": "Apply Toffoli to from ctl1 and ctl2 to tgt",
+            "arguments": [{
+                "name": "ctl1",
+                "type": "QuantumRegister"
+            }, {
+                "name": "ctl2",
+                "type": "QuantumRegister"
+            }, {
+                "name": "tgt",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "ch",
+            "type": "void",
+            "detail": "CH",
+            "documentation": "Apply CH from ctl to tgt.",
+            "arguments": [{
+                "name": "ctl",
+                "type": "QuantumRegister"
+            }, {
+                "name": "tgt",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "check_circuit",
+            "type": "void",
+            "detail": "Validates the circuit",
+            "documentation": "Raise exception if self.circuit is None."
+        }, {
+            "name": "crz",
+            "type": "void",
+            "detail": "CRZ",
+            "documentation": "Apply crz from ctl to tgt with angle theta.",
+            "arguments": [{
+                "name": "theta",
+                "type": "float"
+            }, {
+                "name": "ctl",
+                "type": "QuantumRegister"
+            }, {
+                "name": "tgt",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "cswap",
+            "type": "void",
+            "detail": "Fredkin",
+            "documentation": "Apply Fredkin to circuit.",
+            "arguments": [{
+                "name": "ctl",
+                "type": "QuantumRegister"
+            }, {
+                "name": "tgt1",
+                "type": "QuantumRegister"
+            }, {
+                "name": "tgt2",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "cu1",
+            "type": "void",
+            "detail": "CU1",
+            "documentation": "Apply cu1 from ctl to tgt with angle theta.",
+            "arguments": [{
+                "name": "theta",
+                "type": "float"
+            }, {
+                "name": "ctl",
+                "type": "QuantumRegister"
+            }, {
+                "name": "tgt",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "cu3",
+            "type": "void",
+            "detail": "CU3",
+            "documentation": "Apply cu3 from ctl to tgt with angle theta, phi, lam.",
+            "arguments": [{
+                "name": "theta",
+                "type": "float"
+            }, {
+                "name": "phi",
+                "type": "float"
+            }, {
+                "name": "lam",
+                "type": "float"
+            }, {
+                "name": "ctl",
+                "type": "QuantumRegister"
+            }, {
+                "name": "tgt",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "cx",
+            "type": "void",
+            "detail": "CX",
+            "documentation": "Apply CX from ctl to tgt.",
+            "arguments": [{
+                "name": "ctl",
+                "type": "QuantumRegister"
+            }, {
+                "name": "tgt",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "cx_base",
+            "type": "void",
+            "detail": "CX",
+            "documentation": "Apply CX ctl, tgt.",
+            "arguments": [{
+                "name": "ctl",
+                "type": "QuantumRegister"
+            }, {
+                "name": "tgt",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "cy",
+            "type": "void",
+            "detail": "CY",
+            "documentation": "Apply CY to circuit.",
+            "arguments": [{
+                "name": "ctl",
+                "type": "QuantumRegister"
+            }, {
+                "name": "tgt",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "cz",
+            "type": "void",
+            "detail": "CZ",
+            "documentation": "Apply CZ to circuit.",
+            "arguments": [{
+                "name": "ctl",
+                "type": "QuantumRegister"
+            }, {
+                "name": "tgt",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "first_atomic_gate_host",
+            "type": "void",
+            "detail": "List of the leaf gate on the left edge",
+            "documentation": "Return the host list of the leaf gate on the left edge."
+        }, {
+            "name": "h",
+            "type": "void",
+            "detail": "H",
+            "documentation": "Apply H to q.",
+            "arguments": [{
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "has_register",
+            "type": "boolean",
+            "detail": "Checks register existance",
+            "documentation": "Test if this gate’s circuit has the register r.",
+            "arguments": [{
+                "name": "register",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "iden",
+            "type": "void",
+            "detail": "Identity",
+            "documentation": "Apply Identity to q.",
+            "arguments": [{
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "initialize",
+            "type": "void",
+            "detail": "Initialization",
+            "documentation": "Apply initialize to circuit.",
+            "arguments": [{
+                "name": "params",
+                "type": "void"
+            }, {
+                "name": "qubits",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "instruction_list",
+            "type": "list<string>",
+            "detail": "Instruction's list",
+            "documentation": "Return a list of instructions for this CompositeGate."
+        }, {
+            "name": "inverse",
+            "type": "void",
+            "detail": "Invert this gate",
+            "documentation": "Invert this gate."
+        }, {
+            "name": "last_atomic_gate_host",
+            "type": "void",
+            "detail": "List of the leaf gate on the right edge",
+            "documentation": "Return the host list of the leaf gate on the right edge."
+        }, {
+            "name": "load",
+            "type": "QuantumCircuit",
+            "detail": "Load the internal simulator representation",
+            "documentation": "Load the internal simulator representation (statevector, probability, density matrix, clifford table) Works on all qubits, and prevents reordering (like barrier).",
+            "arguments": [{
+                "name": "slot",
+                "type": "int"
+            }]
+        }, {
+            "name": "noise",
+            "type": "void",
+            "detail": "Switches noise status on/off",
+            "documentation": "Turn noise on/off in simulator. Works on all qubits, and prevents reordering (like barrier).",
+            "arguments": [{
+                "name": "switch",
+                "type": "int(0,1)"
+            }]
+        }, {
+            "name": "number_atomic_gates",
+            "type": "int",
+            "detail": "Number of leaf gates",
+            "documentation": "Count the number of leaf gates."
+        }, {
+            "name": "optimize_gates",
+            "type": "void",
+            "detail": "Optimize",
+            "documentation": "Remove Zero rotations and Double CNOTS."
+        }, {
+            "name": "q_if",
+            "type": "void",
+            "detail": "Controls",
+            "documentation": "Add controls to this gate.",
+            "arguments": [{
+                "name": "*qregs",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "qasm",
+            "type": "string",
+            "detail": "QASM representation",
+            "documentation": "Return OPENQASM string."
+        }, {
+            "name": "remove_double_cnots_once",
+            "type": "void",
+            "detail": "Remove Double CNOTS",
+            "documentation": "Remove Double CNOTS paying attention that gates may be neighbours across Composite Gate boundaries."
+        }, {
+            "name": "remove_zero_rotations",
+            "type": "void",
+            "detail": "Remove Zero Rotations",
+            "documentation": "Remove Zero Rotations by looking (recursively) at rotation gates at the leaf ends."
+        }, {
+            "name": "reverse",
+            "type": "void",
+            "detail": "Reverse the sub-gates",
+            "documentation": "Reverse (recursively) the sub-gates of this CompositeGate."
+        }, {
+            "name": "rx",
+            "type": "void",
+            "detail": "Rx",
+            "documentation": "Apply Rx to q.",
+            "arguments": [{
+                "name": "theta",
+                "type": "float"
+            }, {
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "ry",
+            "type": "void",
+            "detail": "Ry",
+            "documentation": "Apply Ry to q.",
+            "arguments": [{
+                "name": "theta",
+                "type": "float"
+            }, {
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "rz",
+            "type": "void",
+            "detail": "Rz",
+            "documentation": "Apply Rz to q.",
+            "arguments": [{
+                "name": "phi",
+                "type": "float"
+            }, {
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "rzz",
+            "type": "void",
+            "detail": "RZZ",
+            "documentation": "Apply RZZ to circuit.",
+            "arguments": [{
+                "name": "theta",
+                "type": "float"
+            }, {
+                "name": "ctl",
+                "type": "QuantumRegister"
+            }, {
+                "name": "tgt",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "s",
+            "type": "void",
+            "detail": "S",
+            "documentation": "Apply S to q.",
+            "arguments": [{
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "save",
+            "type": "QuantumCircuit",
+            "detail": "Save internal simulator",
+            "documentation": "Save the internal simulator representation (statevector, probability, density matrix, clifford table).",
+            "arguments": [{
+                "name": "slot",
+                "type": "int"
+            }]
+        }, {
+            "name": "sdg",
+            "type": "void",
+            "detail": "Sdg",
+            "documentation": "Apply Sdg to q.",
+            "arguments": [{
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "snapshot",
+            "type": "QuantumCircuit",
+            "detail": "Snapshot of the internal simulator",
+            "documentation": "Take a snapshot of the internal simulator representation (statevector, probability, density matrix, clifford table) Works on all qubits, and prevents reordering (like barrier).",
+            "arguments": [{
+                "name": "slot",
+                "type": "int"
+            }]
+        }, {
+            "name": "swap",
+            "type": "void",
+            "detail": "SWAP",
+            "documentation": "Apply SWAP from ctl to tgt.",
+            "arguments": [{
+                "name": "ctl",
+                "type": "QuantumRegister"
+            }, {
+                "name": "tgt",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "t",
+            "type": "void",
+            "detail": "T",
+            "documentation": "Apply T to q.",
+            "arguments": [{
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "tdg",
+            "type": "void",
+            "detail": "Tdg",
+            "documentation": "Apply Tdg to q.",
+            "arguments": [{
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "u0",
+            "type": "void",
+            "detail": "u0",
+            "documentation": "Apply u0 with length m to q.",
+            "arguments": [{
+                "name": "m",
+                "type": "float"
+            }, {
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "u1",
+            "type": "void",
+            "detail": "u1",
+            "documentation": "Apply u1 with angle theta to q.",
+            "arguments": [{
+                "name": "theta",
+                "type": "float"
+            }, {
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "u2",
+            "type": "void",
+            "detail": "u2",
+            "documentation": "Apply u2 to q.",
+            "arguments": [{
+                "name": "phi",
+                "type": "float"
+            }, {
+                "name": "lam",
+                "type": "float"
+            }, {
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "u3",
+            "type": "void",
+            "detail": "u3",
+            "documentation": "Apply u3 to q.",
+            "arguments": [{
+                "name": "theta",
+                "type": "float"
+            },{
+                "name": "phi",
+                "type": "float"
+            }, {
+                "name": "lam",
+                "type": "float"
+            }, {
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "u_base",
+            "type": "void",
+            "detail": "U",
+            "documentation": "Apply U to q.",
+            "arguments": [{
+                "name": "theta",
+                "type": "float"
+            },{
+                "name": "phi",
+                "type": "float"
+            }, {
+                "name": "lam",
+                "type": "float"
+            }, {
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "wait",
+            "type": "void",
+            "detail": "Wait t",
+            "documentation": "Apply wait for time t to q.",
+            "arguments": [{
+                "name": "t",
+                "type": "float"
+            }, {
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "x",
+            "type": "void",
+            "detail": "X",
+            "documentation": "Apply X to q.",
+            "arguments": [{
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "y",
+            "type": "void",
+            "detail": "Y",
+            "documentation": "Apply Y to q.",
+            "arguments": [{
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
+        }, {
+            "name": "z",
+            "type": "void",
+            "detail": "Z",
+            "documentation": "Apply Z to q.",
+            "arguments": [{
+                "name": "q",
+                "type": "QuantumRegister"
+            }]
+        }]
+    }, {
+        "name": "Gate",
+        "detail": "Unitary gate",
+        "documentation": "Unitary gate.",
+        "arguments": [{
+            "name": "name",
+            "type": "string"
+        }, {
+            "name": "params",
+            "type": "list<string>"
+        }, {
+            "name": "args",
+            "type": "list<Register,index>"
+        }, {
+            "name": "circuit",
+            "type": "QuantumCircuit|CompositeGate",
+            "optional": true
+        }],
+        "methods": [{
+            "name": "c_if",
+            "detail": "Conditional logic on classical register",
+            "documentation": "Add classical control on register clasical and value val.",
+            "arguments": [{
+                    "name": "classical",
+                    "type": "ClassicalRegister"
+                },
+                {
+                    "name": "val",
+                    "type": "float"
+                }
+            ]
+        }, {
+            "name": "check_circuit",
+            "detail": "Check the circuit",
+            "documentation": "Raise exception if self.circuit is None.",
+            "arguments": []
+        }, {
+            "name": "inverse",
+            "detail": "Invert the gate",
+            "documentation": "Invert this gate.",
+            "arguments": []
+        }, {
+            "name": "q_if",
+            "detail": "Add control",
+            "documentation": "Add controls to this gate.",
+            "arguments": [{
+                "name": "*qregs",
+                "type": "QuantumRegister"
             }]
         }]
     }, {
