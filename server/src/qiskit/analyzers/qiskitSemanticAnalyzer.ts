@@ -31,7 +31,7 @@ import {
 import { QiskitSymbolTable } from '../compiler/qiskitSymbolTable';
 import { Python3Lexer } from '../antlr/Python3Lexer';
 import { StatementValidator } from './statementValidator';
-import { Expression, Term, TermType, ArrayReference, Position, Statement } from './types';
+import { Expression, Term, TermType, ArrayReference, Position, Statement, ArgumentsTerm } from './types';
 import { ErrorListener } from '../parser';
 import { CommonToken, ParserRuleContext, Token } from 'antlr4ts';
 
@@ -157,7 +157,7 @@ class ExpressionTrailerAnalyzer extends AbstractParseTreeVisitor<Term> implement
     visitTrailer(ctx: TrailerContext): Term {
         if (ctx.text.startsWith('(')) {
             if (ctx.arglist() === undefined) {
-                return Term.emptyArguments(PositionFrom.context(ctx));
+                return new ArgumentsTerm([], PositionFrom.context(ctx));
             }
 
             let expressionAnalyzer = new ExpressionAnalyzer();
@@ -166,7 +166,7 @@ class ExpressionTrailerAnalyzer extends AbstractParseTreeVisitor<Term> implement
                 .argument()
                 .map(argument => argument.accept(expressionAnalyzer));
 
-            return Term.asArguments(expressions, PositionFrom.context(ctx));
+            return new ArgumentsTerm(expressions, PositionFrom.context(ctx));
         } else if (ctx.text.startsWith('[')) {
             if (ctx.subscriptlist() === undefined) {
                 return Term.empty();

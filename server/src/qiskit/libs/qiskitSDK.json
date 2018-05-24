@@ -5,7 +5,7 @@
         "documentation": "Implement a classical register.",
         "arguments": [{
                 "name": "size",
-                "type": "int"
+                "type": "number"
             },
             {
                 "name": "name",
@@ -20,7 +20,7 @@
                 "documentation": "cr.check_range(j: int)\nCheck that j is a valid index into self.",
                 "arguments": [{
                     "name": "position",
-                    "type": "int"
+                    "type": "number"
                 }]
             },
             {
@@ -36,7 +36,7 @@
         "documentation": "Implement a quantum register.",
         "arguments": [{
                 "name": "size",
-                "type": "int"
+                "type": "number"
             },
             {
                 "name": "name",
@@ -51,7 +51,7 @@
                 "documentation": "cr.check_range(j: int)\nCheck that j is a valid index into self.",
                 "arguments": [{
                     "name": "position",
-                    "type": "int"
+                    "type": "number"
                 }]
             },
             {
@@ -155,7 +155,7 @@
                 "type": "ClassicalRegister"
             }, {
                 "name": "val",
-                "type": "float"
+                "type": "number"
             }]
         }, {
             "name": "ccx",
@@ -196,7 +196,7 @@
             "documentation": "Apply crz from ctl to tgt with angle theta.",
             "arguments": [{
                 "name": "theta",
-                "type": "float"
+                "type": "number"
             }, {
                 "name": "ctl",
                 "type": "QuantumRegister"
@@ -226,7 +226,7 @@
             "documentation": "Apply cu1 from ctl to tgt with angle theta.",
             "arguments": [{
                 "name": "theta",
-                "type": "float"
+                "type": "number"
             }, {
                 "name": "ctl",
                 "type": "QuantumRegister"
@@ -241,13 +241,13 @@
             "documentation": "Apply cu3 from ctl to tgt with angle theta, phi, lam.",
             "arguments": [{
                 "name": "theta",
-                "type": "float"
+                "type": "number"
             }, {
                 "name": "phi",
-                "type": "float"
+                "type": "number"
             }, {
                 "name": "lam",
-                "type": "float"
+                "type": "number"
             }, {
                 "name": "ctl",
                 "type": "QuantumRegister"
@@ -369,7 +369,7 @@
             "documentation": "Load the internal simulator representation (statevector, probability, density matrix, clifford table) Works on all qubits, and prevents reordering (like barrier).",
             "arguments": [{
                 "name": "slot",
-                "type": "int"
+                "type": "number"
             }]
         }, {
             "name": "noise",
@@ -382,7 +382,7 @@
             }]
         }, {
             "name": "number_atomic_gates",
-            "type": "int",
+            "type": "number",
             "detail": "Number of leaf gates",
             "documentation": "Count the number of leaf gates."
         }, {
@@ -426,7 +426,7 @@
             "documentation": "Apply Rx to q.",
             "arguments": [{
                 "name": "theta",
-                "type": "float"
+                "type": "number"
             }, {
                 "name": "q",
                 "type": "QuantumRegister"
@@ -438,7 +438,7 @@
             "documentation": "Apply Ry to q.",
             "arguments": [{
                 "name": "theta",
-                "type": "float"
+                "type": "number"
             }, {
                 "name": "q",
                 "type": "QuantumRegister"
@@ -450,7 +450,7 @@
             "documentation": "Apply Rz to q.",
             "arguments": [{
                 "name": "phi",
-                "type": "float"
+                "type": "number"
             }, {
                 "name": "q",
                 "type": "QuantumRegister"
@@ -462,7 +462,7 @@
             "documentation": "Apply RZZ to circuit.",
             "arguments": [{
                 "name": "theta",
-                "type": "float"
+                "type": "number"
             }, {
                 "name": "ctl",
                 "type": "QuantumRegister"
@@ -486,7 +486,7 @@
             "documentation": "Save the internal simulator representation (statevector, probability, density matrix, clifford table).",
             "arguments": [{
                 "name": "slot",
-                "type": "int"
+                "type": "number"
             }]
         }, {
             "name": "sdg",
@@ -504,7 +504,7 @@
             "documentation": "Take a snapshot of the internal simulator representation (statevector, probability, density matrix, clifford table) Works on all qubits, and prevents reordering (like barrier).",
             "arguments": [{
                 "name": "slot",
-                "type": "int"
+                "type": "number"
             }]
         }, {
             "name": "swap",
@@ -543,7 +543,7 @@
             "documentation": "Apply u0 with length m to q.",
             "arguments": [{
                 "name": "m",
-                "type": "float"
+                "type": "number"
             }, {
                 "name": "q",
                 "type": "QuantumRegister"
@@ -555,7 +555,7 @@
             "documentation": "Apply u1 with angle theta to q.",
             "arguments": [{
                 "name": "theta",
-                "type": "float"
+                "type": "number"
             }, {
                 "name": "q",
                 "type": "QuantumRegister"
@@ -567,10 +567,10 @@
             "documentation": "Apply u2 to q.",
             "arguments": [{
                 "name": "phi",
-                "type": "float"
+                "type": "number"
             }, {
                 "name": "lam",
-                "type": "float"
+                "type": "number"
             }, {
                 "name": "q",
                 "type": "QuantumRegister"
@@ -582,13 +582,13 @@
             "documentation": "Apply u3 to q.",
             "arguments": [{
                 "name": "theta",
-                "type": "float"
-            },{
+                "type": "number"
+            }, {
                 "name": "phi",
-                "type": "float"
+                "type": "number"
             }, {
                 "name": "lam",
-                "type": "float"
+                "type": "number"
             }, {
                 "name": "q",
                 "type": "QuantumRegister"
@@ -600,13 +600,13 @@
             "documentation": "Apply U to q.",
             "arguments": [{
                 "name": "theta",
-                "type": "float"
-            },{
+                "type": "number"
+            }, {
                 "name": "phi",
-                "type": "float"
+                "type": "number"
             }, {
                 "name": "lam",
-                "type": "float"
+                "type": "number"
             }, {
                 "name": "q",
                 "type": "QuantumRegister"
@@ -618,7 +618,7 @@
             "documentation": "Apply wait for time t to q.",
             "arguments": [{
                 "name": "t",
-                "type": "float"
+                "type": "number"
             }, {
                 "name": "q",
                 "type": "QuantumRegister"
@@ -679,7 +679,7 @@
                 },
                 {
                     "name": "val",
-                    "type": "float"
+                    "type": "number"
                 }
             ]
         }, {
@@ -719,6 +719,7 @@
         }],
         "methods": [{
             "name": "c_if",
+            "type": "void",
             "detail": "Conditional logic on classical register",
             "documentation": "Add classical control on register clasical and value val.",
             "arguments": [{
@@ -727,13 +728,56 @@
                 },
                 {
                     "name": "val",
-                    "type": "float"
+                    "type": "number"
                 }
             ]
         }, {
             "name": "check_circuit",
+            "type": "void",
             "detail": "Check the circuit",
             "documentation": "Raise exception if self.circuit is None."
+        }]
+    }, {
+        "name": "InstructionSet",
+        "detail": "Instruction collection",
+        "documentation": "Instruction collection.",
+        "methods": [{
+            "name": "add",
+            "type": "void",
+            "detail": "Add instruction",
+            "documentation": "Add instruction to set.",
+            "arguments": [{
+                "name": "gate",
+                "type": "Gate"
+            }]
+        }, {
+            "name": "c_if",
+            "type": "void",
+            "detail": "Conditional logic on classical register",
+            "documentation": "Add classical control on register to all instructions.",
+            "arguments": [{
+                    "name": "classical",
+                    "type": "ClassicalRegister"
+                },
+                {
+                    "name": "val",
+                    "type": "number"
+                }
+            ]
+        }, {
+            "name": "inverse",
+            "type": "void",
+            "detail": "Invert instructions",
+            "documentation": "Invert all instructions"
+        }, {
+            "name": "q_if",
+            "type": "void",
+            "detail": "Controls",
+            "documentation": "Add controls to all instructions.",
+            "arguments": [{
+                "name": "*qregs",
+                "type": "QuantumRegister"
+            }]
         }]
     }, {
         "name": "QuantumProgram",
@@ -751,7 +795,7 @@
                 "defaultValue": "None"
             }, {
                 "name": "size",
-                "type": "int",
+                "type": "number",
                 "optional": true,
                 "defaultValue": "1"
             }]

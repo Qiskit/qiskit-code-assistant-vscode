@@ -19,7 +19,15 @@ import { expect } from 'chai';
 import { QiskitSymbolTable, VariableSymbol } from '../src/qiskit/compiler/qiskitSymbolTable';
 import { StatementValidator } from '../src/qiskit/analyzers/statementValidator';
 import { ErrorListener } from '../src/qiskit/parser';
-import { Expression, Term, ArrayReference, TermType, Position, Statement } from '../src/qiskit/analyzers/types';
+import {
+    Expression,
+    Term,
+    ArrayReference,
+    TermType,
+    Position,
+    Statement,
+    ArgumentsTerm
+} from '../src/qiskit/analyzers/types';
 import { ParseErrorLevel } from '../src/types';
 import { SymbolTable } from '../src/tools/symbolTable';
 
@@ -51,36 +59,6 @@ describe('A statement validator with QISKit symbol table', () => {
             expect(symbolTable.lookup('qp')).to.include({
                 name: 'qp',
                 type: symbolTable.lookup('QuantumProgram')
-            });
-        });
-    });
-
-    describe('with input qr = qp.create_quantum_register("qr", 2)', () => {
-        let expressions = [
-            Expression.withTerms([Term.asVariable('qr', defaultPosition)]),
-            Expression.withTerms([
-                Term.asVariable('qp', defaultPosition),
-                Term.asVariable('create_quantum_register', defaultPosition),
-                Term.asArguments(
-                    [Expression.withTerms([Term.asString('qr', defaultPosition), Term.asNumber('2', defaultPosition)])],
-                    defaultPosition
-                )
-            ])
-        ];
-
-        it('should introduce new symbol into the symbol table', () => {
-            let type = symbolTable.lookup('QuantumProgram');
-            let symbol = new VariableSymbol('qp', type);
-            symbolTable.define(symbol);
-
-            statementValidator.validate(Statement.withExpressions(expressions));
-            let qrVariable = symbolTable.lookup('qr') as VariableSymbol;
-
-            expect(qrVariable.name).to.be.equal('qr');
-            expect(qrVariable.type).to.be.equal(symbolTable.lookup('QuantumRegister'));
-            expect(qrVariable.metadata).to.include({
-                name: 'qr',
-                size: 2
             });
         });
     });

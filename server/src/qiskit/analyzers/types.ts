@@ -96,10 +96,6 @@ export class Term implements Position {
         return this._builder(value, TermType.number, position);
     }
 
-    static asArguments(value: Expression[], position: Position): Term {
-        return this._builder(value, TermType.arguments, position);
-    }
-
     static asArrayReference(value: ArrayReference, position: Position): Term {
         return this._builder(value, TermType.arrayReference, position);
     }
@@ -125,6 +121,25 @@ export class Term implements Position {
 
     toString(): string {
         return `Term(${this.value} | ${this.type})`;
+    }
+}
+
+export class ArgumentsTerm extends Term {
+    constructor(expressions: Expression[], position: Position) {
+        super();
+        this.value = expressions;
+        this.line = position.line;
+        this.start = position.start;
+        this.end = position.end;
+        this.type = TermType.arguments;
+    }
+
+    arguments(): Expression[] {
+        return this.value as Expression[];
+    }
+
+    numberOfArguments(): number {
+        return this.value.length || 0;
     }
 }
 

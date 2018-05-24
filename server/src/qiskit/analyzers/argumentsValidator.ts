@@ -17,7 +17,7 @@
 
 import { SymbolTable, Type } from '../../tools/symbolTable';
 import { ErrorListener } from '../parser';
-import { Term, TermType, Expression, ArrayReference } from './types';
+import { Term, TermType, Expression, ArrayReference, ArgumentsTerm } from './types';
 import { VariableSymbol, ClassSymbol, MethodSymbol } from '../compiler/qiskitSymbolTable';
 import { ParseErrorLevel, ParserError } from '../../types';
 import { createServerSocketTransport } from 'vscode-jsonrpc';
@@ -69,14 +69,6 @@ export class ArgumentsValidator {
 abstract class ArgumentValidation {
     abstract validate(currentType: Type, argsTerm: Term): void;
 
-    unfoldArgs(argsTerm: Term): Term[] {
-        if (argsTerm.type === TermType.arguments) {
-            return (argsTerm.value[0] as Expression).terms;
-        }
-
-        return [];
-    }
-
     isMethodSymbol(currentType: Type): boolean {
         return currentType instanceof MethodSymbol;
     }
@@ -87,25 +79,28 @@ class ArgumentsNumberValidation extends ArgumentValidation {
         super();
     }
 
-    validate(currentType: Type, argsTerm: Term): void {
+    validate(currentType: Type, term: Term): void {
         if (!this.isMethodSymbol(currentType)) {
+            return;
+        }
+        if (term.type !== TermType.arguments) {
             return;
         }
 
         let methodSymbol = currentType as MethodSymbol;
-        let args = this.unfoldArgs(argsTerm);
         let mandatoryArguments = methodSymbol.getArguments().filter(arg => arg.optional === false).length;
-        if (args.length < mandatoryArguments) {
-            this.wrongNumberOfArgumentsError(argsTerm, args, mandatoryArguments);
+        let requiredArguments = (term as ArgumentsTerm).numberOfArguments();
+        if (requiredArguments < mandatoryArguments) {
+            this.wrongNumberOfArgumentsError(term, mandatoryArguments);
         }
     }
 
-    private wrongNumberOfArgumentsError(argsTerm: Term, args: Term[], mandatoryArguments: number): void {
+    private wrongNumberOfArgumentsError(term: Term, mandatoryArguments: number): void {
         let error = {
-            line: argsTerm.line,
-            start: argsTerm.start,
-            end: argsTerm.end,
-            message: `Expecting ${mandatoryArguments} arguments but ${args.length} received`,
+            line: term.line,
+            start: term.start,
+            end: term.end,
+            message: `Expecting ${mandatoryArguments} arguments but ${term.value.length} received`,
             level: ParseErrorLevel.WARNING
         } as ParserError;
 
@@ -118,18 +113,20 @@ class ArgumentsTypeValidation extends ArgumentValidation {
         super();
     }
 
-    validate(currentType: Type, argsTerm: Term): void {
+    validate(currentType: Type, term: Term): void {
         if (!this.isMethodSymbol(currentType)) {
+            return;
+        }
+        if (term.type !== TermType.arguments) {
             return;
         }
 
         let methodSymbol = currentType as MethodSymbol;
-        let args = this.unfoldArgs(argsTerm);
-        args.forEach(arg => {
-            let argumentType = this.calculateArgumentType(arg);
-            let matchedTypes = methodSymbol.getArguments().filter(arg => arg.type === argumentType);
-            if (matchedTypes.length < 1) {
-                this.wrongTypeOfArgumentError(arg, argumentType);
+        (term as ArgumentsTerm).arguments().forEach((expression, position) => {
+            let requiredArgument = methodSymbol.getArguments()[position];
+            let argumentType = this.calculateArgumentType(expression.terms[0]);
+            if (argumentType === null || argumentType.getName() !== requiredArgument.type.getName()) {
+                this.wrongTypeOfArgumentError(expression.terms[0], requiredArgument.type);
             }
         });
     }
@@ -140,7 +137,7 @@ class ArgumentsTypeValidation extends ArgumentValidation {
                 return this.symbolTable.lookup('string');
             }
             case TermType.number: {
-                return this.symbolTable.lookup('int');
+                return this.symbolTable.lookup('number');
             }
             case TermType.variable: {
                 let symbol = this.symbolTable.lookup(arg.value);

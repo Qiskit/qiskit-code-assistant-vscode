@@ -19,7 +19,7 @@ import { expect } from 'chai';
 import { SymbolTable } from '../src/tools/symbolTable';
 import { QiskitSymbolTable, VariableSymbol } from '../src/qiskit/compiler/qiskitSymbolTable';
 import { ErrorListener } from '../src/qiskit/parser';
-import { ArrayReference, TermType, Expression, Term, Position } from '../src/qiskit/analyzers/types';
+import { ArrayReference, TermType, Expression, Term, Position, ArgumentsTerm } from '../src/qiskit/analyzers/types';
 import { ArgumentsValidator } from '../src/qiskit/analyzers/argumentsValidator';
 
 describe('An arguments checker with QISKit symbol table', () => {
@@ -47,7 +47,7 @@ describe('An arguments checker with QISKit symbol table', () => {
         let terms = [
             Term.asVariable('qc', defaultPosition),
             Term.asVariable('h', defaultPosition),
-            Term.asArguments(
+            new ArgumentsTerm(
                 [Expression.withTerms([Term.asArrayReference(arrayReference, defaultPosition)])],
                 defaultPosition
             )

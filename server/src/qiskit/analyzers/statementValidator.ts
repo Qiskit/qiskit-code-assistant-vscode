@@ -16,7 +16,7 @@
 'use strict';
 
 import { SymbolTable, Symbol, Type, BuiltInTypeSymbol } from '../../tools/symbolTable';
-import { Expression, Term, TermType, ArrayReference, Statement } from './types';
+import { Expression, Term, TermType, ArrayReference, Statement, ArgumentsTerm } from './types';
 import { VariableSymbol, ClassSymbol, VariableMetadata, MethodSymbol } from '../compiler/qiskitSymbolTable';
 import { ErrorListener } from '../parser';
 import { ParseErrorLevel, ParserError } from '../../types';
@@ -84,7 +84,6 @@ export class StatementValidator {
     private metadataForTerm(_term: Term, currentType: Type): VariableMetadata {
         if (currentType instanceof ClassSymbol) {
             let classSymbol = currentType as ClassSymbol;
-            let declaredArguments = (_term.value[0] as Expression).terms;
             // TODO refactor
             let toMetada = (metadata: VariableMetadata, argument: Term) => {
                 if (this.declaredSizeArgument(classSymbol, argument)) {
@@ -109,7 +108,7 @@ export class StatementValidator {
                 return metadata;
             };
 
-            return this.fold(null, toMetada, declaredArguments);
+            return this.fold(null, toMetada, (_term as ArgumentsTerm).arguments());
         }
         return null;
     }

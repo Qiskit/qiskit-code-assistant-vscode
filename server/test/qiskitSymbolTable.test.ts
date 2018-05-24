@@ -20,7 +20,6 @@ import { ArgumentSymbol, QiskitSymbolTable } from '../src/qiskit/compiler/qiskit
 import { SymbolTable } from '../src/tools/symbolTable';
 
 describe('An argument symbol', () => {
-
     let symbolTable = QiskitSymbolTable.build();
 
     describe('of type string', () => {
@@ -35,8 +34,8 @@ describe('An argument symbol', () => {
         });
     });
 
-    describe('of type int', () => {
-        let argumentSymbol = new ArgumentSymbol('size', symbolTable.lookup('int'));
+    describe('of type number', () => {
+        let argumentSymbol = new ArgumentSymbol('size', symbolTable.lookup('number'));
 
         it('is not the same type than "a"', () => {
             expect(argumentSymbol.isSameType("'a'")).to.be.false;
@@ -46,5 +45,4 @@ describe('An argument symbol', () => {
             expect(argumentSymbol.isSameType(2)).to.be.true;
         });
     });
-    
 });

@@ -25,8 +25,7 @@ export namespace QiskitSymbolTable {
         symbolTable.define(new BuiltInTypeSymbol('void'));
         symbolTable.define(new BuiltInTypeSymbol('object'));
         symbolTable.define(new BuiltInTypeSymbol('string'));
-        symbolTable.define(new BuiltInTypeSymbol('int'));
-        symbolTable.define(new BuiltInTypeSymbol('float'));
+        symbolTable.define(new BuiltInTypeSymbol('number'));
         symbolTable.define(new BuiltInTypeSymbol('boolean'));
         symbolTable.define(new BuiltInTypeSymbol('class'));
 
@@ -112,7 +111,7 @@ export class ArgumentSymbol extends Symbol {
             return this.type.getName() === 'string';
         }
         if (typeof input === 'number') {
-            return this.type.getName() === 'int';
+            return this.type.getName() === 'number';
         }
 
         return false;
