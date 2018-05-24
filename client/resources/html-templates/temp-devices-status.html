@@ -6,20 +6,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, proxy-revalidate" />
 
-    <title>IBM Q Experience</title>
+    <title>IBM Q Experience - Devices</title>
     <meta name="HandheldFriendly" content="true" />
     <meta name="MobileOptimized" content="320" />
     <meta name="robots" content="index, nofollow">
-    <meta name="description" content="Run algorithms and experiments on IBM’s quantum processor via IBM Cloud.">
+    <meta name="description" content="Get information on IBM’s quantum processors via IBM Cloud.">
     <meta name="keywords" content="Quantum,IBM,Cloud,Algorithms">
     <meta name="author" content="IBM Research">
     <!-- Use maximum-scale and user-scalable at your own risk. It disables pinch/zoom. Think about usability/accessibility before including.-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0" />
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="./css/quantum-experience.css">
     <style>
         .backend-stats .backend-title b {
             font-size: 1.2em;
+            background-color: #001689;
         }
 
         b,
@@ -36,10 +36,12 @@
 
         a {
             color: #f4f4f4;
+            text-decoration: none;
         }
 
         a:active {
-            color: none;
+            color: #f4f4f4;
+            fill: #f4f4f4;
         }
 
         #header .arrow {
@@ -52,12 +54,8 @@
             box-sizing: border-box;
         }
 
-        .backend-stats ibm-q-tag {
-            font-size: 75%;
-            font-weight: bold;
-            line-height: 1;
-            color: #f4f4f4;
-            text-transform: uppercase;
+        #header.ibm-q-accordion-item {
+            display: flex;
         }
 
         .backend-stats ibm-q-tag {
@@ -66,38 +64,27 @@
             line-height: 1;
             color: #f4f4f4;
             text-transform: uppercase;
-
         }
 
         .label-success {
             background-color: #7CCC10;
+            color: #f4f4f4;
+            text-transform: uppercase;
         }
 
         .label-danger {
             background-color: #dd0026;
+            color: #f4f4f4;
+            text-transform: uppercase;
         }
 
         .label-info {
             background-color: #4178BE;
+            color: #f4f4f4;
+            text-transform: uppercase;
         }
 
         ibm-q-tag {
-            font-family: var(--ibm-q-font-family-base);
-            font-size: 0.75rem;
-            display: -webkit-inline-box;
-            display: -ms-inline-flexbox;
-            display: inline-flex;
-            -webkit-box-align: center;
-            -ms-flex-align: center;
-            align-items: center;
-            padding: 0 .625rem;
-            height: 1.25rem;
-            margin: .1875rem;
-            color: #325c80;
-            background-color: #c0e6ff;
-        }
-
-        :host {
             font-family: var(--ibm-q-font-family-base);
             font-size: 0.75rem;
             display: -webkit-inline-box;
@@ -121,6 +108,11 @@
         .x-ng-cloak,
         .ng-hide:not(.ng-hide-animate) {
             display: none !important;
+        }
+
+        body {
+            background-color: #001689;
+            font-family: "ibm-plex-sans","Helvetica Neue","HelveticaNeue","HelvRegularIBM","Helvetica",Arial,sans-serif;
         }
     </style>
 </head>
@@ -166,6 +158,7 @@
                                 <div slot="title" ng-click="$ctrl.trackExpandedBackends &amp;&amp; $ctrl.updateExpandedBackends(backend)" class="">
                                     <span class="backend-title">
                                         <b class="">IBM Q 16 Rueschlikon</b>&nbsp;&nbsp;
+                                        <!--Don't format the following line, it is used in a Regex and it would crash-->
                                         <small class="">[ibmqx5]</small></span><div class="pull-right"><ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger','label-success': $ctrl.backendStatus[backend.name].tag.color === 'success','label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}"ng-show="$ctrl.backendStatus[backend.name].tag" class="label-success">Active: Calibrating</ibm-q-tag>
                                         <!---->
                                         <a href="https://www.qiskit.org" ng-if="$ctrl.availableInfo &amp;&amp; backend.name !== 'QS1_1'" class="">
@@ -188,6 +181,7 @@
                                 <div slot="title" ng-click="$ctrl.trackExpandedBackends &amp;&amp; $ctrl.updateExpandedBackends(backend)" class="">
                                     <span class="backend-title">
                                         <b class="">IBM Q 5 Tenerife</b>&nbsp;&nbsp;
+                                        <!--Don't format the following line, it is used in a Regex and it would crash-->
                                         <small class="">[ibmqx4]</small></span><div class="pull-right"><ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger','label-success': $ctrl.backendStatus[backend.name].tag.color === 'success','label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}"ng-show="$ctrl.backendStatus[backend.name].tag" class="label-success">Active: Calibrating</ibm-q-tag>
                                         <!---->
                                         <a href="https://www.qiskit.org" ng-if="$ctrl.availableInfo &amp;&amp; backend.name !== 'QS1_1'" class="">
@@ -210,6 +204,7 @@
                                 <div slot="title" ng-click="$ctrl.trackExpandedBackends &amp;&amp; $ctrl.updateExpandedBackends(backend)" class="">
                                     <span class="backend-title">
                                         <b class="">IBM Q 5 Yorktown</b>&nbsp;&nbsp;
+                                        <!--Don't format the following line, it is used in a Regex and it would crash-->
                                         <small class="">[ibmqx2]</small></span><div class="pull-right"><ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger','label-success': $ctrl.backendStatus[backend.name].tag.color === 'success','label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}"ng-show="$ctrl.backendStatus[backend.name].tag" class="label-success">Active: Calibrating</ibm-q-tag>
                                         <!---->
                                         <a href="https://www.qiskit.org" ng-if="$ctrl.availableInfo &amp;&amp; backend.name !== 'QS1_1'" class="">
@@ -232,6 +227,7 @@
                                 <div slot="title" class="">
                                     <span class="backend-title">
                                         <b class="">IBM Q QASM Simulator</b>&nbsp;&nbsp;
+                                        <!--Don't format the following line, it is used in a Regex and it would crash-->
                                         <small class="">[ibmq_qasm_simulator]</small></span><div class="pull-right"><ibm-q-tag class="label-success">ACTIVE</ibm-q-tag>
                                         <ibm-q-tag class="label-info">
                                             SIMULATOR
