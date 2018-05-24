@@ -26,11 +26,11 @@ def main():
     backs = available_backends({'local': False})
 
     publicNameDevices = {}
-    publicNameDevices['QS1_1'] = "IBM Q 20 Austin [QS1_1]"
-    publicNameDevices['ibmqx5'] = "IBM Q 16 Rueschlikon [ibmqx5]"
-    publicNameDevices['ibmqx4'] = "IBM Q 5 Tenerife [ibmqx4]"
-    publicNameDevices['ibmqx2'] = "IBM Q 5 Yorktown [ibmqx2]"
-    publicNameDevices['ibmq_qasm_simulator'] = "IBM Q QASM Simulator [ibmq_qasm_simulator]"
+    publicNameDevices['QS1_1'] = "IBM Q 20 Austin"
+    publicNameDevices['ibmqx5'] = "IBM Q 16 Rueschlikon"
+    publicNameDevices['ibmqx4'] = "IBM Q 5 Tenerife"
+    publicNameDevices['ibmqx2'] = "IBM Q 5 Yorktown"
+    publicNameDevices['ibmq_qasm_simulator'] = "IBM Q QASM Simulator"
 
     if str(args['status']) == "True": 
         statusDevices = []

@@ -274,11 +274,11 @@ export function activate(context: vscode.ExtensionContext) {
             ]).then(remoteDevicesStatus => {
                 let resultProvider = new ResultProvider();
                 vscode.workspace.registerTextDocumentContentProvider(
-                    'qiskit-remoteBackends-result',
+                    'qiskit-devicesStatus-result',
                     resultProvider
                 );
                 let previewUri = vscode.Uri.parse(
-                    `qiskit-remoteBackends-result://authority/backends-preview`
+                    `qiskit-devicesStatus-result://authority/status-preview`
                 );
                 let execPath = Util.getOSDependentPath(
                     remoteBackendsScript

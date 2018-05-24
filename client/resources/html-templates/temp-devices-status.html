@@ -1,0 +1,254 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Language" content="en" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, proxy-revalidate" />
+
+    <title>IBM Q Experience</title>
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="robots" content="index, nofollow">
+    <meta name="description" content="Run algorithms and experiments on IBM’s quantum processor via IBM Cloud.">
+    <meta name="keywords" content="Quantum,IBM,Cloud,Algorithms">
+    <meta name="author" content="IBM Research">
+    <!-- Use maximum-scale and user-scalable at your own risk. It disables pinch/zoom. Think about usability/accessibility before including.-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0" />
+    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./css/quantum-experience.css">
+    <style>
+        .backend-stats .backend-title b {
+            font-size: 1.2em;
+        }
+
+        b,
+        strong {
+            font-weight: bold;
+            color: #f4f4f4;
+        }
+
+        small,
+        .small {
+            font-size: 85%;
+            color: #f4f4f4;
+        }
+
+        a {
+            color: #f4f4f4;
+        }
+
+        a:active {
+            color: none;
+        }
+
+        #header .arrow {
+            transition: all 250ms cubic-bezier(0.5, 0, 0.1, 1);
+            height: 1.25rem;
+            width: 1.25rem;
+            padding: .25rem .125rem .25rem .25rem;
+            margin: 0 0 0 0.25rem;
+            fill: #f4f4f4;
+            box-sizing: border-box;
+        }
+
+        .backend-stats ibm-q-tag {
+            font-size: 75%;
+            font-weight: bold;
+            line-height: 1;
+            color: #f4f4f4;
+            text-transform: uppercase;
+        }
+
+        .backend-stats ibm-q-tag {
+            font-size: 75%;
+            font-weight: bold;
+            line-height: 1;
+            color: #f4f4f4;
+            text-transform: uppercase;
+
+        }
+
+        .label-success {
+            background-color: #7CCC10;
+        }
+
+        .label-danger {
+            background-color: #dd0026;
+        }
+
+        .label-info {
+            background-color: #4178BE;
+        }
+
+        ibm-q-tag {
+            font-family: var(--ibm-q-font-family-base);
+            font-size: 0.75rem;
+            display: -webkit-inline-box;
+            display: -ms-inline-flexbox;
+            display: inline-flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            padding: 0 .625rem;
+            height: 1.25rem;
+            margin: .1875rem;
+            color: #325c80;
+            background-color: #c0e6ff;
+        }
+
+        :host {
+            font-family: var(--ibm-q-font-family-base);
+            font-size: 0.75rem;
+            display: -webkit-inline-box;
+            display: -ms-inline-flexbox;
+            display: inline-flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            padding: 0 .625rem;
+            height: 1.25rem;
+            margin: .1875rem;
+            color: #325c80;
+            background-color: #c0e6ff;
+        }
+
+        [ng\:cloak],
+        [ng-cloak],
+        [data-ng-cloak],
+        [x-ng-cloak],
+        .ng-cloak,
+        .x-ng-cloak,
+        .ng-hide:not(.ng-hide-animate) {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-banner page-banner-thinner page-banner-black">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <hr>
+                    <a href="https://quantumexperience.ng.bluemix.net/qx/devices">
+                        <div id="header" tabindex="0" class="style-scope ibm-q-accordion-item">
+                            <svg class="arrow style-scope ibm-q-accordion-item" width="8" height="12" viewBox="0 0 8 12" fill-rule="evenodd">
+                                <path d="M0 10.6L4.7 6 0 1.4 1.4 0l6.1 6-6.1 6z" class="style-scope ibm-q-accordion-item"></path>
+                            </svg>
+                            <div slot="title" ng-click="$ctrl.trackExpandedBackends &amp;&amp; $ctrl.updateExpandedBackends(backend)" class="">
+                                <span class="backend-title">
+                                    <b class="">IBM Q 20 Austin</b>&nbsp;&nbsp;
+                                    <small class="">[QS1_1]</small>
+                                </span>
+                                <div class="pull-right">
+                                    <ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger',
+                                                            'label-success': $ctrl.backendStatus[backend.name].tag.color === 'success',
+                                                            'label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}"
+                                        ng-show="$ctrl.backendStatus[backend.name].tag" class="ng-hide">
+
+                                    </ibm-q-tag>
+                                    <!---->
+                                    <!---->
+                                    <ibm-q-tag class="label-info" ng-if="$ctrl.availableInfo &amp;&amp; backend.name === 'QS1_1'">
+                                        AVAILABLE TO HUBS, PARTNERS, AND MEMBERS OF THE IBM Q NETWORK
+                                    </ibm-q-tag>
+                                    <!---->
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <a href="https://quantumexperience.ng.bluemix.net/qx/devices">
+                            <div id="header" tabindex="0" class="style-scope ibm-q-accordion-item">
+                                <svg class="arrow style-scope ibm-q-accordion-item" width="8" height="12" viewBox="0 0 8 12" fill-rule="evenodd">
+                                    <path d="M0 10.6L4.7 6 0 1.4 1.4 0l6.1 6-6.1 6z" class="style-scope ibm-q-accordion-item"></path>
+                                </svg>
+                                <div slot="title" ng-click="$ctrl.trackExpandedBackends &amp;&amp; $ctrl.updateExpandedBackends(backend)" class="">
+                                    <span class="backend-title">
+                                        <b class="">IBM Q 16 Rueschlikon</b>&nbsp;&nbsp;
+                                        <small class="">[ibmqx5]</small></span><div class="pull-right"><ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger','label-success': $ctrl.backendStatus[backend.name].tag.color === 'success','label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}"ng-show="$ctrl.backendStatus[backend.name].tag" class="label-success">Active: Calibrating</ibm-q-tag>
+                                        <!---->
+                                        <a href="https://www.qiskit.org" ng-if="$ctrl.availableInfo &amp;&amp; backend.name !== 'QS1_1'" class="">
+                                            <ibm-q-tag class="label-info">
+                                                AVAILABLE ON QISKIT
+                                            </ibm-q-tag>
+                                        </a>
+                                        <!---->
+                                        <!---->
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <hr>
+                        <a href="https://quantumexperience.ng.bluemix.net/qx/devices">
+                            <div id="header" tabindex="0" class="style-scope ibm-q-accordion-item">
+                                <svg class="arrow style-scope ibm-q-accordion-item" width="8" height="12" viewBox="0 0 8 12" fill-rule="evenodd">
+                                    <path d="M0 10.6L4.7 6 0 1.4 1.4 0l6.1 6-6.1 6z" class="style-scope ibm-q-accordion-item"></path>
+                                </svg>
+                                <div slot="title" ng-click="$ctrl.trackExpandedBackends &amp;&amp; $ctrl.updateExpandedBackends(backend)" class="">
+                                    <span class="backend-title">
+                                        <b class="">IBM Q 5 Tenerife</b>&nbsp;&nbsp;
+                                        <small class="">[ibmqx4]</small></span><div class="pull-right"><ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger','label-success': $ctrl.backendStatus[backend.name].tag.color === 'success','label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}"ng-show="$ctrl.backendStatus[backend.name].tag" class="label-success">Active: Calibrating</ibm-q-tag>
+                                        <!---->
+                                        <a href="https://www.qiskit.org" ng-if="$ctrl.availableInfo &amp;&amp; backend.name !== 'QS1_1'" class="">
+                                            <ibm-q-tag class="label-info">
+                                                AVAILABLE ON QISKIT
+                                            </ibm-q-tag>
+                                        </a>
+                                        <!---->
+                                        <!---->
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <hr>
+                        <a href="https://quantumexperience.ng.bluemix.net/qx/devices">
+                            <div id="header" tabindex="0" class="style-scope ibm-q-accordion-item">
+                                <svg class="arrow style-scope ibm-q-accordion-item" width="8" height="12" viewBox="0 0 8 12" fill-rule="evenodd">
+                                    <path d="M0 10.6L4.7 6 0 1.4 1.4 0l6.1 6-6.1 6z" class="style-scope ibm-q-accordion-item"></path>
+                                </svg>
+                                <div slot="title" ng-click="$ctrl.trackExpandedBackends &amp;&amp; $ctrl.updateExpandedBackends(backend)" class="">
+                                    <span class="backend-title">
+                                        <b class="">IBM Q 5 Yorktown</b>&nbsp;&nbsp;
+                                        <small class="">[ibmqx2]</small></span><div class="pull-right"><ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger','label-success': $ctrl.backendStatus[backend.name].tag.color === 'success','label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}"ng-show="$ctrl.backendStatus[backend.name].tag" class="label-success">Active: Calibrating</ibm-q-tag>
+                                        <!---->
+                                        <a href="https://www.qiskit.org" ng-if="$ctrl.availableInfo &amp;&amp; backend.name !== 'QS1_1'" class="">
+                                            <ibm-q-tag class="label-info">
+                                                AVAILABLE ON QISKIT
+                                            </ibm-q-tag>
+                                        </a>
+                                        <!---->
+                                        <!---->
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <hr>
+                        <a href="https://quantumexperience.ng.bluemix.net/qx/devices">
+                            <div id="header" tabindex="0" class="style-scope ibm-q-accordion-item">
+                                <svg class="arrow style-scope ibm-q-accordion-item" width="8" height="12" viewBox="0 0 8 12" fill-rule="evenodd">
+                                    <path d="M0 10.6L4.7 6 0 1.4 1.4 0l6.1 6-6.1 6z" class="style-scope ibm-q-accordion-item"></path>
+                                </svg>
+                                <div slot="title" class="">
+                                    <span class="backend-title">
+                                        <b class="">IBM Q QASM Simulator</b>&nbsp;&nbsp;
+                                        <small class="">[ibmq_qasm_simulator]</small></span><div class="pull-right"><ibm-q-tag class="label-success">ACTIVE</ibm-q-tag>
+                                        <ibm-q-tag class="label-info">
+                                            SIMULATOR
+                                        </ibm-q-tag>
+                                        <a href="https://www.qiskit.org" class="">
+                                            <ibm-q-tag class="label-info">
+                                                AVAILABLE ON QISKIT
+                                            </ibm-q-tag>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
