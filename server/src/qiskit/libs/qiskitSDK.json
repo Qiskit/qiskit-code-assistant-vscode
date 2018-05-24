@@ -685,13 +685,11 @@
         }, {
             "name": "check_circuit",
             "detail": "Check the circuit",
-            "documentation": "Raise exception if self.circuit is None.",
-            "arguments": []
+            "documentation": "Raise exception if self.circuit is None."
         }, {
             "name": "inverse",
             "detail": "Invert the gate",
-            "documentation": "Invert this gate.",
-            "arguments": []
+            "documentation": "Invert this gate."
         }, {
             "name": "q_if",
             "detail": "Add control",
@@ -702,10 +700,45 @@
             }]
         }]
     }, {
+        "name": "Instruction",
+        "detail": "Quantum computer instruction",
+        "documentation": "Generic quantum computer instruction.",
+        "arguments": [{
+            "name": "name",
+            "type": "string"
+        }, {
+            "name": "param",
+            "type": "list<real>"
+        }, {
+            "name": "args",
+            "type": "list<Register,index>"
+        }, {
+            "name": "circuit",
+            "type": "QuantumCircuit|CompositeGate",
+            "optional": true
+        }],
+        "methods": [{
+            "name": "c_if",
+            "detail": "Conditional logic on classical register",
+            "documentation": "Add classical control on register clasical and value val.",
+            "arguments": [{
+                    "name": "classical",
+                    "type": "ClassicalRegister"
+                },
+                {
+                    "name": "val",
+                    "type": "float"
+                }
+            ]
+        }, {
+            "name": "check_circuit",
+            "detail": "Check the circuit",
+            "documentation": "Raise exception if self.circuit is None."
+        }]
+    }, {
         "name": "QuantumProgram",
         "detail": "Quantum program",
         "documentation": "Quantum program.",
-        "arguments": [],
         "methods": [{
             "name": "create_quantum_register",
             "type": "QuantumRegister",
