@@ -395,7 +395,7 @@
             "documentation": "Turn noise on/off in simulator. Works on all qubits, and prevents reordering (like barrier).",
             "arguments": [{
                 "name": "switch",
-                "type": "int(0,1)"
+                "type": "number"
             }]
         }, {
             "name": "number_atomic_gates",
@@ -1333,6 +1333,63 @@
         "detail": "Quantum program",
         "documentation": "Quantum program.",
         "methods": [{
+            "name": "add_circuit",
+            "type": "void",
+            "detail": "Add new circuit",
+            "documentation": "Add a new circuit based on an Object representation.",
+            "arguments": [{
+                "name": "name",
+                "type": "string",
+                "optional": true
+            }, {
+                "name": "quantum_circuit",
+                "type": "QuantumCircuit",
+                "optional": true
+            }]
+        }, {
+            "name": "create_circuit",
+            "type": "QuantumCircuit",
+            "detail": "Create empty circuit",
+            "documentation": "Create a empty Quantum Circuit in the Quantum Program.",
+            "arguments": [{
+                "name": "name",
+                "type": "string",
+                "optional": true
+            }, {
+                "name": "qregisters",
+                "type": "list<QuantumRegister>",
+                "optional": true
+            }, {
+                "name": "cregisters",
+                "type": "list<ClassicalRegister>",
+                "optional": true
+            }]
+        }, {
+            "name": "create_classical_register",
+            "type": "ClassicalRegister",
+            "detail": "Create a new Classical Register",
+            "documentation": "Create a new Classical Register.",
+            "arguments": [{
+                "name": "name",
+                "type": "string",
+                "optional": true,
+                "defaultValue": "None"
+            }, {
+                "name": "size",
+                "type": "number",
+                "optional": true,
+                "defaultValue": "1"
+            }]
+        }, {
+            "name": "create_classical_registers",
+            "type": "list<ClassicalRegister>",
+            "detail": "Create a new set of Classical Registers",
+            "documentation": "Create a new set of Classical Registers.",
+            "arguments": [{
+                "name": "registersArray",
+                "type": "list<dict>"
+            }]
+        }, {
             "name": "create_quantum_register",
             "type": "QuantumRegister",
             "detail": "Create a new Quantum Register",
@@ -1347,6 +1404,224 @@
                 "type": "number",
                 "optional": true,
                 "defaultValue": "1"
+            }]
+        }, {
+            "name": "create_quantum_registers",
+            "type": "list<QuantumRegister>",
+            "detail": "Create a new set of Quantum Registers",
+            "documentation": "Create a new set of Quantum Registers.",
+            "arguments": [{
+                "name": "registersArray",
+                "type": "list<dict>"
+            }]
+        }, {
+            "name": "destroy_circuit",
+            "type": "void",
+            "detail": "Destroy a Quantum Circuit",
+            "documentation": "Destroy a Quantum Circuit in the Quantum Program. This will not destroy any registers associated with the circuit.",
+            "arguments": [{
+                "name": "name",
+                "type": "string"
+            }]
+        }, {
+            "name": "destroy_classical_register",
+            "type": "void",
+            "detail": "Destroy a Classical Register",
+            "documentation": "Destroy an existing Classical Register.",
+            "arguments": [{
+                "name": "name",
+                "type": "string"
+            }]
+        }, {
+            "name": "destroy_classical_registers",
+            "type": "void",
+            "detail": "Destroy a set of Classical Registers",
+            "documentation": "Destroy a set of Classical Registers based on a array of them.",
+            "arguments": [{
+                "name": "registersArray",
+                "type": "list<dict>"
+            }]
+        }, {
+            "name": "destroy_quantum_register",
+            "type": "void",
+            "detail": "Destroy a Quantum Register",
+            "documentation": "Destroy an existing Quantum Register.",
+            "arguments": [{
+                "name": "name",
+                "type": "string"
+            }]
+        }, {
+            "name": "destroy_quantum_registers",
+            "type": "void",
+            "detail": "Destroy a set of Quantum Registers",
+            "documentation": "Destroy a set of Quantum Registers based on a array of them.",
+            "arguments": [{
+                "name": "registersArray",
+                "type": "list<dict>"
+            }]
+        }, {
+            "name": "get_circuit",
+            "type": "QuantumCircuit",
+            "detail": "Return a Circuit",
+            "documentation": "Return a Circuit Object by name.",
+            "arguments": [{
+                "name": "name",
+                "type": "string"
+            }]
+        }, {
+            "name": "get_circuit_names",
+            "type": "list<string>",
+            "detail": "Return names of the circuits",
+            "documentation": "Return all the names of the quantum circuits."
+        }, {
+            "name": "get_classical_register",
+            "type": "ClassicalRegister",
+            "detail": "Return the Classical Register",
+            "documentation": "Return a Classical Register by name.",
+            "arguments": [{
+                "name": "name",
+                "type": "string"
+            }]
+        }, {
+            "name": "get_classical_register_names",
+            "type": "list<string>",
+            "detail": "Return the names of the Classical Registers",
+            "documentation": "Return all the names of the classical Registers."
+        }, {
+            "name": "get_initial_circuit()",
+            "type": "QuantumCircuit",
+            "detail": "Return the initialization",
+            "documentation": "Return the initialization Circuit."
+        }, {
+            "name": "get_qasm",
+            "type": "string",
+            "detail": "Get qasm format",
+            "documentation": "Get qasm format of circuit by name.",
+            "arguments": [{
+                "name": "name",
+                "type": "string"
+            }]
+        }, {
+            "name": "get_qasms",
+            "type": "list<QuantmCircuit>",
+            "detail": "Get qasm format",
+            "documentation": "Get qasm format of circuit by list of names.",
+            "arguments": [{
+                "name": "list_circuit_name",
+                "type": "list<string>"
+            }]
+        }, {
+            "name": "get_quantum_register",
+            "type": "QuantumRegister",
+            "detail": "Return a Quantum Register",
+            "documentation": "Return a Quantum Register by name.",
+            "arguments": [{
+                "name": "name",
+                "type": "string"
+            }]
+        }, {
+            "name": "get_quantum_register_names",
+            "type": "list<string>",
+            "detail": "Names of the Quantum Registers",
+            "documentation": "Return all the names of the quantum Registers."
+        }, {
+            "name": "load",
+            "type": "void",
+            "detail": "Load a Quantum Program",
+            "documentation": "Load Quantum Program Json file into the Quantum Program object.",
+            "arguments": [{
+                "name": "file_name",
+                "type": "string"
+            }]
+        }, {
+            "name": "load_qasm_file",
+            "type": "void",
+            "detail": "Load QASM into the Quantum Program",
+            "documentation": "Load qasm file into the quantum program.",
+            "arguments": [{
+                "name": "qasm_file",
+                "type": "string"
+            }, {
+                "name": "name",
+                "type": "string"
+            }, {
+                "name": "basis_gates",
+                "type": "string"
+            }]
+        }, {
+            "name": "load_qasm_text",
+            "type": "void",
+            "detail": "Load QASM into the Quantum Program",
+            "documentation": "Load qasm string in the quantum program.",
+            "arguments": [{
+                "name": "qasm_string",
+                "type": "string"
+            }, {
+                "name": "name",
+                "type": "string"
+            }, {
+                "name": "basis_gates",
+                "type": "string"
+            }]
+        }, {
+            "name": "reconfig",
+            "type": "void",
+            "detail": "Change configuration parameters",
+            "documentation": "Change configuration parameters for a compile qobj. Only parameters which don’t affect the circuit compilation can change, e.g., the coupling_map cannot be changed here!",
+            "arguments": [{
+                "name": "qobj",
+                "type": "dict"
+            }, {
+                "name": "backend",
+                "type": "string"
+            }, {
+                "name": "config",
+                "type": "dict"
+            }, {
+                "name": "shots",
+                "type": "number"
+            }, {
+                "name": "max_credits",
+                "type": "number"
+            }, {
+                "name": "seed",
+                "type": "number"
+            }]
+        }, {
+            "name": "run",
+            "type": "Result",
+            "detail": "Run a program",
+            "documentation": "Run a program (a pre-compiled quantum program). This function will block until the Job is processed.\nThe program to run is extracted from the qobj parameter.",
+            "arguments": [{
+                "name": "qobj",
+                "type": "dict"
+            }, {
+                "name": "timeout",
+                "type": "number"
+            }]
+        }, {
+            "name": "run_batch",
+            "type": "list<Result>",
+            "detail": "Run various programs",
+            "documentation": "Run various programs (a list of pre-compiled quantum programs). This function will block until all programs are processed.\nThe programs to run are extracted from qobj elements of the list.",
+            "arguments": [{
+                "name": "qobj_list",
+                "type": "list<dict>"
+            }, {
+                "name": "timeout",
+                "type": "number"
+            }]
+        }, {
+            "name": "save",
+            "type": "void",
+            "detail": "Save a Quantum Program",
+            "documentation": "Save Quantum Program in a Json file.",
+            "arguments": [{
+                "name": "file_name",
+                "type": "string"
+            }, {
+                "name": "beauty",
+                "type": "boolean"
             }]
         }]
     }]
