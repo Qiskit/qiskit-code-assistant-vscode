@@ -780,6 +780,53 @@
             }]
         }]
     }, {
+        "name": "Measure",
+        "detail": "Quantum measurement",
+        "documentation": "Quantum measurement in the computational basis.",
+        "arguments": [{
+            "name": "qubit",
+            "type": "QuantumRegister"
+        }, {
+            "name": "bit",
+            "type": "ClassicalRegister"
+        }, {
+            "name": "circuit",
+            "type": "QuantumCircuit",
+            "optional": true
+        }],
+        "methods": [{
+            "name": "c_if",
+            "type": "void",
+            "detail": "Add classical control register",
+            "documentation": "Add classical control on register clasical and value val.",
+            "arguments": [{
+                "name": "classical",
+                "type": "ClassicalRegister"
+            }, {
+                "name": "val",
+                "type": "number"
+            }]
+        }, {
+            "name": "check_circuit",
+            "type": "void",
+            "detail": "Validates the circuit",
+            "documentation": "Raise exception if self.circuit is None."
+        }, {
+            "name": "qasm",
+            "type": "string",
+            "detail": "Returns the QASM representation",
+            "documentation": "Return OPENQASM string."
+        }, {
+            "name": "reapply",
+            "type": "void",
+            "detail": "Reapply gate",
+            "documentation": "Reapply this gate to corresponding qubits.",
+            "arguments": [{
+                "name": "circuit",
+                "type": "QuantumCircuit"
+            }]
+        }]
+    }, {
         "name": "QuantumProgram",
         "detail": "Quantum program",
         "documentation": "Quantum program.",
