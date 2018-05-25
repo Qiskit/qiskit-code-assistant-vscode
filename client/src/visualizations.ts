@@ -21,8 +21,8 @@ import { Util } from "./utils";
 export namespace VizManager {
 
     export function createViz(codePath: string, result: object): string {
-        console.log("histogram detected");
         if (this.detectProperViz(codePath) === "HISTOGRAM") {
+            console.log("Histogram detected");
             let templatePath = Util.getOSDependentPath("../../resources/html-templates/temp-plot-shots.html");
 
             let resultString = result.toString().replace(/'/g, '"');
@@ -46,6 +46,24 @@ export namespace VizManager {
         } else if (this.detectProperViz(codePath) === "TEXT") {
             console.log("Text detected");
             return `<pre>${result}</pre>`;
+        } else if (this.detectProperViz(codePath) === "STATUS") {
+            console.log("Device status detected");
+            let templatePath = Util.getOSDependentPath("../../resources/html-templates/temp-devices-status.html");
+
+            let resultString = result.toString().replace(/'/g, '"');
+            let execResult = JSON.parse(String(resultString));
+
+            // console.log("execResult", execResult);
+            // console.log("execResult[0].hasOwnProperty('status')", execResult[0].hasOwnProperty('status'));
+
+            if (execResult[0].hasOwnProperty('status')) {
+                return VizManager.createDeviceStatus(
+                    execResult,
+                    templatePath
+                );
+            } else {
+                return `${result}`;
+            }
         } else {
             console.log("none detected");
             return `${result}`;
@@ -54,6 +72,12 @@ export namespace VizManager {
 
     export function detectProperViz(codePath: string): string {
         let codeFile = undefined;
+
+        //console.log("codePath", codePath);
+        if (codePath === Util.getOSDependentPath("../../resources/qiskitScripts/listRemoteBackends.py")) {
+            return "STATUS";
+        }
+
         codeFile = fs.readFileSync(codePath, { encoding: "utf8" });
         if (codeFile !== undefined) {
             // console.log(codeFile);
@@ -66,7 +90,7 @@ export namespace VizManager {
                 codeFileArray.push(codeFile[key]);
             }
 
-            console.log(codeFileArray);
+            // console.log(codeFileArray);
             let codeFileArrayRev = codeFileArray.reverse();
 
             for (let i = 0; i < codeFileArrayRev.length; i++) {
@@ -133,6 +157,36 @@ export namespace VizManager {
             return html;
         } else {
             return `<pre>${countsArray}</pre>`;
+        }
+    }
+
+    export function createDeviceStatus(
+        devicesArray: Array<object>,
+        templatePath: string
+    ): string {
+        let html = undefined;
+        html = fs.readFileSync(templatePath, { encoding: "utf8" });
+        if (html !== undefined) {
+            devicesArray.forEach(element => {
+                let str2Replace = `<small class="">[${element['status']['name']}]</small></span><div class="pull-right"><ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger','label-success': $ctrl.backendStatus[backend.name].tag.color === 'success','label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}"ng-show="$ctrl.backendStatus[backend.name].tag" class="label-success">Active: Calibrating</ibm-q-tag>`;
+                let str2ReplaceSimulator = `<small class="">[${element['status']['name']}]</small></span><div class="pull-right"><ibm-q-tag class="label-success">ACTIVE</ibm-q-tag>`;
+
+                let statusTag = "label-success";
+                let statusMessage = "Active";
+                if (element['status']['available'] === false) {
+                    statusTag = "label-danger";
+                    statusMessage = "Maintenance";
+                }
+
+                let replacement = `<small class="">[${element['status']['name']}]</small></span><div class="pull-right"><ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger','label-success': $ctrl.backendStatus[backend.name].tag.color === 'success', 'label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}" ng-show="$ctrl.backendStatus[backend.name].tag" class="${statusTag}">${statusMessage}</ibm-q-tag>`;
+                let replacementSimulator = `<small class="">[${element['status']['name']}]</small></span><div class="pull-right"><ibm-q-tag class="${statusTag}">${statusMessage}</ibm-q-tag>`;
+
+                html = html.replace(str2Replace, replacement);
+                html = html.replace(str2ReplaceSimulator, replacementSimulator);
+            });
+            return html;
+        } else {
+            return `<pre>${devicesArray}</pre>`;
         }
     }
 }
