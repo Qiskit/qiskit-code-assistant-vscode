@@ -18,64 +18,74 @@
 import { SuggestionSymbol } from '../../types';
 
 export class SuggestionsDictionary {
-    symbols = [
-        {
-            label: 'QuantumProgram',
-            detail: 'Quantum Program Class',
-            documentation: 'Quantum Program Class.',
-            type: 'class'
-        },
-        {
-            label: 'create_quantum_register',
-            detail: 'Creates a quantum register',
-            documentation: "create_quantum_register('register_name', size)",
-            type: 'method'
-        },
-        {
-            label: 'create_classical_register',
-            detail: 'Creates a classical register',
-            documentation: "create_classical_register('register_name', size)",
-            type: 'method'
-        },
-        {
-            label: 'create_circuit',
-            detail: 'Creates a quantum circuit',
-            documentation: "create_circuit('circuit_name', quantum_registers, classical_registers)",
-            type: 'method'
-        },
-        {
-            label: 'QuantumCircuit',
-            detail: 'Quantum circuit',
-            documentation: 'Quantum circuit.',
-            type: 'class'
-        },
-        {
-            label: 'h',
-            detail: 'Applies a Hadamard gate',
-            documentation: 'h(quantum_register)',
-            type: 'method'
-        },
-        {
-            label: 'QuantumRegister',
-            detail: 'Quantum register',
-            documentation: 'Implement a quantum register.',
-            type: 'class'
-        },
-        {
-            label: 'ClassicalRegister',
-            detail: 'Classical register',
-            documentation: 'Implement a classical register.',
-            type: 'class'
-        }
-    ];
-
     allSymbols(): SuggestionSymbol[] {
-        return this.symbols;
+        return this.getSymbols();
     }
 
     symbolsWithTypeIn(types: string[]): SuggestionSymbol[] {
         let isContainedInTypes = (symbol: SuggestionSymbol) => types.indexOf(symbol.type) > -1;
 
-        return this.symbols.filter(isContainedInTypes);
+        return this.getSymbols().filter(isContainedInTypes);
     }
+
+    methodsIn(names: string[]): SuggestionSymbol[] {
+        return this.symbolsWithTypeIn(['method']).filter(symbol => names.includes(symbol.label));
+    }
+
+    allMethods(): SuggestionSymbol[] {
+        return this.symbolsWithTypeIn(['method']);
+    }
+
+    private getSymbols(): SuggestionSymbol[] {
+        const qiskitSymbols: QiskitSDK = require('../libs/qiskitSDK.json');
+        let symbols: SuggestionSymbol[] = [];
+        qiskitSymbols.classes.forEach(qclass => {
+            symbols.push({
+                label: qclass.name,
+                detail: qclass.detail,
+                documentation: qclass.documentation,
+                type: 'class',
+                parent: qclass.name
+            });
+            symbols.push(...this.getMethods(qclass));
+        });
+
+        return symbols;
+    }
+
+    private getMethods(qclass: QiskitClass): SuggestionSymbol[] {
+        return qclass.methods.map(qmethod => {
+            return {
+                label: qmethod.name,
+                detail: qmethod.detail,
+                documentation: qmethod.documentation,
+                type: 'method',
+                parent: qclass.name
+            };
+        });
+    }
+}
+
+interface QiskitSDK {
+    classes: QiskitClass[];
+}
+
+interface QiskitClass {
+    name: string;
+    detail: string;
+    documentation: string;
+    methods: QiskitMethod[];
+}
+
+interface QiskitMethod {
+    name: string;
+    type: string;
+    detail: string;
+    documentation: string;
+    arguments: QiskitArgument[];
+}
+
+interface QiskitArgument {
+    name: string;
+    type: string;
 }

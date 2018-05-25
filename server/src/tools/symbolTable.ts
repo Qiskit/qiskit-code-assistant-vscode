@@ -18,7 +18,6 @@
 // Symbol table implementation guided by Terence Parr book, Language implementation patterns
 
 export class SymbolTable {
-
     currentScope: Scope;
 
     constructor(scope: Scope) {
@@ -48,9 +47,9 @@ export class SymbolTable {
 
         return oldScope;
     }
-    
+
     definedSymbols(): string[] {
-        return this.currentScope.definedSymbols().map((symbol) => symbol.name);
+        return this.currentScope.definedSymbols().map(symbol => symbol.name);
     }
 
     currentSymbols(): Symbol[] {
@@ -62,11 +61,9 @@ export class SymbolTable {
         this.currentScope.print();
         console.log('<<<<<<<<<<<<<<<<');
     }
-
 }
 
 export class Symbol implements Type {
-
     name: string;
 
     type: Type;
@@ -80,10 +77,12 @@ export class Symbol implements Type {
         return this.name;
     }
 
+    isType(theType: string): boolean {
+        return this.type.getName() === theType;
+    }
 }
 
 export class BuiltInTypeSymbol extends Symbol implements Type {
-
     constructor(name: string) {
         super(name, null);
     }
@@ -95,34 +94,30 @@ export class BuiltInTypeSymbol extends Symbol implements Type {
     toString(): string {
         return `{ name: ${this.getName()} }`;
     }
-
 }
 
 export interface Type {
-
-    getName():string;
-
+    getName(): string;
 }
 
 abstract class Scope {
-
     dictionary: Map<string, Symbol> = new Map();
 
     abstract getScopeName(): string;
 
     abstract getEnclosingScope(): Scope;
-    
+
     define(symbol: Symbol): void {
         this.dictionary.set(symbol.name, symbol);
     }
 
     lookup(name: string): Symbol {
         let symbol = this.dictionary.get(name);
-        
+
         if (symbol) {
             return symbol;
         }
-        
+
         if (this.getEnclosingScope()) {
             return this.getEnclosingScope().lookup(name);
         }
@@ -136,8 +131,9 @@ abstract class Scope {
             symbols.push(...this.getEnclosingScope().definedSymbols());
         }
 
-        let noBuiltInSymbols = Array.from(this.dictionary.values())
-            .filter((symbol) => !(symbol instanceof BuiltInTypeSymbol));
+        let noBuiltInSymbols = Array.from(this.dictionary.values()).filter(
+            symbol => !(symbol instanceof BuiltInTypeSymbol)
+        );
         symbols.push(...noBuiltInSymbols);
 
         return symbols;
@@ -146,22 +142,20 @@ abstract class Scope {
     print(): void {
         console.log(`${this.getScopeName()} => `);
         this.printEntries();
-        
+
         if (this.getEnclosingScope()) {
             this.getEnclosingScope().print();
         }
     }
 
     private printEntries() {
-        this.dictionary.forEach((entry) => {
+        this.dictionary.forEach(entry => {
             console.log(`\t${entry.toString()}`);
         });
     }
-
 }
 
 export class GlobalScope extends Scope {
-
     getScopeName(): string {
         return 'global';
     }
@@ -169,18 +163,16 @@ export class GlobalScope extends Scope {
     getEnclosingScope(): Scope {
         return null;
     }
-
 }
 
 export class LocalScope extends Scope {
-
     name: string;
 
     enclosingScope: Scope;
 
     constructor(name: string, enclosingScope: Scope) {
         super();
-        
+
         this.name = name;
         this.enclosingScope = enclosingScope;
     }
@@ -192,7 +184,4 @@ export class LocalScope extends Scope {
     getEnclosingScope(): Scope {
         return this.enclosingScope;
     }
-
 }
-
-

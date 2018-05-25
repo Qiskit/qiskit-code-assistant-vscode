@@ -25,11 +25,16 @@ export interface Suggester {
 }
 
 export interface SuggestionSymbol {
-
     label: string;
     detail: string;
     documentation: string;
     type: string;
+    parent: string;
+}
+
+export enum SuggestionSymbolType {
+    method = 'method',
+    class = 'class'
 }
 
 export interface ParserResult {
@@ -46,7 +51,8 @@ export interface ParserError {
 }
 
 export enum ParseErrorLevel {
-    ERROR, WARNING
+    ERROR,
+    WARNING
 }
 
 export interface CompilationResult {
@@ -57,9 +63,9 @@ export interface CompilationResult {
 export interface CompilationError {
     message: string;
     location: {
-        firstLine: number,
-        lastLine: number,
-        firstColumn: number,
-        lastColumn: number
+        firstLine: number;
+        lastLine: number;
+        firstColumn: number;
+        lastColumn: number;
     };
 }

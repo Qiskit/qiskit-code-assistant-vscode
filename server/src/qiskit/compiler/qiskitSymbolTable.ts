@@ -15,114 +15,64 @@
 
 'use strict';
 
-import { SymbolTable, Symbol, GlobalScope, Type, BuiltInTypeSymbol } from "../../tools/symbolTable";
-import { lookup } from "dns";
+import { SymbolTable, Symbol, GlobalScope, Type, BuiltInTypeSymbol } from '../../tools/symbolTable';
 
 export namespace QiskitSymbolTable {
-
     export function build(): SymbolTable {
         let globalScope = new GlobalScope();
         let symbolTable = new SymbolTable(globalScope);
-        
-        let classType = new BuiltInTypeSymbol('class');
 
         symbolTable.define(new BuiltInTypeSymbol('void'));
+        symbolTable.define(new BuiltInTypeSymbol('object'));
         symbolTable.define(new BuiltInTypeSymbol('string'));
-        symbolTable.define(new BuiltInTypeSymbol('int'));
-        symbolTable.define(classType);
-        symbolTable.define(new ClassSymbol('QuantumRegister', classType, []));
-        symbolTable.define(new ClassSymbol('ClassicalRegister', classType, []));
-        symbolTable.define(createQuantumCircuitSymbol(symbolTable));
-        symbolTable.define(createQuantumProgramSymbol(symbolTable));
-        
+        symbolTable.define(new BuiltInTypeSymbol('number'));
+        symbolTable.define(new BuiltInTypeSymbol('boolean'));
+        symbolTable.define(new BuiltInTypeSymbol('dict'));
+        symbolTable.define(new BuiltInTypeSymbol('qubit_pol'));
+        symbolTable.define(new BuiltInTypeSymbol('class'));
+
+        const qiskitSymbols: QiskitSDK = require('../libs/qiskitSDK.json');
+
+        load(qiskitSymbols, symbolTable);
+
         return symbolTable;
     }
 
-    function createQuantumProgramSymbol(symbolTable: SymbolTable): ClassSymbol {
-        let methods = [
-            createQuantumRegisterMethod(symbolTable),
-            createClassicalRegisterMethod(symbolTable),
-            createCircuitMethod(symbolTable)
-        ];
+    function load(qiskitSymbols: QiskitSDK, symbolTable: SymbolTable): void {
+        qiskitSymbols.classes.forEach(qclass => {
+            let type = symbolTable.lookup('class');
+            let args: ArgumentSymbol[] = getArgumentsSymbols(qclass.arguments, symbolTable);
+            let methods: MethodSymbol[] = getMethodsSymbols(qclass.methods, symbolTable);
+            let classSymbol = new ClassSymbol(qclass.name, type, args, methods);
 
-        return new ClassSymbol('QuantumProgram', symbolTable.lookup('class'), methods);
+            symbolTable.define(classSymbol);
+        });
     }
 
-    function createQuantumRegisterMethod(symbolTable: SymbolTable): MethodSymbol {
-        let type = symbolTable.lookup('QuantumRegister');
-        let requiredArguments = [
-            new ArgumentSymbol('name', symbolTable.lookup('string')),
-            new ArgumentSymbol('size', symbolTable.lookup('int'))
-        ];
+    function getMethodsSymbols(qmethods: QiskitMethod[], symbolTable: SymbolTable): MethodSymbol[] {
+        return qmethods.map(qmethod => {
+            let type = symbolTable.lookup(qmethod.type) || symbolTable.lookup('void');
+            let requiredArguments: ArgumentSymbol[] = getArgumentsSymbols(qmethod.arguments, symbolTable);
 
-        return new MethodSymbol('create_quantum_register', type, requiredArguments);
+            return new MethodSymbol(qmethod.name, type, requiredArguments);
+        });
     }
 
-    function createClassicalRegisterMethod(symbolTable: SymbolTable): MethodSymbol {
-        let type = symbolTable.lookup('ClassicalRegister');
-        let requiredArguments = [
-            new ArgumentSymbol('name', symbolTable.lookup('string')),
-            new ArgumentSymbol('size', symbolTable.lookup('int'))
-        ];
+    function getArgumentsSymbols(qarguments: QiskitArgument[] | undefined, symbolTable: SymbolTable): ArgumentSymbol[] {
+        if (qarguments === undefined) {
+            return [];
+        }
 
-        return new MethodSymbol('create_classical_register', type, requiredArguments);
+        return qarguments.map(qargument => {
+            let type = symbolTable.lookup(qargument.type) || symbolTable.lookup('void');
+
+            return new ArgumentSymbol(qargument.name, type, qargument.optional);
+        });
     }
-
-    function createCircuitMethod(symbolTable: SymbolTable): MethodSymbol {
-        let type = symbolTable.lookup('QuantumCircuit');
-        let requiredArguments = [
-            new ArgumentSymbol('name', symbolTable.lookup('string')),
-            new ArgumentSymbol('quantumRegister', symbolTable.lookup('QuantumRegister')),
-            new ArgumentSymbol('classicalRegister', symbolTable.lookup('ClassicalRegister'))
-        ];
-
-        return new MethodSymbol('create_circuit', type, requiredArguments);
-    }
-
-    function createQuantumCircuitSymbol(symbolTable: SymbolTable): ClassSymbol {
-        let methods = [
-            createHMethod(symbolTable),
-            createCXMethod(symbolTable),
-            createMeasureMethod(symbolTable)
-        ];
-
-        return new ClassSymbol('QuantumCircuit', symbolTable.lookup('class'), methods);
-    }
-
-    function createHMethod(symbolTable: SymbolTable): MethodSymbol {
-        let type = symbolTable.lookup('void');
-        let requiredArguments = [
-            new ArgumentSymbol('quantumRegister', symbolTable.lookup('QuantumRegister'))
-        ];
-
-        return new MethodSymbol('h', type, requiredArguments);
-    }
-
-    function createCXMethod(symbolTable: SymbolTable): MethodSymbol {
-        let type = symbolTable.lookup('void');
-        let requiredArguments = [
-            new ArgumentSymbol('quantumRegister1', symbolTable.lookup('QuantumRegister')),
-            new ArgumentSymbol('quantumRegister2', symbolTable.lookup('QuantumRegister'))
-        ];
-
-        return new MethodSymbol('cx', type, requiredArguments);
-    }
-
-    function createMeasureMethod(symbolTable: SymbolTable): MethodSymbol {
-        let type = symbolTable.lookup('void');
-        let requiredArguments = [
-            new ArgumentSymbol('quantumRegister', symbolTable.lookup('QuantumRegister')),
-            new ArgumentSymbol('classicalRegister', symbolTable.lookup('ClassicalRegister'))
-        ];
-
-        return new MethodSymbol('measure', type, requiredArguments);
-    }
-
 }
 
 export class ClassSymbol extends Symbol {
-
-    constructor(name: string, type: Type, public methods: MethodSymbol[]) {
+    constructor(name: string, type: Type, public requiredArguments: ArgumentSymbol[], public methods: MethodSymbol[]) {
         super(name, type);
     }
 
@@ -134,11 +84,9 @@ export class ClassSymbol extends Symbol {
     toString() {
         return `{ name: ${this.name}, type: ${this.type.getName()}, methods: [${this.methods}] }`;
     }
-
 }
 
 export class MethodSymbol extends Symbol {
-
     arguments: ArgumentSymbol[] = [];
 
     constructor(name: string, type: Type, requiredArguments: ArgumentSymbol[] = []) {
@@ -153,40 +101,40 @@ export class MethodSymbol extends Symbol {
     toString() {
         return `{ name: ${this.name}, type: ${this.type.getName()}, arguments: ${this.arguments} }`;
     }
-
 }
 
 export class ArgumentSymbol extends Symbol {
-
-    constructor(name: string, type: Type) {
+    constructor(name: string, type: Type, public optional: boolean = false) {
         super(name, type);
     }
 
     isSameType(input: any): boolean {
-        if (typeof input === "string") {
+        if (typeof input === 'string') {
             return this.type.getName() === 'string';
         }
-        if (typeof input === "number") {
-            return this.type.getName() === 'int';
+        if (typeof input === 'number') {
+            return this.type.getName() === 'number';
         }
 
         return false;
     }
 
     toString() {
+        if (this.type === null) {
+            return `{ name: ${this.name}, type: NULL }`;
+        }
+
         return `{ name: ${this.name}, type: ${this.type.getName()} }`;
     }
-
 }
 
 export class VariableSymbol extends Symbol {
-
-    private metadata: VariableMetadata = null;
+    metadata: VariableMetadata = null;
 
     constructor(name: string, type: Type, metadata?: VariableMetadata) {
         super(name, type);
-        
-        if (metadata) {
+
+        if (metadata && metadata !== null) {
             this.metadata = metadata;
         }
     }
@@ -200,12 +148,41 @@ export class VariableSymbol extends Symbol {
     }
 
     toString() {
+        if (this.type === null) {
+            return `{ name: ${this.name}, type: NULL }`;
+        }
+
         return `{ name: ${this.name}, type: ${this.type.getName()} }`;
     }
-
 }
 
 export interface VariableMetadata {
     name: string;
     size: number;
+}
+
+interface QiskitSDK {
+    classes: QiskitClass[];
+}
+
+interface QiskitClass {
+    name: string;
+    detail: string;
+    documentation: string;
+    arguments?: QiskitArgument[];
+    methods: QiskitMethod[];
+}
+
+interface QiskitMethod {
+    name: string;
+    type: string;
+    detail: string;
+    documentation: string;
+    arguments?: QiskitArgument[];
+}
+
+interface QiskitArgument {
+    name: string;
+    type: string;
+    optional?: boolean;
 }
