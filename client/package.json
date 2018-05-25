@@ -15,6 +15,7 @@
 		"type": "git",
 		"url": "https://github.ibm.com/IBMQuantum/qiskit-studio"
 	},
+	"icon": "icon.png",
 	"engines": {
 		"vscode": "^1.16.0"
 	},
