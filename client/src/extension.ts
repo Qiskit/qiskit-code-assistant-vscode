@@ -496,6 +496,8 @@ export function activate(context: vscode.ExtensionContext) {
             initQConfig()
                 .then(result => {
                     vscode.window.showInformationMessage(result);
+                    vscode.window.showInformationMessage("Reloading VSCode to use the new config...");
+                    setTimeout(function () { vscode.commands.executeCommand("workbench.action.reloadWindow"); }, 3000);
                 })
                 .catch(err => {
                     vscode.window.showErrorMessage(err);
