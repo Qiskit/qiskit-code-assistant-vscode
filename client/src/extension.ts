@@ -496,8 +496,6 @@ export function activate(context: vscode.ExtensionContext) {
             initQConfig()
                 .then(result => {
                     vscode.window.showInformationMessage(result);
-                    vscode.window.showInformationMessage("Reloading VSCode to use the new config...");
-                    setTimeout(function () { vscode.commands.executeCommand("workbench.action.reloadWindow"); }, 3000);
                 })
                 .catch(err => {
                     vscode.window.showErrorMessage(err);
@@ -698,8 +696,22 @@ function saveQConfig(
                         }
                     })
                     .then(() => {
-                        return resolve("QConfig saved!");
-                    });
+                        return vscode.window.showInputBox({
+                            ignoreFocusOut: true,
+                            prompt: `👉 QConfig saved! Do you want to reload the extension? 👈`,
+                            placeHolder: "YES",
+                            value: "YES"
+                        });
+                    }).then((selection: string | undefined) => {
+                        if (selection === "YES") {
+                            return resolve(
+                                vscode.commands.executeCommand("workbench.action.reloadWindow"));
+                        }
+                        else {
+                            return resolve("Reload your extension manually to use your new-brand QConfig");
+                        }
+                    }
+                    );
             } catch (err) {
                 return reject("🙁 QConfig cannot be saved! 🙁");
             }
