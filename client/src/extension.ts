@@ -41,16 +41,6 @@ export function activate(context: vscode.ExtensionContext) {
     let qiskitLanguage = languagesActivation.qiskitLanguageClient().start();
     context.subscriptions.push(qiskitLanguage);
 
-    /*
-    vscode.languages.registerDocumentFormattingEditProvider('qasm-lang', {
-        provideDocumentFormattingEdits(document: vscode.TextDocument): any {
-            const firstLine = document.lineAt(0);
-            
-            return [vscode.TextEdit.insert(firstLine.range.start, 'Formatted QASM file\n')];
-        }
-    });
-    */
-
     ActivationUtils.checkDependencies()
         .then(() => {
             console.log("IBM Q Studio extension successfully loaded!");
@@ -62,12 +52,6 @@ export function activate(context: vscode.ExtensionContext) {
             console.log("Dependencies error:", err);
             vscode.window.showErrorMessage(err);
         });
-
-    /*function registerQiskitCommands(context: vscode.ExtensionContext): void {
-        context.subscriptions.push(vscode.commands.registerCommand(`qiskitRun`, () => {
-            return CommandPaletteHelper.run()
-        }));
-    }*/
 
     const config = vscode.workspace.getConfiguration("ibm-q-studio");
     const executeQASMScript = Util.getOSDependentPath(
@@ -93,9 +77,6 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("qstudio.reload", () =>
-            activate(context)
-        ),
         vscode.commands.registerCommand("qstudio.checkDependencies", () =>
             ActivationUtils.checkDependencies()
         ),
