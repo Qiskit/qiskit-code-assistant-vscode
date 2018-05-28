@@ -28,7 +28,6 @@
 		"onLanguage:python",
 		"onCommand:qstudio.runQISKitCode",
 		"onCommand:qstudio.runQASMCode",
-		"onCommand:qstudio.reload",
 		"onCommand:qstudio.checkDependencies",
 		"onCommand:qstudio.initQConfig",
 		"onCommand:qstudio.discoverLocalBackends",
@@ -141,11 +140,6 @@
 		],
 		"commands": [
 			{
-				"command": "qstudio.reload",
-				"title": "Reload IBM Q Studio",
-				"category": "qstudio"
-			},
-			{
 				"command": "qstudio.checkDependencies",
 				"title": "Check IBM Q Studio dependencies",
 				"category": "qstudio"
@@ -202,12 +196,6 @@
 			}
 		],
 		"keybindings": [
-			{
-				"command": "qstudio.reload",
-				"key": "Ctrl+r",
-				"mac": "cmd+r",
-				"when": "editorTextFocus && editorLangId == 'python'"
-			},
 			{
 				"command": "qstudio.runQISKitCode",
 				"key": "shift+enter",
