@@ -16,6 +16,10 @@ import * as vscode from "vscode";
 import * as Q from "q";
 import { DependencyMgr } from "./dependencyMgr";
 import { PackageMgr } from "./packageMgr";
+import { Util } from "./utils";
+import { ResultProvider } from "./resultProvider";
+import { CommandExecutor } from "./commandExecutor";
+import { VizManager } from "./visualizations";
 
 export namespace ActivationUtils {
 
@@ -68,6 +72,437 @@ export namespace ActivationUtils {
                     return reject(error);
                 });
         });
+    }
+
+    export function registerCommands(context: vscode.ExtensionContext): Q.Promise<string> {
+        const config = vscode.workspace.getConfiguration("ibm-q-studio");
+        const executeQASMScript = Util.getOSDependentPath(
+            "../../resources/qiskitScripts/executeQASM.py"
+        );
+        const localBackendsScript = Util.getOSDependentPath(
+            "../../resources/qiskitScripts/listLocalBackends.py"
+        );
+        const remoteBackendsScript = Util.getOSDependentPath(
+            "../../resources/qiskitScripts/listRemoteBackends.py"
+        );
+        const pendingJobsScript = Util.getOSDependentPath(
+            "../../resources/qiskitScripts/listPendingJobs.py"
+        );
+        const executedJobsScript = Util.getOSDependentPath(
+            "../../resources/qiskitScripts/listExecutedJobs.py"
+        );
+        const getQueueStatusScript = Util.getOSDependentPath(
+            "../../resources/qiskitScripts/getQueueStatus.py"
+        );
+        const getUserCreditsScript = Util.getOSDependentPath(
+            "../../resources/qiskitScripts/getUserCredits.py"
+        );
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand("qstudio.checkDependencies", () =>
+                ActivationUtils.checkDependencies()
+            ),
+            vscode.commands.registerCommand("qstudio.runQISKitCode", () =>
+                CommandExecutor.execPythonActiveEditor().then(codeResult => {
+                    let resultProvider = new ResultProvider();
+                    vscode.workspace.registerTextDocumentContentProvider(
+                        "qiskit-preview-result",
+                        resultProvider
+                    );
+                    let previewUri = vscode.Uri.parse(
+                        `qiskit-preview-result://authority/result-preview`
+                    );
+
+                    const codeFile = vscode.window.activeTextEditor.document;
+                    codeFile.save();
+                    resultProvider.displayContent(
+                        VizManager.createViz(
+                            codeFile.fileName.toString(),
+                            codeResult
+                        ),
+                        previewUri
+                    );
+
+                    vscode.commands
+                        .executeCommand(
+                            "vscode.previewHtml",
+                            previewUri,
+                            vscode.ViewColumn.Two,
+                            "Execution result - QISKit"
+                        )
+                        .then(
+                            _success => { },
+                            reason => {
+                                console.log(`Error: ${reason}`);
+                                vscode.window.showErrorMessage(reason);
+                            }
+                        );
+                })
+            ),
+            vscode.commands.registerCommand("qstudio.runQASMCode", () =>
+                CommandExecutor.execQasmActiveEditor(executeQASMScript).then(
+                    codeResult => {
+                        let resultProvider = new ResultProvider();
+                        vscode.workspace.registerTextDocumentContentProvider(
+                            "qasm-preview-result",
+                            resultProvider
+                        );
+                        let previewUri = vscode.Uri.parse(
+                            `qasm-preview-result://authority/result-preview`
+                        );
+                        let execPath = Util.getOSDependentPath(
+                            executeQASMScript
+                        );
+                        resultProvider.displayContent(
+                            VizManager.createViz(execPath, codeResult),
+                            previewUri
+                        );
+
+                        vscode.commands
+                            .executeCommand(
+                                "vscode.previewHtml",
+                                previewUri,
+                                vscode.ViewColumn.Two,
+                                "Execution result - QASM"
+                            )
+                            .then(
+                                _success => { },
+                                reason => {
+                                    console.log(`Error: ${reason}`);
+                                    vscode.window.showErrorMessage(reason);
+                                }
+                            );
+                    }
+                )
+            ),
+            vscode.commands.registerCommand("qstudio.discoverLocalBackends", () =>
+                CommandExecutor.execPythonFile(localBackendsScript, []).then(
+                    localBackends => {
+                        let resultProvider = new ResultProvider();
+                        vscode.workspace.registerTextDocumentContentProvider(
+                            "qiskit-localBackends-result",
+                            resultProvider
+                        );
+                        let previewUri = vscode.Uri.parse(
+                            `qiskit-localBackends-result://authority/backends-preview`
+                        );
+
+                        let execPath = Util.getOSDependentPath(
+                            localBackendsScript
+                        );
+                        resultProvider.displayContent(
+                            VizManager.createViz(execPath, localBackends),
+                            previewUri
+                        );
+
+                        vscode.commands
+                            .executeCommand(
+                                "vscode.previewHtml",
+                                previewUri,
+                                vscode.ViewColumn.Two,
+                                "Local backends available"
+                            )
+                            .then(
+                                _success => { },
+                                reason => {
+                                    console.log(`Error: ${reason}`);
+                                    vscode.window.showErrorMessage(reason);
+                                }
+                            );
+                    }
+                )
+            ),
+
+            vscode.commands.registerCommand("qstudio.discoverRemoteBackends", () =>
+                CommandExecutor.execPythonFile(remoteBackendsScript, [
+                    "--apiToken",
+                    config.get("qiskit.token"),
+                    "--url",
+                    config.get("qiskit.url"),
+                    "--hub",
+                    config.get("qiskit.hub"),
+                    "--group",
+                    config.get("qiskit.group"),
+                    "--project",
+                    config.get("qiskit.project")
+                ]).then(remoteBackends => {
+                    let resultProvider = new ResultProvider();
+                    vscode.workspace.registerTextDocumentContentProvider(
+                        "qiskit-remoteBackends-result",
+                        resultProvider
+                    );
+                    let previewUri = vscode.Uri.parse(
+                        `qiskit-remoteBackends-result://authority/backends-preview`
+                    );
+                    let execPath = Util.getOSDependentPath(
+                        remoteBackendsScript
+                    );
+                    resultProvider.displayContent(
+                        VizManager.createViz(execPath, remoteBackends),
+                        previewUri
+                    );
+
+                    vscode.commands
+                        .executeCommand(
+                            "vscode.previewHtml",
+                            previewUri,
+                            vscode.ViewColumn.Two,
+                            "Remote backends available"
+                        )
+                        .then(
+                            _success => { },
+                            reason => {
+                                console.log(`Error: ${reason}`);
+                                vscode.window.showErrorMessage(reason);
+                            }
+                        );
+                })
+            ),
+
+            vscode.commands.registerCommand("qstudio.getDevicesStatus", () =>
+                CommandExecutor.execPythonFile(remoteBackendsScript, [
+                    "--apiToken",
+                    config.get("qiskit.token"),
+                    "--url",
+                    config.get('qiskit.url'),
+                    "--hub",
+                    config.get('qiskit.hub'),
+                    "--group",
+                    config.get('qiskit.group'),
+                    "--project",
+                    config.get('qiskit.project'),
+                    "--status", "True"
+                ]).then(remoteDevicesStatus => {
+                    let resultProvider = new ResultProvider();
+                    vscode.workspace.registerTextDocumentContentProvider(
+                        'qiskit-devicesStatus-result',
+                        resultProvider
+                    );
+                    let previewUri = vscode.Uri.parse(
+                        `qiskit-devicesStatus-result://authority/status-preview`
+                    );
+                    let execPath = Util.getOSDependentPath(
+                        remoteBackendsScript
+                    );
+                    resultProvider.displayContent(
+                        VizManager.createViz(execPath, remoteDevicesStatus),
+                        previewUri
+                    );
+
+                    vscode.commands
+                        .executeCommand(
+                            'vscode.previewHtml',
+                            previewUri,
+                            vscode.ViewColumn.Two,
+                            "Status for remote devices"
+                        )
+                        .then(
+                            _success => { },
+                            reason => {
+                                console.log(`Error: ${reason}`);
+                                vscode.window.showErrorMessage(reason);
+                            }
+                        );
+                })
+            ),
+
+            vscode.commands.registerCommand("qstudio.listPendingJobs", () =>
+                CommandExecutor.execPythonFile(pendingJobsScript, [
+                    "--apiToken",
+                    config.get("qiskit.token"),
+                    "--url",
+                    config.get("qiskit.url"),
+                    "--hub",
+                    config.get("qiskit.hub"),
+                    "--group",
+                    config.get("qiskit.group"),
+                    "--project",
+                    config.get("qiskit.project")
+                ]).then(pendingJobs => {
+                    let resultProvider = new ResultProvider();
+                    vscode.workspace.registerTextDocumentContentProvider(
+                        "qiskit-pendingJobs-result",
+                        resultProvider
+                    );
+                    let previewUri = vscode.Uri.parse(
+                        `qiskit-pendingJobs-result://authority/list-preview`
+                    );
+
+                    let execPath = Util.getOSDependentPath(
+                        pendingJobsScript
+                    );
+                    resultProvider.displayContent(
+                        VizManager.createViz(execPath, pendingJobs),
+                        previewUri
+                    );
+
+                    vscode.commands
+                        .executeCommand(
+                            "vscode.previewHtml",
+                            previewUri,
+                            vscode.ViewColumn.Two,
+                            "User's pending jobs"
+                        )
+                        .then(
+                            _success => { },
+                            reason => {
+                                console.log(`Error: ${reason}`);
+                                vscode.window.showErrorMessage(reason);
+                            }
+                        );
+                })
+            ),
+
+            vscode.commands.registerCommand("qstudio.listExecutedJobs", () =>
+                CommandExecutor.execPythonFile(executedJobsScript, [
+                    "--apiToken",
+                    config.get("qiskit.token"),
+                    "--url",
+                    config.get("qiskit.url"),
+                    "--hub",
+                    config.get("qiskit.hub"),
+                    "--group",
+                    config.get("qiskit.group"),
+                    "--project",
+                    config.get("qiskit.project")
+                ]).then(executedJobs => {
+                    let resultProvider = new ResultProvider();
+                    vscode.workspace.registerTextDocumentContentProvider(
+                        "qiskit-executedJobs-result",
+                        resultProvider
+                    );
+                    let previewUri = vscode.Uri.parse(
+                        `qiskit-executedJobs-result://authority/list-preview`
+                    );
+
+                    let execPath = Util.getOSDependentPath(
+                        executedJobsScript
+                    );
+                    resultProvider.displayContent(
+                        VizManager.createViz(execPath, executedJobs),
+                        previewUri
+                    );
+
+                    vscode.commands
+                        .executeCommand(
+                            "vscode.previewHtml",
+                            previewUri,
+                            vscode.ViewColumn.Two,
+                            "User's executed jobs"
+                        )
+                        .then(
+                            _success => { },
+                            reason => {
+                                console.log(`Error: ${reason}`);
+                                vscode.window.showErrorMessage(reason);
+                            }
+                        );
+                })
+            ),
+
+            vscode.commands.registerCommand("qstudio.getQueueStatus", () =>
+                CommandExecutor.execPythonFile(getQueueStatusScript, [
+                    "--apiToken",
+                    config.get("qiskit.token"),
+                    "--url",
+                    config.get("qiskit.url"),
+                    "--hub",
+                    config.get("qiskit.hub"),
+                    "--group",
+                    config.get("qiskit.group"),
+                    "--project",
+                    config.get("qiskit.project")
+                ]).then(queueStatus => {
+                    let resultProvider = new ResultProvider();
+                    vscode.workspace.registerTextDocumentContentProvider(
+                        "qiskit-queueStatus-result",
+                        resultProvider
+                    );
+                    let previewUri = vscode.Uri.parse(
+                        `qiskit-queueStatus-result://authority/status-preview`
+                    );
+
+                    let execPath = Util.getOSDependentPath(
+                        getQueueStatusScript
+                    );
+                    resultProvider.displayContent(
+                        VizManager.createViz(execPath, queueStatus),
+                        previewUri
+                    );
+
+                    vscode.commands
+                        .executeCommand(
+                            "vscode.previewHtml",
+                            previewUri,
+                            vscode.ViewColumn.Two,
+                            "Queue status"
+                        )
+                        .then(
+                            _success => { },
+                            reason => {
+                                console.log(`Error: ${reason}`);
+                                vscode.window.showErrorMessage(reason);
+                            }
+                        );
+                })
+            ),
+
+            vscode.commands.registerCommand("qstudio.getUserCredits", () =>
+                CommandExecutor.execPythonFile(getUserCreditsScript, [
+                    "--apiToken",
+                    config.get("qiskit.token"),
+                    "--url",
+                    config.get("qiskit.url"),
+                    "--hub",
+                    config.get("qiskit.hub"),
+                    "--group",
+                    config.get("qiskit.group"),
+                    "--project",
+                    config.get("qiskit.project")
+                ]).then(userCredits => {
+                    let resultProvider = new ResultProvider();
+                    vscode.workspace.registerTextDocumentContentProvider(
+                        "qiskit-userCredits-result",
+                        resultProvider
+                    );
+                    let previewUri = vscode.Uri.parse(
+                        `qiskit-userCredits-result://authority/credits-preview`
+                    );
+
+                    let execPath = Util.getOSDependentPath(
+                        getUserCreditsScript
+                    );
+                    resultProvider.displayContent(
+                        VizManager.createViz(execPath, userCredits),
+                        previewUri
+                    );
+
+                    vscode.commands
+                        .executeCommand(
+                            "vscode.previewHtml",
+                            previewUri,
+                            vscode.ViewColumn.Two,
+                            "User's credits"
+                        )
+                        .then(
+                            _success => { },
+                            reason => {
+                                console.log(`Error: ${reason}`);
+                                vscode.window.showErrorMessage(reason);
+                            }
+                        );
+                })
+            ),
+            vscode.commands.registerCommand("qstudio.initQConfig", () =>
+                ActivationUtils.initQConfig()
+                    .then(result => {
+                        vscode.window.showInformationMessage(result);
+                    })
+                    .catch(err => {
+                        vscode.window.showErrorMessage(err);
+                    })
+            )
+        );
     }
 
     export function initQConfig(): Q.Promise<string> {
