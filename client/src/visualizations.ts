@@ -148,9 +148,11 @@ export namespace VizManager {
         if (html !== undefined) {
             let str2Replace =
                 '"x": ["000", "001", "010", "011", "100", "101", "110", "111"], "y": [117, 136, 119, 119, 149, 142, 129, 113]';
-            let replacement = `"x": ["${xArray}"], "y": [${yArray}]`;
 
-            console.log("replacement", replacement);
+            let xArrayUnrolled: String = xArray.map(element => `"${element}"`).join(',');
+            let yArrayUnrolled: String = yArray.map(element => `${element}`).join(',');
+
+            let replacement = `"x": [${xArrayUnrolled}], "y": [${yArrayUnrolled}]`;
 
             html = html.replace(str2Replace, replacement);
 

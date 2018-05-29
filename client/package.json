@@ -10,14 +10,14 @@
 		}
 	],
 	"publisher": "ibm-research",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"repository": {
 		"type": "git",
 		"url": "https://github.ibm.com/IBMQuantum/qiskit-studio"
 	},
 	"icon": "icon.png",
 	"engines": {
-		"vscode": "^1.16.0"
+		"vscode": "^1.23.0"
 	},
 	"categories": [
 		"Programming Languages",
@@ -28,7 +28,6 @@
 		"onLanguage:python",
 		"onCommand:qstudio.runQISKitCode",
 		"onCommand:qstudio.runQASMCode",
-		"onCommand:qstudio.reload",
 		"onCommand:qstudio.checkDependencies",
 		"onCommand:qstudio.initQConfig",
 		"onCommand:qstudio.discoverLocalBackends",
@@ -141,11 +140,6 @@
 		],
 		"commands": [
 			{
-				"command": "qstudio.reload",
-				"title": "Reload IBM Q Studio",
-				"category": "qstudio"
-			},
-			{
 				"command": "qstudio.checkDependencies",
 				"title": "Check IBM Q Studio dependencies",
 				"category": "qstudio"
@@ -203,12 +197,6 @@
 		],
 		"keybindings": [
 			{
-				"command": "qstudio.reload",
-				"key": "Ctrl+r",
-				"mac": "cmd+r",
-				"when": "editorTextFocus && editorLangId == 'python'"
-			},
-			{
 				"command": "qstudio.runQISKitCode",
 				"key": "shift+enter",
 				"mac": "shift+enter",
@@ -250,11 +238,11 @@
 		"vscode-languageclient": "^3.5.0"
 	},
 	"devDependencies": {
-		"typescript": "^2.6.1",
-		"vscode": "^1.1.6",
-		"tslint": "^5.8.0",
+		"@types/mocha": "^2.2.42",
 		"@types/node": "^7.0.43",
-		"@types/mocha": "^2.2.42"
+		"tslint": "^5.8.0",
+		"typescript": "^2.6.1",
+		"vscode": "^1.1.18"
 	},
 	"extensionDependencies": [
 		"ms-python.python"
