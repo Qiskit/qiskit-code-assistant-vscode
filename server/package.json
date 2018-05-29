@@ -25,19 +25,19 @@
 		"typescript": "^2.7.2"
 	},
 	"devDependencies": {
-		"mocha": "^3.5.0",
-		"chai": "^4.1.1",
 		"@types/chai": "^4.1.1",
-		"sinon": "^4.5.0",
 		"@types/sinon": "^4.3.1",
-		"sinon-chai": "^3.0.0",
 		"@types/sinon-chai": "^2.7.29",
 		"antlr4ts-cli": "^0.4.0-alpha.4",
-		"ts-mockito": "^2.3.0",
-		"tslint": "^5.9.1",
+		"chai": "^4.1.1",
+		"husky": "^0.14.3",
+		"lint-staged": "^7.1.2",
+		"mocha": "^3.5.0",
 		"prettier": "^1.12.1",
-		"lint-staged": "^7.0.4",
-		"husky": "^0.14.3"
+		"sinon": "^4.5.0",
+		"sinon-chai": "^3.0.0",
+		"ts-mockito": "^2.3.0",
+		"tslint": "^5.9.1"
 	},
 	"scripts": {
 		"installServer": "installServerIntoExtension ../client ./package.json ./tsconfig.json && npm run installQuantumLibraries && npm run installQiskitLibraries",
