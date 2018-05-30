@@ -11,14 +11,15 @@
 
 ## [Unreleased]
 
-### :tada: Added
+
+### :tada: Added
   * [#106](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/106) Meeting internal guidelines for Github repos (Adding changelog, contributing, issues&PR templates, and code of conduct files) ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 
 ### :space_invader: Security
   * [#104](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/104) Check dependencies with vulnerabilities ([Yeray-Darias](https://github.ibm.com/Yeray-Darias))
   
 
-## [0.0.2](https://github.ibm.com/IBMQuantum/qiskit-studio/releases/tag/v0.0.2) - 2018-05-28
+## [v0.0.2] - 2018-05-28
 
 > Fixes visualization problems at the x-axis.
 
@@ -28,7 +29,7 @@
   * [#101](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/101) Auto reload extension after setup QConfig & refactor extension.ts ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
   * [#100](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/100) Fixed errors when visualizing results with >1 count in get_counts() ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 
-## [0.0.1](https://github.ibm.com/IBMQuantum/qiskit-studio/releases/tag/v0.0.1) - 2018-05-25
+## [v0.0.1] - 2018-05-25
 
 > First internal release
 
@@ -58,3 +59,8 @@
   * [#98](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/98) Updating readme gif ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
   * [#97](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/97) Re-styling charts ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
   * [#76](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/76) Extension size reduction ([Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+
+
+
+[v0.0.2]: (https://github.ibm.com/IBMQuantum/qiskit-studio/releases/tag/v0.0.2)
+[v0.0.1]: (https://github.ibm.com/IBMQuantum/qiskit-studio/releases/tag/v0.0.1)
