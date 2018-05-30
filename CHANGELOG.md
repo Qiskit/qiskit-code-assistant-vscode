@@ -12,15 +12,15 @@
 
 ### 🎉 Added
 
-- [#106](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/106) Meeting internal guidelines for Github repos (Adding changelog, contributing, issues&PR templates, and code of conduct files) ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- Meeting internal guidelines for Github repos (Adding changelog, contributing, issues&PR templates, and code of conduct files) ([#106](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/106) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 
 ### ✏️ Changed
 
-- [#107](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/107) Fixes in changelog's style and contents: following Keepachangelog guidelines ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- Fixes in changelog's style and contents: following Keepachangelog guidelines ([#107](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/107) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 
 ### 👾 Security
 
-- [#104](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/104) Check dependencies with vulnerabilities ([Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- Check dependencies with vulnerabilities ([#104](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/104) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 
 ## [v0.0.2] - 2018-05-28
 
@@ -30,8 +30,8 @@
 
 ### 🐛 Fixed
 
-- [#101](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/101) Auto reload extension after setup QConfig & refactor extension.ts ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
-- [#100](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/100) Fixed errors when visualizing results with >1 count in get_counts() ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- Auto reload extension after setup QConfig & refactor extension.ts ([#101](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/101) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- Fixed errors when visualizing results with >1 count in get_counts() ([#100](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/100) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 
 ## [v0.0.1] - 2018-05-25
 
@@ -39,33 +39,33 @@
 
 ### 🎉 Added
 
-- [#95](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/96) Added a new logo to the extension ([Yeray-Darias](https://github.ibm.com/Yeray-Darias))
-- [#93](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/93) Add command to get the status for remote devices ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
-- [#92](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/92) Parser adaptation to QISKit 0.5 ([Yeray-Darias](https://github.ibm.com/Yeray-Darias))
-- [#77](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/77) QISKit inline documentation ([Yeray-Darias](https://github.ibm.com/Yeray-Darias))
-- [#69](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/69) Visualizing the results of code executions ([Juan-Cruz](https://github.ibm.com/Juan-Cruz) & [Ismael-Faro1](https://github.ibm.com/Ismael-Faro1))
-- [#63](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/63) Readme file for users and VS Code Marketplace ([Yeray-Darias](https://github.ibm.com/Yeray-Darias))
-- [#55](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/55) Run Python code using QISKit and integration of useful commands from QISKit & API ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
-- [#40](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/40) QISKit errors highlight ([Yeray-Darias](https://github.ibm.com/Yeray-Darias))
-- [#38](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/38) Managing IBM Q Studio dependencies ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
-- [#10](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/10) ANTLR v4 grammar adaptation. ([Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- Added a new logo to the extension ([#95](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/96) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- Add command to get the status for remote devices ([#93](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/93) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- Parser adaptation to QISKit 0.5 ([#92](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/92) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- QISKit inline documentation ([#77](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/77) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- Visualizing the results of code executions ([#69](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/69) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz) & [@Ismael-Faro1](https://github.ibm.com/Ismael-Faro1))
+- Readme file for users and VS Code Marketplace ([#63](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/63) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- Run Python code using QISKit and integration of useful commands from QISKit & API ([#55](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/55) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- QISKit errors highlight ([#40](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/40) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- Managing IBM Q Studio dependencies ([#38](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/38) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- ANTLR v4 grammar adaptation. ([#10](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/10) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 
 ### 🐛 Fixed
 
-- [#91](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/91) Fix related to qiskit required version ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
-- [#82](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/82) Solving issues with QISKit v0.5 ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
-- [#80](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/80) Managing properly the OS-dependent paths ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
-- [#66](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/66) Improving the check for dependencies. Fixes #65 ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
-- [#61](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/61) Add code owners ([abdonrod](https://github.ibm.com/abdonrod))
-- [#55](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/53) Array index out of bound check ([Yeray-Darias](https://github.ibm.com/Yeray-Darias))
-- [#50](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/50) Extension packaging phase fix ([Yeray-Darias](https://github.ibm.com/Yeray-Darias))
-- [#45](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/45) Fixed error when executing methods on the left side of an statement ([Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- Fix related to qiskit required version ([#91](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/91) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- Solving issues with QISKit v0.5 ([#82](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/82) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- Managing properly the OS-dependent paths ([#80](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/80) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- Improving the check for dependencies. Fixes #65 ([#66](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/66) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- Add code owners ([#61](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/61) by [@abdonrod](https://github.ibm.com/abdonrod))
+- Array index out of bound check ([#55](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/53) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- Extension packaging phase fix ([#50](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/50) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- Fixed error when executing methods on the left side of an statement ([#45](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/45) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 
 ### ✏️ Changed
 
-- [#98](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/98) Updating readme gif ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
-- [#97](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/97) Re-styling charts ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
-- [#76](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/76) Extension size reduction ([Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- Updating readme gif ([#98](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/98) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- Re-styling charts ([#97](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/97) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- Extension size reduction ([#76](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/76) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 
 [Unreleased]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.0.2...HEAD
 [v0.0.2]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.0.1...v0.0.2
