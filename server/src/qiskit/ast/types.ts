@@ -17,16 +17,18 @@ import { Position } from '../analyzers/types';
 
 'use strict';
 
-export interface Visitor {
-    visitStatement?(item: Statement): void;
-    visitAssignment?(item: Assignment): void;
-    visitExpression?(item: Expression): void;
-    visitVariableReference?(item: VariableReference): void;
-    visitMethodReference?(item: MethodReference): void;
-    visitArrayReference?(item: ArrayReference): void;
-    visitInteger?(item: Integer): void;
-    visitFloat?(item: Float): void;
-    visitText?(item: Text): void;
+export interface Visitor<T> {
+    visitStatement?(item: Statement): T;
+    visitAssignment?(item: Assignment): T;
+    visitExpression?(item: Expression): T;
+    visitVariableReference?(item: VariableReference): T;
+    visitMethodReference?(item: MethodReference): T;
+    visitArrayReference?(item: ArrayReference): T;
+    visitInteger?(item: Integer): T;
+    visitFloat?(item: Float): T;
+    visitText?(item: Text): T;
+
+    defaultValue(): T;
 }
 
 export abstract class VisitableItem {
@@ -34,7 +36,7 @@ export abstract class VisitableItem {
     start: number;
     end: number;
 
-    abstract accept(visitor: Visitor): void;
+    abstract accept<T>(visitor: Visitor<T>): T;
 }
 
 export class Statement extends VisitableItem {
@@ -46,10 +48,11 @@ export class Statement extends VisitableItem {
         this.expression = expression;
     }
 
-    accept(visitor: Visitor): void {
+    accept<T>(visitor: Visitor<T>): T {
         if (visitor.visitStatement) {
             return visitor.visitStatement(this);
         }
+        return visitor.defaultValue();
     }
 
     toString(): string {
@@ -68,10 +71,11 @@ export class Assignment extends VisitableItem {
         this.right = right;
     }
 
-    accept(visitor: Visitor): void {
+    accept<T>(visitor: Visitor<T>): T {
         if (visitor.visitAssignment) {
             return visitor.visitAssignment(this);
         }
+        return visitor.defaultValue();
     }
 
     toString(): string {
@@ -88,10 +92,11 @@ export class Expression extends VisitableItem {
         this.terms = terms;
     }
 
-    accept(visitor: Visitor): void {
+    accept<T>(visitor: Visitor<T>): T {
         if (visitor.visitExpression) {
             return visitor.visitExpression(this);
         }
+        return visitor.defaultValue();
     }
 
     toString(): string {
@@ -111,10 +116,11 @@ export class VariableReference extends VisitableItem {
         this.end = position.end;
     }
 
-    accept(visitor: Visitor): void {
+    accept<T>(visitor: Visitor<T>): T {
         if (visitor.visitVariableReference) {
             return visitor.visitVariableReference(this);
         }
+        return visitor.defaultValue();
     }
 
     toString(): string {
@@ -136,10 +142,11 @@ export class MethodReference extends VisitableItem {
         this.end = position.end;
     }
 
-    accept(visitor: Visitor): void {
+    accept<T>(visitor: Visitor<T>): T {
         if (visitor.visitMethodReference) {
             return visitor.visitMethodReference(this);
         }
+        return visitor.defaultValue();
     }
 
     toString(): string {
@@ -161,10 +168,11 @@ export class ArrayReference extends VisitableItem {
         this.end = position.end;
     }
 
-    accept(visitor: Visitor): void {
+    accept<T>(visitor: Visitor<T>): T {
         if (visitor.visitArrayReference) {
             return visitor.visitArrayReference(this);
         }
+        return visitor.defaultValue();
     }
 
     toString(): string {
@@ -184,10 +192,11 @@ export class Integer extends VisitableItem {
         this.end = position.end;
     }
 
-    accept(visitor: Visitor): void {
+    accept<T>(visitor: Visitor<T>): T {
         if (visitor.visitInteger) {
             return visitor.visitInteger(this);
         }
+        return visitor.defaultValue();
     }
 
     toString(): string {
@@ -207,10 +216,11 @@ export class Float extends VisitableItem {
         this.end = position.end;
     }
 
-    accept(visitor: Visitor): void {
+    accept<T>(visitor: Visitor<T>): T {
         if (visitor.visitFloat) {
             return visitor.visitFloat(this);
         }
+        return visitor.defaultValue();
     }
 
     toString(): string {
@@ -230,10 +240,11 @@ export class Text extends VisitableItem {
         this.end = position.end;
     }
 
-    accept(visitor: Visitor): void {
+    accept<T>(visitor: Visitor<T>): T {
         if (visitor.visitText) {
             return visitor.visitText(this);
         }
+        return visitor.defaultValue();
     }
 
     toString(): string {

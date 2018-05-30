@@ -56,8 +56,12 @@ export class TreeFolder extends AbstractParseTreeVisitor<Statement[]> implements
             let statementFolder = new StatementFolder();
             return statement.accept(statementFolder);
         };
+        let undefinedStatements = (statement: Statement) => statement !== undefined;
 
-        return ctx.stmt().map(toStatement);
+        return ctx
+            .stmt()
+            .map(toStatement)
+            .filter(undefinedStatements);
     }
 }
 
@@ -246,7 +250,9 @@ class Arguments extends VisitableItem {
         this.end = position.end;
     }
 
-    accept(_visitor: Visitor) {}
+    accept<T>(_visitor: Visitor<T>): T {
+        return null;
+    }
 
     toString(): string {
         return `Arguments(${this.args.join(',')})`;
@@ -265,7 +271,9 @@ class ArrayIndex extends VisitableItem {
         this.end = position.end;
     }
 
-    accept(_visitor: Visitor) {}
+    accept<T>(_visitor: Visitor<T>): T {
+        return null;
+    }
 
     toString(): string {
         return `ArrayIndex(${this.indexes.join(',')})`;

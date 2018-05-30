@@ -34,6 +34,7 @@ import { TreePrinter } from '../tools';
 import { ParseTreeWalker } from 'antlr4ts/tree';
 import { QiskitSemanticAnalyzer } from './analyzers/qiskitSemanticAnalyzer';
 import { TreeFolder } from './ast/treeFolder';
+import { SymbolTableGenerator } from './ast/symbolTableGenerator';
 
 export class QiskitParser implements Parser {
     parse(input: string): ParserResult {
@@ -47,9 +48,11 @@ export class QiskitParser implements Parser {
         let semanticAnalyzer = new QiskitSemanticAnalyzer(errorListener);
         semanticAnalyzer.visit(tree);
 
+        // New semantic analysis version
         let folder = new TreeFolder();
         let statements = folder.visit(tree);
         statements.forEach(statement => console.log(`${statement}`));
+        let symbolTable = SymbolTableGenerator.symbolTableFor(statements);
 
         return {
             ast: tree,
