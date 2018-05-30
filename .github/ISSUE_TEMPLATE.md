@@ -38,3 +38,11 @@
 **What is the expected behavior?**
 
 
+
+---
+
+*ENHANCEMENT REQUEST TEMPLATE*  <!-- Delete this header from your issue. -->
+
+**What is the expected enhancement?**
+
+
