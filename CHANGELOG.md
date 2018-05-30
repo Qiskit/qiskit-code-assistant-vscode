@@ -11,7 +11,6 @@
 
 ## [Unreleased]
 
-
 ### :tada: Added
   * [#106](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/106) Meeting internal guidelines for Github repos (Adding changelog, contributing, issues&PR templates, and code of conduct files) ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 
