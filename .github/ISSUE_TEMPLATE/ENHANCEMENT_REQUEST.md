@@ -1,5 +1,5 @@
 ---
-name: 💅 Enhancement Request
+name: 💅 Enhancement request
 about: Suggest an improvement for this project 🆒!
 ---
 
