@@ -1,3 +1,8 @@
+---
+name: 🐛 Bug Report
+about: Create a report to help us improve 🤔.
+---
+
 <!--
 ⚠️ If you do not respect these two points, your issue will be closed.
 - Don't forget the checkbox at the end of your issue.
@@ -34,14 +39,6 @@
 
 
 
----
-
-*FEATURE REQUEST TEMPLATE*  <!-- Delete this header from your issue. -->
-
-**What is the expected behavior?**
 
 
-
----
-
-<!-- ⚠️ Make sure to browse the opened and closed issues. -->
+<!-- ⚠️ Make sure to browse the opened and closed issues  -->
