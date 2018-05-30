@@ -40,20 +40,22 @@ describe('From a parser and folded QISKit code', () => {
     describe('when a symbol table is generated', () => {
         let symbolTable = SymbolTableGenerator.symbolTableFor(statements);
 
-        it('contains a QuantumRegister named a', () => {
-            expect(symbolTable.lookup('a')).to.include({ type: symbolTable.lookup('QuantumRegister') });
+        it('contains a QuantumRegister named a with size 2', () => {
+            expect(symbolTable.lookup('a').type.getName()).to.be.equal('QuantumRegister');
+            expect(symbolTable.lookup('a')).to.deep.include({ metadata: { size: 2 } });
         });
         it('contains a QuantumRegister named q', () => {
-            expect(symbolTable.lookup('q')).to.include({ type: symbolTable.lookup('QuantumRegister') });
+            expect(symbolTable.lookup('q').type.getName()).to.be.equal('QuantumRegister');
         });
         it('contains a ClassicalRegister named c', () => {
-            expect(symbolTable.lookup('c')).to.include({ type: symbolTable.lookup('ClassicalRegister') });
+            expect(symbolTable.lookup('c').type.getName()).to.be.equal('ClassicalRegister');
         });
         it('contains a QuantumCircuit named qc', () => {
-            expect(symbolTable.lookup('qc')).to.include({ type: symbolTable.lookup('QuantumCircuit') });
+            expect(symbolTable.lookup('qc').type.getName()).to.be.equal('QuantumCircuit');
         });
-        it('contains a QuantumRegister named qr', () => {
-            expect(symbolTable.lookup('qr')).to.include({ type: symbolTable.lookup('QuantumRegister') });
+        it('contains a QuantumRegister named qr with size 2 and name "qr"', () => {
+            expect(symbolTable.lookup('qr').type.getName()).to.be.equal('QuantumRegister');
+            expect(symbolTable.lookup('qr')).to.deep.include({ metadata: { size: 2, name: '"qr"' } });
         });
     });
 });

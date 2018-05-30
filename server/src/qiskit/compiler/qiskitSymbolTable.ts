@@ -157,8 +157,8 @@ export class VariableSymbol extends Symbol {
 }
 
 export interface VariableMetadata {
-    name: string;
-    size: number;
+    name?: string;
+    size?: number;
 }
 
 interface QiskitSDK {
