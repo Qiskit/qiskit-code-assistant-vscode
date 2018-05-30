@@ -46,6 +46,8 @@ export namespace SymbolTableGenerator {
             statement.accept(updater);
         });
 
+        symbolTable.print();
+
         return symbolTable;
     }
 }
@@ -56,6 +58,10 @@ class StatementSymbolTableUpdater implements Visitor<void> {
     defaultValue() {}
 
     visitStatement(statement: Statement) {
+        if (statement.expression === null) {
+            return;
+        }
+
         let updater = new AssignmentSymbolTableUpdater(this.symbolTable);
         statement.expression.accept(updater);
     }
@@ -72,7 +78,7 @@ class AssignmentSymbolTableUpdater implements Visitor<MethodInvocationData> {
 
     visitAssignment(assignment: Assignment): MethodInvocationData {
         let variable = this.unwrapVariable(assignment.left);
-        if (variable !== null) {
+        if (variable !== null && assignment.right) {
             let invocationData = assignment.right.accept(this);
 
             let symbol = new VariableSymbol(variable, invocationData.type, invocationData.metadata);

@@ -1,5 +1,3 @@
-import { Position } from '../analyzers/types';
-
 // Copyright 2018 IBM RESEARCH. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +14,8 @@ import { Position } from '../analyzers/types';
 // =============================================================================
 
 'use strict';
+
+import { Position } from '../analyzers/types';
 
 export interface Visitor<T> {
     visitStatement?(item: Statement): T;

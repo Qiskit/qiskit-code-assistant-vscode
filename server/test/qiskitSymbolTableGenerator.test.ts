@@ -22,8 +22,8 @@ import { Python3Parser } from '../src/qiskit/antlr/Python3Parser';
 import { TreeFolder } from '../src/qiskit/ast/treeFolder';
 import { SymbolTableGenerator } from '../src/qiskit/ast/symbolTableGenerator';
 
-let source = `
-from qiskit import ClassicalRegister, QuantumRegister
+let validSource = `
+from qiskit import ClassicalRegister, QuantumRegister, QuantumProgram
 from qiskit import QuantumCircuit
 a = q = QuantumRegister(2)
 c = ClassicalRegister(2)
@@ -32,9 +32,9 @@ qp = QuantumProgram()
 qr = qp.create_quantum_register("qr", 2)
 `;
 
-describe('From a parser and folded QISKit code', () => {
+describe('From a parser and folded QISKit code of a valid source', () => {
     let folder = new TreeFolder();
-    let tree = parse(source);
+    let tree = parse(validSource);
     let statements = folder.visit(tree);
 
     describe('when a symbol table is generated', () => {
@@ -60,8 +60,31 @@ describe('From a parser and folded QISKit code', () => {
     });
 });
 
-function parse(source: string): ParserRuleContext {
-    let inputStream = new ANTLRInputStream(source);
+let wrongSource = `
+from qiskit import QuantumProgram
+qp = QuantumProgram()
+qr = qp.
+`;
+
+describe('From a parser and folded QISKit code of a wrong source', () => {
+    let folder = new TreeFolder();
+    let tree = parse(wrongSource);
+    let statements = folder.visit(tree);
+
+    describe('when a symbol table is generated', () => {
+        let symbolTable = SymbolTableGenerator.symbolTableFor(statements);
+
+        it('contains a QuantumProgram named qp', () => {
+            expect(symbolTable.lookup('qp').type.getName()).to.be.equal('QuantumProgram');
+        });
+        it('contains a QuantumProgram named qr (partial detection)', () => {
+            expect(symbolTable.lookup('qr')).to.be.null;
+        });
+    });
+});
+
+function parse(validSource: string): ParserRuleContext {
+    let inputStream = new ANTLRInputStream(validSource);
     let lexer = new Python3Lexer(inputStream);
     let tokenStream = new CommonTokenStream(lexer);
     let parser = new Python3Parser(tokenStream);
