@@ -4,8 +4,7 @@ about: Create a report to help us improve 🤔.
 ---
 
 <!--
-⚠️ If you do not respect these two points, your issue will be closed.
-- Don't forget the checkbox at the end of your issue.
+⚠️ If you do not respect this point, your issue will be closed.
 - Respect this template.
 -->
 

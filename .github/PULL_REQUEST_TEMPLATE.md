@@ -1,31 +1,16 @@
-<!--- Provide a general summary of your changes in the Title above -->
+<!-- ⚠️ Your PR title will appear in the changelogs please make it short detailed and understandable for all. -->
 
-## Description
-<!--- Describe your changes in detail -->
+<!-- Uncomment the correct contribution type. !-->
 
-## Motivation and Context
-<!--- Why is this change required? What problem does it solve? -->
-<!--- If it fixes an open issue, please link to the issue here. -->
+My PR is a:
+<!-- 🐛 Bug fix -->
+<!-- 💅 Enhancement -->
+<!-- 🚀 New feature -->
 
-## How Has This Been Tested?
-<!--- Please describe in detail how you tested your changes. -->
-<!--- Include details of your testing environment, and the tests you ran to -->
-<!--- see how your change affects other areas of the code, etc. -->
+Main update on the:
+<!-- Client -->
+<!-- Server -->
+<!-- Documentation -->
+<!-- Repository -->
 
-## Screenshots (if appropriate):
-
-## Types of changes
-<!--- What types of changes does your code introduce? Put an `x` in all the boxes that apply: -->
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to change)
-
-## Checklist:
-<!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
-<!--- If you're unsure about any of these, don't hesitate to ask. We're here to help! -->
-- [ ] My code follows the code style of this project.
-- [ ] My change requires a change to the documentation.
-- [ ] I have updated the documentation accordingly.
-- [ ] I have read the **CONTRIBUTING** document.
-- [ ] I have added tests to cover my changes.
-- [ ] All new and existing tests passed.
+<!-- Write a short description of what your PR solves and link the related issues. -->
