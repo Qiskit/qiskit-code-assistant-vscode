@@ -14,6 +14,11 @@
 ### :tada: Added
   * [#106](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/106) Meeting internal guidelines for Github repos (Adding changelog, contributing, issues&PR templates, and code of conduct files) ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 
+### :pencil2: Changed
+
+* [#107](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/107) Fixes in changelog's style and contents: following Keepachangelog guidelines ([Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+
+
 ### :space_invader: Security
   * [#104](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/104) Check dependencies with vulnerabilities ([Yeray-Darias](https://github.ibm.com/Yeray-Darias))
   
