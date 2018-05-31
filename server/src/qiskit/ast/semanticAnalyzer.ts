@@ -85,7 +85,7 @@ class TermSemanticValidator implements Visitor<ExpressionAnalysis> {
 
     visitMethodReference(method: MethodReference): ExpressionAnalysis {
         let methodSymbol = this.findMethodSymbol(method.name, this.currentAnalysis.lastSymbol);
-        if (methodSymbol === null) {
+        if (methodSymbol === null || methodSymbol === undefined) {
             return this.currentAnalysis;
         }
 
@@ -113,6 +113,10 @@ class TermSemanticValidator implements Visitor<ExpressionAnalysis> {
 
     checkMethodArguments(method: MethodReference, methodSymbol: MethodSymbol): ParserError[] {
         let result: ParserError[] = [];
+
+        // if (method === undefined || methodSymbol === undefined) {
+        //     return result;
+        // }
 
         // number of arguments check
         let requiredArguments = methodSymbol.arguments.filter(arg => arg.optional === false).length;
