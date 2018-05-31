@@ -191,13 +191,16 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
         }
 
         if (variableSymbol instanceof VariableSymbol) {
-            return this.checkArgumentTypev2(arrayReference, variableSymbol);
+            let result = [];
+            result.push(...this.checkArgumentTypev2(arrayReference, variableSymbol));
+            result.push(...this.checkArrayPosition(arrayReference, variableSymbol));
+            return result;
         }
 
         return [];
     }
 
-    checkArgumentType(variable: VariableReference, variableSymbol: VariableSymbol) {
+    checkArgumentType(variable: VariableReference, variableSymbol: VariableSymbol): ParserError[] {
         if (variableSymbol.type !== this.requiredArgument.type) {
             let errorMessage =
                 this.requiredArgument.type !== null
@@ -218,7 +221,7 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
         return [];
     }
 
-    checkArgumentTypev2(variable: ArrayReference, variableSymbol: VariableSymbol) {
+    checkArgumentTypev2(variable: ArrayReference, variableSymbol: VariableSymbol): ParserError[] {
         if (variableSymbol.type !== this.requiredArgument.type) {
             let errorMessage =
                 this.requiredArgument.type !== null
@@ -231,6 +234,21 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
                 start: variable.start,
                 end: variable.end,
                 message: errorMessage,
+                level: ParseErrorLevel.WARNING
+            } as ParserError;
+            return [error];
+        }
+
+        return [];
+    }
+
+    checkArrayPosition(variable: ArrayReference, variableSymbol: VariableSymbol): ParserError[] {
+        if (variableSymbol.hasSize() && variable.index >= variableSymbol.size()) {
+            let error = {
+                line: variable.line,
+                start: variable.start,
+                end: variable.end,
+                message: `Position ${variable.index} is not valid at ${variable.variable}`,
                 level: ParseErrorLevel.WARNING
             } as ParserError;
             return [error];

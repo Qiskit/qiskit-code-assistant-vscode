@@ -34,6 +34,7 @@ qc.cx(q[0], q[1])
 qc.measure(q, c)
 job_sim = execute(qc, "local_qasm_simulator")
 sim_result = job_sim.result()
+
 `;
 
 describe('From a parsed and folded QISKit code of a valid source', () => {
@@ -57,11 +58,12 @@ from qiskit import QuantumCircuit, execute
 q = QuantumRegister(2)
 c = ClassicalRegister(2)
 qc = QuantumCircuit(q, q)
-qc.h(c[3])
+qc.h(c[1])
 qc.cx(q[5])
 qc.measure(q, c)
 job_sim = execute(qc, "local_qasm_simulator")
 sim_result = job_sim.result()
+
 `;
 
 describe('From a parsed and folded QISKit code of a wrong source', () => {
