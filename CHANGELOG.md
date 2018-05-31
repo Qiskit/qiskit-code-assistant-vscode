@@ -15,6 +15,10 @@
 - Meeting internal guidelines for Github repos (Adding changelog, contributing, issues&PR templates, and code of conduct files) ([#106](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/106) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Follow the dev guidelines: update the issue templates & move contributing ([#108](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/108) by [@abdonrod](https://github.ibm.com/abdonrod) & [@Juan-Cruz](https://github.ibm.com/abdonrod))
 
+### 🐛 Fixed
+
+- Fixed an error in the message to users when qiskit installed is not the last version available ([#110](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/110) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+
 ### ✏️ Changed
 
 - Fixes in changelog's style and contents: following Keepachangelog guidelines ([#107](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/107) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
