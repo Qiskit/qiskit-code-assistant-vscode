@@ -13,4 +13,4 @@ Main update on the:
 <!-- Documentation -->
 <!-- Repository -->
 
-<!-- Write a short description of what your PR solves and link the related issues. -->
+<!-- Write a short description of what your PR solves and link the related issues. Remember also to include this PR in the CHANGELOG.md file -->
