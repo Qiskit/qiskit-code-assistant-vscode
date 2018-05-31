@@ -21,6 +21,7 @@
 
 ### ✏️ Changed
 
+- Update the gif in readme to meet version 0.0.2 and qiskit >= 0.5 ([#113](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/113) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Updating usage of load_qasm_file() to qiskit 0.5.3 ([#112](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/112) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Fixes in changelog's style and contents: following Keepachangelog guidelines ([#107](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/107) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 
