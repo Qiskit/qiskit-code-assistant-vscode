@@ -41,9 +41,9 @@ import {
     Float,
     Integer,
     MethodReference,
-    Visitor
+    Visitor,
+    Position
 } from './types';
-import { Position } from '../analyzers/types';
 import { ParserRuleContext, Token } from 'antlr4ts';
 
 export class TreeFolder extends AbstractParseTreeVisitor<Statement[]> implements Python3Visitor<Statement[]> {

@@ -15,8 +15,6 @@
 
 'use strict';
 
-import { Position } from '../analyzers/types';
-
 export interface Visitor<T> {
     visitStatement?(item: Statement): T;
     visitAssignment?(item: Assignment): T;
@@ -250,4 +248,10 @@ export class Text extends VisitableItem {
     toString(): string {
         return `${this.value}`;
     }
+}
+
+export interface Position {
+    line: number;
+    start: number;
+    end: number;
 }
