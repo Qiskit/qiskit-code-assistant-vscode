@@ -32,10 +32,8 @@ import { VariableSymbol, ClassSymbol, MethodSymbol, ArgumentSymbol } from '../co
 export namespace SemanticAnalyzer {
     export function analyze(statements: Statement[], symbolTable: SymbolTable): ParserError[] {
         let statementValidator = new StatementSemanticValidator(symbolTable);
-        let validatingStatement = (a: ParserError[], b: Statement) => {
-            a.push(...b.accept(statementValidator));
-            return a;
-        };
+        let validatingStatement = (a: ParserError[], b: Statement) => a.concat(b.accept(statementValidator));
+
         return statements.reduce(validatingStatement, []);
     }
 }
@@ -59,12 +57,13 @@ class StatementSemanticValidator implements Visitor<ParserError[]> {
     }
 
     visitExpression(expression: Expression): ParserError[] {
-        let expressionAnalysis = expression.terms.reduce((a: ExpressionAnalysis, b: VisitableItem) => {
+        let visitingTerms = (a: ExpressionAnalysis, b: VisitableItem) => {
             let termValidator = new TermSemanticValidator(this.symbolTable, a);
             let currentAnalysis = b.accept(termValidator);
 
             return currentAnalysis;
-        }, new ExpressionAnalysis());
+        };
+        let expressionAnalysis = expression.terms.reduce(visitingTerms, new ExpressionAnalysis());
 
         return expressionAnalysis.errors;
     }
@@ -85,12 +84,10 @@ class TermSemanticValidator implements Visitor<ExpressionAnalysis> {
 
     visitMethodReference(method: MethodReference): ExpressionAnalysis {
         let methodSymbol = this.findMethodSymbol(method.name, this.currentAnalysis.lastSymbol);
-        if (methodSymbol === null || methodSymbol === undefined) {
-            return this.currentAnalysis;
+        if (methodSymbol) {
+            this.currentAnalysis.errors.push(...this.checkMethodArguments(method, methodSymbol));
+            this.currentAnalysis.lastSymbol = methodSymbol.type;
         }
-
-        this.currentAnalysis.errors.push(...this.checkMethodArguments(method, methodSymbol));
-        this.currentAnalysis.lastSymbol = methodSymbol.type;
 
         return this.currentAnalysis;
     }
@@ -112,26 +109,26 @@ class TermSemanticValidator implements Visitor<ExpressionAnalysis> {
     }
 
     checkMethodArguments(method: MethodReference, methodSymbol: MethodSymbol): ParserError[] {
+        return []
+            .concat(this.checkArgumentsNumber(method, methodSymbol))
+            .concat(this.checkArgumentsType(method, methodSymbol));
+    }
+
+    checkArgumentsNumber(method: MethodReference, methodSymbol: MethodSymbol): ParserError[] {
         let result: ParserError[] = [];
 
-        // if (method === undefined || methodSymbol === undefined) {
-        //     return result;
-        // }
-
-        // number of arguments check
         let requiredArguments = methodSymbol.arguments.filter(arg => arg.optional === false).length;
         if (method.args.length < requiredArguments) {
-            let error = {
-                line: method.line,
-                start: method.start,
-                end: method.end,
-                message: `Expecting ${requiredArguments} arguments but ${method.args.length} received`,
-                level: ParseErrorLevel.WARNING
-            };
+            let message = `Expecting ${requiredArguments} arguments but ${method.args.length} received`;
+            let error = this.warning(message, method);
+
             result.push(error);
         }
 
-        // argument type
+        return result;
+    }
+
+    checkArgumentsType(method: MethodReference, methodSymbol: MethodSymbol): ParserError[] {
         let errors: ParserError[] = [];
         methodSymbol.arguments.forEach((arg, position) => {
             if (method.args[position]) {
@@ -139,11 +136,8 @@ class TermSemanticValidator implements Visitor<ExpressionAnalysis> {
                 errors.push(...method.args[position].accept(argumentValidator));
             }
         });
-        result.push(...errors);
 
-        // array reference arguments size
-
-        return result;
+        return errors;
     }
 
     extractMethodFromVariable(variable: VariableSymbol, method: string): MethodSymbol {
@@ -155,8 +149,18 @@ class TermSemanticValidator implements Visitor<ExpressionAnalysis> {
         return null;
     }
 
-    extractMethodFromClass(klass: ClassSymbol, method: string): MethodSymbol {
-        return klass.getMethods().find(symbol => symbol.name === method);
+    extractMethodFromClass(classSymbol: ClassSymbol, method: string): MethodSymbol {
+        return classSymbol.getMethods().find(symbol => symbol.name === method);
+    }
+
+    warning(message: string, item: VisitableItem): ParserError {
+        return {
+            line: item.line,
+            start: item.start,
+            end: item.end,
+            message: message,
+            level: ParseErrorLevel.WARNING
+        };
     }
 }
 
@@ -168,10 +172,7 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
     }
 
     visitExpression(expression: Expression): ParserError[] {
-        return expression.terms.reduce((a: ParserError[], b: VisitableItem) => {
-            a.push(...b.accept(this));
-            return a;
-        }, []);
+        return expression.terms.reduce((a: ParserError[], b: VisitableItem) => a.concat(b.accept(this)), []);
     }
 
     visitVariableReference(variable: VariableReference): ParserError[] {
@@ -181,7 +182,7 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
         }
 
         if (variableSymbol instanceof VariableSymbol) {
-            return this.checkArgumentType(variable, variableSymbol);
+            return this.checkVariableType(variable, variableSymbol, variable.value);
         }
 
         return [];
@@ -189,14 +190,13 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
 
     visitArrayReference(arrayReference: ArrayReference): ParserError[] {
         let variableSymbol = this.symbolTable.lookup(arrayReference.variable);
-
         if (variableSymbol === null) {
             return [];
         }
 
         if (variableSymbol instanceof VariableSymbol) {
             let result = [];
-            result.push(...this.checkArgumentTypev2(arrayReference, variableSymbol));
+            result.push(...this.checkVariableType(arrayReference, variableSymbol, arrayReference.variable));
             result.push(...this.checkArrayPosition(arrayReference, variableSymbol));
             return result;
         }
@@ -204,43 +204,12 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
         return [];
     }
 
-    checkArgumentType(variable: VariableReference, variableSymbol: VariableSymbol): ParserError[] {
+    checkVariableType(item: VisitableItem, variableSymbol: VariableSymbol, name: string) {
         if (variableSymbol.type !== this.requiredArgument.type) {
-            let errorMessage =
-                this.requiredArgument.type !== null
-                    ? `Expecting argument of type ${this.requiredArgument.type.getName()}, but ${
-                          variable.value
-                      } doesn't match it`
-                    : `${variable.value} does not match the expected type`;
-            let error = {
-                line: variable.line,
-                start: variable.start,
-                end: variable.end,
-                message: errorMessage,
-                level: ParseErrorLevel.WARNING
-            } as ParserError;
-            return [error];
-        }
+            let expectedType = this.requiredArgument.type.getName();
+            let errorMessage = `Expecting argument of type ${expectedType}, but ${name} doesn't match it`;
 
-        return [];
-    }
-
-    checkArgumentTypev2(variable: ArrayReference, variableSymbol: VariableSymbol): ParserError[] {
-        if (variableSymbol.type !== this.requiredArgument.type) {
-            let errorMessage =
-                this.requiredArgument.type !== null
-                    ? `Expecting argument of type ${this.requiredArgument.type.getName()}, but ${
-                          variable.variable
-                      } doesn't match it`
-                    : `${variable.variable} does not match the expected type`;
-            let error = {
-                line: variable.line,
-                start: variable.start,
-                end: variable.end,
-                message: errorMessage,
-                level: ParseErrorLevel.WARNING
-            } as ParserError;
-            return [error];
+            return [this.warning(errorMessage, item)];
         }
 
         return [];
@@ -248,17 +217,21 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
 
     checkArrayPosition(variable: ArrayReference, variableSymbol: VariableSymbol): ParserError[] {
         if (variableSymbol.hasSize() && variable.index >= variableSymbol.size()) {
-            let error = {
-                line: variable.line,
-                start: variable.start,
-                end: variable.end,
-                message: `Position ${variable.index} is not valid at ${variable.variable}`,
-                level: ParseErrorLevel.WARNING
-            } as ParserError;
-            return [error];
+            let message = `Position ${variable.index} is not valid at ${variable.variable}`;
+            return [this.warning(message, variable)];
         }
 
         return [];
+    }
+
+    warning(message: string, item: VisitableItem): ParserError {
+        return {
+            line: item.line,
+            start: item.start,
+            end: item.end,
+            message: message,
+            level: ParseErrorLevel.WARNING
+        };
     }
 }
 
