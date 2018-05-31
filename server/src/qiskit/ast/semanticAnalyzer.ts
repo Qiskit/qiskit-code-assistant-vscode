@@ -15,10 +15,19 @@
 
 'use strict';
 
-import { Statement, Visitor, Assignment, Expression, VisitableItem, MethodReference, VariableReference } from './types';
+import {
+    Statement,
+    Visitor,
+    Assignment,
+    Expression,
+    VisitableItem,
+    MethodReference,
+    VariableReference,
+    ArrayReference
+} from './types';
 import { SymbolTable, Type } from '../../tools/symbolTable';
 import { ParserError, ParseErrorLevel } from '../../types';
-import { VariableSymbol, ClassSymbol, MethodSymbol } from '../compiler/qiskitSymbolTable';
+import { VariableSymbol, ClassSymbol, MethodSymbol, ArgumentSymbol } from '../compiler/qiskitSymbolTable';
 
 export namespace SemanticAnalyzer {
     export function analyze(statements: Statement[], symbolTable: SymbolTable): ParserError[] {
@@ -119,6 +128,14 @@ class TermSemanticValidator implements Visitor<ExpressionAnalysis> {
         }
 
         // argument type
+        let errors: ParserError[] = [];
+        methodSymbol.arguments.forEach((arg, position) => {
+            if (method.args[position]) {
+                let argumentValidator = new ArgumentSemanticValidator(arg, this.symbolTable);
+                errors.push(...method.args[position].accept(argumentValidator));
+            }
+        });
+        result.push(...errors);
 
         // array reference arguments size
 
@@ -136,6 +153,90 @@ class TermSemanticValidator implements Visitor<ExpressionAnalysis> {
 
     extractMethodFromClass(klass: ClassSymbol, method: string): MethodSymbol {
         return klass.getMethods().find(symbol => symbol.name === method);
+    }
+}
+
+class ArgumentSemanticValidator implements Visitor<ParserError[]> {
+    constructor(private requiredArgument: ArgumentSymbol, private symbolTable: SymbolTable) {}
+
+    defaultValue(): ParserError[] {
+        return [];
+    }
+
+    visitExpression(expression: Expression): ParserError[] {
+        return expression.terms.reduce((a: ParserError[], b: VisitableItem) => {
+            a.push(...b.accept(this));
+            return a;
+        }, []);
+    }
+
+    visitVariableReference(variable: VariableReference): ParserError[] {
+        let variableSymbol = this.symbolTable.lookup(variable.value);
+        if (variableSymbol === null) {
+            return [];
+        }
+
+        if (variableSymbol instanceof VariableSymbol) {
+            return this.checkArgumentType(variable, variableSymbol);
+        }
+
+        return [];
+    }
+
+    visitArrayReference(arrayReference: ArrayReference): ParserError[] {
+        let variableSymbol = this.symbolTable.lookup(arrayReference.variable);
+
+        if (variableSymbol === null) {
+            return [];
+        }
+
+        if (variableSymbol instanceof VariableSymbol) {
+            return this.checkArgumentTypev2(arrayReference, variableSymbol);
+        }
+
+        return [];
+    }
+
+    checkArgumentType(variable: VariableReference, variableSymbol: VariableSymbol) {
+        if (variableSymbol.type !== this.requiredArgument.type) {
+            let errorMessage =
+                this.requiredArgument.type !== null
+                    ? `Expecting argument of type ${this.requiredArgument.type.getName()}, but ${
+                          variable.value
+                      } doesn't match it`
+                    : `${variable.value} does not match the expected type`;
+            let error = {
+                line: variable.line,
+                start: variable.start,
+                end: variable.end,
+                message: errorMessage,
+                level: ParseErrorLevel.WARNING
+            } as ParserError;
+            return [error];
+        }
+
+        return [];
+    }
+
+    checkArgumentTypev2(variable: ArrayReference, variableSymbol: VariableSymbol) {
+        if (variableSymbol.type !== this.requiredArgument.type) {
+            let errorMessage =
+                this.requiredArgument.type !== null
+                    ? `Expecting argument of type ${this.requiredArgument.type.getName()}, but ${
+                          variable.variable
+                      } doesn't match it`
+                    : `${variable.variable} does not match the expected type`;
+            let error = {
+                line: variable.line,
+                start: variable.start,
+                end: variable.end,
+                message: errorMessage,
+                level: ParseErrorLevel.WARNING
+            } as ParserError;
+            return [error];
+        }
+
+        return [];
     }
 }
 

@@ -46,8 +46,8 @@ export class QiskitParser implements Parser {
 
         // TreePrinter.print(parser.ruleNames, tree);
 
-        let semanticAnalyzer = new QiskitSemanticAnalyzer(errorListener);
-        semanticAnalyzer.visit(tree);
+        // let semanticAnalyzer = new QiskitSemanticAnalyzer(errorListener);
+        // semanticAnalyzer.visit(tree);
 
         // New semantic analysis version
         let folder = new TreeFolder();
@@ -58,7 +58,7 @@ export class QiskitParser implements Parser {
 
         return {
             ast: tree,
-            errors: errorListener.errors
+            errors: errorListener.errors.concat(errors)
         };
     }
 
