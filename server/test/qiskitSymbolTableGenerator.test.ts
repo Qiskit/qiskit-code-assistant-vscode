@@ -32,7 +32,7 @@ qp = QuantumProgram()
 qr = qp.create_quantum_register("qr", 2)
 `;
 
-describe('From a parser and folded QISKit code of a valid source', () => {
+describe('From a parsed and folded QISKit code of a valid source', () => {
     let folder = new TreeFolder();
     let tree = parse(validSource);
     let statements = folder.visit(tree);

@@ -46,8 +46,6 @@ export namespace SymbolTableGenerator {
             statement.accept(updater);
         });
 
-        symbolTable.print();
-
         return symbolTable;
     }
 }
