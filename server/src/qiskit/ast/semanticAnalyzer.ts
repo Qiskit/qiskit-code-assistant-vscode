@@ -25,7 +25,7 @@ import {
     VariableReference,
     ArrayReference
 } from './types';
-import { SymbolTable, Type } from '../../tools/symbolTable';
+import { SymbolTable, Type, BuiltInTypeSymbol } from '../../tools/symbolTable';
 import { ParserError, ParseErrorLevel } from '../../types';
 import { VariableSymbol, ClassSymbol, MethodSymbol, ArgumentSymbol } from '../compiler/qiskitSymbolTable';
 
@@ -207,6 +207,14 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
     checkVariableType(item: VisitableItem, variableSymbol: VariableSymbol, name: string) {
         if (variableSymbol.type !== this.requiredArgument.type) {
             let expectedType = this.requiredArgument.type.getName();
+
+            // checks on primitive types should be avoided because this kind of variables are not properly
+            // registered at the symbol table
+            let symbol = this.symbolTable.lookup(expectedType);
+            if (symbol === null || symbol instanceof BuiltInTypeSymbol) {
+                return [];
+            }
+
             let errorMessage = `Expecting argument of type ${expectedType}, but ${name} doesn't match it`;
 
             return [this.warning(errorMessage, item)];
