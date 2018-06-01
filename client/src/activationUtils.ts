@@ -688,9 +688,7 @@ export namespace ActivationUtils {
             }
         });
     }
-    export function setVisualizationFlag(
-        flag: boolean,
-    ): Q.Promise<string> {
+    export function setVisualizationFlag(flag: boolean): Q.Promise<string> {
         return Q.Promise((resolve, reject) => {
             try {
                 vscode.workspace.getConfiguration("ibm-q-studio").update("config.visualizationsFlag", flag, vscode.ConfigurationTarget.Global)
