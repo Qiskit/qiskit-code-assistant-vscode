@@ -22,6 +22,7 @@
 ### ✏️ Changed
 
 - Improved the NPM tasks to be more clear and readable ([#117](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/117) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- Adding prettier formatter to client code ([#116](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/116) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Refactorization of the QISKit symbol table generation and semantic errors detection ([#111](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/111) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 - Update the gif in readme to meet version 0.0.2 and qiskit >= 0.5 ([#113](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/113) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Updating usage of load_qasm_file() to qiskit 0.5.3 ([#112](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/112) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))

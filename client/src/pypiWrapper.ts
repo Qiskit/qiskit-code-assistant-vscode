@@ -28,9 +28,9 @@ export class PyPiWrapper implements IPackageInfo {
     public Location: string;
     public Dependencies: string;
 
-    constructor(){}
+    constructor() { }
 
-    public getPackageInfo(pkg: string) : Q.Promise<IPackageInfo> {
+    public getPackageInfo(pkg: string): Q.Promise<IPackageInfo> {
         let url: string = PYPI_BASE_URL + pkg + '/json';
         let httpc: httpm.HttpClient = new httpm.HttpClient('vsts-node-api');
         return httpc.get(url).then((res: httpm.HttpClientResponse) => {

@@ -43,7 +43,7 @@ export class Dependency implements IDependency {
                 } else {
                     reject(
                         `Version >= ${this.RequiredVersion.toString()} of package ${
-                            this.Name
+                        this.Name
                         } is required`
                     );
                 }

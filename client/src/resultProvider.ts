@@ -19,10 +19,10 @@ import { TextDocumentContentProvider, EventEmitter, Uri, Event } from "vscode";
 
 export class ResultProvider implements TextDocumentContentProvider {
     public content: string;
-    
+
     private _onDidChange = new EventEmitter<Uri>();
 
-    public displayContent(content: string, uri: Uri){
+    public displayContent(content: string, uri: Uri) {
         this.content = content;
         this.update(uri);
     }
