@@ -16,14 +16,15 @@
 		"url": "https://github.ibm.com/IBMQuantum/qiskit-studio"
 	},
 	"scripts": {
-		"postinstall": "cd server && npm install && cd ../client && npm install && cd ..",
+		"postinstall": "npm-run-all -s install:**",
+		"install:client": "cd client && npm install && cd ..",
+		"install:server": "cd server && npm install && cd ..",
 		"clean": "npm-run-all -p clean:server clean:client",
 		"clean:server": "cd server && npm run clean && cd ..",
 		"clean:client": "cd client && npm run clean && cd ..",
-		"compile": "npm run compile:parser && tsc -p client/tsconfig.json && cd server && npm run installServer && cd .. && tsc -p server/tsconfig.json",
+		"compile": "npm-run-all -s compile:server compile:client",
 		"compile:client": "tsc -p client/tsconfig.json",
 		"compile:server": "cd server && npm run installServer && cd .. && tsc -p server/tsconfig.json",
-		"compile:parser": "cd server && npm run compile:parser && cd ..",
 		"watch:client": "tsc -w -p client/tsconfig.json",
 		"watch:server": "cd server && npm run installServer && cd .. && tsc -w -p server/tsconfig.json",
 		"test": "cd server && npm test && cd ..",
