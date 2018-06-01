@@ -14,19 +14,19 @@
 // =============================================================================
 
 import * as Q from "q";
-import {IPackage} from "./interfaces";
+import { IPackage } from "./interfaces";
 
 export class Qiskit implements IPackage {
     public Info;
-    update() : Q.Promise<string> {
+    update(): Q.Promise<string> {
         return Q.reject("Not implemented!");
     }
 
-    checkVersion() : Q.Promise<void> {
+    checkVersion(): Q.Promise<void> {
         return Q.reject("Not implemented!");
     }
 
-    install() : Q.Promise<void> {
+    install(): Q.Promise<void> {
         return Q.reject("Not implemented!");
     }
 }

@@ -29,7 +29,7 @@ export class PipWrapper implements IPackageInfo {
 
     private static PIP_COMMAND = "pip";
 
-    constructor() {}
+    constructor() { }
 
     public getPackageInfo(pkgStr: string): Q.Promise<IPackageInfo> {
         return this.show(pkgStr)

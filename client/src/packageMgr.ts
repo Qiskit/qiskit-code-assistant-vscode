@@ -15,33 +15,33 @@
 
 import * as Q from "q";
 
-import {IPackage} from "./interfaces";
-import {PipPackage} from "./pipPackage";
-import {workspace} from "vscode";
+import { IPackage } from "./interfaces";
+import { PipPackage } from "./pipPackage";
+import { workspace } from "vscode";
 
 export class PackageMgr {
-    static _packages : Q.Promise<[IPackage]> = [];
+    static _packages: Q.Promise<[IPackage]> = [];
 
     constructor() {
-        try{
+        try {
             const config = workspace.getConfiguration('ibm-q-studio');
             const qiskitPacks = config.get("qiskit.packages");
-            Object.keys(qiskitPacks).forEach(function(key) {
+            Object.keys(qiskitPacks).forEach(function (key) {
                 //console.log(key.toString(), qiskitPacks[key].toString());
-                PackageMgr._packages.push(new PipPackage(key.toString(), qiskitPacks[key].toString()));     
-              });
-        } catch (err){
+                PackageMgr._packages.push(new PipPackage(key.toString(), qiskitPacks[key].toString()));
+            });
+        } catch (err) {
             console.log(`PackMGr ${err}`);
         }
-        
+
     }
 
-    check() : Q.Promise<void> {
+    check(): Q.Promise<void> {
         let packages: Q.Promise<IPackage>[] = [];
         PackageMgr._packages.forEach(pkg => {
             packages.push(pkg.checkVersion(pkg.Info.Version));
         });
-        return Q.all(packages);   
+        return Q.all(packages);
     }
 
 }

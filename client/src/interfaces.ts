@@ -21,9 +21,9 @@ export interface IVersionInfo {
     Maintenance: Number;
 }
 
-export interface IVersion  {
+export interface IVersion {
     Info: IVersionInfo;
-    toString() : string;
+    toString(): string;
     isEqual(version: IVersion): boolean;
     isGreater(version: IVersion): boolean;
     isLesser(version: IVersion): boolean;

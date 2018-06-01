@@ -22,7 +22,7 @@ import { ExtensionContext } from "vscode";
 
 export class LanguagesActivation {
 
-    constructor(private context: ExtensionContext) {};
+    constructor(private context: ExtensionContext) { }
 
     qasmLanguageClient(): LanguageClient {
         let serverModule = this.context.asAbsolutePath(path.join('server', 'serverQasm.js'));
