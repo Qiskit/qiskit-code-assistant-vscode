@@ -1,4 +1,5 @@
-from qiskit import QuantumProgram
+from qiskit.wrapper import load_qasm_file
+from qiskit import execute
 import argparse
 import json
 
@@ -9,16 +10,12 @@ def main():
     
     args = vars(parser.parse_args())
 
-    qp = QuantumProgram()
-    qp.load_qasm_file(args['file'])
+    qc = load_qasm_file(args['file'])
 
-    result = qp.execute(None)
+    job_sim = execute(qc, "local_qasm_simulator")
+    result = job_sim.result()
     
     print(json.dumps(result._result, indent=2, sort_keys=True))
-    '''
-    for circuit in result.get_names():
-        print(json.dumps(result.get_data(circuit), indent=2, sort_keys=True))
-    '''
 
 if __name__ == '__main__':
     main()
