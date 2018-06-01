@@ -45,7 +45,6 @@ export class QiskitParser implements Parser {
 
         let folder = new TreeFolder();
         let statements = folder.visit(tree);
-        statements.forEach(statement => console.log(`${statement}`));
         let symbolTable = SymbolTableGenerator.symbolTableFor(statements);
         let errors = SemanticAnalyzer.analyze(statements, symbolTable);
 
