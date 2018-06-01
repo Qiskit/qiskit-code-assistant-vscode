@@ -22,10 +22,11 @@ import { Python3Lexer } from './antlr/Python3Lexer';
 import { Python3Parser } from './antlr/Python3Parser';
 import { SuggestionsCalculator } from './suggestions/suggestionsCalculator';
 import { AtomFinder } from './suggestions/atomFinder';
-import { QiskitSemanticAnalyzer } from './analyzers/qiskitSemanticAnalyzer';
 import { MethodsDictionary } from './suggestions/methodsDictionary';
 import { VariablesDictionary } from './suggestions/variablesDictionary';
 import { SymbolTable } from '../tools/symbolTable';
+import { SymbolTableGenerator } from './ast/symbolTableGenerator';
+import { TreeFolder } from './ast/treeFolder';
 
 export class QiskitSuggester implements Suggester {
     private dictionary = new SuggestionsDictionary();
@@ -73,8 +74,9 @@ export class QiskitSuggester implements Suggester {
     }
 
     private buildSymbolTable(tree: ParserRuleContext) {
-        let semanticAnalyzer = new QiskitSemanticAnalyzer();
-        let symbolTable = semanticAnalyzer.visit(tree);
+        let treeFolder = new TreeFolder();
+        let statements = treeFolder.visit(tree);
+        let symbolTable = SymbolTableGenerator.symbolTableFor(statements);
 
         symbolTable.print();
 
