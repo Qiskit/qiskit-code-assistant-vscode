@@ -501,6 +501,24 @@ export namespace ActivationUtils {
                     .catch(err => {
                         vscode.window.showErrorMessage(err);
                     })
+            ),
+            vscode.commands.registerCommand("qstudio.activateVisualizations", () =>
+                ActivationUtils.setVisualizationFlag(true)
+                    .then(result => {
+                        vscode.window.showInformationMessage(result);
+                    })
+                    .catch(err => {
+                        vscode.window.showErrorMessage(err);
+                    })
+            ),
+            vscode.commands.registerCommand("qstudio.deactivateVisualizations", () =>
+                ActivationUtils.setVisualizationFlag(false)
+                    .then(result => {
+                        vscode.window.showInformationMessage(result);
+                    })
+                    .catch(err => {
+                        vscode.window.showErrorMessage(err);
+                    })
             )
         );
     }
@@ -615,34 +633,34 @@ export namespace ActivationUtils {
                         .update("qiskit.token", apiToken, true)
                         .then(() => {
                             if (hub !== undefined || hub !== "") {
-                                return config.update("qiskit.hub", hub, true);
+                                config.update("qiskit.hub", hub, true).then(() => { return null; });
                             } else {
-                                return config.update("qiskit.hub", "", true);
+                                config.update("qiskit.hub", "", true).then(() => { return null; });
                             }
                         })
                         .then(() => {
                             if (url !== undefined || url !== "") {
-                                return config.update("qiskit.url", url, true);
+                                config.update("qiskit.url", url, true).then(() => { return null; });
                             } else {
-                                return config.update("qiskit.url", "", true);
+                                config.update("qiskit.url", "", true).then(() => { return null; });
                             }
                         })
                         .then(() => {
                             if (group !== undefined || group !== "") {
-                                return config.update("qiskit.group", group, true);
+                                config.update("qiskit.group", group, true).then(() => { return null; });
                             } else {
-                                return config.update("qiskit.group", "", true);
+                                config.update("qiskit.group", "", true).then(() => { return null; });
                             }
                         })
                         .then(() => {
                             if (project !== undefined || project !== "") {
-                                return config.update(
+                                config.update(
                                     "qiskit.project",
                                     project,
                                     true
-                                );
+                                ).then(() => { return null; });
                             } else {
-                                return config.update("qiskit.project", "", true);
+                                config.update("qiskit.project", "", true).then(() => { return null; });
                             }
                         })
                         .then(() => {
@@ -658,7 +676,7 @@ export namespace ActivationUtils {
                                     vscode.commands.executeCommand("workbench.action.reloadWindow"));
                             }
                             else {
-                                return resolve("Reload your extension manually to use your new-brand QConfig");
+                                return resolve("Reload your extension manually to use your brand-new QConfig");
                             }
                         }
                         );
@@ -667,6 +685,45 @@ export namespace ActivationUtils {
                 }
             } catch (err) {
                 return reject("Error saving QConfig!");
+            }
+        });
+    }
+    export function setVisualizationFlag(
+        flag: boolean,
+    ): Q.Promise<string> {
+        return Q.Promise((resolve, reject) => {
+            try {
+                let config = vscode.workspace.getConfiguration("ibm-q-studio");
+                try {
+                    config.update("config.visualizationsFlag", flag, true)
+                        .then(() => {
+                            let message: string;
+                            if (flag === true) {
+                                message = "Now the visualizations for code execution are enabled!";
+                            } else {
+                                message = "Now the visualizations for code execution are disabled!";
+                            }
+                            return vscode.window.showInputBox({
+                                ignoreFocusOut: true,
+                                prompt: `👉 ${message} Do you want to reload the extension? 👈`,
+                                placeHolder: "YES",
+                                value: "YES"
+                            });
+                        }).then((selection: string | undefined) => {
+                            if (selection === "YES") {
+                                return resolve(
+                                    vscode.commands.executeCommand("workbench.action.reloadWindow"));
+                            }
+                            else {
+                                return resolve("Reload your extension manually to use your brand-new visualization flag");
+                            }
+                        }
+                        );
+                } catch (err) {
+                    return reject("ERROR: The flag for visualizations in code execution has not been changed");
+                }
+            } catch (err) {
+                return reject("Error modifying the flag for visualizations");
             }
         });
     }
