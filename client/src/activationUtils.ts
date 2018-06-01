@@ -629,27 +629,27 @@ export namespace ActivationUtils {
             try {
                 const config = vscode.workspace.getConfiguration("ibm-q-studio");
                 try {
-                    return config
-                        .update("qiskit.token", apiToken, true)
+                    config
+                        .update("qiskit.token", apiToken, vscode.ConfigurationTarget.Global)
                         .then(() => {
                             if (hub !== undefined || hub !== "") {
-                                config.update("qiskit.hub", hub, true).then(() => { return null; });
+                                config.update("qiskit.hub", hub, vscode.ConfigurationTarget.Global).then(() => { return null; });
                             } else {
-                                config.update("qiskit.hub", "", true).then(() => { return null; });
+                                config.update("qiskit.hub", "", vscode.ConfigurationTarget.Global).then(() => { return null; });
                             }
                         })
                         .then(() => {
                             if (url !== undefined || url !== "") {
-                                config.update("qiskit.url", url, true).then(() => { return null; });
+                                config.update("qiskit.url", url, vscode.ConfigurationTarget.Global).then(() => { return null; });
                             } else {
-                                config.update("qiskit.url", "", true).then(() => { return null; });
+                                config.update("qiskit.url", "", vscode.ConfigurationTarget.Global).then(() => { return null; });
                             }
                         })
                         .then(() => {
                             if (group !== undefined || group !== "") {
-                                config.update("qiskit.group", group, true).then(() => { return null; });
+                                config.update("qiskit.group", group, vscode.ConfigurationTarget.Global).then(() => { return null; });
                             } else {
-                                config.update("qiskit.group", "", true).then(() => { return null; });
+                                config.update("qiskit.group", "", vscode.ConfigurationTarget.Global).then(() => { return null; });
                             }
                         })
                         .then(() => {
@@ -657,10 +657,10 @@ export namespace ActivationUtils {
                                 config.update(
                                     "qiskit.project",
                                     project,
-                                    true
+                                    vscode.ConfigurationTarget.Global
                                 ).then(() => { return null; });
                             } else {
-                                config.update("qiskit.project", "", true).then(() => { return null; });
+                                config.update("qiskit.project", "", vscode.ConfigurationTarget.Global).then(() => { return null; });
                             }
                         })
                         .then(() => {
@@ -693,35 +693,15 @@ export namespace ActivationUtils {
     ): Q.Promise<string> {
         return Q.Promise((resolve, reject) => {
             try {
-                let config = vscode.workspace.getConfiguration("ibm-q-studio");
-                try {
-                    config.update("config.visualizationsFlag", flag, true)
-                        .then(() => {
-                            let message: string;
-                            if (flag === true) {
-                                message = "Now the visualizations for code execution are enabled!";
-                            } else {
-                                message = "Now the visualizations for code execution are disabled!";
-                            }
-                            return vscode.window.showInputBox({
-                                ignoreFocusOut: true,
-                                prompt: `👉 ${message} Do you want to reload the extension? 👈`,
-                                placeHolder: "YES",
-                                value: "YES"
-                            });
-                        }).then((selection: string | undefined) => {
-                            if (selection === "YES") {
-                                return resolve(
-                                    vscode.commands.executeCommand("workbench.action.reloadWindow"));
-                            }
-                            else {
-                                return resolve("Reload your extension manually to use your brand-new visualization flag");
-                            }
+                vscode.workspace.getConfiguration("ibm-q-studio").update("config.visualizationsFlag", flag, vscode.ConfigurationTarget.Global)
+                    .then(() => {
+                        if (flag === true) {
+                            return resolve("Now the visualizations for code execution are enabled!");
+                        } else {
+                            return resolve("Now the visualizations for code execution are disabled!");
                         }
-                        );
-                } catch (err) {
-                    return reject("ERROR: The flag for visualizations in code execution has not been changed");
-                }
+                    }
+                    );
             } catch (err) {
                 return reject("Error modifying the flag for visualizations");
             }
