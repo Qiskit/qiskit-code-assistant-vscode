@@ -32,7 +32,9 @@ import { Python3Parser } from './antlr/Python3Parser';
 import { Python3Lexer } from './antlr/Python3Lexer';
 import { TreePrinter } from '../tools';
 import { ParseTreeWalker } from 'antlr4ts/tree';
-import { QiskitSemanticAnalyzer } from './analyzers/qiskitSemanticAnalyzer';
+import { TreeFolder } from './ast/treeFolder';
+import { SymbolTableGenerator } from './ast/symbolTableGenerator';
+import { SemanticAnalyzer } from './ast/semanticAnalyzer';
 
 export class QiskitParser implements Parser {
     parse(input: string): ParserResult {
@@ -41,14 +43,14 @@ export class QiskitParser implements Parser {
 
         let tree = parser.program();
 
-        // TreePrinter.print(parser.ruleNames, tree);
-
-        let semanticAnalyzer = new QiskitSemanticAnalyzer(errorListener);
-        semanticAnalyzer.visit(tree);
+        let folder = new TreeFolder();
+        let statements = folder.visit(tree);
+        let symbolTable = SymbolTableGenerator.symbolTableFor(statements);
+        let errors = SemanticAnalyzer.analyze(statements, symbolTable);
 
         return {
             ast: tree,
-            errors: errorListener.errors
+            errors: errorListener.errors.concat(errors)
         };
     }
 
