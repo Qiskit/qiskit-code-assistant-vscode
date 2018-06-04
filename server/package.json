@@ -37,22 +37,26 @@
 		"sinon": "^4.5.0",
 		"sinon-chai": "^3.0.0",
 		"ts-mockito": "^2.3.0",
-		"tslint": "^5.9.1"
+		"tslint": "^5.9.1",
+		"npm-run-all": "^4.1.3"
 	},
 	"scripts": {
-		"installServer": "installServerIntoExtension ../client ./package.json ./tsconfig.json && npm run installQuantumLibraries && npm run installQiskitLibraries",
+		"installServer": "npm run compile:parser && installServerIntoExtension ../client ./package.json ./tsconfig.json && npm run installQuantumLibraries && npm run installQiskitLibraries",
 		"compile": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
 		"watch": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -w -p .",
+		"compile:parser": "npm-run-all -s compile:qasmParser compile:qiskitParser",
 		"compile:qasmParser": "cd src/qasm/antlr && antlr4ts -visitor QasmLexer.g4 QasmParser.g4 && cd ../../..",
 		"compile:qiskitParser": "cd src/qiskit/antlr && antlr4ts -visitor Python3.g4 && cd ../../..",
-		"compile:parser": "npm run compile:qasmParser && npm run compile:qiskitParser",
-		"exportQuantumLibraries": "cp -Rv src/qasm/libs out/src/qasm/",
-		"exportQiskitLibraries": "cp -Rv src/qiskit/libs out/src/qiskit/",
 		"installQuantumLibraries": "mkdir -p ../client/server/qasm/libs && cp -Rv src/qasm/libs ../client/server/qasm/",
 		"installQiskitLibraries": "mkdir -p ../client/server/qiskit/libs && cp -Rv src/qiskit/libs ../client/server/qiskit/",
-		"pretest": "tsc test/*.test.ts --outDir out --module commonjs --target ES6 --experimentalDecorators && npm run exportQuantumLibraries && npm run exportQiskitLibraries",
+		"pretest": "npm-run-all -s clean:generated compile:tests link:qasmLibs link:qiskitLibs",
+		"compile:tests": "tsc test/*.test.ts --outDir out --module commonjs --target ES6 --experimentalDecorators",
+		"link:qasmLibs": "cp -Rv src/qasm/libs out/src/qasm/",
+		"link:qiskitLibs": "cp -Rv src/qiskit/libs out/src/qiskit/",
 		"test": "mocha out/test --recursive",
-		"clean": "rm -rf  out node_modules",
+		"clean": "npm-run-all -p clean:**",
+		"clean:deps": "rm -rf node_modules",
+		"clean:generated": "rm -rf out",
 		"lint": "lint-staged && tslint -c tslint.json 'src/**/*.ts' && tslint -c tslint.test.json 'test/**/*.ts'"
 	},
 	"lint-staged": {
