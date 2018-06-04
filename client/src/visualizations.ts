@@ -16,12 +16,22 @@
 "use strict";
 
 import * as fs from "fs";
+import * as vscode from "vscode";
 import { Util } from "./utils";
 
 export namespace VizManager {
 
     export function createViz(codePath: string, result: object): string {
-        if (this.detectProperViz(codePath) === "HISTOGRAM") {
+        let config = vscode.workspace.getConfiguration("ibm-q-studio");
+        let visualizationsFlag = config.get("config.visualizationsFlag");
+        let visualizationType: string;
+        if (visualizationsFlag === false) {
+            visualizationType = "TEXT";
+        } else {
+            visualizationType = this.detectProperViz(codePath);
+        }
+
+        if (visualizationType === "HISTOGRAM") {
             console.log("Histogram detected");
             let templatePath = Util.getOSDependentPath("../../resources/html-templates/temp-plot-shots.html");
 
@@ -43,10 +53,10 @@ export namespace VizManager {
                     return `<pre>${resultString}</pre>`;
                 }
             }
-        } else if (this.detectProperViz(codePath) === "TEXT") {
+        } else if (visualizationType === "TEXT") {
             console.log("Text detected");
             return `<pre>${result}</pre>`;
-        } else if (this.detectProperViz(codePath) === "STATUS") {
+        } else if (visualizationType === "STATUS") {
             console.log("Device status detected");
             let templatePath = Util.getOSDependentPath("../../resources/html-templates/temp-devices-status.html");
 
@@ -65,7 +75,7 @@ export namespace VizManager {
                 return `${result}`;
             }
         } else {
-            console.log("none detected");
+            // console.log("none detected");
             return `${result}`;
         }
     }
