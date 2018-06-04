@@ -12,6 +12,7 @@
 
 ### 🎉 Added
 
+- Winston as the logging library ([#118](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/118)) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 - Meeting internal guidelines for Github repos (Adding changelog, contributing, issues&PR templates, and code of conduct files) ([#106](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/106) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Follow the dev guidelines: update the issue templates & move contributing ([#108](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/108) by [@abdonrod](https://github.ibm.com/abdonrod) & [@Juan-Cruz](https://github.ibm.com/abdonrod))
 
