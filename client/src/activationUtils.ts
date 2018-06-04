@@ -52,6 +52,7 @@ export namespace ActivationUtils {
                 try {
                     let config = vscode.workspace.getConfiguration('ibm-q-studio');
                     let displayBubbles = config.get('config.displayBootInfo');
+                    console.log('displayBubbles', displayBubbles);
                     if (displayBubbles === true) {
                         return resolve(true);
                     } else {
@@ -65,11 +66,13 @@ export namespace ActivationUtils {
     }
 
     export function showExtensionBootInfo(message: string) {
-        if (checkFirstRun() === true) {
-            vscode.window.showInformationMessage(message);
-        } else {
-            console.log(message);
-        }
+        showInfoBubbles().then(result => {
+            if (result === true) {
+                vscode.window.showInformationMessage(message);
+            } else {
+                console.log(message);
+            }
+        });
     }
 
     export function checkDependencies(): Q.Promise<string> {
@@ -438,6 +441,24 @@ export namespace ActivationUtils {
                     .catch(err => {
                         vscode.window.showErrorMessage(err);
                     })
+            ),
+            vscode.commands.registerCommand('qstudio.enableBootInfo', () =>
+                ActivationUtils.setBootInfoFlag(true)
+                    .then(result => {
+                        vscode.window.showInformationMessage(result);
+                    })
+                    .catch(err => {
+                        vscode.window.showErrorMessage(err);
+                    })
+            ),
+            vscode.commands.registerCommand('qstudio.disableBootInfo', () =>
+                ActivationUtils.setBootInfoFlag(false)
+                    .then(result => {
+                        vscode.window.showInformationMessage(result);
+                    })
+                    .catch(err => {
+                        vscode.window.showErrorMessage(err);
+                    })
             )
         );
     }
@@ -630,6 +651,25 @@ export namespace ActivationUtils {
                     });
             } catch (err) {
                 return reject('Error modifying the flag for visualizations');
+            }
+        });
+    }
+
+    export function setBootInfoFlag(flag: boolean): Q.Promise<string> {
+        return Q.Promise((resolve, reject) => {
+            try {
+                vscode.workspace
+                    .getConfiguration('ibm-q-studio')
+                    .update('config.displayBootInfo', flag, vscode.ConfigurationTarget.Global)
+                    .then(() => {
+                        if (flag === true) {
+                            return resolve('Now the visual information about activation is enabled!');
+                        } else {
+                            return resolve('Now the visual information about activation is disabled!');
+                        }
+                    });
+            } catch (err) {
+                return reject('Error modifying the flag for displaying the extension boot info');
             }
         });
     }

@@ -122,15 +122,15 @@
 					"default": true,
 					"description": "Is the first time running the extension?"
 				},
-				"ibm-q-studio.config.displayBootInfo": {
-					"type": "boolean",
-					"default": false,
-					"description": "Display info about extension's booting?"
-				},
 				"ibm-q-studio.config.visualizationsFlag": {
 					"type": "boolean",
 					"default": true,
 					"description": "Flag to control if visualizations are displayed or not for code executions"
+				},
+				"ibm-q-studio.config.displayBootInfo": {
+					"type": "boolean",
+					"default": false,
+					"description": "Display info about extension's booting?"
 				}
 			}
 		},
@@ -210,16 +210,6 @@
 				"category": "qstudio"
 			},
 			{
-				"command": "qstudio.enableBootInfo",
-				"title": "Enable the display of information related to extension's boot",
-				"category": "qstudio"
-			},
-			{
-				"command": "qstudio.disableBootInfo",
-				"title": "Disable the display of information related to extension's boot",
-				"category": "qstudio"
-			},
-			{
 				"command": "qstudio.activateVisualizations",
 				"title": "Activate the visualizations for the execution of code",
 				"category": "qstudio"
@@ -227,6 +217,16 @@
 			{
 				"command": "qstudio.deactivateVisualizations",
 				"title": "Deactivate the visualizations for the execution of code",
+				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.enableBootInfo",
+				"title": "Enable the display of information related to extension's boot",
+				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.disableBootInfo",
+				"title": "Disable the display of information related to extension's boot",
 				"category": "qstudio"
 			}
 		],
