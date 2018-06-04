@@ -46,6 +46,8 @@ Command | Description
 ```QStudio: List the user's executed jobs``` | A listing of the previously executed jobs will be presented in a new tab.
 ```QStudio: Get the queue status``` | The current status of the queues will be presented in a new tab.
 ```QStudio: Get the user's available credits``` | The current available credits of the user will be presented in a new tab.
+```QStudio: Activate the visualizations for the execution of code``` | Activate the automatic visualization of results achieved during the execution of code using the extension.
+```QStudio: Deactivate the visualizations for the execution of code``` | Deactivate the automatic visualization of results achieved during the execution of code using the extension (giving the results in text mode).
 
 ## Authors (alphabetical)
 
