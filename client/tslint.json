@@ -1,0 +1,24 @@
+{
+	"rules": {
+		"file-header": [
+			true,
+			"Copyright \\d{4} IBM RESEARCH"
+		],
+		"no-string-throw": true,
+		"no-unused-expression": true,
+		"no-duplicate-variable": true,
+		"no-unnecessary-class": true,
+		"curly": true,
+		"class-name": true,
+		"semicolon": [
+			true,
+			"always"
+		],
+		"triple-equals": true
+	},
+	"defaultSeverity": "warning",
+	"linterOptions": {
+		"exclude": [
+		]
+	}
+}
