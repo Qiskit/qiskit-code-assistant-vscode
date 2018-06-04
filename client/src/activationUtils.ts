@@ -420,6 +420,24 @@ export namespace ActivationUtils {
                     .catch(err => {
                         vscode.window.showErrorMessage(err);
                     })
+            ),
+            vscode.commands.registerCommand('qstudio.activateVisualizations', () =>
+                ActivationUtils.setVisualizationFlag(true)
+                    .then(result => {
+                        vscode.window.showInformationMessage(result);
+                    })
+                    .catch(err => {
+                        vscode.window.showErrorMessage(err);
+                    })
+            ),
+            vscode.commands.registerCommand('qstudio.deactivateVisualizations', () =>
+                ActivationUtils.setVisualizationFlag(false)
+                    .then(result => {
+                        vscode.window.showInformationMessage(result);
+                    })
+                    .catch(err => {
+                        vscode.window.showErrorMessage(err);
+                    })
             )
         );
     }
@@ -528,34 +546,50 @@ export namespace ActivationUtils {
             try {
                 const config = vscode.workspace.getConfiguration('ibm-q-studio');
                 try {
-                    return config
-                        .update('qiskit.token', apiToken, true)
+                    config
+                        .update('qiskit.token', apiToken, vscode.ConfigurationTarget.Global)
                         .then(() => {
                             if (hub !== undefined || hub !== '') {
-                                return config.update('qiskit.hub', hub, true);
+                                config.update('qiskit.hub', hub, vscode.ConfigurationTarget.Global).then(() => {
+                                    return null;
+                                });
                             } else {
-                                return config.update('qiskit.hub', '', true);
+                                config.update('qiskit.hub', '', vscode.ConfigurationTarget.Global).then(() => {
+                                    return null;
+                                });
                             }
                         })
                         .then(() => {
                             if (url !== undefined || url !== '') {
-                                return config.update('qiskit.url', url, true);
+                                config.update('qiskit.url', url, vscode.ConfigurationTarget.Global).then(() => {
+                                    return null;
+                                });
                             } else {
-                                return config.update('qiskit.url', '', true);
+                                config.update('qiskit.url', '', vscode.ConfigurationTarget.Global).then(() => {
+                                    return null;
+                                });
                             }
                         })
                         .then(() => {
                             if (group !== undefined || group !== '') {
-                                return config.update('qiskit.group', group, true);
+                                config.update('qiskit.group', group, vscode.ConfigurationTarget.Global).then(() => {
+                                    return null;
+                                });
                             } else {
-                                return config.update('qiskit.group', '', true);
+                                config.update('qiskit.group', '', vscode.ConfigurationTarget.Global).then(() => {
+                                    return null;
+                                });
                             }
                         })
                         .then(() => {
                             if (project !== undefined || project !== '') {
-                                return config.update('qiskit.project', project, true);
+                                config.update('qiskit.project', project, vscode.ConfigurationTarget.Global).then(() => {
+                                    return null;
+                                });
                             } else {
-                                return config.update('qiskit.project', '', true);
+                                config.update('qiskit.project', '', vscode.ConfigurationTarget.Global).then(() => {
+                                    return null;
+                                });
                             }
                         })
                         .then(() => {
@@ -570,7 +604,7 @@ export namespace ActivationUtils {
                             if (selection === 'YES') {
                                 return resolve(vscode.commands.executeCommand('workbench.action.reloadWindow'));
                             } else {
-                                return resolve('Reload your extension manually to use your new-brand QConfig');
+                                return resolve('Reload your extension manually to use your brand-new QConfig');
                             }
                         });
                 } catch (err) {
@@ -578,6 +612,24 @@ export namespace ActivationUtils {
                 }
             } catch (err) {
                 return reject('Error saving QConfig!');
+            }
+        });
+    }
+    export function setVisualizationFlag(flag: boolean): Q.Promise<string> {
+        return Q.Promise((resolve, reject) => {
+            try {
+                vscode.workspace
+                    .getConfiguration('ibm-q-studio')
+                    .update('config.visualizationsFlag', flag, vscode.ConfigurationTarget.Global)
+                    .then(() => {
+                        if (flag === true) {
+                            return resolve('Now the visualizations for code execution are enabled!');
+                        } else {
+                            return resolve('Now the visualizations for code execution are disabled!');
+                        }
+                    });
+            } catch (err) {
+                return reject('Error modifying the flag for visualizations');
             }
         });
     }

@@ -12,6 +12,7 @@
 
 ### 🎉 Added
 
+- Adding controls to enable/disable visualizations for code execution ([#120](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/120) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Meeting internal guidelines for Github repos (Adding changelog, contributing, issues&PR templates, and code of conduct files) ([#106](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/106) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Follow the dev guidelines: update the issue templates & move contributing ([#108](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/108) by [@abdonrod](https://github.ibm.com/abdonrod) & [@Juan-Cruz](https://github.ibm.com/abdonrod))
 
