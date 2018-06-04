@@ -35,6 +35,7 @@ import { ParseTreeWalker } from 'antlr4ts/tree';
 import { TreeFolder } from './ast/treeFolder';
 import { SymbolTableGenerator } from './ast/symbolTableGenerator';
 import { SemanticAnalyzer } from './ast/semanticAnalyzer';
+import { QLogger } from '../logger';
 
 export class QiskitParser implements Parser {
     parse(input: string): ParserResult {
