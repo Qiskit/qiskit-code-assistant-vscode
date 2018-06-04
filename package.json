@@ -27,8 +27,8 @@
 		"compile:server": "cd server && npm-run-all -s installServer compile && cd ..",
 		"watch:client": "tsc -w -p client/tsconfig.json",
 		"watch:server": "cd server && npm run installServer && cd .. && tsc -w -p server/tsconfig.json",
-		"test": "cd server && npm test && cd ..",
-		"lint": "cd server && npm run lint && cd ..",
+		"test": "cd server && npm test && cd ../client && npm test && cd..",
+		"lint": "cd server && npm run lint && cd ../client && npm run lint && cd ..",
 		"package": "npm run compile && cd client && vsce package && cd .."
 	},
 	"devDependencies": {
