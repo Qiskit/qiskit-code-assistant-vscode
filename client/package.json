@@ -116,6 +116,17 @@
 					"type": "string",
 					"default": null,
 					"description": "User's QISKit & Q Experience project"
+				},
+				"ibm-q-studio.config.firstRun": {
+					"type": "boolean",
+					"default": true,
+					"description": "Is the first time running the extension?"
+				}
+				,
+				"ibm-q-studio.config.displayBootInfo": {
+					"type": "boolean",
+					"default": false,
+					"description": "Display info about extension's booting?"
 				}
 			}
 		},
@@ -192,6 +203,16 @@
 			{
 				"command": "qstudio.getUserCredits",
 				"title": "Get the user's available credits",
+				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.enableBootInfo",
+				"title": "Enable the display of information related to extension's boot",
+				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.disableBootInfo",
+				"title": "Disable the display of information related to extension's boot",
 				"category": "qstudio"
 			}
 		],

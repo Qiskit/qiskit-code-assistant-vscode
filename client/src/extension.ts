@@ -13,18 +13,16 @@
 // limitations under the License.
 // =============================================================================
 
-"use strict";
+'use strict';
 
-import * as vscode from "vscode";
-import { LanguagesActivation } from "./languages";
-import { ActivationUtils } from "./activationUtils";
+import * as vscode from 'vscode';
+import { LanguagesActivation } from './languages';
+import { ActivationUtils } from './activationUtils';
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log("Activating IBM Q Studio extension ...");
+    console.log('Activating IBM Q Studio extension ...');
 
-    vscode.window.showInformationMessage(
-        "✨ Activating IBM Q Studio extension... ✨"
-    );
+    ActivationUtils.showExtensionBootInfo('✨ Activating IBM Q Studio extension... ✨');
 
     let languagesActivation = new LanguagesActivation(context);
 
@@ -38,17 +36,15 @@ export function activate(context: vscode.ExtensionContext) {
 
     ActivationUtils.checkDependencies()
         .then(() => {
-            console.log("IBM Q Studio extension successfully loaded!");
-            vscode.window.showInformationMessage(
-                "🚀 IBM Q Studio extension loaded! 🚀"
-            );
+            console.log('IBM Q Studio extension successfully loaded!');
+            ActivationUtils.showExtensionBootInfo('🚀 IBM Q Studio extension loaded! 🚀');
         })
         .catch(err => {
-            console.log("Dependencies error:", err);
+            console.log('Dependencies error:', err);
             vscode.window.showErrorMessage(err);
         });
 }
 
 export function deactivate() {
-    console.log("Deactivating Qiskit extension ...");
+    console.log('Deactivating Qiskit extension ...');
 }
