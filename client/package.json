@@ -130,7 +130,7 @@
 				"ibm-q-studio.config.displayBootInfo": {
 					"type": "boolean",
 					"default": false,
-					"description": "Display info about extension's booting?"
+					"description": "Display info about the boot of extension?"
 				}
 			}
 		},
@@ -221,12 +221,12 @@
 			},
 			{
 				"command": "qstudio.enableBootInfo",
-				"title": "Enable the display of information related to extension's boot",
+				"title": "Enable the display of information related to the boot of the extension",
 				"category": "qstudio"
 			},
 			{
 				"command": "qstudio.disableBootInfo",
-				"title": "Disable the display of information related to extension's boot",
+				"title": "Disable the display of information related to the boot of the extension",
 				"category": "qstudio"
 			}
 		],
