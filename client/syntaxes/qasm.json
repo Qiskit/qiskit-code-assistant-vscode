@@ -1,8 +1,8 @@
 {
     "fileTypes": [
-        "sol"
+        "qasm"
     ],
-    "name": "Solidity",
+    "name": "QASM",
     "patterns": [
         {
             "name": "comment.line.solidity",
