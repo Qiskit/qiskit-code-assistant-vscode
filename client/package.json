@@ -116,6 +116,11 @@
 					"type": "string",
 					"default": null,
 					"description": "User's QISKit & Q Experience project"
+				},
+				"ibm-q-studio.config.visualizationsFlag": {
+					"type": "boolean",
+					"default": true,
+					"description": "Flag to control if visualizations are displayed or not for code executions"
 				}
 			}
 		},
@@ -192,6 +197,16 @@
 			{
 				"command": "qstudio.getUserCredits",
 				"title": "Get the user's available credits",
+				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.activateVisualizations",
+				"title": "Activate the visualizations for the execution of code",
+				"category": "qstudio"
+			},
+			{
+				"command": "qstudio.deactivateVisualizations",
+				"title": "Deactivate the visualizations for the execution of code",
 				"category": "qstudio"
 			}
 		],
