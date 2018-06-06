@@ -8,8 +8,22 @@
             "match": "//.*?$"
         },
         {
-            "match": "[0-9]+(\\.[0-9]+)?",
-            "name": "constant.numeric"
+            "name": "constant.numeric",
+            "match": "\\b[0-9]+(\\.[0-9]+)?\\b"
+            
+        },
+        {
+            "name": "keyword",
+            "match": "\\b(OPENQASM|IBMQASM|include|qreg|creg|clean|U|CX|sin|cos|tan|exp|ln|sqrt|measure|barrier|reset|opaque|if|pi|gate)\\b"
+        },
+        {
+            "name": "string.value",
+            "match": "\\b\\'.*?\\'\\b"
+        },
+        {
+            "name": "string.value",
+            "match": "\\b\".*?\"\\b"
         }
     ]
+
 }
