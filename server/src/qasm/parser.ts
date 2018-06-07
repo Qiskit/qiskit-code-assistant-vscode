@@ -23,15 +23,12 @@ import {
     Token,
     Recognizer,
     RecognitionException,
-    ConsoleErrorListener,
-    ParserRuleContext
+    ConsoleErrorListener
 } from 'antlr4ts';
 import { Parser, ParserResult, ParserError, ParseErrorLevel } from '../types';
 import { QasmLexer } from './antlr/QasmLexer';
 import { QasmParser } from './antlr/QasmParser';
-import { QasmParserV2, CodeContext } from './antlrV2/QasmParserV2';
 import { Override } from 'antlr4ts/Decorators';
-import { TreePrinter } from '../tools';
 import { SymbolTableGenerator } from './ast/symbolTableGenerator';
 import { QASMSyntacticParser } from './qasmSyntacticParser';
 
@@ -53,14 +50,15 @@ export class QASMParser implements Parser {
     private parseV2(input: string): ParserResult {
         let tree = QASMSyntacticParser.parse(input);
 
-        TreePrinter.print(QASMSyntacticParser.ruleNames(), tree);
-
-        let symbolTable = SymbolTableGenerator.symbolTableFor(tree);
-        symbolTable.print();
+        let symbolTableResult = SymbolTableGenerator.symbolTableFor(tree);
+        symbolTableResult.symbolTable.print();
+        symbolTableResult.errors.forEach(error =>
+            console.log(`${error.level} @ ${error.line}(${error.start}:${error.end}) - ${error.message}`)
+        );
 
         return {
             ast: tree,
-            errors: []
+            errors: symbolTableResult.errors
         };
     }
 

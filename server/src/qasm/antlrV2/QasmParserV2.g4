@@ -176,15 +176,11 @@ conditional
     ;
 
 qregDefinition: 
-    Qreg identifier LeftBrace dimension RightBrace Semi
+    Qreg Id LeftBrace dimension RightBrace Semi
     ;
 
 cregDefinition:
-    Creg identifier LeftBrace dimension RightBrace Semi
-    ;
-
-identifier:
-    Id
+    Creg Id LeftBrace dimension RightBrace Semi
     ;
 
 dimension:
