@@ -30,6 +30,7 @@ import { QasmLexer } from './antlr/QasmLexer';
 import { QasmParser } from './antlr/QasmParser';
 import { Override } from 'antlr4ts/Decorators';
 import { SymbolTableGenerator } from './ast/symbolTableGenerator';
+import { SemanticAnalyzer } from './ast/semanticAnalyzer';
 import { QASMSyntacticParser } from './qasmSyntacticParser';
 
 export class QASMParser implements Parser {
@@ -53,6 +54,11 @@ export class QASMParser implements Parser {
         let symbolTableResult = SymbolTableGenerator.symbolTableFor(tree);
         symbolTableResult.symbolTable.print();
         symbolTableResult.errors.forEach(error =>
+            console.log(`${error.level} @ ${error.line}(${error.start}:${error.end}) - ${error.message}`)
+        );
+
+        let semanticErrors = SemanticAnalyzer.analyze(tree, symbolTableResult.symbolTable);
+        semanticErrors.forEach(error =>
             console.log(`${error.level} @ ${error.line}(${error.start}:${error.end}) - ${error.message}`)
         );
 
