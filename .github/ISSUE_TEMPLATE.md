@@ -12,7 +12,7 @@
 
 - **VSCode version**:
 - **QISKit (Python SDK) version**:
-- **Python version**:
+- **QISKit Studio version**:
 - **Operating system**:
 
 ### What is the current behavior?
