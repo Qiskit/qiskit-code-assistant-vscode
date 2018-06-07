@@ -40,6 +40,10 @@ class SemanticValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
     }
 
     visitCode(ctx: CodeContext): ParserError[] {
+        if (ctx.sentences() === undefined) {
+            return [];
+        }
+
         let validator = new SentenceValidator(this.symbolTable);
 
         return ctx.sentences().accept(validator);
@@ -127,6 +131,10 @@ class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
 
     private checkQbitReference(id: TerminalNode, position: TerminalNode) {
         let symbol = this.symbolTable.lookup(id.text);
+        if (symbol === null) {
+            return;
+        }
+
         if (symbol.type.getName() === 'Qreg') {
             let register = symbol as RegisterSymbol;
             let positionValue = +position.text;
@@ -157,6 +165,10 @@ class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
 
     private checkCbitReference(id: TerminalNode, position: TerminalNode) {
         let symbol = this.symbolTable.lookup(id.text);
+        if (symbol === null) {
+            return;
+        }
+
         if (symbol.type.getName() === 'Creg') {
             let register = symbol as RegisterSymbol;
             let positionValue = +position.text;
