@@ -56,6 +56,10 @@ export class SymbolTable {
         return this.currentScope.definedSymbols();
     }
 
+    mergeWith(scope: Scope) {
+        scope.definedSymbols().forEach(symbol => this.define(symbol));
+    }
+
     print() {
         console.log('Printing symbol table >>>>>>>>');
         this.currentScope.print();

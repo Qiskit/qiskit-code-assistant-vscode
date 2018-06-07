@@ -16,19 +16,23 @@
 'use strict';
 
 import {
-    CodeContext,
     QregDefinitionContext,
     CregDefinitionContext,
     GateDefinitionContext,
-    OpaqueDefinitionContext
+    OpaqueDefinitionContext,
+    IncludeLibraryContext
 } from '../antlrV2/QasmParserV2';
 import { SymbolTable } from '../../tools/symbolTable';
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree';
 import { QasmParserV2Visitor } from '../antlrV2/QasmParserV2Visitor';
 import { SymbolTableBuilder, RegisterSymbol, VariableSymbol } from '../compiler/symbolTable';
+import path = require('path');
+import fs = require('fs');
+import { ParserRuleContext } from 'antlr4ts';
+import { QASMSyntacticParser } from '../qasmSyntacticParser';
 
 export namespace SymbolTableGenerator {
-    export function symbolTableFor(tree: CodeContext): SymbolTable {
+    export function symbolTableFor(tree: ParserRuleContext): SymbolTable {
         let symbolTable = SymbolTableBuilder.build();
         let matcher = new DefinitionMatcher(symbolTable);
 
@@ -44,6 +48,20 @@ class DefinitionMatcher extends AbstractParseTreeVisitor<void> implements QasmPa
     }
 
     defaultResult() {}
+
+    visitIncludeLibrary(ctx: IncludeLibraryContext) {
+        let libraryName = ctx.Library().text;
+        let libraryPath = path.join(__dirname, '..', 'libs', libraryName);
+
+        let text = fs.readFileSync(libraryPath, 'utf8');
+        let tree = QASMSyntacticParser.parse(text);
+
+        let librarySymbolTable = SymbolTableGenerator.symbolTableFor(tree);
+
+        this.symbolTable.mergeWith(librarySymbolTable.currentScope);
+
+        this.visitChildren(ctx);
+    }
 
     visitQregDefinition(ctx: QregDefinitionContext) {
         let registerName = ctx.identifier().text;

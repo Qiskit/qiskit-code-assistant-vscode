@@ -23,15 +23,17 @@ import {
     Token,
     Recognizer,
     RecognitionException,
-    ConsoleErrorListener
+    ConsoleErrorListener,
+    ParserRuleContext
 } from 'antlr4ts';
 import { Parser, ParserResult, ParserError, ParseErrorLevel } from '../types';
 import { QasmLexer } from './antlr/QasmLexer';
 import { QasmParser } from './antlr/QasmParser';
-import { QasmParserV2 } from './antlrV2/QasmParserV2';
+import { QasmParserV2, CodeContext } from './antlrV2/QasmParserV2';
 import { Override } from 'antlr4ts/Decorators';
 import { TreePrinter } from '../tools';
 import { SymbolTableGenerator } from './ast/symbolTableGenerator';
+import { QASMSyntacticParser } from './qasmSyntacticParser';
 
 export class QASMParser implements Parser {
     parse(input: string): ParserResult {
@@ -49,25 +51,16 @@ export class QASMParser implements Parser {
     }
 
     private parseV2(input: string): ParserResult {
-        let errorListener = new ErrorListener();
-        let inputStream = new ANTLRInputStream(input);
-        let lexer = new QasmLexer(inputStream);
-        lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
+        let tree = QASMSyntacticParser.parse(input);
 
-        let tokenStream = new CommonTokenStream(lexer);
-        let parser = new QasmParserV2(tokenStream);
-        parser.addErrorListener(errorListener);
-
-        let tree = parser.code();
-
-        TreePrinter.print(parser.ruleNames, tree);
+        TreePrinter.print(QASMSyntacticParser.ruleNames(), tree);
 
         let symbolTable = SymbolTableGenerator.symbolTableFor(tree);
         symbolTable.print();
 
         return {
             ast: tree,
-            errors: errorListener.errors
+            errors: []
         };
     }
 
