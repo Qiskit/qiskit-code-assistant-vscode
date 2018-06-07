@@ -27,7 +27,7 @@ import {
 } from 'vscode-languageserver';
 import { CompilationTool } from './compilation';
 import { QASMSuggester } from './qasm/suggester';
-import { QASMParser } from './qasmv2/parser';
+import { QASMParser } from './qasm/parser';
 
 let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
 

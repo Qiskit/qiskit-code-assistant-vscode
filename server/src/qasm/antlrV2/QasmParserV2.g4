@@ -13,12 +13,12 @@
 // limitations under the License.
 // =============================================================================
 
-parser grammar QasmParser;
-options { tokenVocab=QasmLexer; }
+parser grammar QasmParserV2;
+options { tokenVocab=QasmLexerV2; }
 
 @header {
 import { Register, SymbolsTable } from './utils';
-import { QasmLexer } from './QasmLexer';
+import { QasmLexerV2 } from './QasmLexerV2';
 import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts'; 
 import { SymbolTable, BuiltInTypeSymbol } from '../../tools/symbolTable'; 
 import { SymbolTableBuilder, VariableSymbol, RegisterSymbol } from '../compiler/symbolTable';
@@ -156,11 +156,11 @@ getSymbolTable(): SymbolTable {
     return this.symbolTable;
 }
 
-private buildQasmParser(input: string): QasmParser {
+private buildQasmParser(input: string): QasmParserV2 {
     let inputStream = new ANTLRInputStream(input);
-    let lexer = new QasmLexer(inputStream);
+    let lexer = new QasmLexerV2(inputStream);
     let tokenStream = new CommonTokenStream(lexer);
-    let parser = new QasmParser(tokenStream);
+    let parser = new QasmParserV2(tokenStream);
 
     return parser;
 }
@@ -205,7 +205,7 @@ clean
 sentence
     : definition
     | expression
-    | conditional
+    | conditional expression
     | EOF
     ;
 
@@ -225,10 +225,6 @@ expression
     ;
 
 conditional
-    : condition expression
-    ;
-
-condition
     : If LeftParen Id { this.verifyCregReference($Id); } Equals Int RightParen
     ;
 

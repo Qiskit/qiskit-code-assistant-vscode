@@ -23,20 +23,42 @@ import {
     Token,
     Recognizer,
     RecognitionException,
-    ConsoleErrorListener,
-    ParserRuleContext
+    ConsoleErrorListener
 } from 'antlr4ts';
-import { CodeCompletionCore } from 'antlr4-c3';
 import { Parser, ParserResult, ParserError, ParseErrorLevel } from '../types';
 import { QasmLexer } from './antlr/QasmLexer';
-import { QasmParser, CodeContext } from './antlr/QasmParser';
+import { QasmParser } from './antlr/QasmParser';
+import { QasmLexerV2 } from './antlrV2/QasmLexerV2';
+import { QasmParserV2 } from './antlrV2/QasmParserV2';
 import { Override } from 'antlr4ts/Decorators';
 import { TreePrinter } from '../tools';
 
 export class QASMParser implements Parser {
     parse(input: string): ParserResult {
+        this.parseV2(input);
+
         let errorListener = new ErrorListener();
         let parser = this.buildQasmParser(input, errorListener);
+
+        let tree = parser.code();
+
+        TreePrinter.print(parser.ruleNames, tree);
+
+        return {
+            ast: tree,
+            errors: errorListener.errors
+        };
+    }
+
+    private parseV2(input: string): ParserResult {
+        let errorListener = new ErrorListener();
+        let inputStream = new ANTLRInputStream(input);
+        let lexer = new QasmLexer(inputStream);
+        lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
+
+        let tokenStream = new CommonTokenStream(lexer);
+        let parser = new QasmParserV2(tokenStream);
+        parser.addErrorListener(errorListener);
 
         let tree = parser.code();
 
