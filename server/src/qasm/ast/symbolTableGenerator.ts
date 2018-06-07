@@ -145,7 +145,7 @@ class DefinitionMatcher extends AbstractParseTreeVisitor<ParserError[]> implemen
 
         let message = `Variable "${node.text}" was previously defined.`;
         let error = {
-            line: node.symbol.line,
+            line: node.symbol.line - 1,
             start: node.symbol.charPositionInLine,
             end: node.symbol.charPositionInLine + node.text.length,
             message: message,

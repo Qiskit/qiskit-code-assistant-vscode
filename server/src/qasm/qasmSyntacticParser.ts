@@ -15,9 +15,17 @@
 
 'use strict';
 
-import { ParserRuleContext, ANTLRInputStream, CommonTokenStream } from 'antlr4ts';
+import {
+    ParserRuleContext,
+    ANTLRInputStream,
+    CommonTokenStream,
+    ANTLRErrorListener,
+    CommonToken,
+    ConsoleErrorListener
+} from 'antlr4ts';
 import { QasmLexerV2 } from './antlrV2/QasmLexerV2';
 import { QasmParserV2 } from './antlrV2/QasmParserV2';
+import { ErrorListener } from '../qiskit/parser';
 
 export namespace QASMSyntacticParser {
     export function parse(input: string): ParserRuleContext {
@@ -26,6 +34,21 @@ export namespace QASMSyntacticParser {
 
         let tokenStream = new CommonTokenStream(lexer);
         let parser = new QasmParserV2(tokenStream);
+
+        return parser.code();
+    }
+
+    export function parseWithErrorListener(
+        input: string,
+        errorListener: ANTLRErrorListener<CommonToken>
+    ): ParserRuleContext {
+        let inputStream = new ANTLRInputStream(input);
+        let lexer = new QasmLexerV2(inputStream);
+        lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
+
+        let tokenStream = new CommonTokenStream(lexer);
+        let parser = new QasmParserV2(tokenStream);
+        parser.addErrorListener(errorListener);
 
         return parser.code();
     }

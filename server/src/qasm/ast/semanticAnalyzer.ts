@@ -85,7 +85,7 @@ class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
         if (symbol === null) {
             let message = `Symbol ${id.text} is not previously defined.`;
             let error = {
-                line: id.symbol.line,
+                line: id.symbol.line - 1,
                 start: id.symbol.charPositionInLine,
                 end: id.symbol.charPositionInLine + id.text.length,
                 message: message,
@@ -96,7 +96,7 @@ class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
             if (symbol.type.getName() !== 'Creg') {
                 let message = `${id.text} is not a classical register, but conditionals requires one.`;
                 let error = {
-                    line: id.symbol.line,
+                    line: id.symbol.line - 1,
                     start: id.symbol.charPositionInLine,
                     end: id.symbol.charPositionInLine + id.text.length,
                     message: message,
@@ -118,7 +118,7 @@ class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
                     symbol.size
                 }.`;
                 let error = {
-                    line: id.symbol.line,
+                    line: id.symbol.line - 1,
                     start: id.symbol.charPositionInLine,
                     end: id.symbol.charPositionInLine + id.text.length,
                     message: message,
@@ -142,7 +142,7 @@ class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
             if (positionValue >= register.size) {
                 let message = `Index out of bound register ${id.text} has size ${position.text}`;
                 let error = {
-                    line: id.symbol.line,
+                    line: id.symbol.line - 1,
                     start: id.symbol.charPositionInLine,
                     end: id.symbol.charPositionInLine + id.text.length,
                     message: message,
@@ -153,7 +153,7 @@ class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
         } else {
             let message = `Expecting a quantum register but ${id.text} has type ${symbol.type.getName()}`;
             let error = {
-                line: id.symbol.line,
+                line: id.symbol.line - 1,
                 start: id.symbol.charPositionInLine,
                 end: id.symbol.charPositionInLine + id.text.length,
                 message: message,
@@ -176,7 +176,7 @@ class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
             if (positionValue >= register.size) {
                 let message = `Index out of bound register ${id.text} has size ${position.text}`;
                 let error = {
-                    line: id.symbol.line,
+                    line: id.symbol.line - 1,
                     start: id.symbol.charPositionInLine,
                     end: id.symbol.charPositionInLine + id.text.length,
                     message: message,
@@ -187,7 +187,7 @@ class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
         } else {
             let message = `Expecting a classical register but ${id.text} has type ${symbol.type.getName()}`;
             let error = {
-                line: id.symbol.line,
+                line: id.symbol.line - 1,
                 start: id.symbol.charPositionInLine,
                 end: id.symbol.charPositionInLine + id.text.length,
                 message: message,

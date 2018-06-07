@@ -35,21 +35,8 @@ import { QASMSyntacticParser } from './qasmSyntacticParser';
 
 export class QASMParser implements Parser {
     parse(input: string): ParserResult {
-        this.parseV2(input);
-
         let errorListener = new ErrorListener();
-        let parser = this.buildQasmParser(input, errorListener);
-
-        let tree = parser.code();
-
-        return {
-            ast: tree,
-            errors: errorListener.errors
-        };
-    }
-
-    private parseV2(input: string): ParserResult {
-        let tree = QASMSyntacticParser.parse(input);
+        let tree = QASMSyntacticParser.parseWithErrorListener(input, errorListener);
 
         let symbolTableResult = SymbolTableGenerator.symbolTableFor(tree);
         symbolTableResult.symbolTable.print();
@@ -64,20 +51,8 @@ export class QASMParser implements Parser {
 
         return {
             ast: tree,
-            errors: symbolTableResult.errors
+            errors: [...errorListener.errors, ...symbolTableResult.errors, ...semanticErrors]
         };
-    }
-
-    private buildQasmParser(input: string, errorListener: ErrorListener): QasmParser {
-        let inputStream = new ANTLRInputStream(input);
-        let lexer = new QasmLexer(inputStream);
-        lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
-
-        let tokenStream = new CommonTokenStream(lexer);
-        let parser = new QasmParser(tokenStream);
-        parser.addErrorListener(errorListener);
-
-        return parser;
     }
 }
 

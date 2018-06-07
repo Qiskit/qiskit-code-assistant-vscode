@@ -16,114 +16,6 @@
 parser grammar QasmParserV2;
 options { tokenVocab=QasmLexerV2; }
 
-@header {
-import { Register, SymbolsTable } from './utils';
-import { QasmLexerV2 } from './QasmLexerV2';
-import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts'; 
-import { SymbolTable, BuiltInTypeSymbol } from '../../tools/symbolTable'; 
-import { SymbolTableBuilder, VariableSymbol, RegisterSymbol } from '../compiler/symbolTable';
-import fs = require('fs');
-import path = require('path');
-}
-
-@members {
-    
-private symbolTable = SymbolTableBuilder.build();
-
-private verifyQregReference(id: Token, position?: Token) {
-    let variableSymbol = this.symbolTable.lookup(id.text);
-    if (variableSymbol) {
-        let qregSymbol = this.symbolTable.lookup('Qreg') as BuiltInTypeSymbol;
-        if (variableSymbol.type != qregSymbol) {
-            let message = `Wrong type at ${id.text}, expecting a ${qregSymbol.getName()}`;
-            this.notifyErrorListeners(message, id, null);
-        }
-
-        if (position) {
-            let register = variableSymbol as RegisterSymbol;
-            let selectedPosition = +position.text;
-            if (selectedPosition >= register.size) {
-                let message = `Index out of bound at register ${id.text}`;
-                this.notifyErrorListeners(message, position, null);
-            }
-        }
-    } else {
-        let message = `Qubit ${id.text} is not previously defined`;
-        this.notifyErrorListeners(message, id, null);
-    }
-}
-
-private verifyCregReference(id: Token, position?: Token) {
-    let variableSymbol = this.symbolTable.lookup(id.text);
-    if (variableSymbol) {
-        let cregSymbol = this.symbolTable.lookup('Creg') as BuiltInTypeSymbol;
-        if (variableSymbol.type != cregSymbol) {
-            let message = `Wrong type at ${id.text}, expecting a ${cregSymbol.getName()}`;
-            this.notifyErrorListeners(message, id, null);
-        }
-
-        if (position) {
-            let register = variableSymbol as RegisterSymbol;
-            let selectedPosition = +position.text;
-            if (selectedPosition >= register.size) {
-                let message = `Index out of bound at register ${id.text}`;
-                this.notifyErrorListeners(message, position, null);
-            }
-        }
-    } else {
-        let message = `Cbit ${id.text} is not previously defined`;
-        this.notifyErrorListeners(message, id, null);
-    }
-}
-
-private verifyMeasureInvocation(quantumRegister: Token, classicRegister: Token): void {
-    let qregSymbol = this.symbolTable.lookup(quantumRegister.text) as RegisterSymbol;
-    let cregSymbol = this.symbolTable.lookup(classicRegister.text) as RegisterSymbol;
-
-    if (qregSymbol && cregSymbol && qregSymbol.size > cregSymbol.size) {
-        let message = `The quatum register ${quantumRegister.text} cannot be mapped to a smaller classic register ${classicRegister.text}`;
-        this.notifyErrorListeners(message, quantumRegister, null);
-    }
-}
-
-private verifyGateInvocation(id: Token): void {
-    let gateSymbol = this.symbolTable.lookup(id.text);
-
-    if (gateSymbol == null) {
-        let message = `The symbol ${id.text} is not previously defined`;
-        this.notifyErrorListeners(message, id, null);
-    }
-}
-
-declaredVariables(): string[] {
-    return this.symbolTable.definedSymbols();
-}
- 
-getSymbolTable(): SymbolTable {
-    return this.symbolTable;
-}
-
-private buildQasmParser(input: string): QasmParserV2 {
-    let inputStream = new ANTLRInputStream(input);
-    let lexer = new QasmLexerV2(inputStream);
-    let tokenStream = new CommonTokenStream(lexer);
-    let parser = new QasmParserV2(tokenStream);
-
-    return parser;
-}
-
-private processLibrary(libraryName: string) {
-    let libraryPath = path.join(__dirname, '..', 'libs', libraryName);
-    let text = fs.readFileSync(libraryPath, 'utf8');
-    let parser = this.buildQasmParser(text);
-
-    parser.code();
-
-    this.symbolTable = parser.getSymbolTable();
-}
-
-}
-
 code
     : sentences
     | headers sentences
@@ -137,7 +29,7 @@ headers
     ;
 
 includeLibrary
-    : Include Library Semi { this.processLibrary($Library.text); }
+    : Include Library Semi 
     ;
 
 sentences
@@ -172,7 +64,7 @@ expression
     ;
 
 conditional
-    : If LeftParen Id { this.verifyCregReference($Id); } Equals Int RightParen
+    : If LeftParen Id  Equals Int RightParen
     ;
 
 qregDefinition: 
@@ -257,23 +149,20 @@ unaryOp
 
 measure
     : Measure qubit Assign cbit 
-    | Measure q=Id { this.verifyQregReference($q); } Assign c=Id { 
-        this.verifyCregReference($c); 
-        this.verifyMeasureInvocation($q, $c);
-    }
+    | Measure q=Id  Assign c=Id
     ;
 
 qubit
-    : Id LeftBrace position=Int RightBrace { this.verifyQregReference($Id, $position); }
+    : Id LeftBrace position=Int RightBrace 
     ;
 
 cbit
-    : Id LeftBrace position=Int RightBrace { this.verifyCregReference($Id, $position); }
+    : Id LeftBrace position=Int RightBrace 
     ;
 
 customArglist
-    : Id LeftParen paramsListNumber RightParen qubitAndQregList { this.verifyGateInvocation($Id); }
-    | Id qubitAndQregList { this.verifyGateInvocation($Id); }
+    : Id LeftParen paramsListNumber RightParen qubitAndQregList 
+    | Id qubitAndQregList 
     ;
 
 paramsListNumber
@@ -287,8 +176,8 @@ qubitAndQregList
     ;
 
 qbitOrQreg
-    : Id { this.verifyQregReference($Id); }
-    | Id LeftBrace position=Int RightBrace { this.verifyQregReference($Id, $position); }
+    : Id 
+    | Id LeftBrace position=Int RightBrace 
     ;
 
 cxGate
@@ -296,7 +185,7 @@ cxGate
     ;
 
 barrierGate
-    : Barrier Id { this.verifyQregReference($Id); }
+    : Barrier Id 
     | Barrier qubitList 
     ;
 
@@ -306,6 +195,6 @@ qubitList
     ; 
 
 resetGate
-    : Reset Id { this.verifyQregReference($Id); }
+    : Reset Id 
     | Reset qubit
     ;

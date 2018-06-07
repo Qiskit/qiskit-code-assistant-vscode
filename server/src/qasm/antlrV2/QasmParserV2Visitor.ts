@@ -1,15 +1,6 @@
 // Generated from QasmParserV2.g4 by ANTLR 4.6-SNAPSHOT
 
 
-import { Register, SymbolsTable } from './utils';
-import { QasmLexerV2 } from './QasmLexerV2';
-import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts'; 
-import { SymbolTable, BuiltInTypeSymbol } from '../../tools/symbolTable'; 
-import { SymbolTableBuilder, VariableSymbol, RegisterSymbol } from '../compiler/symbolTable';
-import fs = require('fs');
-import path = require('path');
-
-
 import { ParseTreeVisitor } from 'antlr4ts/tree/ParseTreeVisitor';
 
 import { CodeContext } from './QasmParserV2';
