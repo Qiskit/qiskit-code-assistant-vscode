@@ -18,7 +18,6 @@
 import { SymbolTable, GlobalScope, Symbol, BuiltInTypeSymbol, Type } from '../../tools/symbolTable';
 
 export namespace SymbolTableBuilder {
-    
     export function build(): SymbolTable {
         let globalScope = new GlobalScope();
         let symbolTable = new SymbolTable(globalScope);
@@ -31,19 +30,19 @@ export namespace SymbolTableBuilder {
 
         return symbolTable;
     }
-
 }
 
 export class VariableSymbol extends Symbol {
-    
     constructor(name: string, type: Type) {
         super(name, type);
     }
 
+    toString(): string {
+        return `{ name: ${this.name}, type: ${this.type} }`;
+    }
 }
 
 export class RegisterSymbol extends Symbol {
-
     size: number;
 
     constructor(name: string, type: Type, size: number) {
@@ -51,12 +50,7 @@ export class RegisterSymbol extends Symbol {
         this.size = size;
     }
 
-}
-
-export class GateSymbol extends Symbol {
-
-    constructor(name: string, type: Type) {
-        super(name, type);
+    toString(): string {
+        return `{ name: ${this.name}, type: ${this.type}, size: ${this.size} }`;
     }
-
 }

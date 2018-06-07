@@ -21,6 +21,10 @@ import { SentenceContext } from './QasmParserV2';
 import { DefinitionContext } from './QasmParserV2';
 import { ExpressionContext } from './QasmParserV2';
 import { ConditionalContext } from './QasmParserV2';
+import { QregDefinitionContext } from './QasmParserV2';
+import { CregDefinitionContext } from './QasmParserV2';
+import { IdentifierContext } from './QasmParserV2';
+import { DimensionContext } from './QasmParserV2';
 import { GateDefinitionContext } from './QasmParserV2';
 import { OpaqueDefinitionContext } from './QasmParserV2';
 import { GateDefinitionArgumentsContext } from './QasmParserV2';
@@ -147,6 +151,50 @@ export interface QasmParserV2Listener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitConditional?: (ctx: ConditionalContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParserV2.qregDefinition`.
+	 * @param ctx the parse tree
+	 */
+	enterQregDefinition?: (ctx: QregDefinitionContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParserV2.qregDefinition`.
+	 * @param ctx the parse tree
+	 */
+	exitQregDefinition?: (ctx: QregDefinitionContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParserV2.cregDefinition`.
+	 * @param ctx the parse tree
+	 */
+	enterCregDefinition?: (ctx: CregDefinitionContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParserV2.cregDefinition`.
+	 * @param ctx the parse tree
+	 */
+	exitCregDefinition?: (ctx: CregDefinitionContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParserV2.identifier`.
+	 * @param ctx the parse tree
+	 */
+	enterIdentifier?: (ctx: IdentifierContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParserV2.identifier`.
+	 * @param ctx the parse tree
+	 */
+	exitIdentifier?: (ctx: IdentifierContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `QasmParserV2.dimension`.
+	 * @param ctx the parse tree
+	 */
+	enterDimension?: (ctx: DimensionContext) => void;
+	/**
+	 * Exit a parse tree produced by `QasmParserV2.dimension`.
+	 * @param ctx the parse tree
+	 */
+	exitDimension?: (ctx: DimensionContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `QasmParserV2.gateDefinition`.

@@ -28,10 +28,10 @@ import {
 import { Parser, ParserResult, ParserError, ParseErrorLevel } from '../types';
 import { QasmLexer } from './antlr/QasmLexer';
 import { QasmParser } from './antlr/QasmParser';
-import { QasmLexerV2 } from './antlrV2/QasmLexerV2';
 import { QasmParserV2 } from './antlrV2/QasmParserV2';
 import { Override } from 'antlr4ts/Decorators';
 import { TreePrinter } from '../tools';
+import { SymbolTableGenerator } from './ast/symbolTableGenerator';
 
 export class QASMParser implements Parser {
     parse(input: string): ParserResult {
@@ -41,8 +41,6 @@ export class QASMParser implements Parser {
         let parser = this.buildQasmParser(input, errorListener);
 
         let tree = parser.code();
-
-        TreePrinter.print(parser.ruleNames, tree);
 
         return {
             ast: tree,
@@ -63,6 +61,9 @@ export class QASMParser implements Parser {
         let tree = parser.code();
 
         TreePrinter.print(parser.ruleNames, tree);
+
+        let symbolTable = SymbolTableGenerator.symbolTableFor(tree);
+        symbolTable.print();
 
         return {
             ast: tree,

@@ -21,6 +21,10 @@ import { SentenceContext } from './QasmParserV2';
 import { DefinitionContext } from './QasmParserV2';
 import { ExpressionContext } from './QasmParserV2';
 import { ConditionalContext } from './QasmParserV2';
+import { QregDefinitionContext } from './QasmParserV2';
+import { CregDefinitionContext } from './QasmParserV2';
+import { IdentifierContext } from './QasmParserV2';
+import { DimensionContext } from './QasmParserV2';
 import { GateDefinitionContext } from './QasmParserV2';
 import { OpaqueDefinitionContext } from './QasmParserV2';
 import { GateDefinitionArgumentsContext } from './QasmParserV2';
@@ -114,6 +118,34 @@ export interface QasmParserV2Visitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitConditional?: (ctx: ConditionalContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParserV2.qregDefinition`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitQregDefinition?: (ctx: QregDefinitionContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParserV2.cregDefinition`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitCregDefinition?: (ctx: CregDefinitionContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParserV2.identifier`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitIdentifier?: (ctx: IdentifierContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParserV2.dimension`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitDimension?: (ctx: DimensionContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `QasmParserV2.gateDefinition`.

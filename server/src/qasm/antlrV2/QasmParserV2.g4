@@ -30,58 +30,6 @@ import path = require('path');
     
 private symbolTable = SymbolTableBuilder.build();
 
-private declareQreg(registerName: Token, size: Token): void {
-    let variableSymbol = this.symbolTable.lookup(registerName.text);
-    if (variableSymbol == null) {
-        let qregSymbol = this.symbolTable.lookup('Qreg') as BuiltInTypeSymbol;
-        let newSymbol = new RegisterSymbol(registerName.text, qregSymbol, +size.text);
-
-        this.symbolTable.define(newSymbol);
-    } else {
-        let message = `There is another declaration with name ${registerName.text}`;
-        this.notifyErrorListeners(message, registerName, null);
-    }
-}
-
-private declareCreg(registerName: Token, size: Token): void {
-    let variableSymbol = this.symbolTable.lookup(registerName.text);
-    if (variableSymbol == null) {
-        let cregSymbol = this.symbolTable.lookup('Creg') as BuiltInTypeSymbol;
-        let newSymbol = new RegisterSymbol(registerName.text, cregSymbol, +size.text);
-
-        this.symbolTable.define(newSymbol);
-    } else {
-        let message = `There is another declaration with name ${registerName.text}`;
-        this.notifyErrorListeners(message, registerName, null);
-    }
-}
-
-private declareGate(gateName: Token): void {
-    let variableSymbol = this.symbolTable.lookup(gateName.text);
-    if (variableSymbol == null) {
-        let gateSymbol = this.symbolTable.lookup('Gate') as BuiltInTypeSymbol;
-        let newSymbol = new VariableSymbol(gateName.text, gateSymbol);
-
-        this.symbolTable.define(newSymbol);
-    } else {
-        let message = `There is another declaration with name ${gateName.text}`;
-        this.notifyErrorListeners(message, gateName, null);
-    }
-}
-
-private declareOpaque(opaqueName: Token): void {
-    let variableSymbol = this.symbolTable.lookup(opaqueName.text);
-    if (variableSymbol == null) {
-        let opaqueSymbol = this.symbolTable.lookup('Opaque') as BuiltInTypeSymbol;
-        let newSymbol = new VariableSymbol(opaqueName.text, opaqueSymbol);
-
-        this.symbolTable.define(newSymbol);
-    } else {
-        let message = `There is another declaration with name ${opaqueName.text}`;
-        this.notifyErrorListeners(message, opaqueName, null);
-    }
-}
-
 private verifyQregReference(id: Token, position?: Token) {
     let variableSymbol = this.symbolTable.lookup(id.text);
     if (variableSymbol) {
@@ -151,7 +99,6 @@ declaredVariables(): string[] {
     return this.symbolTable.definedSymbols();
 }
  
-
 getSymbolTable(): SymbolTable {
     return this.symbolTable;
 }
@@ -210,8 +157,8 @@ sentence
     ;
 
 definition
-    : Qreg Id LeftBrace size=Int RightBrace Semi { this.declareQreg($Id, $size); }
-    | Creg Id LeftBrace size=Int RightBrace Semi { this.declareCreg($Id, $size); }
+    : qregDefinition
+    | cregDefinition
     | gateDefinition
     | opaqueDefinition Semi
     ;
@@ -228,17 +175,28 @@ conditional
     : If LeftParen Id { this.verifyCregReference($Id); } Equals Int RightParen
     ;
 
+qregDefinition: 
+    Qreg identifier LeftBrace dimension RightBrace Semi
+    ;
+
+cregDefinition:
+    Creg identifier LeftBrace dimension RightBrace Semi
+    ;
+
+identifier:
+    Id
+    ;
+
+dimension:
+    Int
+    ;
+
 gateDefinition: 
-    Gate Id { 
-        this.declareGate($Id); 
-        this.symbolTable.push($Id.text);
-    } gateDefinitionArguments {
-        this.symbolTable.pop();
-    }
+    Gate Id gateDefinitionArguments
     ;
 
 opaqueDefinition
-    : Opaque Id opaqueDefinitionArguments { this.declareOpaque($Id); }
+    : Opaque Id opaqueDefinitionArguments
     ;
 
 gateDefinitionArguments
