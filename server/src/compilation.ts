@@ -36,16 +36,13 @@ export class CompilationTool {
             kind: CompletionItemKind.Text,
             data: index,
             detail: symbol.detail,
-            documentation: symbol.documentation   
+            documentation: symbol.documentation
         };
-    }
+    };
 
-    constructor(private connection: IConnection, private parser: Parser, private suggester: Suggester) {
-    }
+    constructor(private connection: IConnection, private parser: Parser, private suggester: Suggester) {}
 
     validateDocument(document: TextDocument): void {
-        this.connection.console.log(`Validating document type ${document.languageId}`);
-
         this.currentDocument = document;
 
         let result = this.parser.parse(document.getText());
@@ -57,7 +54,9 @@ export class CompilationTool {
             return [];
         }
 
-        let textToCaret = this.currentDocument.getText().substring(0, this.currentDocument.offsetAt(documentPosition.position));
+        let textToCaret = this.currentDocument
+            .getText()
+            .substring(0, this.currentDocument.offsetAt(documentPosition.position));
 
         this.currentSuggestions = this.suggester.calculateSuggestionsFor(textToCaret).map(this.toCompletionItem);
 
@@ -74,7 +73,7 @@ export class CompilationTool {
     }
 
     private getCompletionSymbolFor(item: CompletionItem): CompletionItem {
-        let isSameData = (symbol:CompletionItem) => symbol.data === item.data;
+        let isSameData = (symbol: CompletionItem) => symbol.data === item.data;
 
         let availableOptions = this.currentSuggestions.filter(isSameData);
 
@@ -91,7 +90,7 @@ export class CompilationTool {
 
     private launchCompilationErrors(document: TextDocument, errors: ParserError[]) {
         let diagnostics: Diagnostic[] = [];
-        errors.forEach((error) => {
+        errors.forEach(error => {
             diagnostics.push(this.errorToDiagnostics(error));
         });
 
@@ -103,7 +102,7 @@ export class CompilationTool {
 
     private errorToDiagnostics(error: ParserError) {
         return {
-            severity: (error.level === ParseErrorLevel.ERROR) ? DiagnosticSeverity.Error : DiagnosticSeverity.Warning,
+            severity: error.level === ParseErrorLevel.ERROR ? DiagnosticSeverity.Error : DiagnosticSeverity.Warning,
             range: {
                 start: {
                     line: error.line,
@@ -118,5 +117,4 @@ export class CompilationTool {
             source: 'ex'
         };
     }
-
 }

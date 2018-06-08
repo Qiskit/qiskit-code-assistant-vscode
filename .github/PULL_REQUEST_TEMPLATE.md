@@ -1,16 +1,17 @@
-<!-- ⚠️ Your PR title will appear in the changelogs please make it short detailed and understandable for all. -->
+<!--
+⚠️ If you do not respect this template, your pull request will be closed.
+⚠️ Your pull request title should be short detailed and understandable for all.
+⚠️ Also, please add it in the CHANGELOG.md file under Unreleased section.
+⚠️ If your pull request fixes an open issue, please link to the issue.
 
-<!-- Uncomment the correct contribution type. !-->
+✅ I have added the tests to cover my changes.
+✅ I have read the CONTRIBUTING.md document.
+-->
 
-My PR is a:
-<!-- 🐛 Bug fix -->
-<!-- 💅 Enhancement -->
-<!-- 🚀 New feature -->
+### Summary
 
-Main update on the:
-<!-- Client -->
-<!-- Server -->
-<!-- Documentation -->
-<!-- Repository -->
 
-<!-- Write a short description of what your PR solves and link the related issues. Remember also to include this PR in the CHANGELOG.md file -->
+
+### Details and comments
+
+

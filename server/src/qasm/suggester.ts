@@ -20,6 +20,7 @@ import { CodeCompletionCore } from 'antlr4-c3';
 import { QasmLexer } from './antlr/QasmLexer';
 import { QasmParser } from './antlr/QasmParser';
 import { Suggester, SuggestionSymbol } from '../types';
+import { QLogger } from '../logger';
 
 export class QASMSuggester implements Suggester {
     dictionary: SymbolsDictionary = new SymbolsDictionary();
@@ -68,9 +69,6 @@ export class QASMSuggester implements Suggester {
 
         let functionNames: string[] = [];
         let variableNames: string[] = [];
-        for (let candidate of candidates.rules) {
-            console.log('Rule > ' + candidate);
-        }
 
         let suggestions: string[] = [];
         suggestions.push(...keywords);
@@ -81,7 +79,7 @@ export class QASMSuggester implements Suggester {
         result.push(...this.dictionary.symbolsWithTypeIn(suggestions));
         result.push(...this.foundVariablesAt(parser));
 
-        console.log(`Available suggestions > ${result}`);
+        QLogger.verbose(`Available suggestions > ${result}`, this);
 
         return result;
     }

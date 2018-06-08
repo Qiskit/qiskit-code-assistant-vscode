@@ -13,11 +13,12 @@
 // limitations under the License.
 // =============================================================================
 
-import * as Q from "q";
+import * as Q from 'q';
 
-import { IPackage } from "./interfaces";
-import { PipPackage } from "./pipPackage";
-import { workspace } from "vscode";
+import { IPackage } from './interfaces';
+import { PipPackage } from './pipPackage';
+import { workspace } from 'vscode';
+import { QLogger } from './logger';
 
 export class PackageMgr {
     static _packages: Q.Promise<[IPackage]> = [];
@@ -25,15 +26,14 @@ export class PackageMgr {
     constructor() {
         try {
             const config = workspace.getConfiguration('ibm-q-studio');
-            const qiskitPacks = config.get("qiskit.packages");
-            Object.keys(qiskitPacks).forEach(function (key) {
+            const qiskitPacks = config.get('qiskit.packages');
+            Object.keys(qiskitPacks).forEach(function(key) {
                 //console.log(key.toString(), qiskitPacks[key].toString());
                 PackageMgr._packages.push(new PipPackage(key.toString(), qiskitPacks[key].toString()));
             });
         } catch (err) {
-            console.log(`PackMGr ${err}`);
+            QLogger.error(`PackMGr ${err}`, this);
         }
-
     }
 
     check(): Q.Promise<void> {
@@ -43,5 +43,4 @@ export class PackageMgr {
         });
         return Q.all(packages);
     }
-
 }
