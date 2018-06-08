@@ -18,9 +18,10 @@
 import * as vscode from 'vscode';
 import { LanguagesActivation } from './languages';
 import { ActivationUtils } from './activationUtils';
+import { QLogger } from './logger';
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log('Activating IBM Q Studio extension ...');
+    QLogger.verbose('Activating IBM Q Studio extension ...', this);
 
     ActivationUtils.showExtensionBootInfo('✨ Activating IBM Q Studio extension... ✨');
 
@@ -36,15 +37,15 @@ export function activate(context: vscode.ExtensionContext) {
 
     ActivationUtils.checkDependencies()
         .then(() => {
-            console.log('IBM Q Studio extension successfully loaded!');
+            QLogger.verbose('IBM Q Studio extension successfully loaded!', this);
             ActivationUtils.showExtensionBootInfo('🚀 IBM Q Studio extension loaded! 🚀');
         })
         .catch(err => {
-            console.log('Dependencies error:', err);
+            QLogger.error(`Dependencies error: ${err}`, this);
             vscode.window.showErrorMessage(err);
         });
 }
 
 export function deactivate() {
-    console.log('Deactivating Qiskit extension ...');
+    QLogger.verbose('Deactivating Qiskit extension ...', this);
 }

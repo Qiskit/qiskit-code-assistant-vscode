@@ -22,7 +22,8 @@
 		"vscode-languageserver": "^3.5.0",
 		"antlr4ts": "^0.4.1-alpha.0",
 		"antlr4-c3": "^1.1.7",
-		"typescript": "^2.7.2"
+		"typescript": "^2.7.2",
+		"winston": "^3.0.0-rc6"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.1.1",

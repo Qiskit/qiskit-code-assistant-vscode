@@ -45,6 +45,7 @@ import {
     Position
 } from './types';
 import { ParserRuleContext, Token } from 'antlr4ts';
+import { QLogger } from '../../logger';
 
 export class TreeFolder extends AbstractParseTreeVisitor<Statement[]> implements Python3Visitor<Statement[]> {
     defaultResult(): Statement[] {
@@ -147,7 +148,7 @@ export class ExpressionFolder extends AbstractParseTreeVisitor<VisitableItem> im
     }
 
     numberValue(item: VisitableItem) {
-        console.log(`Visiting number ${item}`);
+        QLogger.debug(`Visiting number ${item}`, this);
 
         if (item instanceof Expression) {
             return item.terms.reduce((a, b) => (b instanceof Integer ? b.value : a), 0);

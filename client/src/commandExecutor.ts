@@ -13,10 +13,11 @@
 // limitations under the License.
 // =============================================================================
 
-import * as Q from "q";
-import * as vscode from "vscode";
-import * as nodeChildProcess from "child_process";
-import { Util } from "./utils";
+import * as Q from 'q';
+import * as vscode from 'vscode';
+import * as nodeChildProcess from 'child_process';
+import { Util } from './utils';
+import { QLogger } from './logger';
 
 interface IExecOptions {
     cwd?: string;
@@ -29,15 +30,11 @@ interface IExecOptions {
 }
 
 export namespace CommandExecutor {
-    export function exec(
-        command: string,
-        args: string[] = [],
-        options: IExecOptions = {}
-    ): Q.Promise<string> {
+    export function exec(command: string, args: string[] = [], options: IExecOptions = {}): Q.Promise<string> {
         let outcome = Q.defer<string>();
 
         nodeChildProcess.exec(
-            command + " " + args.join(" "),
+            command + ' ' + args.join(' '),
             options,
             (error: Error, stdout: string, stderr: string) => {
                 if (error) {
@@ -59,28 +56,26 @@ export namespace CommandExecutor {
 
     export function execPythonActiveEditor(): Q.Promise<string> {
         return Q.Promise((resolve, reject) => {
-            vscode.window.showInformationMessage("⚡ Running... ⚡");
+            vscode.window.showInformationMessage('⚡ Running... ⚡');
             const codeFile = vscode.window.activeTextEditor.document;
             codeFile.save();
-            CommandExecutor.exec("python", [codeFile.fileName.toString()])
+            CommandExecutor.exec('python', [codeFile.fileName.toString()])
                 .then(stdout => {
                     return resolve(stdout);
                 })
                 .catch(err => {
-                    console.log(err);
+                    QLogger.error(err, this);
                     vscode.window.showErrorMessage(err);
                     return reject(err);
                 });
         });
     }
 
-    export function execQasmActiveEditor(
-        scriptPath: string
-    ): Q.Promise<string> {
+    export function execQasmActiveEditor(scriptPath: string): Q.Promise<string> {
         return Q.Promise((resolve, reject) => {
             const execPath = Util.getOSDependentPath(scriptPath);
 
-            vscode.window.showInformationMessage("⚡ Running... ⚡");
+            vscode.window.showInformationMessage('⚡ Running... ⚡');
             const codeFile = vscode.window.activeTextEditor.document;
             codeFile.save();
 
@@ -91,17 +86,13 @@ export namespace CommandExecutor {
                 //console.log(document);
                 //console.log("python", [document.fileName.toString(), '--file', codeFile.fileName.toString()]);
 
-                CommandExecutor.exec("python", [
-                    document.fileName.toString(),
-                    "--file",
-                    codeFile.fileName.toString()
-                ])
+                CommandExecutor.exec('python', [document.fileName.toString(), '--file', codeFile.fileName.toString()])
                     .then(stdout => {
                         //console.log(stdout);
                         return resolve(stdout);
                     })
                     .catch(err => {
-                        console.log(err);
+                        QLogger.error(err, this);
                         vscode.window.showErrorMessage(err);
                         return reject(err);
                     });
@@ -109,27 +100,21 @@ export namespace CommandExecutor {
         });
     }
 
-    export function execPythonFile(
-        scriptPath: string,
-        options: string[]
-    ): Q.Promise<string> {
+    export function execPythonFile(scriptPath: string, options: string[]): Q.Promise<string> {
         return Q.Promise((resolve, reject) => {
-            vscode.window.showInformationMessage("⚡ Running... ⚡");
+            vscode.window.showInformationMessage('⚡ Running... ⚡');
 
             const execPath = Util.getOSDependentPath(scriptPath);
 
             vscode.workspace.openTextDocument(execPath).then(document => {
-                CommandExecutor.exec(
-                    "python",
-                    [document.fileName.toString()].concat(options)
-                )
+                CommandExecutor.exec('python', [document.fileName.toString()].concat(options))
                     .then(stdout => {
                         // console.log(stdout);
                         //vscode.window.showInformationMessage("Execution result:",stdout);
                         return resolve(stdout);
                     })
                     .catch(err => {
-                        console.log(err);
+                        QLogger.error(err, this);
                         vscode.window.showErrorMessage(err);
                         return reject(err);
                     });

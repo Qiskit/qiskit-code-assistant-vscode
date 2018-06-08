@@ -20,6 +20,7 @@ import { IPackageInfo, IPackage } from './interfaces';
 import { PipWrapper } from './pipWrapper';
 import { PyPiWrapper } from './pypiWrapper';
 import { ActivationUtils } from './activationUtils';
+import { QLogger } from './logger';
 
 export class PipPackage implements IPackage {
     //TODO: Get Info form local installation
@@ -41,7 +42,7 @@ export class PipPackage implements IPackage {
     }
 
     public checkVersion(pkgVersion: string): Q.Promise<void> {
-        console.log('pkgVersion', pkgVersion);
+        QLogger.verbose(`pkgVersion: ${pkgVersion}`, this);
         let packageName = this.Info.Name;
         return this.pip
             .getPackageInfo(this.Info.Name)
@@ -55,7 +56,7 @@ export class PipPackage implements IPackage {
                 // If there is a new version, offer to the user the update.
 
                 if (this.Info.Version.isLesser(Version.fromString(pkgVersion.toString()))) {
-                    console.log(`New mandatory version ${pkgInfo.Version.toString()}`);
+                    QLogger.verbose(`New mandatory version ${pkgInfo.Version.toString()}`, this);
                     return vscode.window.showInputBox({
                         ignoreFocusOut: true,
                         prompt: `👉 There's a new mandatory ${packageName} release: ${pkgInfo.Version.toString()}. You must upgrade it to enjoy this extension 👈`,
@@ -63,7 +64,7 @@ export class PipPackage implements IPackage {
                     });
                 } else {
                     if (pkgInfo.Version.isGreater(this.Info.Version)) {
-                        console.log(`New version ${pkgInfo.Version.toString()}`);
+                        QLogger.verbose(`New version ${pkgInfo.Version.toString()}`, this);
                         return vscode.window.showInputBox({
                             ignoreFocusOut: true,
                             prompt: `👉 There's a new ${packageName} release: ${pkgInfo.Version.toString()}. Do you want to upgrade? 👈`,
@@ -95,14 +96,14 @@ export class PipPackage implements IPackage {
                     .then(result => {
                         //console.log(`pip list ${result}`);
                         if (result.search(packageName) === -1) {
-                            console.log(`${packageName} not installed`);
+                            QLogger.verbose(`${packageName} not installed`, this);
                             return vscode.window.showInputBox({
                                 ignoreFocusOut: true,
                                 prompt: `👉 You don't have installed ${packageName}. Do you want to install it? 👈`,
                                 value: 'Yes'
                             });
                         } else {
-                            console.log(`${packageName} is already installed`);
+                            QLogger.verbose(`${packageName} is already installed`, this);
                             ActivationUtils.showExtensionBootInfo(`👌 ${packageName} is already installed`);
                             return Q.resolve();
                         }
@@ -120,26 +121,26 @@ export class PipPackage implements IPackage {
                         }
                     })
                     .catch(err => {
-                        console.log(`Error: pip list ${err}`);
+                        QLogger.error(`Error: pip list ${err}`, this);
                         return Q.reject(err);
                     });
             })
             .catch(err => {
-                console.log(err);
+                QLogger.error(err, this);
                 if (String(err).includes('version you have installed is older than the version required') === false) {
                     return this.pip
                         .list()
                         .then(result => {
                             //console.log(`pip list ${result}`);
                             if (result.search(packageName) === -1) {
-                                console.log(`${packageName} not installed`);
+                                QLogger.verbose(`${packageName} not installed`, this);
                                 return vscode.window.showInputBox({
                                     ignoreFocusOut: true,
                                     prompt: `👉 You don't have installed ${packageName}. Do you want to install it? 👈`,
                                     value: 'Yes'
                                 });
                             } else {
-                                console.log(`${packageName} is already installed`);
+                                QLogger.verbose(`${packageName} is already installed`, this);
                                 ActivationUtils.showExtensionBootInfo(`👌 ${packageName} is already installed`);
                                 return Q.resolve();
                             }
@@ -155,11 +156,11 @@ export class PipPackage implements IPackage {
                                         return Q.reject(err);
                                     });
                             } else {
-                                return Q.reject('QISKit not installed. QISKit Studio will not work properly');
+                                return Q.reject('QISKit not installed. The extension will not work properly');
                             }
                         })
                         .catch(err => {
-                            console.log(`Error: pip list ${err}`);
+                            QLogger.error(`Error: pip list ${err}`, this);
                             return Q.reject(err);
                         });
                 } else {
@@ -173,16 +174,16 @@ export class PipPackage implements IPackage {
         return this.pip
             .update(packageName)
             .then(stdout => {
-                console.log(stdout);
+                QLogger.verbose(stdout, this);
                 //return Q.resolve();
             })
             .then(result => {
-                console.log(result);
+                QLogger.verbose(result, this);
                 vscode.window.showInformationMessage(`${packageName} updated! 🎉🎉🎉`);
                 return Q.resolve();
             })
             .catch(error => {
-                console.log(error);
+                QLogger.error(error, this);
                 vscode.window.showErrorMessage(`ERROR: Couldn't upgrade ${packageName}. ${error}`);
                 return Q.reject(error);
             });
@@ -193,16 +194,16 @@ export class PipPackage implements IPackage {
         return this.pip
             .install(packageName)
             .then(stdout => {
-                console.log(stdout);
+                QLogger.verbose(stdout, this);
                 //return Q.resolve();
             })
             .then(result => {
-                console.log(result);
+                QLogger.verbose(result, this);
                 vscode.window.showInformationMessage(`${packageName} installed! 🎉🎉🎉`);
                 return Q.resolve();
             })
             .catch(error => {
-                console.log(error);
+                QLogger.error(error, this);
                 vscode.window.showErrorMessage(`ERROR: Couldn't install ${packageName}. ${error}`);
                 return Q.reject(error);
             });

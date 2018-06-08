@@ -279,7 +279,8 @@
 	"dependencies": {
 		"q": "^1.4.1",
 		"typed-rest-client": "^1.0.7",
-		"vscode-languageclient": "^3.5.0"
+		"vscode-languageclient": "^3.5.0",
+		"winston": "^3.0.0-rc6"
 	},
 	"devDependencies": {
 		"@types/mocha": "^2.2.42",

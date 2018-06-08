@@ -1,23 +1,31 @@
 # Changelog
 
-> **Tags:**
-> - 🎉 Added
-> - ✏️ Changed
-> - ⚠️ Deprecated
-> - ❌ Removed
-> - 🐛 Fixed
-> - 👾 Security
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+> **Types of changes**:
+>
+> - 🎉 **Added**: for new features.
+> - ✏️ **Changed**: for changes in existing functionality.
+> - ⚠️ **Deprecated**: for soon-to-be removed features.
+> - ❌ **Removed**: for now removed features.
+> - 🐛 **Fixed**: for any bug fixes.
+> - 👾 **Security**: in case of vulnerabilities.
 
 ## [Unreleased]
 
 ### 🎉 Added
 
+- Winston as the logging library ([#118](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/118)) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 - Adding controls to enable/disable visualizations for code execution ([#120](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/120) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Meeting internal guidelines for Github repos (Adding changelog, contributing, issues&PR templates, and code of conduct files) ([#106](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/106) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Follow the dev guidelines: update the issue templates & move contributing ([#108](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/108) by [@abdonrod](https://github.ibm.com/abdonrod) & [@Juan-Cruz](https://github.ibm.com/abdonrod))
 
 ### 🐛 Fixed
 
+- Syntax descriptor file customized for QASM language([#123](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/123) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 - Fixed an error in the message to users when qiskit installed is not the last version available ([#110](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/110) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 
 ### ✏️ Changed

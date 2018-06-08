@@ -20,6 +20,7 @@ import { Util } from './utils';
 import { ResultProvider } from './resultProvider';
 import { CommandExecutor } from './commandExecutor';
 import { VizManager } from './visualizations';
+import { QLogger } from './logger';
 
 export namespace ActivationUtils {
     export function checkFirstRun(): Q.Promise<string> {
@@ -81,38 +82,37 @@ export namespace ActivationUtils {
             return depMgr
                 .checkDependencies()
                 .then(deps => {
-                    console.log('Checking for Python dependencies...');
+                    QLogger.verbose('Checking for Python dependencies...', this);
                     //vscode.window.showInformationMessage("Checking for Python dependencies...");
                     let depsList: string = '';
                     deps.forEach(dep => {
-                        console.log(`Package: ${dep.Name} Version: ${dep.InstalledVersion}`);
+                        QLogger.verbose(`Package: ${dep.Name} Version: ${dep.InstalledVersion}`, this);
                         depsList += `👌 ${dep.Name} v ${dep.InstalledVersion}\n`;
                     });
                     showExtensionBootInfo(`IBM Q Studio dependencies found! ${depsList}`);
                     // Check for pyhton packages!
                 })
                 .then(() => {
-                    console.log('Check for required python packages...');
+                    QLogger.verbose('Check for required python packages...', this);
                     //vscode.window.showInformationMessage("Checking for required python packages...");
 
                     let packMgr = new PackageMgr();
                     return packMgr
                         .check()
                         .then(results => {
-                            console.log(`packMgr.check extension.ts ${results}`);
+                            QLogger.verbose(`packMgr.check extension.ts ${results}`, this);
                             showExtensionBootInfo(results);
-                            //return Q.resolve(results);
                             return resolve();
                         })
                         .catch(err => {
-                            console.log(`packMgr.check error extension.ts ${err}`);
+                            QLogger.error(`packMgr.check error extension.ts ${err}`, this);
                             return Q.reject(err);
                         });
 
                     // Iterate over the list of packages
                 })
                 .catch(error => {
-                    console.log(`Seems like there was a problem: ${error}`);
+                    QLogger.error(`Seems like there was a problem: ${error}`, this);
                     //vscode.window.showWarningMessage('Seems like there was a problem: ' + error);
                     vscode.window.showErrorMessage(`Seems like there was a problem: ${error}`);
                     return reject(error);
@@ -155,7 +155,7 @@ export namespace ActivationUtils {
                         .then(
                             _success => {},
                             reason => {
-                                console.log(`Error: ${reason}`);
+                                QLogger.error(`Error: ${reason}`, this);
                                 vscode.window.showErrorMessage(reason);
                             }
                         );
@@ -179,7 +179,7 @@ export namespace ActivationUtils {
                         .then(
                             _success => {},
                             reason => {
-                                console.log(`Error: ${reason}`);
+                                QLogger.error(`Error: ${reason}`, this);
                                 vscode.window.showErrorMessage(reason);
                             }
                         );
@@ -204,7 +204,7 @@ export namespace ActivationUtils {
                         .then(
                             _success => {},
                             reason => {
-                                console.log(`Error: ${reason}`);
+                                QLogger.error(`Error: ${reason}`, this);
                                 vscode.window.showErrorMessage(reason);
                             }
                         );
@@ -243,7 +243,7 @@ export namespace ActivationUtils {
                         .then(
                             _success => {},
                             reason => {
-                                console.log(`Error: ${reason}`);
+                                QLogger.error(`Error: ${reason}`, this);
                                 vscode.window.showErrorMessage(reason);
                             }
                         );
@@ -281,7 +281,7 @@ export namespace ActivationUtils {
                         .then(
                             _success => {},
                             reason => {
-                                console.log(`Error: ${reason}`);
+                                QLogger.error(`Error: ${reason}`, this);
                                 vscode.window.showErrorMessage(reason);
                             }
                         );
@@ -313,7 +313,7 @@ export namespace ActivationUtils {
                         .then(
                             _success => {},
                             reason => {
-                                console.log(`Error: ${reason}`);
+                                QLogger.error(`Error: ${reason}`, this);
                                 vscode.window.showErrorMessage(reason);
                             }
                         );
@@ -345,7 +345,7 @@ export namespace ActivationUtils {
                         .then(
                             _success => {},
                             reason => {
-                                console.log(`Error: ${reason}`);
+                                QLogger.error(`Error: ${reason}`, this);
                                 vscode.window.showErrorMessage(reason);
                             }
                         );
@@ -377,7 +377,7 @@ export namespace ActivationUtils {
                         .then(
                             _success => {},
                             reason => {
-                                console.log(`Error: ${reason}`);
+                                QLogger.error(`Error: ${reason}`, this);
                                 vscode.window.showErrorMessage(reason);
                             }
                         );
@@ -409,7 +409,7 @@ export namespace ActivationUtils {
                         .then(
                             _success => {},
                             reason => {
-                                console.log(`Error: ${reason}`);
+                                QLogger.error(`Error: ${reason}`, this);
                                 vscode.window.showErrorMessage(reason);
                             }
                         );
@@ -529,7 +529,7 @@ export namespace ActivationUtils {
                             })
                             .then((_url: string | undefined) => {
                                 if (_url !== '' || _url !== undefined) {
-                                    console.log('url', url);
+                                    QLogger.verbose(`url: ${url}`, this);
                                     url = _url;
                                 }
                                 saveQConfig(apiToken, hub, group, project, url)
