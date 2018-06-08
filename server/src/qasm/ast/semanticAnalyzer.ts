@@ -15,10 +15,10 @@
 
 'use strict';
 
-import { ParserRuleContext, Token } from 'antlr4ts';
+import { ParserRuleContext } from 'antlr4ts';
 import { SymbolTable } from '../../tools/symbolTable';
-import { ParserError, ParseErrorLevel } from '../../types';
-import { AbstractParseTreeVisitor, TerminalNode } from 'antlr4ts/tree';
+import { ParserError } from '../../types';
+import { AbstractParseTreeVisitor } from 'antlr4ts/tree';
 import { QasmParserV2Visitor } from '../antlrV2/QasmParserV2Visitor';
 import {
     CodeContext,
@@ -30,327 +30,138 @@ import {
     BarrierGateContext,
     CustomArglistContext
 } from '../antlrv2/QasmParserV2';
-import { RegisterSymbol } from '../compiler/symbolTable';
 import { ErrorMessages } from './errorMessages';
 import { ErrorBuilder, PositionAdapter } from './errorBuilder';
 import { ErrorListener } from '../parser';
-import { ExistingSymbolValidation, SemanticRulesValidator, RegistersOfSameSizeRule } from './validations';
+import {
+    SemanticRulesValidator,
+    RegistersOfSameSizeRule,
+    ExistingSymbolValidationRule,
+    ClassicalRegisterTypeRule,
+    ClassicalRegisterComparationRule,
+    QuantumRegisterTypeRule,
+    SemanticRule,
+    ValidRegisterReferenceRule
+} from './validations';
 
 export namespace SemanticAnalyzer {
-    export function analyze(
-        tree: ParserRuleContext,
-        symbolTable: SymbolTable,
-        errorListener: ErrorListener
-    ): ParserError[] {
+    export function analyze(tree: ParserRuleContext, symbolTable: SymbolTable, errorListener: ErrorListener) {
         let validator = new SemanticValidator(symbolTable, errorListener);
-        return tree.accept(validator);
+        tree.accept(validator);
     }
 }
 
-class SemanticValidator extends AbstractParseTreeVisitor<ParserError[]> implements QasmParserV2Visitor<ParserError[]> {
+class SemanticValidator extends AbstractParseTreeVisitor<void> implements QasmParserV2Visitor<void> {
     constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {
         super();
     }
 
-    defaultResult(): ParserError[] {
-        return [];
-    }
+    defaultResult() {}
 
-    visitCode(ctx: CodeContext): ParserError[] {
+    visitCode(ctx: CodeContext) {
         if (ctx.sentences() === undefined) {
-            return [];
+            return;
         }
 
         let validator = new SentenceValidator(this.symbolTable, this.errorListener);
-
-        return ctx.sentences().accept(validator);
+        ctx.sentences().accept(validator);
     }
 }
 
-class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implements QasmParserV2Visitor<ParserError[]> {
-    errors: ParserError[] = [];
-    private existingSymbolValidation: ExistingSymbolValidation;
+class SentenceValidator extends AbstractParseTreeVisitor<void> implements QasmParserV2Visitor<void> {
     private rulesValidator: SemanticRulesValidator;
 
-    constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {
+    constructor(symbolTable: SymbolTable, errorListener: ErrorListener) {
         super();
-
-        this.existingSymbolValidation = new ExistingSymbolValidation(this.symbolTable, this.errorListener);
         this.rulesValidator = new SemanticRulesValidator(symbolTable, errorListener);
     }
 
-    defaultResult(): ParserError[] {
-        return this.errors;
+    defaultResult() {}
+
+    visitConditional(ctx: ConditionalContext) {
+        let position = PositionAdapter.fromTerminalNode(ctx.Id());
+        this.rulesValidator.validate([
+            new ExistingSymbolValidationRule(ctx.Id().text, position),
+            new ClassicalRegisterTypeRule(ctx.Id().text, position),
+            new ClassicalRegisterComparationRule(ctx.Id().text, +ctx.Int().text, position)
+        ]);
     }
 
-    visitConditional(ctx: ConditionalContext): ParserError[] {
-        this.checkClassicalRegisterType(ctx.Id());
-        this.checkComparationValue(ctx.Id(), ctx.Int());
-
-        return this.errors;
-    }
-
-    visitMeasure(ctx: MeasureContext): ParserError[] {
+    visitMeasure(ctx: MeasureContext) {
         if (ctx._classicalRegister !== undefined && ctx._quantumRegister !== undefined) {
-            this.checkQuantumRegister(ctx._quantumRegister);
-            this.checkClassicalRegister(ctx._classicalRegister);
+            let qRegister = ctx._quantumRegister.text;
+            let qRegisterPosition = PositionAdapter.fromToken(ctx._quantumRegister);
+            let cRegister = ctx._classicalRegister.text;
+            let cRegisterPosition = PositionAdapter.fromToken(ctx._classicalRegister);
 
-            let sizeRule = new RegistersOfSameSizeRule(
-                ctx._quantumRegister.text,
-                ctx._classicalRegister.text,
-                PositionAdapter.fromToken(ctx._classicalRegister)
-            );
-
-            this.rulesValidator.validate([sizeRule]);
+            this.rulesValidator.validate([
+                new ExistingSymbolValidationRule(qRegister, qRegisterPosition),
+                new QuantumRegisterTypeRule(qRegister, qRegisterPosition),
+                new ExistingSymbolValidationRule(cRegister, cRegisterPosition),
+                new ClassicalRegisterTypeRule(cRegister, cRegisterPosition),
+                new RegistersOfSameSizeRule(qRegister, cRegister, cRegisterPosition)
+            ]);
         }
 
         this.visitChildren(ctx);
-
-        return this.errors;
     }
 
-    visitBarrierGate(ctx: BarrierGateContext): ParserError[] {
+    visitBarrierGate(ctx: BarrierGateContext) {
         if (ctx.Id() !== undefined) {
-            this.checkQuantumRegister2(ctx.Id());
+            let position = PositionAdapter.fromTerminalNode(ctx.Id());
+
+            this.rulesValidator.validate([
+                new ExistingSymbolValidationRule(ctx.Id().text, position),
+                new QuantumRegisterTypeRule(ctx.Id().text, position)
+            ]);
         }
 
         this.visitChildren(ctx);
-
-        return this.errors;
     }
 
-    visitCustomArglist(ctx: CustomArglistContext): ParserError[] {
+    visitCustomArglist(ctx: CustomArglistContext) {
         if (ctx._gate !== undefined) {
             let position = PositionAdapter.fromToken(ctx._gate);
-            this.existingSymbolValidation.apply(ctx._gate.text, position);
+
+            this.rulesValidator.validate([new ExistingSymbolValidationRule(ctx._gate.text, position)]);
         }
 
         this.visitChildren(ctx);
-
-        return this.errors;
     }
 
-    visitQbitOrQreg(ctx: QbitOrQregContext): ParserError[] {
+    visitQbitOrQreg(ctx: QbitOrQregContext) {
         console.log(`Visiting QbitOrQreg with ${ctx.text}`);
 
-        let validator = new RegisterValidator(this.symbolTable, this.errors);
+        let rules: SemanticRule[] = [];
         let position = PositionAdapter.fromTerminalNode(ctx.Id());
 
-        validator.validateQuantumRegister(ctx.Id().text, position);
+        rules.push(new ExistingSymbolValidationRule(ctx.Id().text, position));
+        rules.push(new QuantumRegisterTypeRule(ctx.Id().text, position));
 
-        return this.errors;
-    }
-
-    visitQubit(ctx: QubitContext): ParserError[] {
-        this.checkQbitReference(ctx.Id(), ctx.Int());
-
-        return this.errors;
-    }
-
-    visitCbit(ctx: CbitContext): ParserError[] {
-        this.checkCbitReference(ctx.Id(), ctx.Int());
-
-        return this.errors;
-    }
-
-    checkClassicalRegisterType(id: TerminalNode) {
-        let symbol = this.symbolTable.lookup(id.text);
-        if (symbol === null) {
-            let message = `Symbol ${id.text} is not previously defined.`;
-            let error = {
-                line: id.symbol.line - 1,
-                start: id.symbol.charPositionInLine,
-                end: id.symbol.charPositionInLine + id.text.length,
-                message: message,
-                level: ParseErrorLevel.ERROR
-            };
-            this.errors.push(error);
-        } else {
-            if (symbol.type.getName() !== 'Creg') {
-                let message = `Symbol ${id.text} must be a classical register to be compared.`;
-                let error = {
-                    line: id.symbol.line - 1,
-                    start: id.symbol.charPositionInLine,
-                    end: id.symbol.charPositionInLine + id.text.length,
-                    message: message,
-                    level: ParseErrorLevel.ERROR
-                };
-                this.errors.push(error);
-            }
-        }
-    }
-
-    private checkComparationValue(id: TerminalNode, position: TerminalNode) {
-        let symbol = this.symbolTable.lookup(id.text);
-        if (symbol instanceof RegisterSymbol) {
-            let positionValue = +position.text;
-            let maximumValue = Math.pow(2, symbol.size);
-
-            if (positionValue >= maximumValue) {
-                let message = `${positionValue} is not a valid comparisson because ${id.text} is a register of size ${
-                    symbol.size
-                }.`;
-                let error = {
-                    line: id.symbol.line - 1,
-                    start: id.symbol.charPositionInLine,
-                    end: id.symbol.charPositionInLine + id.text.length,
-                    message: message,
-                    level: ParseErrorLevel.ERROR
-                };
-                this.errors.push(error);
-            }
-        }
-    }
-
-    private checkQbitReference(id: TerminalNode, position: TerminalNode) {
-        let symbol = this.symbolTable.lookup(id.text);
-        if (symbol === null) {
-            let message = ErrorMessages.notPreviouslyDefined(id.text);
-            let error = ErrorBuilder.error(message, PositionAdapter.fromTerminalNode(id));
-            this.errors.push(error);
-
-            return;
+        if (ctx.Int()) {
+            rules.push(new ValidRegisterReferenceRule(ctx.Id().text, +ctx.Int().text, position));
         }
 
-        if (symbol.type.getName() === 'Qreg') {
-            let register = symbol as RegisterSymbol;
-            let positionValue = +position.text;
-
-            if (positionValue >= register.size) {
-                let message = ErrorMessages.indexOutOfBound(id.text, register.size);
-                let error = ErrorBuilder.error(message, PositionAdapter.fromTerminalNode(id));
-                this.errors.push(error);
-            }
-        } else {
-            let message = ErrorMessages.expectingQuantumRegister(id.text);
-            let error = ErrorBuilder.error(message, PositionAdapter.fromTerminalNode(id));
-            this.errors.push(error);
-        }
+        this.rulesValidator.validate(rules);
     }
 
-    private checkCbitReference(id: TerminalNode, position: TerminalNode) {
-        let symbol = this.symbolTable.lookup(id.text);
-        if (symbol === null) {
-            let message = `Variable ${id.text} is not previously defined.`;
-            let error = {
-                line: id.symbol.line - 1,
-                start: id.symbol.charPositionInLine,
-                end: id.symbol.charPositionInLine + id.text.length,
-                message: message,
-                level: ParseErrorLevel.ERROR
-            };
-            this.errors.push(error);
+    visitQubit(ctx: QubitContext) {
+        let position = PositionAdapter.fromTerminalNode(ctx.Id());
 
-            return;
-        }
-
-        if (symbol.type.getName() === 'Creg') {
-            let register = symbol as RegisterSymbol;
-            let positionValue = +position.text;
-
-            if (positionValue >= register.size) {
-                let message = ErrorMessages.indexOutOfBound(id.text, register.size);
-                let error = ErrorBuilder.error(message, PositionAdapter.fromTerminalNode(id));
-                this.errors.push(error);
-            }
-        } else {
-            let message = `Expecting a classical register but ${id.text} has type ${symbol.type.getName()}`;
-            let error = {
-                line: id.symbol.line - 1,
-                start: id.symbol.charPositionInLine,
-                end: id.symbol.charPositionInLine + id.text.length,
-                message: message,
-                level: ParseErrorLevel.ERROR
-            };
-            this.errors.push(error);
-        }
+        this.rulesValidator.validate([
+            new ExistingSymbolValidationRule(ctx.Id().text, position),
+            new QuantumRegisterTypeRule(ctx.Id().text, position),
+            new ValidRegisterReferenceRule(ctx.Id().text, +ctx.Int().text, position)
+        ]);
     }
 
-    checkQuantumRegister(token: Token) {
-        let symbol = this.symbolTable.lookup(token.text);
-        if (symbol === null) {
-            let message = `Symbol ${token.text} is not previously defined.`;
-            let error = {
-                line: token.line - 1,
-                start: token.charPositionInLine,
-                end: token.charPositionInLine + token.text.length,
-                message: message,
-                level: ParseErrorLevel.ERROR
-            };
-            this.errors.push(error);
-        } else {
-            if (symbol.type.getName() !== 'Qreg') {
-                let message = `Expecting quantum register at ${token.text} but it is another type.`;
-                let error = {
-                    line: token.line - 1,
-                    start: token.charPositionInLine,
-                    end: token.charPositionInLine + token.text.length,
-                    message: message,
-                    level: ParseErrorLevel.ERROR
-                };
-                this.errors.push(error);
-            }
-        }
-    }
+    visitCbit(ctx: CbitContext) {
+        let position = PositionAdapter.fromTerminalNode(ctx.Id());
 
-    checkQuantumRegister2(node: TerminalNode) {
-        let symbol = this.symbolTable.lookup(node.text);
-        if (symbol === null) {
-            let message = ErrorMessages.notPreviouslyDefined(node.text);
-            let error = ErrorBuilder.error(message, PositionAdapter.fromTerminalNode(node));
-            this.errors.push(error);
-        } else {
-            if (symbol.type.getName() !== 'Qreg') {
-                let message = ErrorMessages.expectingQuantumRegister(node.text);
-                let error = ErrorBuilder.error(message, PositionAdapter.fromTerminalNode(node));
-                this.errors.push(error);
-            }
-        }
-    }
-
-    checkClassicalRegister(token: Token) {
-        let symbol = this.symbolTable.lookup(token.text);
-        if (symbol === null) {
-            let message = `Symbol ${token.text} is not previously defined.`;
-            let error = {
-                line: token.line - 1,
-                start: token.charPositionInLine,
-                end: token.charPositionInLine + token.text.length,
-                message: message,
-                level: ParseErrorLevel.ERROR
-            };
-            this.errors.push(error);
-        } else {
-            if (symbol.type.getName() !== 'Creg') {
-                let message = `Expecting classical register at ${token.text} but it is another type.`;
-                let error = {
-                    line: token.line - 1,
-                    start: token.charPositionInLine,
-                    end: token.charPositionInLine + token.text.length,
-                    message: message,
-                    level: ParseErrorLevel.ERROR
-                };
-                this.errors.push(error);
-            }
-        }
-    }
-}
-
-class RegisterValidator {
-    constructor(private symbolTable: SymbolTable, private errors: ParserError[]) {}
-
-    validateQuantumRegister(name: string, position: PositionAdapter) {
-        let symbol = this.symbolTable.lookup(name);
-        if (symbol === null) {
-            let message = ErrorMessages.notPreviouslyDefined(name);
-            let error = ErrorBuilder.error(message, position);
-            this.errors.push(error);
-        } else {
-            if (symbol.type.getName() !== 'Qreg') {
-                let message = ErrorMessages.expectingQuantumRegister(name);
-                let error = ErrorBuilder.error(message, position);
-                this.errors.push(error);
-            }
-        }
+        this.rulesValidator.validate([
+            new ExistingSymbolValidationRule(ctx.Id().text, position),
+            new ClassicalRegisterTypeRule(ctx.Id().text, position),
+            new ValidRegisterReferenceRule(ctx.Id().text, +ctx.Int().text, position)
+        ]);
     }
 }

@@ -20,7 +20,7 @@ import { ErrorListener } from '../parser';
 import { ErrorMessages } from './errorMessages';
 import { PositionAdapter, ErrorBuilder } from './errorBuilder';
 import { Override } from 'antlr4ts/Decorators';
-import { RegisterSymbol } from '../compiler/symbolTable';
+import { RegisterSymbol, QASMSymbols } from '../compiler/symbolTable';
 
 export class SemanticRulesValidator {
     constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {}
@@ -74,6 +74,135 @@ export class RegistersOfSameSizeRule implements SemanticRule {
         return symbol instanceof RegisterSymbol;
     }
 }
+
+export class ExistingSymbolValidationRule implements SemanticRule {
+    constructor(private variableName: string, private position: PositionAdapter) {}
+
+    @Override
+    applyWith(symbolTable: SymbolTable, errorListener: ErrorListener) {
+        if (symbolTable.lookup(this.variableName) !== null) {
+            return;
+        }
+
+        let message = ErrorMessages.notPreviouslyDefined(this.variableName);
+        let error = ErrorBuilder.error(message, this.position);
+
+        errorListener.addError(error);
+    }
+}
+
+export class ClassicalRegisterTypeRule implements SemanticRule {
+    constructor(private variableName: string, private position: PositionAdapter) {}
+
+    @Override
+    applyWith(symbolTable: SymbolTable, errorListener: ErrorListener) {
+        let symbol = symbolTable.lookup(this.variableName);
+        if (this.mustIgnore(symbol)) {
+            return;
+        }
+
+        let message = ErrorMessages.expectingClassicalRegister(this.variableName);
+        let error = ErrorBuilder.error(message, this.position);
+        errorListener.addError(error);
+    }
+
+    private mustIgnore(symbol: Symbol): boolean {
+        if (symbol === null) {
+            return true;
+        }
+        if (symbol.type.getName() === QASMSymbols.Creg) {
+            return true;
+        }
+
+        return false;
+    }
+}
+
+export class QuantumRegisterTypeRule implements SemanticRule {
+    constructor(private variableName: string, private position: PositionAdapter) {}
+
+    @Override
+    applyWith(symbolTable: SymbolTable, errorListener: ErrorListener) {
+        let symbol = symbolTable.lookup(this.variableName);
+        if (this.mustIgnore(symbol)) {
+            return;
+        }
+
+        let message = ErrorMessages.expectingQuantumRegister(this.variableName);
+        let error = ErrorBuilder.error(message, this.position);
+        errorListener.addError(error);
+    }
+
+    private mustIgnore(symbol: Symbol): boolean {
+        if (symbol === null) {
+            return true;
+        }
+        if (symbol.type.getName() === QASMSymbols.Qreg) {
+            return true;
+        }
+
+        return false;
+    }
+}
+
+export class ClassicalRegisterComparationRule implements SemanticRule {
+    constructor(private variableName: string, private comparison: number, private position: PositionAdapter) {}
+
+    @Override
+    applyWith(symbolTable: SymbolTable, errorListener: ErrorListener) {
+        let symbol = symbolTable.lookup(this.variableName);
+        if (this.mustIgnore(symbol)) {
+            return;
+        }
+
+        let registerSize = (symbol as RegisterSymbol).size;
+        let maximumValue = Math.pow(2, registerSize) - 1;
+        if (this.comparison > maximumValue) {
+            let message = ErrorMessages.incompatibleComparationValue(this.variableName, maximumValue);
+            let error = ErrorBuilder.error(message, this.position);
+            errorListener.addError(error);
+        }
+    }
+
+    private mustIgnore(symbol: Symbol): boolean {
+        if (symbol === null) {
+            return true;
+        }
+        if (symbol.type.getName() !== QASMSymbols.Creg) {
+            return true;
+        }
+
+        return !(symbol instanceof RegisterSymbol);
+    }
+}
+
+export class ValidRegisterReferenceRule implements SemanticRule {
+    constructor(private variableName: string, private reference: number, private position: PositionAdapter) {}
+
+    @Override
+    applyWith(symbolTable: SymbolTable, errorListener: ErrorListener) {
+        let symbol = symbolTable.lookup(this.variableName);
+        if (this.mustIgnore(symbol)) {
+            return;
+        }
+
+        let registerSize = (symbol as RegisterSymbol).size;
+        if (this.reference >= registerSize) {
+            let message = ErrorMessages.indexOutOfBound(this.variableName, registerSize);
+            let error = ErrorBuilder.error(message, this.position);
+            errorListener.addError(error);
+        }
+    }
+
+    private mustIgnore(symbol: Symbol): boolean {
+        if (symbol === null) {
+            return true;
+        }
+
+        return !(symbol instanceof RegisterSymbol);
+    }
+}
+
 export class PreviousDefinitionValidation {
     constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {}
 
@@ -84,21 +213,6 @@ export class PreviousDefinitionValidation {
 
         let message = ErrorMessages.previousDefinitionOf(variableName);
         let error = ErrorBuilder.warning(message, position);
-
-        this.errorListener.addError(error);
-    }
-}
-
-export class ExistingSymbolValidation {
-    constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {}
-
-    apply(variableName: string, position: PositionAdapter) {
-        if (this.symbolTable.lookup(variableName) !== null) {
-            return;
-        }
-
-        let message = ErrorMessages.notPreviouslyDefined(variableName);
-        let error = ErrorBuilder.error(message, position);
 
         this.errorListener.addError(error);
     }

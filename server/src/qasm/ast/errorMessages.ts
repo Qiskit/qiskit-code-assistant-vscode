@@ -39,4 +39,8 @@ export namespace ErrorMessages {
     export function classicalRegisterTooSmall(quantumRegister: string, classicalRegister: string): string {
         return `The quatum register ${quantumRegister} cannot be mapped to a smaller classic register ${classicalRegister}.`;
     }
+
+    export function incompatibleComparationValue(classicalRegister: string, maxSize: number): string {
+        return `${classicalRegister} cannot be compared with a value larger than ${maxSize}`;
+    }
 }

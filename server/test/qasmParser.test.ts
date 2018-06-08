@@ -366,7 +366,7 @@ describe('A QASM parser', () => {
             let result = parser.parse(input);
 
             Expect.oneErrorLike({
-                message: 'Symbol q must be a classical register to be compared.',
+                message: ErrorMessages.expectingClassicalRegister('q'),
                 start: 15,
                 end: 16
             }).at(result.errors);
@@ -381,6 +381,18 @@ describe('A QASM parser', () => {
                 message: ErrorMessages.notPreviouslyDefined('a'),
                 start: 23,
                 end: 24
+            }).at(result.errors);
+        });
+
+        it('if a comparisson uses a value too large to the register', () => {
+            let input = `include "qelib1.inc";qreg q[2];creg c[1];if(c==2) h q[1];`;
+
+            let result = parser.parse(input);
+
+            Expect.oneErrorLike({
+                message: ErrorMessages.incompatibleComparationValue('c', 1),
+                start: 44,
+                end: 45
             }).at(result.errors);
         });
     });
