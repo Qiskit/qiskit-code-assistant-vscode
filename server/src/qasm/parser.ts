@@ -28,7 +28,7 @@ export class QASMParser implements Parser {
 
         let tree = QASMSyntacticParser.parseWithErrorListener(input, errorListener);
         let symbolTable = SymbolTableGenerator.symbolTableFor(tree, errorListener);
-        let semanticErrors = SemanticAnalyzer.analyze(tree, symbolTable);
+        let semanticErrors = SemanticAnalyzer.analyze(tree, symbolTable, errorListener);
 
         return {
             ast: tree,

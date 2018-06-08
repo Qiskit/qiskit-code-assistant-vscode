@@ -17,6 +17,7 @@
 
 import { ParserError, ParseErrorLevel } from '../../types';
 import { TerminalNode } from 'antlr4ts/tree';
+import { Token } from 'antlr4ts';
 
 export namespace ErrorBuilder {
     export function error(message: string, position: PositionAdapter): ParserError {
@@ -52,6 +53,15 @@ export class PositionAdapter {
         instance.line = node.symbol.line - 1;
         instance.start = node.symbol.charPositionInLine;
         instance.end = node.symbol.charPositionInLine + node.text.length;
+
+        return instance;
+    }
+
+    static fromToken(token: Token): PositionAdapter {
+        let instance = new PositionAdapter();
+        instance.line = token.line - 1;
+        instance.start = token.charPositionInLine;
+        instance.end = token.charPositionInLine + token.text.length;
 
         return instance;
     }

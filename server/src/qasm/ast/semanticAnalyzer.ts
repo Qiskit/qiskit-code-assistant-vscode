@@ -27,21 +27,28 @@ import {
     CbitContext,
     MeasureContext,
     QbitOrQregContext,
-    BarrierGateContext
+    BarrierGateContext,
+    CustomArglistContext
 } from '../antlrv2/QasmParserV2';
 import { RegisterSymbol } from '../compiler/symbolTable';
 import { ErrorMessages } from './errorMessages';
 import { ErrorBuilder, PositionAdapter } from './errorBuilder';
+import { ErrorListener } from '../parser';
+import { ExistingSymbolValidation, SemanticRulesValidator, RegistersOfSameSizeRule } from './validations';
 
 export namespace SemanticAnalyzer {
-    export function analyze(tree: ParserRuleContext, symbolTable: SymbolTable): ParserError[] {
-        let validator = new SemanticValidator(symbolTable);
+    export function analyze(
+        tree: ParserRuleContext,
+        symbolTable: SymbolTable,
+        errorListener: ErrorListener
+    ): ParserError[] {
+        let validator = new SemanticValidator(symbolTable, errorListener);
         return tree.accept(validator);
     }
 }
 
 class SemanticValidator extends AbstractParseTreeVisitor<ParserError[]> implements QasmParserV2Visitor<ParserError[]> {
-    constructor(private symbolTable: SymbolTable) {
+    constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {
         super();
     }
 
@@ -54,7 +61,7 @@ class SemanticValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
             return [];
         }
 
-        let validator = new SentenceValidator(this.symbolTable);
+        let validator = new SentenceValidator(this.symbolTable, this.errorListener);
 
         return ctx.sentences().accept(validator);
     }
@@ -62,9 +69,14 @@ class SemanticValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
 
 class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implements QasmParserV2Visitor<ParserError[]> {
     errors: ParserError[] = [];
+    private existingSymbolValidation: ExistingSymbolValidation;
+    private rulesValidator: SemanticRulesValidator;
 
-    constructor(private symbolTable: SymbolTable) {
+    constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {
         super();
+
+        this.existingSymbolValidation = new ExistingSymbolValidation(this.symbolTable, this.errorListener);
+        this.rulesValidator = new SemanticRulesValidator(symbolTable, errorListener);
     }
 
     defaultResult(): ParserError[] {
@@ -82,6 +94,14 @@ class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
         if (ctx._classicalRegister !== undefined && ctx._quantumRegister !== undefined) {
             this.checkQuantumRegister(ctx._quantumRegister);
             this.checkClassicalRegister(ctx._classicalRegister);
+
+            let sizeRule = new RegistersOfSameSizeRule(
+                ctx._quantumRegister.text,
+                ctx._classicalRegister.text,
+                PositionAdapter.fromToken(ctx._classicalRegister)
+            );
+
+            this.rulesValidator.validate([sizeRule]);
         }
 
         this.visitChildren(ctx);
@@ -92,6 +112,17 @@ class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
     visitBarrierGate(ctx: BarrierGateContext): ParserError[] {
         if (ctx.Id() !== undefined) {
             this.checkQuantumRegister2(ctx.Id());
+        }
+
+        this.visitChildren(ctx);
+
+        return this.errors;
+    }
+
+    visitCustomArglist(ctx: CustomArglistContext): ParserError[] {
+        if (ctx._gate !== undefined) {
+            let position = PositionAdapter.fromToken(ctx._gate);
+            this.existingSymbolValidation.apply(ctx._gate.text, position);
         }
 
         this.visitChildren(ctx);

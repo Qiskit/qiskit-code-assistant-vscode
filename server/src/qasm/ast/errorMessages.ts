@@ -35,4 +35,8 @@ export namespace ErrorMessages {
     export function indexOutOfBound(name: string, size: number): string {
         return `Index out of bound, register ${name} has size ${size}.`;
     }
+
+    export function classicalRegisterTooSmall(quantumRegister: string, classicalRegister: string): string {
+        return `The quatum register ${quantumRegister} cannot be mapped to a smaller classic register ${classicalRegister}.`;
+    }
 }

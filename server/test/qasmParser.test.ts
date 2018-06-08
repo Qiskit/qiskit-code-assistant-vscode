@@ -270,9 +270,9 @@ describe('A QASM parser', () => {
             let result = parser.parse(input);
 
             Expect.oneErrorLike({
-                message: 'The quatum register foo cannot be mapped to a smaller classic register bar',
-                start: 32,
-                end: 35
+                message: ErrorMessages.classicalRegisterTooSmall('foo', 'bar'),
+                start: 39,
+                end: 42
             }).at(result.errors);
         });
 

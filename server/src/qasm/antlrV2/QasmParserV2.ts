@@ -1476,7 +1476,7 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 1);
 				{
 				this.state = 311;
-				this.match(QasmParserV2.Id);
+				_localctx._gate = this.match(QasmParserV2.Id);
 				this.state = 312;
 				this.match(QasmParserV2.LeftParen);
 				this.state = 313;
@@ -1492,7 +1492,7 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 2);
 				{
 				this.state = 317;
-				this.match(QasmParserV2.Id);
+				_localctx._gate = this.match(QasmParserV2.Id);
 				this.state = 318;
 				this.qubitAndQregList();
 				}
@@ -2813,7 +2813,7 @@ export class CbitContext extends ParserRuleContext {
 
 
 export class CustomArglistContext extends ParserRuleContext {
-	public Id(): TerminalNode { return this.getToken(QasmParserV2.Id, 0); }
+	public _gate: Token;
 	public LeftParen(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.LeftParen, 0); }
 	public paramsListNumber(): ParamsListNumberContext | undefined {
 		return this.tryGetRuleContext(0, ParamsListNumberContext);
@@ -2822,6 +2822,7 @@ export class CustomArglistContext extends ParserRuleContext {
 	public qubitAndQregList(): QubitAndQregListContext {
 		return this.getRuleContext(0, QubitAndQregListContext);
 	}
+	public Id(): TerminalNode { return this.getToken(QasmParserV2.Id, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);

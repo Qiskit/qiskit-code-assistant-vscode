@@ -161,8 +161,8 @@ cbit
     ;
 
 customArglist
-    : Id LeftParen paramsListNumber RightParen qubitAndQregList 
-    | Id qubitAndQregList 
+    : gate=Id LeftParen paramsListNumber RightParen qubitAndQregList 
+    | gate=Id qubitAndQregList 
     ;
 
 paramsListNumber

@@ -15,11 +15,65 @@
 
 'use strict';
 
-import { SymbolTable } from '../../tools/symbolTable';
+import { SymbolTable, Symbol } from '../../tools/symbolTable';
 import { ErrorListener } from '../parser';
 import { ErrorMessages } from './errorMessages';
 import { PositionAdapter, ErrorBuilder } from './errorBuilder';
+import { Override } from 'antlr4ts/Decorators';
+import { RegisterSymbol } from '../compiler/symbolTable';
 
+export class SemanticRulesValidator {
+    constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {}
+
+    validate(rules: SemanticRule[]) {
+        if (rules === undefined || rules === null) {
+            return;
+        }
+
+        rules.forEach(rule => rule.applyWith(this.symbolTable, this.errorListener));
+    }
+}
+
+export interface SemanticRule {
+    applyWith(symbolTable: SymbolTable, errorListener: ErrorListener): void;
+}
+
+export class RegistersOfSameSizeRule implements SemanticRule {
+    constructor(
+        private quantumRegister: string,
+        private classicalRegister: string,
+        private position: PositionAdapter
+    ) {}
+
+    @Override
+    applyWith(symbolTable: SymbolTable, errorListener: ErrorListener) {
+        let quantumRegisterSymbol = symbolTable.lookup(this.quantumRegister);
+        if (!this.isValidSymbol(quantumRegisterSymbol)) {
+            return;
+        }
+        let classicalRegisterSymbol = symbolTable.lookup(this.classicalRegister);
+        if (!this.isValidSymbol(classicalRegisterSymbol)) {
+            return;
+        }
+
+        let quantumRegisterSize = (quantumRegisterSymbol as RegisterSymbol).size;
+        let classicalRegisterSize = (classicalRegisterSymbol as RegisterSymbol).size;
+        if (classicalRegisterSize < quantumRegisterSize) {
+            let message = ErrorMessages.classicalRegisterTooSmall(this.quantumRegister, this.classicalRegister);
+            let error = ErrorBuilder.error(message, this.position);
+
+            errorListener.addError(error);
+        }
+    }
+
+    private isValidSymbol(symbol: Symbol) {
+        if (symbol === null) {
+            return false;
+        }
+
+        return symbol instanceof RegisterSymbol;
+    }
+}
 export class PreviousDefinitionValidation {
     constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {}
 
@@ -30,6 +84,21 @@ export class PreviousDefinitionValidation {
 
         let message = ErrorMessages.previousDefinitionOf(variableName);
         let error = ErrorBuilder.warning(message, position);
+
+        this.errorListener.addError(error);
+    }
+}
+
+export class ExistingSymbolValidation {
+    constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {}
+
+    apply(variableName: string, position: PositionAdapter) {
+        if (this.symbolTable.lookup(variableName) !== null) {
+            return;
+        }
+
+        let message = ErrorMessages.notPreviouslyDefined(variableName);
+        let error = ErrorBuilder.error(message, position);
 
         this.errorListener.addError(error);
     }
