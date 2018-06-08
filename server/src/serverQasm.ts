@@ -37,8 +37,6 @@ documents.listen(connection);
 let compilationTool: CompilationTool = new CompilationTool(connection, new QASMParser(), new QASMSuggester());
 
 connection.onInitialize((_params): InitializeResult => {
-    connection.console.log('QASM language support is being initialized ...');
-
     return {
         capabilities: {
             textDocumentSync: documents.syncKind,

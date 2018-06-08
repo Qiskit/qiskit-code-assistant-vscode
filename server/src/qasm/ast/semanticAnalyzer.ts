@@ -130,8 +130,6 @@ class SentenceValidator extends AbstractParseTreeVisitor<void> implements QasmPa
     }
 
     visitQbitOrQreg(ctx: QbitOrQregContext) {
-        console.log(`Visiting QbitOrQreg with ${ctx.text}`);
-
         let rules: SemanticRule[] = [];
         let position = PositionAdapter.fromTerminalNode(ctx.Id());
 
