@@ -26,6 +26,7 @@ import { AtomFinder } from './atomFinder';
 import { ClassSymbol } from '../compiler/qiskitSymbolTable';
 import { MethodsDictionary } from './methodsDictionary';
 import { VariablesDictionary } from './variablesDictionary';
+import { QLogger } from '../../logger';
 
 export class SuggestionsCalculator {
     constructor(
@@ -59,7 +60,7 @@ export class SuggestionsCalculator {
     }
 
     private calculateSuggestions(allowedSymbols: string[]): SuggestionSymbol[] {
-        console.log(`Allowed symbols > ${allowedSymbols}`);
+        QLogger.debug(`Allowed symbols > ${allowedSymbols}`, this);
 
         let result: SuggestionSymbol[] = [];
         if (allowedSymbols.includes('trailer')) {

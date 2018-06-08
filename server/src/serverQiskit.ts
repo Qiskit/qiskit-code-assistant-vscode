@@ -25,9 +25,7 @@ import {
     TextDocumentPositionParams,
     CompletionItem
 } from 'vscode-languageserver';
-import {
-    CompilationTool
-} from './compilation';
+import { CompilationTool } from './compilation';
 import { QiskitSuggester } from './qiskit/suggester';
 import { QiskitParser } from './qiskit/parser';
 
@@ -39,9 +37,6 @@ documents.listen(connection);
 let compilationTool: CompilationTool = new CompilationTool(connection, new QiskitParser(), new QiskitSuggester());
 
 connection.onInitialize((_params): InitializeResult => {
-
-    connection.console.log('QISKit language support is being initialized ...');
-
     return {
         capabilities: {
             textDocumentSync: documents.syncKind,
@@ -52,7 +47,7 @@ connection.onInitialize((_params): InitializeResult => {
     };
 });
 
-documents.onDidChangeContent((change) => {
+documents.onDidChangeContent(change => {
     compilationTool.validateDocument(change.document);
 });
 

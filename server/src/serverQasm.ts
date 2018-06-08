@@ -25,9 +25,7 @@ import {
     TextDocumentPositionParams,
     CompletionItem
 } from 'vscode-languageserver';
-import {
-    CompilationTool
-} from './compilation';
+import { CompilationTool } from './compilation';
 import { QASMSuggester } from './qasm/suggester';
 import { QASMParser } from './qasm/parser';
 
@@ -39,9 +37,6 @@ documents.listen(connection);
 let compilationTool: CompilationTool = new CompilationTool(connection, new QASMParser(), new QASMSuggester());
 
 connection.onInitialize((_params): InitializeResult => {
-
-    connection.console.log('QASM language support is being initialized ...');
-
     return {
         capabilities: {
             textDocumentSync: documents.syncKind,
@@ -52,7 +47,7 @@ connection.onInitialize((_params): InitializeResult => {
     };
 });
 
-documents.onDidChangeContent((change) => {
+documents.onDidChangeContent(change => {
     compilationTool.validateDocument(change.document);
 });
 
