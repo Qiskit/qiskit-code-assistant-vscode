@@ -427,6 +427,7 @@ export namespace ActivationUtils {
                 ActivationUtils.setVisualizationFlag(true)
                     .then(result => {
                         vscode.window.showInformationMessage(result);
+                        Util.reloadAfterSavingSettings();
                     })
                     .catch(err => {
                         vscode.window.showErrorMessage(err);
@@ -436,6 +437,7 @@ export namespace ActivationUtils {
                 ActivationUtils.setVisualizationFlag(false)
                     .then(result => {
                         vscode.window.showInformationMessage(result);
+                        Util.reloadAfterSavingSettings();
                     })
                     .catch(err => {
                         vscode.window.showErrorMessage(err);
@@ -445,6 +447,7 @@ export namespace ActivationUtils {
                 ActivationUtils.setBootInfoFlag(true)
                     .then(result => {
                         vscode.window.showInformationMessage(result);
+                        Util.reloadAfterSavingSettings();
                     })
                     .catch(err => {
                         vscode.window.showErrorMessage(err);
@@ -454,6 +457,7 @@ export namespace ActivationUtils {
                 ActivationUtils.setBootInfoFlag(false)
                     .then(result => {
                         vscode.window.showInformationMessage(result);
+                        Util.reloadAfterSavingSettings();
                     })
                     .catch(err => {
                         vscode.window.showErrorMessage(err);
