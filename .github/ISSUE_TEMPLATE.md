@@ -5,7 +5,7 @@
 
 <!-- ⚠️ Before writing your issue make sure you are using: -->
 <!-- VSCode 1.23.x -->
-<!-- QISKit-sdk-py ^0.5.x -->
+<!-- qiskit-core ^0.5.x -->
 <!-- The latest version of QISKit Studio -->
 
 ### Informations
