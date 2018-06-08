@@ -53,7 +53,6 @@ export namespace ActivationUtils {
                 try {
                     let config = vscode.workspace.getConfiguration('ibm-q-studio');
                     let displayBubbles = config.get('config.displayBootInfo');
-                    console.log('displayBubbles', displayBubbles);
                     if (verbose === true || displayBubbles === true) {
                         return resolve(true);
                     } else {
@@ -71,7 +70,7 @@ export namespace ActivationUtils {
             if (result === true) {
                 vscode.window.showInformationMessage(message);
             } else {
-                console.log(message);
+                QLogger.verbose(message, this);
             }
         });
     }
