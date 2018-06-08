@@ -36,10 +36,10 @@ export namespace Util {
                         value: 'YES'
                     })
                     .then((selection: string | undefined) => {
-                        if (selection === 'YES') {
-                            return resolve(vscode.commands.executeCommand('workbench.action.reloadWindow'));
-                        } else {
+                        if (selection === undefined || selection.toUpperCase() !== 'YES') {
                             return resolve('Reload your extension manually to use your new config');
+                        } else {
+                            return resolve(vscode.commands.executeCommand('workbench.action.reloadWindow'));
                         }
                     });
             } catch (err) {
