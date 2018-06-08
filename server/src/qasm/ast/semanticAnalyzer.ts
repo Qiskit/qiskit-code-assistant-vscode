@@ -15,13 +15,23 @@
 
 'use strict';
 
-import { ParserRuleContext } from 'antlr4ts';
+import { ParserRuleContext, Token } from 'antlr4ts';
 import { SymbolTable } from '../../tools/symbolTable';
 import { ParserError, ParseErrorLevel } from '../../types';
 import { AbstractParseTreeVisitor, TerminalNode } from 'antlr4ts/tree';
 import { QasmParserV2Visitor } from '../antlrV2/QasmParserV2Visitor';
-import { CodeContext, ConditionalContext, QubitContext, CbitContext } from '../antlrv2/QasmParserV2';
+import {
+    CodeContext,
+    ConditionalContext,
+    QubitContext,
+    CbitContext,
+    MeasureContext,
+    QbitOrQregContext,
+    BarrierGateContext
+} from '../antlrv2/QasmParserV2';
 import { RegisterSymbol } from '../compiler/symbolTable';
+import { ErrorMessages } from './errorMessages';
+import { ErrorBuilder, PositionAdapter } from './errorBuilder';
 
 export namespace SemanticAnalyzer {
     export function analyze(tree: ParserRuleContext, symbolTable: SymbolTable): ParserError[] {
@@ -68,6 +78,38 @@ class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
         return this.errors;
     }
 
+    visitMeasure(ctx: MeasureContext): ParserError[] {
+        if (ctx._classicalRegister !== undefined && ctx._quantumRegister !== undefined) {
+            this.checkQuantumRegister(ctx._quantumRegister);
+            this.checkClassicalRegister(ctx._classicalRegister);
+        }
+
+        this.visitChildren(ctx);
+
+        return this.errors;
+    }
+
+    visitBarrierGate(ctx: BarrierGateContext): ParserError[] {
+        if (ctx.Id() !== undefined) {
+            this.checkQuantumRegister2(ctx.Id());
+        }
+
+        this.visitChildren(ctx);
+
+        return this.errors;
+    }
+
+    visitQbitOrQreg(ctx: QbitOrQregContext): ParserError[] {
+        console.log(`Visiting QbitOrQreg with ${ctx.text}`);
+
+        let validator = new RegisterValidator(this.symbolTable, this.errors);
+        let position = PositionAdapter.fromTerminalNode(ctx.Id());
+
+        validator.validateQuantumRegister(ctx.Id().text, position);
+
+        return this.errors;
+    }
+
     visitQubit(ctx: QubitContext): ParserError[] {
         this.checkQbitReference(ctx.Id(), ctx.Int());
 
@@ -94,7 +136,7 @@ class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
             this.errors.push(error);
         } else {
             if (symbol.type.getName() !== 'Creg') {
-                let message = `${id.text} is not a classical register, but conditionals requires one.`;
+                let message = `Symbol ${id.text} must be a classical register to be compared.`;
                 let error = {
                     line: id.symbol.line - 1,
                     start: id.symbol.charPositionInLine,
@@ -132,6 +174,10 @@ class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
     private checkQbitReference(id: TerminalNode, position: TerminalNode) {
         let symbol = this.symbolTable.lookup(id.text);
         if (symbol === null) {
+            let message = ErrorMessages.notPreviouslyDefined(id.text);
+            let error = ErrorBuilder.error(message, PositionAdapter.fromTerminalNode(id));
+            this.errors.push(error);
+
             return;
         }
 
@@ -140,18 +186,21 @@ class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
             let positionValue = +position.text;
 
             if (positionValue >= register.size) {
-                let message = `Index out of bound register ${id.text} has size ${position.text}`;
-                let error = {
-                    line: id.symbol.line - 1,
-                    start: id.symbol.charPositionInLine,
-                    end: id.symbol.charPositionInLine + id.text.length,
-                    message: message,
-                    level: ParseErrorLevel.ERROR
-                };
+                let message = ErrorMessages.indexOutOfBound(id.text, register.size);
+                let error = ErrorBuilder.error(message, PositionAdapter.fromTerminalNode(id));
                 this.errors.push(error);
             }
         } else {
-            let message = `Expecting a quantum register but ${id.text} has type ${symbol.type.getName()}`;
+            let message = ErrorMessages.expectingQuantumRegister(id.text);
+            let error = ErrorBuilder.error(message, PositionAdapter.fromTerminalNode(id));
+            this.errors.push(error);
+        }
+    }
+
+    private checkCbitReference(id: TerminalNode, position: TerminalNode) {
+        let symbol = this.symbolTable.lookup(id.text);
+        if (symbol === null) {
+            let message = `Variable ${id.text} is not previously defined.`;
             let error = {
                 line: id.symbol.line - 1,
                 start: id.symbol.charPositionInLine,
@@ -160,12 +209,7 @@ class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
                 level: ParseErrorLevel.ERROR
             };
             this.errors.push(error);
-        }
-    }
 
-    private checkCbitReference(id: TerminalNode, position: TerminalNode) {
-        let symbol = this.symbolTable.lookup(id.text);
-        if (symbol === null) {
             return;
         }
 
@@ -174,14 +218,8 @@ class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
             let positionValue = +position.text;
 
             if (positionValue >= register.size) {
-                let message = `Index out of bound register ${id.text} has size ${position.text}`;
-                let error = {
-                    line: id.symbol.line - 1,
-                    start: id.symbol.charPositionInLine,
-                    end: id.symbol.charPositionInLine + id.text.length,
-                    message: message,
-                    level: ParseErrorLevel.ERROR
-                };
+                let message = ErrorMessages.indexOutOfBound(id.text, register.size);
+                let error = ErrorBuilder.error(message, PositionAdapter.fromTerminalNode(id));
                 this.errors.push(error);
             }
         } else {
@@ -194,6 +232,94 @@ class SentenceValidator extends AbstractParseTreeVisitor<ParserError[]> implemen
                 level: ParseErrorLevel.ERROR
             };
             this.errors.push(error);
+        }
+    }
+
+    checkQuantumRegister(token: Token) {
+        let symbol = this.symbolTable.lookup(token.text);
+        if (symbol === null) {
+            let message = `Symbol ${token.text} is not previously defined.`;
+            let error = {
+                line: token.line - 1,
+                start: token.charPositionInLine,
+                end: token.charPositionInLine + token.text.length,
+                message: message,
+                level: ParseErrorLevel.ERROR
+            };
+            this.errors.push(error);
+        } else {
+            if (symbol.type.getName() !== 'Qreg') {
+                let message = `Expecting quantum register at ${token.text} but it is another type.`;
+                let error = {
+                    line: token.line - 1,
+                    start: token.charPositionInLine,
+                    end: token.charPositionInLine + token.text.length,
+                    message: message,
+                    level: ParseErrorLevel.ERROR
+                };
+                this.errors.push(error);
+            }
+        }
+    }
+
+    checkQuantumRegister2(node: TerminalNode) {
+        let symbol = this.symbolTable.lookup(node.text);
+        if (symbol === null) {
+            let message = ErrorMessages.notPreviouslyDefined(node.text);
+            let error = ErrorBuilder.error(message, PositionAdapter.fromTerminalNode(node));
+            this.errors.push(error);
+        } else {
+            if (symbol.type.getName() !== 'Qreg') {
+                let message = ErrorMessages.expectingQuantumRegister(node.text);
+                let error = ErrorBuilder.error(message, PositionAdapter.fromTerminalNode(node));
+                this.errors.push(error);
+            }
+        }
+    }
+
+    checkClassicalRegister(token: Token) {
+        let symbol = this.symbolTable.lookup(token.text);
+        if (symbol === null) {
+            let message = `Symbol ${token.text} is not previously defined.`;
+            let error = {
+                line: token.line - 1,
+                start: token.charPositionInLine,
+                end: token.charPositionInLine + token.text.length,
+                message: message,
+                level: ParseErrorLevel.ERROR
+            };
+            this.errors.push(error);
+        } else {
+            if (symbol.type.getName() !== 'Creg') {
+                let message = `Expecting classical register at ${token.text} but it is another type.`;
+                let error = {
+                    line: token.line - 1,
+                    start: token.charPositionInLine,
+                    end: token.charPositionInLine + token.text.length,
+                    message: message,
+                    level: ParseErrorLevel.ERROR
+                };
+                this.errors.push(error);
+            }
+        }
+    }
+}
+
+class RegisterValidator {
+    constructor(private symbolTable: SymbolTable, private errors: ParserError[]) {}
+
+    validateQuantumRegister(name: string, position: PositionAdapter) {
+        let symbol = this.symbolTable.lookup(name);
+        if (symbol === null) {
+            let message = ErrorMessages.notPreviouslyDefined(name);
+            let error = ErrorBuilder.error(message, position);
+            this.errors.push(error);
+        } else {
+            if (symbol.type.getName() !== 'Qreg') {
+                let message = ErrorMessages.expectingQuantumRegister(name);
+                let error = ErrorBuilder.error(message, position);
+                this.errors.push(error);
+            }
         }
     }
 }

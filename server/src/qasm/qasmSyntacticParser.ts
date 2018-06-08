@@ -25,7 +25,6 @@ import {
 } from 'antlr4ts';
 import { QasmLexerV2 } from './antlrV2/QasmLexerV2';
 import { QasmParserV2 } from './antlrV2/QasmParserV2';
-import { ErrorListener } from '../qiskit/parser';
 
 export namespace QASMSyntacticParser {
     export function parse(input: string): ParserRuleContext {

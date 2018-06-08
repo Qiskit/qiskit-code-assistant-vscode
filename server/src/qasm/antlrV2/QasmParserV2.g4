@@ -149,7 +149,7 @@ unaryOp
 
 measure
     : Measure qubit Assign cbit 
-    | Measure q=Id  Assign c=Id
+    | Measure quantumRegister=Id  Assign classicalRegister=Id
     ;
 
 qubit
@@ -195,6 +195,5 @@ qubitList
     ; 
 
 resetGate
-    : Reset Id 
-    | Reset qubit
+    : Reset qbitOrQreg
     ;

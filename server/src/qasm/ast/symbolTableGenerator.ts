@@ -33,6 +33,7 @@ import { ParserRuleContext } from 'antlr4ts';
 import { QASMSyntacticParser } from '../qasmSyntacticParser';
 import { SymbolTableResult } from './types';
 import { ParserError, ParseErrorLevel } from '../../types';
+import { ErrorMessages } from './errorMessages';
 
 export namespace SymbolTableGenerator {
     export function symbolTableFor(tree: ParserRuleContext): SymbolTableResult {
@@ -143,7 +144,7 @@ class DefinitionMatcher extends AbstractParseTreeVisitor<ParserError[]> implemen
             return;
         }
 
-        let message = `Variable "${node.text}" was previously defined.`;
+        let message = ErrorMessages.previousDefinitionOf(node.text);
         let error = {
             line: node.symbol.line - 1,
             start: node.symbol.charPositionInLine,

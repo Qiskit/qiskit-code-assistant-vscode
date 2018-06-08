@@ -15,19 +15,8 @@
 
 'use strict';
 
-import {
-    ANTLRInputStream,
-    CommonTokenStream,
-    ANTLRErrorListener,
-    CommonToken,
-    Token,
-    Recognizer,
-    RecognitionException,
-    ConsoleErrorListener
-} from 'antlr4ts';
+import { ANTLRErrorListener, CommonToken, Token, Recognizer, RecognitionException } from 'antlr4ts';
 import { Parser, ParserResult, ParserError, ParseErrorLevel } from '../types';
-import { QasmLexer } from './antlr/QasmLexer';
-import { QasmParser } from './antlr/QasmParser';
 import { Override } from 'antlr4ts/Decorators';
 import { SymbolTableGenerator } from './ast/symbolTableGenerator';
 import { SemanticAnalyzer } from './ast/semanticAnalyzer';
