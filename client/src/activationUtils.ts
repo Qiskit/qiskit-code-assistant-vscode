@@ -45,7 +45,7 @@ export namespace ActivationUtils {
         });
     }
 
-    export function showInfoBubbles(): Q.Promise<string> {
+    export function showInfoBubbles(verbose: boolean | false): Q.Promise<string> {
         return Q.Promise((resolve, reject) => {
             if (checkFirstRun() === true) {
                 return resolve(true);
@@ -54,7 +54,7 @@ export namespace ActivationUtils {
                     let config = vscode.workspace.getConfiguration('ibm-q-studio');
                     let displayBubbles = config.get('config.displayBootInfo');
                     console.log('displayBubbles', displayBubbles);
-                    if (displayBubbles === true) {
+                    if (verbose === true || displayBubbles === true) {
                         return resolve(true);
                     } else {
                         return resolve(false);
@@ -66,8 +66,8 @@ export namespace ActivationUtils {
         });
     }
 
-    export function showExtensionBootInfo(message: string) {
-        showInfoBubbles().then(result => {
+    export function showExtensionBootInfo(message: string, verbose: boolean | false) {
+        showInfoBubbles(verbose).then(result => {
             if (result === true) {
                 vscode.window.showInformationMessage(message);
             } else {
@@ -76,7 +76,7 @@ export namespace ActivationUtils {
         });
     }
 
-    export function checkDependencies(): Q.Promise<string> {
+    export function checkDependencies(verbose: boolean | false): Q.Promise<string> {
         let depMgr = new DependencyMgr();
         return Q.Promise((resolve, reject) => {
             return depMgr
@@ -89,7 +89,7 @@ export namespace ActivationUtils {
                         QLogger.verbose(`Package: ${dep.Name} Version: ${dep.InstalledVersion}`, this);
                         depsList += `👌 ${dep.Name} v ${dep.InstalledVersion}\n`;
                     });
-                    showExtensionBootInfo(`IBM Q Studio dependencies found! ${depsList}`);
+                    showExtensionBootInfo(`IBM Q Studio dependencies found! ${depsList}`, verbose);
                     // Check for pyhton packages!
                 })
                 .then(() => {
@@ -98,10 +98,10 @@ export namespace ActivationUtils {
 
                     let packMgr = new PackageMgr();
                     return packMgr
-                        .check()
+                        .check(verbose)
                         .then(results => {
                             QLogger.verbose(`packMgr.check extension.ts ${results}`, this);
-                            showExtensionBootInfo(results);
+                            showExtensionBootInfo(results, verbose);
                             return resolve();
                         })
                         .catch(err => {
@@ -131,7 +131,7 @@ export namespace ActivationUtils {
         const getUserCreditsScript = Util.getOSDependentPath('../../resources/qiskitScripts/getUserCredits.py');
 
         context.subscriptions.push(
-            vscode.commands.registerCommand('qstudio.checkDependencies', () => ActivationUtils.checkDependencies()),
+            vscode.commands.registerCommand('qstudio.checkDependencies', () => ActivationUtils.checkDependencies(true)),
             vscode.commands.registerCommand('qstudio.runQISKitCode', () =>
                 CommandExecutor.execPythonActiveEditor().then(codeResult => {
                     let resultProvider = new ResultProvider();
