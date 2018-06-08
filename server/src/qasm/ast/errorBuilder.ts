@@ -35,7 +35,7 @@ export namespace ErrorBuilder {
             start: position.start,
             end: position.end,
             message: message,
-            level: ParseErrorLevel.ERROR
+            level: ParseErrorLevel.WARNING
         };
     }
 }

@@ -25,28 +25,24 @@ import { QASMSyntacticParser } from './qasmSyntacticParser';
 export class QASMParser implements Parser {
     parse(input: string): ParserResult {
         let errorListener = new ErrorListener();
+
         let tree = QASMSyntacticParser.parseWithErrorListener(input, errorListener);
-
-        let symbolTableResult = SymbolTableGenerator.symbolTableFor(tree);
-        symbolTableResult.symbolTable.print();
-        symbolTableResult.errors.forEach(error =>
-            console.log(`${error.level} @ ${error.line}(${error.start}:${error.end}) - ${error.message}`)
-        );
-
-        let semanticErrors = SemanticAnalyzer.analyze(tree, symbolTableResult.symbolTable);
-        semanticErrors.forEach(error =>
-            console.log(`${error.level} @ ${error.line}(${error.start}:${error.end}) - ${error.message}`)
-        );
+        let symbolTable = SymbolTableGenerator.symbolTableFor(tree, errorListener);
+        let semanticErrors = SemanticAnalyzer.analyze(tree, symbolTable);
 
         return {
             ast: tree,
-            errors: [...errorListener.errors, ...symbolTableResult.errors, ...semanticErrors]
+            errors: [...errorListener.errors, ...semanticErrors]
         };
     }
 }
 
-class ErrorListener implements ANTLRErrorListener<CommonToken> {
+export class ErrorListener implements ANTLRErrorListener<CommonToken> {
     errors: ParserError[] = [];
+
+    addError(error: ParserError) {
+        this.errors.push(error);
+    }
 
     @Override
     syntaxError<T extends Token>(

@@ -20,68 +20,53 @@ import {
     CregDefinitionContext,
     GateDefinitionContext,
     OpaqueDefinitionContext,
-    IncludeLibraryContext,
-    CodeContext
+    IncludeLibraryContext
 } from '../antlrV2/QasmParserV2';
 import { SymbolTable } from '../../tools/symbolTable';
-import { AbstractParseTreeVisitor, TerminalNode } from 'antlr4ts/tree';
+import { AbstractParseTreeVisitor } from 'antlr4ts/tree';
 import { QasmParserV2Visitor } from '../antlrV2/QasmParserV2Visitor';
 import { SymbolTableBuilder, RegisterSymbol, VariableSymbol } from '../compiler/symbolTable';
 import path = require('path');
 import fs = require('fs');
 import { ParserRuleContext } from 'antlr4ts';
 import { QASMSyntacticParser } from '../qasmSyntacticParser';
-import { SymbolTableResult } from './types';
-import { ParserError, ParseErrorLevel } from '../../types';
-import { ErrorMessages } from './errorMessages';
+import { ErrorListener } from '../parser';
+import { PositionAdapter } from './errorBuilder';
+import { PreviousDefinitionValidation } from './validations';
 
 export namespace SymbolTableGenerator {
-    export function symbolTableFor(tree: ParserRuleContext): SymbolTableResult {
+    export function symbolTableFor(tree: ParserRuleContext, errorListener: ErrorListener): SymbolTable {
         let symbolTable = SymbolTableBuilder.build();
-        let matcher = new DefinitionMatcher(symbolTable);
 
-        let errors = tree.accept(matcher);
+        let matcher = new DefinitionMatcher(symbolTable, errorListener);
+        tree.accept(matcher);
 
-        return {
-            symbolTable: symbolTable,
-            errors: errors
-        };
+        return symbolTable;
     }
 }
 
-class DefinitionMatcher extends AbstractParseTreeVisitor<ParserError[]> implements QasmParserV2Visitor<ParserError[]> {
-    private errors: ParserError[] = [];
+class DefinitionMatcher extends AbstractParseTreeVisitor<void> implements QasmParserV2Visitor<void> {
+    private previousDefinitionValidation: PreviousDefinitionValidation;
 
-    constructor(private symbolTable: SymbolTable) {
+    constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {
         super();
+        this.previousDefinitionValidation = new PreviousDefinitionValidation(this.symbolTable, this.errorListener);
     }
 
-    defaultResult(): ParserError[] {
-        return this.errors;
-    }
+    defaultResult() {}
 
-    visitCode(ctx: CodeContext): ParserError[] {
-        this.errors = [];
-
-        this.visitChildren(ctx);
-
-        return this.errors;
-    }
-
-    visitIncludeLibrary(ctx: IncludeLibraryContext): ParserError[] {
+    visitIncludeLibrary(ctx: IncludeLibraryContext) {
         let input = this.getLibraryContent(ctx.Library().text);
         let tree = QASMSyntacticParser.parse(input);
 
-        let librarySymbolTable = SymbolTableGenerator.symbolTableFor(tree);
-        this.symbolTable.mergeWith(librarySymbolTable.symbolTable.currentScope);
+        let symbolTable = SymbolTableGenerator.symbolTableFor(tree, this.errorListener);
+        this.symbolTable.mergeWith(symbolTable.currentScope);
 
         this.visitChildren(ctx);
-
-        return this.errors;
     }
 
-    visitQregDefinition(ctx: QregDefinitionContext): ParserError[] {
-        this.checkPreviouslyDefinedVariable(ctx.Id());
+    visitQregDefinition(ctx: QregDefinitionContext) {
+        this.previousDefinitionValidation.apply(ctx.Id().text, PositionAdapter.fromTerminalNode(ctx.Id()));
 
         let registerName = ctx.Id().text;
         let registerType = this.symbolTable.lookup('Qreg');
@@ -89,12 +74,10 @@ class DefinitionMatcher extends AbstractParseTreeVisitor<ParserError[]> implemen
         let register = new RegisterSymbol(registerName, registerType, size);
 
         this.symbolTable.define(register);
-
-        return this.errors;
     }
 
-    visitCregDefinition(ctx: CregDefinitionContext): ParserError[] {
-        this.checkPreviouslyDefinedVariable(ctx.Id());
+    visitCregDefinition(ctx: CregDefinitionContext) {
+        this.previousDefinitionValidation.apply(ctx.Id().text, PositionAdapter.fromTerminalNode(ctx.Id()));
 
         let registerName = ctx.Id().text;
         let registerType = this.symbolTable.lookup('Creg');
@@ -102,12 +85,10 @@ class DefinitionMatcher extends AbstractParseTreeVisitor<ParserError[]> implemen
         let register = new RegisterSymbol(registerName, registerType, size);
 
         this.symbolTable.define(register);
-
-        return this.errors;
     }
 
-    visitGateDefinition(ctx: GateDefinitionContext): ParserError[] {
-        this.checkPreviouslyDefinedVariable(ctx.Id());
+    visitGateDefinition(ctx: GateDefinitionContext) {
+        this.previousDefinitionValidation.apply(ctx.Id().text, PositionAdapter.fromTerminalNode(ctx.Id()));
 
         let gateName = ctx.Id().text;
         let gateType = this.symbolTable.lookup('Gate');
@@ -118,41 +99,20 @@ class DefinitionMatcher extends AbstractParseTreeVisitor<ParserError[]> implemen
         this.symbolTable.push(gateName);
         this.visitChildren(ctx);
         this.symbolTable.pop();
-
-        return this.errors;
     }
 
-    visitOpaqueDefinition(ctx: OpaqueDefinitionContext): ParserError[] {
-        this.checkPreviouslyDefinedVariable(ctx.Id());
+    visitOpaqueDefinition(ctx: OpaqueDefinitionContext) {
+        this.previousDefinitionValidation.apply(ctx.Id().text, PositionAdapter.fromTerminalNode(ctx.Id()));
 
         let opaqueName = ctx.Id().text;
         let gateType = this.symbolTable.lookup('Opaque');
         let gate = new VariableSymbol(opaqueName, gateType);
 
         this.symbolTable.define(gate);
-
-        return this.errors;
     }
 
     private getLibraryContent(libraryName: string): string {
         let libraryPath = path.join(__dirname, '..', 'libs', libraryName);
         return fs.readFileSync(libraryPath, 'utf8');
-    }
-
-    private checkPreviouslyDefinedVariable(node: TerminalNode) {
-        if (this.symbolTable.lookup(node.text) === null) {
-            return;
-        }
-
-        let message = ErrorMessages.previousDefinitionOf(node.text);
-        let error = {
-            line: node.symbol.line - 1,
-            start: node.symbol.charPositionInLine,
-            end: node.symbol.charPositionInLine + node.text.length,
-            message: message,
-            level: ParseErrorLevel.WARNING
-        };
-
-        this.errors.push(error);
     }
 }
