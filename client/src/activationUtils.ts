@@ -489,7 +489,17 @@ export namespace ActivationUtils {
                     }
                 })
                 .then((selection: string | undefined) => {
-                    if (selection.toUpperCase() === 'YES') {
+                    if (selection === undefined || selection.toUpperCase() !== 'YES') {
+                        // The user does not need to configure the Hub/Group/Project and URL in the QConfig.py
+                        saveQConfig(apiToken, '', '', '', '')
+                            .then(result => {
+                                return resolve(result);
+                            })
+                            .catch(err => {
+                                return reject(err);
+                            });
+                    } else {
+                        // The user need to configure the Hub/Group/Project and URL in the QConfig.py
                         vscode.window
                             .showInputBox({
                                 ignoreFocusOut: true,
@@ -538,15 +548,6 @@ export namespace ActivationUtils {
                                     .catch(err => {
                                         return reject(err);
                                     });
-                            });
-                    } else {
-                        // The user does not need to configure the Hub/Group/Project and URL in the QConfig.py
-                        saveQConfig(apiToken, '', '', '', '')
-                            .then(result => {
-                                return resolve(result);
-                            })
-                            .catch(err => {
-                                return reject(err);
                             });
                     }
                 });
@@ -613,19 +614,9 @@ export namespace ActivationUtils {
                             }
                         })
                         .then(() => {
-                            return vscode.window.showInputBox({
-                                ignoreFocusOut: true,
-                                prompt: `👉 QConfig saved! Do you want to reload the extension? 👈`,
-                                placeHolder: 'YES',
-                                value: 'YES'
+                            Util.reloadAfterSavingSettings().then(result => {
+                                return resolve(result);
                             });
-                        })
-                        .then((selection: string | undefined) => {
-                            if (selection === 'YES') {
-                                return resolve(vscode.commands.executeCommand('workbench.action.reloadWindow'));
-                            } else {
-                                return resolve('Reload your extension manually to use your brand-new QConfig');
-                            }
                         });
                 } catch (err) {
                     return reject('🙁 QConfig cannot be saved! 🙁');

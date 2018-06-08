@@ -12,14 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // =============================================================================
-import * as path from "path";
+import * as path from 'path';
+import * as Q from 'q';
+import * as vscode from 'vscode';
 
 export namespace Util {
     export function getOSDependentPath(_path: string): string {
         let pathInOS = path.resolve(__dirname, _path);
-        if (process.platform === "win32") {
-            pathInOS = pathInOS.replace(/\\/g, "/");
+        if (process.platform === 'win32') {
+            pathInOS = pathInOS.replace(/\\/g, '/');
         }
         return pathInOS;
+    }
+    export function reloadAfterSavingSettings(): Q.Promise<string> {
+        // vscode.window.showInformationMessage("Saving the QConfig...");
+        return Q.Promise((resolve, reject) => {
+            try {
+                return vscode.window
+                    .showInputBox({
+                        ignoreFocusOut: true,
+                        prompt: `👉 Settings saved! Do you want to reload the extension? 👈`,
+                        placeHolder: 'YES',
+                        value: 'YES'
+                    })
+                    .then((selection: string | undefined) => {
+                        if (selection === 'YES') {
+                            return resolve(vscode.commands.executeCommand('workbench.action.reloadWindow'));
+                        } else {
+                            return resolve('Reload your extension manually to use your new config');
+                        }
+                    });
+            } catch (err) {
+                return reject('offerExtensionReload failed');
+            }
+        });
     }
 }
