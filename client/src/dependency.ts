@@ -13,10 +13,10 @@
 // limitations under the License.
 // =============================================================================
 
-import * as Q from "q";
-import { CommandExecutor } from "./commandExecutor";
-import { Version } from "./version";
-import { IDependency, IVersion } from "./interfaces";
+import * as Q from 'q';
+import { CommandExecutor } from './commandExecutor';
+import { Version } from './version';
+import { IDependency, IVersion } from './interfaces';
 
 export class Dependency implements IDependency {
     Name: string;
@@ -41,11 +41,7 @@ export class Dependency implements IDependency {
                 ) {
                     resolve(this);
                 } else {
-                    reject(
-                        `Version >= ${this.RequiredVersion.toString()} of package ${
-                        this.Name
-                        } is required`
-                    );
+                    reject(`Version >= ${this.RequiredVersion.toString()} of package ${this.Name} is required`);
                 }
             });
         });
@@ -57,11 +53,9 @@ export class Dependency implements IDependency {
                 return resolve(this.InstalledVersion);
             }
 
-            return CommandExecutor.exec(this.Name, ["--version"])
+            return CommandExecutor.exec(this.Name, ['--version'])
                 .then(stdout => {
-                    this.InstalledVersion = Version.fromString(
-                        stdout.split(" ")[1]
-                    );
+                    this.InstalledVersion = Version.fromString(stdout.split(' ')[1]);
                     resolve(this.InstalledVersion);
                 })
                 .catch(err => {

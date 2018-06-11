@@ -23,7 +23,59 @@ import { VizManager } from './visualizations';
 import { QLogger } from './logger';
 
 export namespace ActivationUtils {
-    export function checkDependencies(): Q.Promise<string> {
+    export function checkFirstRun(): Q.Promise<string> {
+        return Q.Promise((resolve, reject) => {
+            try {
+                let config = vscode.workspace.getConfiguration('ibm-q-studio');
+                let firstRun = config.get('config.firstRun');
+
+                if (firstRun === true) {
+                    vscode.workspace
+                        .getConfiguration('ibm-q-studio')
+                        .update('config.firstRun', false, vscode.ConfigurationTarget.Global)
+                        .then(() => {
+                            return resolve(true);
+                        });
+                } else {
+                    return resolve(false);
+                }
+            } catch (err) {
+                return reject('Error modifying the flag for the first run of the extension');
+            }
+        });
+    }
+
+    export function showInfoBubbles(verbose: boolean | false): Q.Promise<string> {
+        return Q.Promise((resolve, reject) => {
+            if (checkFirstRun() === true) {
+                return resolve(true);
+            } else {
+                try {
+                    let config = vscode.workspace.getConfiguration('ibm-q-studio');
+                    let displayBubbles = config.get('config.displayBootInfo');
+                    if (verbose === true || displayBubbles === true) {
+                        return resolve(true);
+                    } else {
+                        return resolve(false);
+                    }
+                } catch (err) {
+                    return reject('Error getting the displayBootInfo flag');
+                }
+            }
+        });
+    }
+
+    export function showExtensionBootInfo(message: string, verbose: boolean | false) {
+        showInfoBubbles(verbose).then(result => {
+            if (result === true) {
+                vscode.window.showInformationMessage(message);
+            } else {
+                QLogger.verbose(message, this);
+            }
+        });
+    }
+
+    export function checkDependencies(verbose: boolean | false): Q.Promise<string> {
         let depMgr = new DependencyMgr();
         return Q.Promise((resolve, reject) => {
             return depMgr
@@ -36,7 +88,7 @@ export namespace ActivationUtils {
                         QLogger.verbose(`Package: ${dep.Name} Version: ${dep.InstalledVersion}`, this);
                         depsList += `👌 ${dep.Name} v ${dep.InstalledVersion}\n`;
                     });
-                    vscode.window.showInformationMessage(`IBM Q Studio dependencies found! ${depsList}`);
+                    showExtensionBootInfo(`IBM Q Studio dependencies found! ${depsList}`, verbose);
                     // Check for pyhton packages!
                 })
                 .then(() => {
@@ -45,11 +97,10 @@ export namespace ActivationUtils {
 
                     let packMgr = new PackageMgr();
                     return packMgr
-                        .check()
+                        .check(verbose)
                         .then(results => {
                             QLogger.verbose(`packMgr.check extension.ts ${results}`, this);
-                            vscode.window.showInformationMessage(results);
-                            //return Q.resolve(results);
+                            showExtensionBootInfo(results, verbose);
                             return resolve();
                         })
                         .catch(err => {
@@ -79,7 +130,7 @@ export namespace ActivationUtils {
         const getUserCreditsScript = Util.getOSDependentPath('../../resources/qiskitScripts/getUserCredits.py');
 
         context.subscriptions.push(
-            vscode.commands.registerCommand('qstudio.checkDependencies', () => ActivationUtils.checkDependencies()),
+            vscode.commands.registerCommand('qstudio.checkDependencies', () => ActivationUtils.checkDependencies(true)),
             vscode.commands.registerCommand('qstudio.runQISKitCode', () =>
                 CommandExecutor.execPythonActiveEditor().then(codeResult => {
                     let resultProvider = new ResultProvider();
@@ -376,6 +427,7 @@ export namespace ActivationUtils {
                 ActivationUtils.setVisualizationFlag(true)
                     .then(result => {
                         vscode.window.showInformationMessage(result);
+                        Util.reloadAfterSavingSettings();
                     })
                     .catch(err => {
                         vscode.window.showErrorMessage(err);
@@ -385,6 +437,27 @@ export namespace ActivationUtils {
                 ActivationUtils.setVisualizationFlag(false)
                     .then(result => {
                         vscode.window.showInformationMessage(result);
+                        Util.reloadAfterSavingSettings();
+                    })
+                    .catch(err => {
+                        vscode.window.showErrorMessage(err);
+                    })
+            ),
+            vscode.commands.registerCommand('qstudio.enableBootInfo', () =>
+                ActivationUtils.setBootInfoFlag(true)
+                    .then(result => {
+                        vscode.window.showInformationMessage(result);
+                        Util.reloadAfterSavingSettings();
+                    })
+                    .catch(err => {
+                        vscode.window.showErrorMessage(err);
+                    })
+            ),
+            vscode.commands.registerCommand('qstudio.disableBootInfo', () =>
+                ActivationUtils.setBootInfoFlag(false)
+                    .then(result => {
+                        vscode.window.showInformationMessage(result);
+                        Util.reloadAfterSavingSettings();
                     })
                     .catch(err => {
                         vscode.window.showErrorMessage(err);
@@ -420,7 +493,17 @@ export namespace ActivationUtils {
                     }
                 })
                 .then((selection: string | undefined) => {
-                    if (selection.toUpperCase() === 'YES') {
+                    if (selection === undefined || selection.toUpperCase() !== 'YES') {
+                        // The user does not need to configure the Hub/Group/Project and URL in the QConfig.py
+                        saveQConfig(apiToken, '', '', '', '')
+                            .then(result => {
+                                return resolve(result);
+                            })
+                            .catch(err => {
+                                return reject(err);
+                            });
+                    } else {
+                        // The user need to configure the Hub/Group/Project and URL in the QConfig.py
                         vscode.window
                             .showInputBox({
                                 ignoreFocusOut: true,
@@ -469,15 +552,6 @@ export namespace ActivationUtils {
                                     .catch(err => {
                                         return reject(err);
                                     });
-                            });
-                    } else {
-                        // The user does not need to configure the Hub/Group/Project and URL in the QConfig.py
-                        saveQConfig(apiToken, '', '', '', '')
-                            .then(result => {
-                                return resolve(result);
-                            })
-                            .catch(err => {
-                                return reject(err);
                             });
                     }
                 });
@@ -544,19 +618,9 @@ export namespace ActivationUtils {
                             }
                         })
                         .then(() => {
-                            return vscode.window.showInputBox({
-                                ignoreFocusOut: true,
-                                prompt: `👉 QConfig saved! Do you want to reload the extension? 👈`,
-                                placeHolder: 'YES',
-                                value: 'YES'
+                            Util.reloadAfterSavingSettings().then(result => {
+                                return resolve(result);
                             });
-                        })
-                        .then((selection: string | undefined) => {
-                            if (selection === 'YES') {
-                                return resolve(vscode.commands.executeCommand('workbench.action.reloadWindow'));
-                            } else {
-                                return resolve('Reload your extension manually to use your brand-new QConfig');
-                            }
                         });
                 } catch (err) {
                     return reject('🙁 QConfig cannot be saved! 🙁');
@@ -581,6 +645,25 @@ export namespace ActivationUtils {
                     });
             } catch (err) {
                 return reject('Error modifying the flag for visualizations');
+            }
+        });
+    }
+
+    export function setBootInfoFlag(flag: boolean): Q.Promise<string> {
+        return Q.Promise((resolve, reject) => {
+            try {
+                vscode.workspace
+                    .getConfiguration('ibm-q-studio')
+                    .update('config.displayBootInfo', flag, vscode.ConfigurationTarget.Global)
+                    .then(() => {
+                        if (flag === true) {
+                            return resolve('Now the visual information about activation is enabled!');
+                        } else {
+                            return resolve('Now the visual information about activation is disabled!');
+                        }
+                    });
+            } catch (err) {
+                return reject('Error modifying the flag for displaying the extension boot info');
             }
         });
     }

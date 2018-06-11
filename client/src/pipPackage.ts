@@ -19,6 +19,7 @@ import { Version } from './version';
 import { IPackageInfo, IPackage } from './interfaces';
 import { PipWrapper } from './pipWrapper';
 import { PyPiWrapper } from './pypiWrapper';
+import { ActivationUtils } from './activationUtils';
 import { QLogger } from './logger';
 
 export class PipPackage implements IPackage {
@@ -40,7 +41,7 @@ export class PipPackage implements IPackage {
         this.Info.Version = Version.fromString(version);
     }
 
-    public checkVersion(pkgVersion: string): Q.Promise<void> {
+    public checkVersion(pkgVersion: string, verbose: boolean | false): Q.Promise<void> {
         QLogger.verbose(`pkgVersion: ${pkgVersion}`, this);
         let packageName = this.Info.Name;
         return this.pip
@@ -103,7 +104,7 @@ export class PipPackage implements IPackage {
                             });
                         } else {
                             QLogger.verbose(`${packageName} is already installed`, this);
-                            vscode.window.showInformationMessage(`👌 ${packageName} is already installed`);
+                            ActivationUtils.showExtensionBootInfo(`👌 ${packageName} is already installed`, verbose);
                             return Q.resolve();
                         }
                     })
@@ -140,7 +141,7 @@ export class PipPackage implements IPackage {
                                 });
                             } else {
                                 QLogger.verbose(`${packageName} is already installed`, this);
-                                vscode.window.showInformationMessage(`👌 ${packageName} is already installed`);
+                                ActivationUtils.showExtensionBootInfo(`👌 ${packageName} is already installed`, false);
                                 return Q.resolve();
                             }
                         })

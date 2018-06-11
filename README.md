@@ -48,6 +48,8 @@ Command | Description
 ```QStudio: Get the user's available credits``` | The current available credits of the user will be presented in a new tab.
 ```QStudio: Activate the visualizations for the execution of code``` | Activate the automatic visualization of results achieved during the execution of code using the extension.
 ```QStudio: Deactivate the visualizations for the execution of code``` | Deactivate the automatic visualization of results achieved during the execution of code using the extension (giving the results in text mode).
+```QStudio: Activate the display of information related to the boot of the extension``` | Activate the visualization (bubble messages) of information related to the boot of the extension. This information includes the version of dependencies installed, the different checks performed at the activation of the extension, etc.
+```QStudio: Deactivate the display of information related to the boot of the extension``` | Deactivate the visualization (bubble messages) of information related to the boot of the extension. It does not deactivate the display of error messages related to dependencies and other checks performed at the boot of the extension
 
 ## Authors (alphabetical)
 
