@@ -11,7 +11,6 @@
 
 import {
     CompletionItem,
-    CompletionItemKind,
     Diagnostic,
     DiagnosticSeverity,
     IConnection,
@@ -19,20 +18,11 @@ import {
     TextDocumentPositionParams
 } from 'vscode-languageserver';
 import { Parser, Suggester, ParserError, ParseErrorLevel, SuggestionSymbol } from './types';
+import { SuggestionSymbolAdapter } from './tools/suggestionSymbolAdapter';
 
 export class CompilationTool {
     currentDocument: TextDocument = null;
     currentSuggestions: CompletionItem[] = [];
-
-    toCompletionItem = (symbol: SuggestionSymbol, index: number) => {
-        return {
-            label: symbol.label,
-            kind: CompletionItemKind.Text,
-            data: index,
-            detail: symbol.detail,
-            documentation: symbol.documentation
-        };
-    };
 
     constructor(private connection: IConnection, private parser: Parser, private suggester: Suggester) {}
 
@@ -52,7 +42,9 @@ export class CompilationTool {
             .getText()
             .substring(0, this.currentDocument.offsetAt(documentPosition.position));
 
-        this.currentSuggestions = this.suggester.calculateSuggestionsFor(textToCaret).map(this.toCompletionItem);
+        this.currentSuggestions = this.suggester
+            .calculateSuggestionsFor(textToCaret)
+            .map(SuggestionSymbolAdapter.toCompletionItem());
 
         return this.currentSuggestions;
     }

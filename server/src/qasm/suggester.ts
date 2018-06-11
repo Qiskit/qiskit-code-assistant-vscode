@@ -15,6 +15,7 @@ import { QasmLexer } from './antlr/QasmLexer';
 import { QasmParser } from './antlr/QasmParser';
 import { Suggester, SuggestionSymbol } from '../types';
 import { QLogger } from '../logger';
+import { SuggestionSymbolAdapter } from '../tools/suggestionSymbolAdapter';
 
 export class QASMSuggester implements Suggester {
     dictionary: SymbolsDictionary = new SymbolsDictionary();
@@ -79,18 +80,8 @@ export class QASMSuggester implements Suggester {
     }
 
     private foundVariablesAt(parser: QasmParser): SuggestionSymbol[] {
-        return parser.declaredVariables().map(this.toSymbolVariable);
+        return parser.declaredVariables().map(SuggestionSymbolAdapter.toSymbolVariable());
     }
-
-    private toSymbolVariable = (input: string): SuggestionSymbol => {
-        return {
-            label: input,
-            detail: 'Declared variable',
-            documentation: 'This is a previously declared variable',
-            type: 'Variable',
-            parent: input
-        };
-    };
 }
 
 class SymbolsDictionary {

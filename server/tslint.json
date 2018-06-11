@@ -2,7 +2,7 @@
 	"rules": {
 		"file-header": [
 			true,
-			"Copyright (c) \\d{4}, IBM"
+			"@license[\\s\\S]*?Copyright\\s+\\(c\\)\\s+\\d{4},\\s+IBM"
 		],
 		"no-string-throw": true,
 		"no-unused-expression": true,
@@ -16,7 +16,7 @@
 		],
 		"triple-equals": true
 	},
-	"defaultSeverity": "warning",
+	"defaultSeverity": "error",
 	"linterOptions": {
 		"exclude": [
 			"**/QasmParser.ts",
