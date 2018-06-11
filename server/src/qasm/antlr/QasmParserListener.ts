@@ -1,407 +1,407 @@
-// Generated from QasmParserV2.g4 by ANTLR 4.6-SNAPSHOT
+// Generated from QasmParser.g4 by ANTLR 4.6-SNAPSHOT
 
 
 import { ParseTreeListener } from 'antlr4ts/tree/ParseTreeListener';
 
-import { CodeContext } from './QasmParserV2';
-import { HeadersContext } from './QasmParserV2';
-import { IncludeLibraryContext } from './QasmParserV2';
-import { SentencesContext } from './QasmParserV2';
-import { CleanContext } from './QasmParserV2';
-import { SentenceContext } from './QasmParserV2';
-import { DefinitionContext } from './QasmParserV2';
-import { ExpressionContext } from './QasmParserV2';
-import { ConditionalContext } from './QasmParserV2';
-import { QregDefinitionContext } from './QasmParserV2';
-import { CregDefinitionContext } from './QasmParserV2';
-import { DimensionContext } from './QasmParserV2';
-import { GateDefinitionContext } from './QasmParserV2';
-import { OpaqueDefinitionContext } from './QasmParserV2';
-import { GateDefinitionArgumentsContext } from './QasmParserV2';
-import { OpaqueDefinitionArgumentsContext } from './QasmParserV2';
-import { ParamsListContext } from './QasmParserV2';
-import { BodyContext } from './QasmParserV2';
-import { BodyExpressionContext } from './QasmParserV2';
-import { ParamsListBodyContext } from './QasmParserV2';
-import { ExpContext } from './QasmParserV2';
-import { UnaryOpContext } from './QasmParserV2';
-import { MeasureContext } from './QasmParserV2';
-import { QubitContext } from './QasmParserV2';
-import { CbitContext } from './QasmParserV2';
-import { CustomArglistContext } from './QasmParserV2';
-import { ParamsListNumberContext } from './QasmParserV2';
-import { QubitAndQregListContext } from './QasmParserV2';
-import { QbitOrQregContext } from './QasmParserV2';
-import { CxGateContext } from './QasmParserV2';
-import { BarrierGateContext } from './QasmParserV2';
-import { QubitListContext } from './QasmParserV2';
-import { ResetGateContext } from './QasmParserV2';
+import { CodeContext } from './QasmParser';
+import { HeadersContext } from './QasmParser';
+import { IncludeLibraryContext } from './QasmParser';
+import { SentencesContext } from './QasmParser';
+import { CleanContext } from './QasmParser';
+import { SentenceContext } from './QasmParser';
+import { DefinitionContext } from './QasmParser';
+import { ExpressionContext } from './QasmParser';
+import { ConditionalContext } from './QasmParser';
+import { QregDefinitionContext } from './QasmParser';
+import { CregDefinitionContext } from './QasmParser';
+import { DimensionContext } from './QasmParser';
+import { GateDefinitionContext } from './QasmParser';
+import { OpaqueDefinitionContext } from './QasmParser';
+import { GateDefinitionArgumentsContext } from './QasmParser';
+import { OpaqueDefinitionArgumentsContext } from './QasmParser';
+import { ParamsListContext } from './QasmParser';
+import { BodyContext } from './QasmParser';
+import { BodyExpressionContext } from './QasmParser';
+import { ParamsListBodyContext } from './QasmParser';
+import { ExpContext } from './QasmParser';
+import { UnaryOpContext } from './QasmParser';
+import { MeasureContext } from './QasmParser';
+import { QubitContext } from './QasmParser';
+import { CbitContext } from './QasmParser';
+import { CustomArglistContext } from './QasmParser';
+import { ParamsListNumberContext } from './QasmParser';
+import { QubitAndQregListContext } from './QasmParser';
+import { QbitOrQregContext } from './QasmParser';
+import { CxGateContext } from './QasmParser';
+import { BarrierGateContext } from './QasmParser';
+import { QubitListContext } from './QasmParser';
+import { ResetGateContext } from './QasmParser';
 
 
 /**
  * This interface defines a complete listener for a parse tree produced by
- * `QasmParserV2`.
+ * `QasmParser`.
  */
-export interface QasmParserV2Listener extends ParseTreeListener {
+export interface QasmParserListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.code`.
+	 * Enter a parse tree produced by `QasmParser.code`.
 	 * @param ctx the parse tree
 	 */
 	enterCode?: (ctx: CodeContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.code`.
+	 * Exit a parse tree produced by `QasmParser.code`.
 	 * @param ctx the parse tree
 	 */
 	exitCode?: (ctx: CodeContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.headers`.
+	 * Enter a parse tree produced by `QasmParser.headers`.
 	 * @param ctx the parse tree
 	 */
 	enterHeaders?: (ctx: HeadersContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.headers`.
+	 * Exit a parse tree produced by `QasmParser.headers`.
 	 * @param ctx the parse tree
 	 */
 	exitHeaders?: (ctx: HeadersContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.includeLibrary`.
+	 * Enter a parse tree produced by `QasmParser.includeLibrary`.
 	 * @param ctx the parse tree
 	 */
 	enterIncludeLibrary?: (ctx: IncludeLibraryContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.includeLibrary`.
+	 * Exit a parse tree produced by `QasmParser.includeLibrary`.
 	 * @param ctx the parse tree
 	 */
 	exitIncludeLibrary?: (ctx: IncludeLibraryContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.sentences`.
+	 * Enter a parse tree produced by `QasmParser.sentences`.
 	 * @param ctx the parse tree
 	 */
 	enterSentences?: (ctx: SentencesContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.sentences`.
+	 * Exit a parse tree produced by `QasmParser.sentences`.
 	 * @param ctx the parse tree
 	 */
 	exitSentences?: (ctx: SentencesContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.clean`.
+	 * Enter a parse tree produced by `QasmParser.clean`.
 	 * @param ctx the parse tree
 	 */
 	enterClean?: (ctx: CleanContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.clean`.
+	 * Exit a parse tree produced by `QasmParser.clean`.
 	 * @param ctx the parse tree
 	 */
 	exitClean?: (ctx: CleanContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.sentence`.
+	 * Enter a parse tree produced by `QasmParser.sentence`.
 	 * @param ctx the parse tree
 	 */
 	enterSentence?: (ctx: SentenceContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.sentence`.
+	 * Exit a parse tree produced by `QasmParser.sentence`.
 	 * @param ctx the parse tree
 	 */
 	exitSentence?: (ctx: SentenceContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.definition`.
+	 * Enter a parse tree produced by `QasmParser.definition`.
 	 * @param ctx the parse tree
 	 */
 	enterDefinition?: (ctx: DefinitionContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.definition`.
+	 * Exit a parse tree produced by `QasmParser.definition`.
 	 * @param ctx the parse tree
 	 */
 	exitDefinition?: (ctx: DefinitionContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.expression`.
+	 * Enter a parse tree produced by `QasmParser.expression`.
 	 * @param ctx the parse tree
 	 */
 	enterExpression?: (ctx: ExpressionContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.expression`.
+	 * Exit a parse tree produced by `QasmParser.expression`.
 	 * @param ctx the parse tree
 	 */
 	exitExpression?: (ctx: ExpressionContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.conditional`.
+	 * Enter a parse tree produced by `QasmParser.conditional`.
 	 * @param ctx the parse tree
 	 */
 	enterConditional?: (ctx: ConditionalContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.conditional`.
+	 * Exit a parse tree produced by `QasmParser.conditional`.
 	 * @param ctx the parse tree
 	 */
 	exitConditional?: (ctx: ConditionalContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.qregDefinition`.
+	 * Enter a parse tree produced by `QasmParser.qregDefinition`.
 	 * @param ctx the parse tree
 	 */
 	enterQregDefinition?: (ctx: QregDefinitionContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.qregDefinition`.
+	 * Exit a parse tree produced by `QasmParser.qregDefinition`.
 	 * @param ctx the parse tree
 	 */
 	exitQregDefinition?: (ctx: QregDefinitionContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.cregDefinition`.
+	 * Enter a parse tree produced by `QasmParser.cregDefinition`.
 	 * @param ctx the parse tree
 	 */
 	enterCregDefinition?: (ctx: CregDefinitionContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.cregDefinition`.
+	 * Exit a parse tree produced by `QasmParser.cregDefinition`.
 	 * @param ctx the parse tree
 	 */
 	exitCregDefinition?: (ctx: CregDefinitionContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.dimension`.
+	 * Enter a parse tree produced by `QasmParser.dimension`.
 	 * @param ctx the parse tree
 	 */
 	enterDimension?: (ctx: DimensionContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.dimension`.
+	 * Exit a parse tree produced by `QasmParser.dimension`.
 	 * @param ctx the parse tree
 	 */
 	exitDimension?: (ctx: DimensionContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.gateDefinition`.
+	 * Enter a parse tree produced by `QasmParser.gateDefinition`.
 	 * @param ctx the parse tree
 	 */
 	enterGateDefinition?: (ctx: GateDefinitionContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.gateDefinition`.
+	 * Exit a parse tree produced by `QasmParser.gateDefinition`.
 	 * @param ctx the parse tree
 	 */
 	exitGateDefinition?: (ctx: GateDefinitionContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.opaqueDefinition`.
+	 * Enter a parse tree produced by `QasmParser.opaqueDefinition`.
 	 * @param ctx the parse tree
 	 */
 	enterOpaqueDefinition?: (ctx: OpaqueDefinitionContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.opaqueDefinition`.
+	 * Exit a parse tree produced by `QasmParser.opaqueDefinition`.
 	 * @param ctx the parse tree
 	 */
 	exitOpaqueDefinition?: (ctx: OpaqueDefinitionContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.gateDefinitionArguments`.
+	 * Enter a parse tree produced by `QasmParser.gateDefinitionArguments`.
 	 * @param ctx the parse tree
 	 */
 	enterGateDefinitionArguments?: (ctx: GateDefinitionArgumentsContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.gateDefinitionArguments`.
+	 * Exit a parse tree produced by `QasmParser.gateDefinitionArguments`.
 	 * @param ctx the parse tree
 	 */
 	exitGateDefinitionArguments?: (ctx: GateDefinitionArgumentsContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.opaqueDefinitionArguments`.
+	 * Enter a parse tree produced by `QasmParser.opaqueDefinitionArguments`.
 	 * @param ctx the parse tree
 	 */
 	enterOpaqueDefinitionArguments?: (ctx: OpaqueDefinitionArgumentsContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.opaqueDefinitionArguments`.
+	 * Exit a parse tree produced by `QasmParser.opaqueDefinitionArguments`.
 	 * @param ctx the parse tree
 	 */
 	exitOpaqueDefinitionArguments?: (ctx: OpaqueDefinitionArgumentsContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.paramsList`.
+	 * Enter a parse tree produced by `QasmParser.paramsList`.
 	 * @param ctx the parse tree
 	 */
 	enterParamsList?: (ctx: ParamsListContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.paramsList`.
+	 * Exit a parse tree produced by `QasmParser.paramsList`.
 	 * @param ctx the parse tree
 	 */
 	exitParamsList?: (ctx: ParamsListContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.body`.
+	 * Enter a parse tree produced by `QasmParser.body`.
 	 * @param ctx the parse tree
 	 */
 	enterBody?: (ctx: BodyContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.body`.
+	 * Exit a parse tree produced by `QasmParser.body`.
 	 * @param ctx the parse tree
 	 */
 	exitBody?: (ctx: BodyContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.bodyExpression`.
+	 * Enter a parse tree produced by `QasmParser.bodyExpression`.
 	 * @param ctx the parse tree
 	 */
 	enterBodyExpression?: (ctx: BodyExpressionContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.bodyExpression`.
+	 * Exit a parse tree produced by `QasmParser.bodyExpression`.
 	 * @param ctx the parse tree
 	 */
 	exitBodyExpression?: (ctx: BodyExpressionContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.paramsListBody`.
+	 * Enter a parse tree produced by `QasmParser.paramsListBody`.
 	 * @param ctx the parse tree
 	 */
 	enterParamsListBody?: (ctx: ParamsListBodyContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.paramsListBody`.
+	 * Exit a parse tree produced by `QasmParser.paramsListBody`.
 	 * @param ctx the parse tree
 	 */
 	exitParamsListBody?: (ctx: ParamsListBodyContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.exp`.
+	 * Enter a parse tree produced by `QasmParser.exp`.
 	 * @param ctx the parse tree
 	 */
 	enterExp?: (ctx: ExpContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.exp`.
+	 * Exit a parse tree produced by `QasmParser.exp`.
 	 * @param ctx the parse tree
 	 */
 	exitExp?: (ctx: ExpContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.unaryOp`.
+	 * Enter a parse tree produced by `QasmParser.unaryOp`.
 	 * @param ctx the parse tree
 	 */
 	enterUnaryOp?: (ctx: UnaryOpContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.unaryOp`.
+	 * Exit a parse tree produced by `QasmParser.unaryOp`.
 	 * @param ctx the parse tree
 	 */
 	exitUnaryOp?: (ctx: UnaryOpContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.measure`.
+	 * Enter a parse tree produced by `QasmParser.measure`.
 	 * @param ctx the parse tree
 	 */
 	enterMeasure?: (ctx: MeasureContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.measure`.
+	 * Exit a parse tree produced by `QasmParser.measure`.
 	 * @param ctx the parse tree
 	 */
 	exitMeasure?: (ctx: MeasureContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.qubit`.
+	 * Enter a parse tree produced by `QasmParser.qubit`.
 	 * @param ctx the parse tree
 	 */
 	enterQubit?: (ctx: QubitContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.qubit`.
+	 * Exit a parse tree produced by `QasmParser.qubit`.
 	 * @param ctx the parse tree
 	 */
 	exitQubit?: (ctx: QubitContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.cbit`.
+	 * Enter a parse tree produced by `QasmParser.cbit`.
 	 * @param ctx the parse tree
 	 */
 	enterCbit?: (ctx: CbitContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.cbit`.
+	 * Exit a parse tree produced by `QasmParser.cbit`.
 	 * @param ctx the parse tree
 	 */
 	exitCbit?: (ctx: CbitContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.customArglist`.
+	 * Enter a parse tree produced by `QasmParser.customArglist`.
 	 * @param ctx the parse tree
 	 */
 	enterCustomArglist?: (ctx: CustomArglistContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.customArglist`.
+	 * Exit a parse tree produced by `QasmParser.customArglist`.
 	 * @param ctx the parse tree
 	 */
 	exitCustomArglist?: (ctx: CustomArglistContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.paramsListNumber`.
+	 * Enter a parse tree produced by `QasmParser.paramsListNumber`.
 	 * @param ctx the parse tree
 	 */
 	enterParamsListNumber?: (ctx: ParamsListNumberContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.paramsListNumber`.
+	 * Exit a parse tree produced by `QasmParser.paramsListNumber`.
 	 * @param ctx the parse tree
 	 */
 	exitParamsListNumber?: (ctx: ParamsListNumberContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.qubitAndQregList`.
+	 * Enter a parse tree produced by `QasmParser.qubitAndQregList`.
 	 * @param ctx the parse tree
 	 */
 	enterQubitAndQregList?: (ctx: QubitAndQregListContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.qubitAndQregList`.
+	 * Exit a parse tree produced by `QasmParser.qubitAndQregList`.
 	 * @param ctx the parse tree
 	 */
 	exitQubitAndQregList?: (ctx: QubitAndQregListContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.qbitOrQreg`.
+	 * Enter a parse tree produced by `QasmParser.qbitOrQreg`.
 	 * @param ctx the parse tree
 	 */
 	enterQbitOrQreg?: (ctx: QbitOrQregContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.qbitOrQreg`.
+	 * Exit a parse tree produced by `QasmParser.qbitOrQreg`.
 	 * @param ctx the parse tree
 	 */
 	exitQbitOrQreg?: (ctx: QbitOrQregContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.cxGate`.
+	 * Enter a parse tree produced by `QasmParser.cxGate`.
 	 * @param ctx the parse tree
 	 */
 	enterCxGate?: (ctx: CxGateContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.cxGate`.
+	 * Exit a parse tree produced by `QasmParser.cxGate`.
 	 * @param ctx the parse tree
 	 */
 	exitCxGate?: (ctx: CxGateContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.barrierGate`.
+	 * Enter a parse tree produced by `QasmParser.barrierGate`.
 	 * @param ctx the parse tree
 	 */
 	enterBarrierGate?: (ctx: BarrierGateContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.barrierGate`.
+	 * Exit a parse tree produced by `QasmParser.barrierGate`.
 	 * @param ctx the parse tree
 	 */
 	exitBarrierGate?: (ctx: BarrierGateContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.qubitList`.
+	 * Enter a parse tree produced by `QasmParser.qubitList`.
 	 * @param ctx the parse tree
 	 */
 	enterQubitList?: (ctx: QubitListContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.qubitList`.
+	 * Exit a parse tree produced by `QasmParser.qubitList`.
 	 * @param ctx the parse tree
 	 */
 	exitQubitList?: (ctx: QubitListContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `QasmParserV2.resetGate`.
+	 * Enter a parse tree produced by `QasmParser.resetGate`.
 	 * @param ctx the parse tree
 	 */
 	enterResetGate?: (ctx: ResetGateContext) => void;
 	/**
-	 * Exit a parse tree produced by `QasmParserV2.resetGate`.
+	 * Exit a parse tree produced by `QasmParser.resetGate`.
 	 * @param ctx the parse tree
 	 */
 	exitResetGate?: (ctx: ResetGateContext) => void;

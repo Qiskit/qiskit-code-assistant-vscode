@@ -13,8 +13,8 @@
 // limitations under the License.
 // =============================================================================
 
-parser grammar QasmParserV2;
-options { tokenVocab=QasmLexerV2; }
+parser grammar QasmParser;
+options { tokenVocab=QasmLexer; }
 
 code
     : sentences

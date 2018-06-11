@@ -21,10 +21,10 @@ import {
     GateDefinitionContext,
     OpaqueDefinitionContext,
     IncludeLibraryContext
-} from '../antlrV2/QasmParserV2';
+} from '../antlr/QasmParser';
 import { SymbolTable } from '../../tools/symbolTable';
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree';
-import { QasmParserV2Visitor } from '../antlrV2/QasmParserV2Visitor';
+import { QasmParserVisitor } from '../antlr/QasmParserVisitor';
 import { SymbolTableBuilder, RegisterSymbol, VariableSymbol } from '../compiler/symbolTable';
 import path = require('path');
 import fs = require('fs');
@@ -46,7 +46,7 @@ export namespace SymbolTableGenerator {
     }
 }
 
-class DefinitionMatcher extends AbstractParseTreeVisitor<void> implements QasmParserV2Visitor<void> {
+class DefinitionMatcher extends AbstractParseTreeVisitor<void> implements QasmParserVisitor<void> {
     private previousDefinitionValidation: PreviousDefinitionValidation;
 
     constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {

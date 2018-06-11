@@ -19,8 +19,8 @@ import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts';
 import { CodeCompletionCore } from 'antlr4-c3';
 import { Suggester, SuggestionSymbol } from '../types';
 import { QLogger } from '../logger';
-import { QasmLexerV2 } from './antlrV2/QasmLexerV2';
-import { QasmParserV2 } from './antlrV2/QasmParserV2';
+import { QasmLexer } from './antlr/QasmLexer';
+import { QasmParser } from './antlr/QasmParser';
 import { SymbolTableGenerator } from './ast/symbolTableGenerator';
 import { SymbolTable } from '../tools/symbolTable';
 
@@ -29,9 +29,9 @@ export class QASMSuggester implements Suggester {
 
     calculateSuggestionsFor(input: string): SuggestionSymbol[] {
         let inputStream = new ANTLRInputStream(input);
-        let lexer = new QasmLexerV2(inputStream);
+        let lexer = new QasmLexer(inputStream);
         let tokenStream = new CommonTokenStream(lexer);
-        let parser = new QasmParserV2(tokenStream);
+        let parser = new QasmParser(tokenStream);
 
         let tree = parser.code();
 
@@ -42,28 +42,28 @@ export class QASMSuggester implements Suggester {
 
     availableSymbols(): SuggestionSymbol[] {
         let inputStream = new ANTLRInputStream('');
-        let lexer = new QasmLexerV2(inputStream);
+        let lexer = new QasmLexer(inputStream);
         let tokenStream = new CommonTokenStream(lexer);
-        let parser = new QasmParserV2(tokenStream);
+        let parser = new QasmParser(tokenStream);
 
         return this.dictionary.allSymbols();
     }
 
     private calculateCandidates(
-        parser: QasmParserV2,
+        parser: QasmParser,
         symbolTable: SymbolTable,
         caretPosition: number
     ): SuggestionSymbol[] {
         let core = new CodeCompletionCore(parser);
 
         core.ignoredTokens = new Set([
-            QasmLexerV2.LeftCurlyBrace,
-            QasmLexerV2.RightCurlyBrace,
-            QasmLexerV2.LeftBrace,
-            QasmLexerV2.RightBrace,
-            QasmLexerV2.LeftParen,
-            QasmLexerV2.RightParen,
-            QasmLexerV2.Semi
+            QasmLexer.LeftCurlyBrace,
+            QasmLexer.RightCurlyBrace,
+            QasmLexer.LeftBrace,
+            QasmLexer.RightBrace,
+            QasmLexer.LeftParen,
+            QasmLexer.RightParen,
+            QasmLexer.Semi
         ]);
 
         // core.preferredRules = new Set([QasmParser.RULE_statement]);

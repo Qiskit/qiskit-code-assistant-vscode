@@ -1,4 +1,4 @@
-// Generated from QasmParserV2.g4 by ANTLR 4.6-SNAPSHOT
+// Generated from QasmParser.g4 by ANTLR 4.6-SNAPSHOT
 
 
 import { ATN } from 'antlr4ts/atn/ATN';
@@ -23,11 +23,11 @@ import { VocabularyImpl } from 'antlr4ts/VocabularyImpl';
 
 import * as Utils from 'antlr4ts/misc/Utils';
 
-import { QasmParserV2Listener } from './QasmParserV2Listener';
-import { QasmParserV2Visitor } from './QasmParserV2Visitor';
+import { QasmParserListener } from './QasmParserListener';
+import { QasmParserVisitor } from './QasmParserVisitor';
 
 
-export class QasmParserV2 extends Parser {
+export class QasmParser extends Parser {
 	public static readonly Comment=1;
 	public static readonly WhiteSpace=2;
 	public static readonly Real=3;
@@ -129,54 +129,54 @@ export class QasmParserV2 extends Parser {
 		"RightBrace", "LeftParen", "RightParen", "Pow", "Mult", "Div", "Sum", 
 		"Subs", "Pi", "Gate", "Library", "Id"
 	];
-	public static readonly VOCABULARY: Vocabulary = new VocabularyImpl(QasmParserV2._LITERAL_NAMES, QasmParserV2._SYMBOLIC_NAMES, []);
+	public static readonly VOCABULARY: Vocabulary = new VocabularyImpl(QasmParser._LITERAL_NAMES, QasmParser._SYMBOLIC_NAMES, []);
 
 	@Override
 	@NotNull
 	public get vocabulary(): Vocabulary {
-		return QasmParserV2.VOCABULARY;
+		return QasmParser.VOCABULARY;
 	}
 
 	@Override
-	public get grammarFileName(): string { return "QasmParserV2.g4"; }
+	public get grammarFileName(): string { return "QasmParser.g4"; }
 
 	@Override
-	public get ruleNames(): string[] { return QasmParserV2.ruleNames; }
+	public get ruleNames(): string[] { return QasmParser.ruleNames; }
 
 	@Override
-	public get serializedATN(): string { return QasmParserV2._serializedATN; }
+	public get serializedATN(): string { return QasmParser._serializedATN; }
 
 	constructor(input: TokenStream) {
 		super(input);
-		this._interp = new ParserATNSimulator(QasmParserV2._ATN, this);
+		this._interp = new ParserATNSimulator(QasmParser._ATN, this);
 	}
 	@RuleVersion(0)
 	public code(): CodeContext {
 		let _localctx: CodeContext = new CodeContext(this._ctx, this.state);
-		this.enterRule(_localctx, 0, QasmParserV2.RULE_code);
+		this.enterRule(_localctx, 0, QasmParser.RULE_code);
 		try {
 			this.state = 71;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
-			case QasmParserV2.EOF:
-			case QasmParserV2.Qreg:
-			case QasmParserV2.Creg:
-			case QasmParserV2.Cx:
-			case QasmParserV2.Measure:
-			case QasmParserV2.Barrier:
-			case QasmParserV2.Reset:
-			case QasmParserV2.Opaque:
-			case QasmParserV2.If:
-			case QasmParserV2.Gate:
-			case QasmParserV2.Id:
+			case QasmParser.EOF:
+			case QasmParser.Qreg:
+			case QasmParser.Creg:
+			case QasmParser.Cx:
+			case QasmParser.Measure:
+			case QasmParser.Barrier:
+			case QasmParser.Reset:
+			case QasmParser.Opaque:
+			case QasmParser.If:
+			case QasmParser.Gate:
+			case QasmParser.Id:
 				this.enterOuterAlt(_localctx, 1);
 				{
 				this.state = 66;
 				this.sentences();
 				}
 				break;
-			case QasmParserV2.QasmDescriptor:
-			case QasmParserV2.Include:
+			case QasmParser.QasmDescriptor:
+			case QasmParser.Include:
 				this.enterOuterAlt(_localctx, 2);
 				{
 				this.state = 67;
@@ -185,7 +185,7 @@ export class QasmParserV2 extends Parser {
 				this.sentences();
 				}
 				break;
-			case QasmParserV2.Clean:
+			case QasmParser.Clean:
 				this.enterOuterAlt(_localctx, 3);
 				{
 				this.state = 70;
@@ -213,7 +213,7 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public headers(): HeadersContext {
 		let _localctx: HeadersContext = new HeadersContext(this._ctx, this.state);
-		this.enterRule(_localctx, 2, QasmParserV2.RULE_headers);
+		this.enterRule(_localctx, 2, QasmParser.RULE_headers);
 		try {
 			this.state = 77;
 			this._errHandler.sync(this);
@@ -222,7 +222,7 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 1);
 				{
 				this.state = 73;
-				this.match(QasmParserV2.QasmDescriptor);
+				this.match(QasmParser.QasmDescriptor);
 				}
 				break;
 
@@ -230,7 +230,7 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 2);
 				{
 				this.state = 74;
-				this.match(QasmParserV2.QasmDescriptor);
+				this.match(QasmParser.QasmDescriptor);
 				this.state = 75;
 				this.includeLibrary();
 				}
@@ -262,16 +262,16 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public includeLibrary(): IncludeLibraryContext {
 		let _localctx: IncludeLibraryContext = new IncludeLibraryContext(this._ctx, this.state);
-		this.enterRule(_localctx, 4, QasmParserV2.RULE_includeLibrary);
+		this.enterRule(_localctx, 4, QasmParser.RULE_includeLibrary);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			this.state = 79;
-			this.match(QasmParserV2.Include);
+			this.match(QasmParser.Include);
 			this.state = 80;
-			this.match(QasmParserV2.Library);
+			this.match(QasmParser.Library);
 			this.state = 81;
-			this.match(QasmParserV2.Semi);
+			this.match(QasmParser.Semi);
 			}
 		}
 		catch (re) {
@@ -291,7 +291,7 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public sentences(): SentencesContext {
 		let _localctx: SentencesContext = new SentencesContext(this._ctx, this.state);
-		this.enterRule(_localctx, 6, QasmParserV2.RULE_sentences);
+		this.enterRule(_localctx, 6, QasmParser.RULE_sentences);
 		try {
 			this.state = 87;
 			this._errHandler.sync(this);
@@ -332,14 +332,14 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public clean(): CleanContext {
 		let _localctx: CleanContext = new CleanContext(this._ctx, this.state);
-		this.enterRule(_localctx, 8, QasmParserV2.RULE_clean);
+		this.enterRule(_localctx, 8, QasmParser.RULE_clean);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			this.state = 89;
-			this.match(QasmParserV2.Clean);
+			this.match(QasmParser.Clean);
 			this.state = 90;
-			this.match(QasmParserV2.EOF);
+			this.match(QasmParser.EOF);
 			}
 		}
 		catch (re) {
@@ -359,33 +359,33 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public sentence(): SentenceContext {
 		let _localctx: SentenceContext = new SentenceContext(this._ctx, this.state);
-		this.enterRule(_localctx, 10, QasmParserV2.RULE_sentence);
+		this.enterRule(_localctx, 10, QasmParser.RULE_sentence);
 		try {
 			this.state = 98;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
-			case QasmParserV2.Qreg:
-			case QasmParserV2.Creg:
-			case QasmParserV2.Opaque:
-			case QasmParserV2.Gate:
+			case QasmParser.Qreg:
+			case QasmParser.Creg:
+			case QasmParser.Opaque:
+			case QasmParser.Gate:
 				this.enterOuterAlt(_localctx, 1);
 				{
 				this.state = 92;
 				this.definition();
 				}
 				break;
-			case QasmParserV2.Cx:
-			case QasmParserV2.Measure:
-			case QasmParserV2.Barrier:
-			case QasmParserV2.Reset:
-			case QasmParserV2.Id:
+			case QasmParser.Cx:
+			case QasmParser.Measure:
+			case QasmParser.Barrier:
+			case QasmParser.Reset:
+			case QasmParser.Id:
 				this.enterOuterAlt(_localctx, 2);
 				{
 				this.state = 93;
 				this.expression();
 				}
 				break;
-			case QasmParserV2.If:
+			case QasmParser.If:
 				this.enterOuterAlt(_localctx, 3);
 				{
 				this.state = 94;
@@ -394,11 +394,11 @@ export class QasmParserV2 extends Parser {
 				this.expression();
 				}
 				break;
-			case QasmParserV2.EOF:
+			case QasmParser.EOF:
 				this.enterOuterAlt(_localctx, 4);
 				{
 				this.state = 97;
-				this.match(QasmParserV2.EOF);
+				this.match(QasmParser.EOF);
 				}
 				break;
 			default:
@@ -422,39 +422,39 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public definition(): DefinitionContext {
 		let _localctx: DefinitionContext = new DefinitionContext(this._ctx, this.state);
-		this.enterRule(_localctx, 12, QasmParserV2.RULE_definition);
+		this.enterRule(_localctx, 12, QasmParser.RULE_definition);
 		try {
 			this.state = 106;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
-			case QasmParserV2.Qreg:
+			case QasmParser.Qreg:
 				this.enterOuterAlt(_localctx, 1);
 				{
 				this.state = 100;
 				this.qregDefinition();
 				}
 				break;
-			case QasmParserV2.Creg:
+			case QasmParser.Creg:
 				this.enterOuterAlt(_localctx, 2);
 				{
 				this.state = 101;
 				this.cregDefinition();
 				}
 				break;
-			case QasmParserV2.Gate:
+			case QasmParser.Gate:
 				this.enterOuterAlt(_localctx, 3);
 				{
 				this.state = 102;
 				this.gateDefinition();
 				}
 				break;
-			case QasmParserV2.Opaque:
+			case QasmParser.Opaque:
 				this.enterOuterAlt(_localctx, 4);
 				{
 				this.state = 103;
 				this.opaqueDefinition();
 				this.state = 104;
-				this.match(QasmParserV2.Semi);
+				this.match(QasmParser.Semi);
 				}
 				break;
 			default:
@@ -478,54 +478,54 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public expression(): ExpressionContext {
 		let _localctx: ExpressionContext = new ExpressionContext(this._ctx, this.state);
-		this.enterRule(_localctx, 14, QasmParserV2.RULE_expression);
+		this.enterRule(_localctx, 14, QasmParser.RULE_expression);
 		try {
 			this.state = 123;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
-			case QasmParserV2.Measure:
+			case QasmParser.Measure:
 				this.enterOuterAlt(_localctx, 1);
 				{
 				this.state = 108;
 				this.measure();
 				this.state = 109;
-				this.match(QasmParserV2.Semi);
+				this.match(QasmParser.Semi);
 				}
 				break;
-			case QasmParserV2.Id:
+			case QasmParser.Id:
 				this.enterOuterAlt(_localctx, 2);
 				{
 				this.state = 111;
 				this.customArglist();
 				this.state = 112;
-				this.match(QasmParserV2.Semi);
+				this.match(QasmParser.Semi);
 				}
 				break;
-			case QasmParserV2.Cx:
+			case QasmParser.Cx:
 				this.enterOuterAlt(_localctx, 3);
 				{
 				this.state = 114;
 				this.cxGate();
 				this.state = 115;
-				this.match(QasmParserV2.Semi);
+				this.match(QasmParser.Semi);
 				}
 				break;
-			case QasmParserV2.Barrier:
+			case QasmParser.Barrier:
 				this.enterOuterAlt(_localctx, 4);
 				{
 				this.state = 117;
 				this.barrierGate();
 				this.state = 118;
-				this.match(QasmParserV2.Semi);
+				this.match(QasmParser.Semi);
 				}
 				break;
-			case QasmParserV2.Reset:
+			case QasmParser.Reset:
 				this.enterOuterAlt(_localctx, 5);
 				{
 				this.state = 120;
 				this.resetGate();
 				this.state = 121;
-				this.match(QasmParserV2.Semi);
+				this.match(QasmParser.Semi);
 				}
 				break;
 			default:
@@ -549,22 +549,22 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public conditional(): ConditionalContext {
 		let _localctx: ConditionalContext = new ConditionalContext(this._ctx, this.state);
-		this.enterRule(_localctx, 16, QasmParserV2.RULE_conditional);
+		this.enterRule(_localctx, 16, QasmParser.RULE_conditional);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			this.state = 125;
-			this.match(QasmParserV2.If);
+			this.match(QasmParser.If);
 			this.state = 126;
-			this.match(QasmParserV2.LeftParen);
+			this.match(QasmParser.LeftParen);
 			this.state = 127;
-			this.match(QasmParserV2.Id);
+			this.match(QasmParser.Id);
 			this.state = 128;
-			this.match(QasmParserV2.Equals);
+			this.match(QasmParser.Equals);
 			this.state = 129;
-			this.match(QasmParserV2.Int);
+			this.match(QasmParser.Int);
 			this.state = 130;
-			this.match(QasmParserV2.RightParen);
+			this.match(QasmParser.RightParen);
 			}
 		}
 		catch (re) {
@@ -584,22 +584,22 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public qregDefinition(): QregDefinitionContext {
 		let _localctx: QregDefinitionContext = new QregDefinitionContext(this._ctx, this.state);
-		this.enterRule(_localctx, 18, QasmParserV2.RULE_qregDefinition);
+		this.enterRule(_localctx, 18, QasmParser.RULE_qregDefinition);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			this.state = 132;
-			this.match(QasmParserV2.Qreg);
+			this.match(QasmParser.Qreg);
 			this.state = 133;
-			this.match(QasmParserV2.Id);
+			this.match(QasmParser.Id);
 			this.state = 134;
-			this.match(QasmParserV2.LeftBrace);
+			this.match(QasmParser.LeftBrace);
 			this.state = 135;
 			this.dimension();
 			this.state = 136;
-			this.match(QasmParserV2.RightBrace);
+			this.match(QasmParser.RightBrace);
 			this.state = 137;
-			this.match(QasmParserV2.Semi);
+			this.match(QasmParser.Semi);
 			}
 		}
 		catch (re) {
@@ -619,22 +619,22 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public cregDefinition(): CregDefinitionContext {
 		let _localctx: CregDefinitionContext = new CregDefinitionContext(this._ctx, this.state);
-		this.enterRule(_localctx, 20, QasmParserV2.RULE_cregDefinition);
+		this.enterRule(_localctx, 20, QasmParser.RULE_cregDefinition);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			this.state = 139;
-			this.match(QasmParserV2.Creg);
+			this.match(QasmParser.Creg);
 			this.state = 140;
-			this.match(QasmParserV2.Id);
+			this.match(QasmParser.Id);
 			this.state = 141;
-			this.match(QasmParserV2.LeftBrace);
+			this.match(QasmParser.LeftBrace);
 			this.state = 142;
 			this.dimension();
 			this.state = 143;
-			this.match(QasmParserV2.RightBrace);
+			this.match(QasmParser.RightBrace);
 			this.state = 144;
-			this.match(QasmParserV2.Semi);
+			this.match(QasmParser.Semi);
 			}
 		}
 		catch (re) {
@@ -654,12 +654,12 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public dimension(): DimensionContext {
 		let _localctx: DimensionContext = new DimensionContext(this._ctx, this.state);
-		this.enterRule(_localctx, 22, QasmParserV2.RULE_dimension);
+		this.enterRule(_localctx, 22, QasmParser.RULE_dimension);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			this.state = 146;
-			this.match(QasmParserV2.Int);
+			this.match(QasmParser.Int);
 			}
 		}
 		catch (re) {
@@ -679,14 +679,14 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public gateDefinition(): GateDefinitionContext {
 		let _localctx: GateDefinitionContext = new GateDefinitionContext(this._ctx, this.state);
-		this.enterRule(_localctx, 24, QasmParserV2.RULE_gateDefinition);
+		this.enterRule(_localctx, 24, QasmParser.RULE_gateDefinition);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			this.state = 148;
-			this.match(QasmParserV2.Gate);
+			this.match(QasmParser.Gate);
 			this.state = 149;
-			this.match(QasmParserV2.Id);
+			this.match(QasmParser.Id);
 			this.state = 150;
 			this.gateDefinitionArguments();
 			}
@@ -708,14 +708,14 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public opaqueDefinition(): OpaqueDefinitionContext {
 		let _localctx: OpaqueDefinitionContext = new OpaqueDefinitionContext(this._ctx, this.state);
-		this.enterRule(_localctx, 26, QasmParserV2.RULE_opaqueDefinition);
+		this.enterRule(_localctx, 26, QasmParser.RULE_opaqueDefinition);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			this.state = 152;
-			this.match(QasmParserV2.Opaque);
+			this.match(QasmParser.Opaque);
 			this.state = 153;
-			this.match(QasmParserV2.Id);
+			this.match(QasmParser.Id);
 			this.state = 154;
 			this.opaqueDefinitionArguments();
 			}
@@ -737,7 +737,7 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public gateDefinitionArguments(): GateDefinitionArgumentsContext {
 		let _localctx: GateDefinitionArgumentsContext = new GateDefinitionArgumentsContext(this._ctx, this.state);
-		this.enterRule(_localctx, 28, QasmParserV2.RULE_gateDefinitionArguments);
+		this.enterRule(_localctx, 28, QasmParser.RULE_gateDefinitionArguments);
 		try {
 			this.state = 193;
 			this._errHandler.sync(this);
@@ -748,11 +748,11 @@ export class QasmParserV2 extends Parser {
 				this.state = 156;
 				this.paramsList();
 				this.state = 157;
-				this.match(QasmParserV2.LeftCurlyBrace);
+				this.match(QasmParser.LeftCurlyBrace);
 				this.state = 158;
 				this.body();
 				this.state = 159;
-				this.match(QasmParserV2.RightCurlyBrace);
+				this.match(QasmParser.RightCurlyBrace);
 				}
 				break;
 
@@ -760,19 +760,19 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 2);
 				{
 				this.state = 161;
-				this.match(QasmParserV2.LeftParen);
+				this.match(QasmParser.LeftParen);
 				this.state = 162;
 				this.paramsList();
 				this.state = 163;
-				this.match(QasmParserV2.RightParen);
+				this.match(QasmParser.RightParen);
 				this.state = 164;
 				this.paramsList();
 				this.state = 165;
-				this.match(QasmParserV2.LeftCurlyBrace);
+				this.match(QasmParser.LeftCurlyBrace);
 				this.state = 166;
 				this.body();
 				this.state = 167;
-				this.match(QasmParserV2.RightCurlyBrace);
+				this.match(QasmParser.RightCurlyBrace);
 				}
 				break;
 
@@ -780,17 +780,17 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 3);
 				{
 				this.state = 169;
-				this.match(QasmParserV2.LeftParen);
+				this.match(QasmParser.LeftParen);
 				this.state = 170;
 				this.paramsList();
 				this.state = 171;
-				this.match(QasmParserV2.RightParen);
+				this.match(QasmParser.RightParen);
 				this.state = 172;
 				this.paramsList();
 				this.state = 173;
-				this.match(QasmParserV2.LeftCurlyBrace);
+				this.match(QasmParser.LeftCurlyBrace);
 				this.state = 174;
-				this.match(QasmParserV2.RightCurlyBrace);
+				this.match(QasmParser.RightCurlyBrace);
 				}
 				break;
 
@@ -798,15 +798,15 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 4);
 				{
 				this.state = 176;
-				this.match(QasmParserV2.LeftParen);
+				this.match(QasmParser.LeftParen);
 				this.state = 177;
-				this.match(QasmParserV2.RightParen);
+				this.match(QasmParser.RightParen);
 				this.state = 178;
 				this.paramsList();
 				this.state = 179;
-				this.match(QasmParserV2.LeftCurlyBrace);
+				this.match(QasmParser.LeftCurlyBrace);
 				this.state = 180;
-				this.match(QasmParserV2.RightCurlyBrace);
+				this.match(QasmParser.RightCurlyBrace);
 				}
 				break;
 
@@ -814,17 +814,17 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 5);
 				{
 				this.state = 182;
-				this.match(QasmParserV2.LeftParen);
+				this.match(QasmParser.LeftParen);
 				this.state = 183;
-				this.match(QasmParserV2.RightParen);
+				this.match(QasmParser.RightParen);
 				this.state = 184;
 				this.paramsList();
 				this.state = 185;
-				this.match(QasmParserV2.LeftCurlyBrace);
+				this.match(QasmParser.LeftCurlyBrace);
 				this.state = 186;
 				this.body();
 				this.state = 187;
-				this.match(QasmParserV2.RightCurlyBrace);
+				this.match(QasmParser.RightCurlyBrace);
 				}
 				break;
 
@@ -834,9 +834,9 @@ export class QasmParserV2 extends Parser {
 				this.state = 189;
 				this.paramsList();
 				this.state = 190;
-				this.match(QasmParserV2.LeftCurlyBrace);
+				this.match(QasmParser.LeftCurlyBrace);
 				this.state = 191;
-				this.match(QasmParserV2.RightCurlyBrace);
+				this.match(QasmParser.RightCurlyBrace);
 				}
 				break;
 			}
@@ -858,27 +858,27 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public opaqueDefinitionArguments(): OpaqueDefinitionArgumentsContext {
 		let _localctx: OpaqueDefinitionArgumentsContext = new OpaqueDefinitionArgumentsContext(this._ctx, this.state);
-		this.enterRule(_localctx, 30, QasmParserV2.RULE_opaqueDefinitionArguments);
+		this.enterRule(_localctx, 30, QasmParser.RULE_opaqueDefinitionArguments);
 		try {
 			this.state = 201;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
-			case QasmParserV2.Id:
+			case QasmParser.Id:
 				this.enterOuterAlt(_localctx, 1);
 				{
 				this.state = 195;
 				this.paramsList();
 				}
 				break;
-			case QasmParserV2.LeftParen:
+			case QasmParser.LeftParen:
 				this.enterOuterAlt(_localctx, 2);
 				{
 				this.state = 196;
-				this.match(QasmParserV2.LeftParen);
+				this.match(QasmParser.LeftParen);
 				this.state = 197;
 				this.paramsList();
 				this.state = 198;
-				this.match(QasmParserV2.RightParen);
+				this.match(QasmParser.RightParen);
 				this.state = 199;
 				this.paramsList();
 				}
@@ -904,7 +904,7 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public paramsList(): ParamsListContext {
 		let _localctx: ParamsListContext = new ParamsListContext(this._ctx, this.state);
-		this.enterRule(_localctx, 32, QasmParserV2.RULE_paramsList);
+		this.enterRule(_localctx, 32, QasmParser.RULE_paramsList);
 		try {
 			this.state = 207;
 			this._errHandler.sync(this);
@@ -913,7 +913,7 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 1);
 				{
 				this.state = 203;
-				this.match(QasmParserV2.Id);
+				this.match(QasmParser.Id);
 				}
 				break;
 
@@ -921,9 +921,9 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 2);
 				{
 				this.state = 204;
-				this.match(QasmParserV2.Id);
+				this.match(QasmParser.Id);
 				this.state = 205;
-				this.match(QasmParserV2.Comma);
+				this.match(QasmParser.Comma);
 				this.state = 206;
 				this.paramsList();
 				}
@@ -947,7 +947,7 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public body(): BodyContext {
 		let _localctx: BodyContext = new BodyContext(this._ctx, this.state);
-		this.enterRule(_localctx, 34, QasmParserV2.RULE_body);
+		this.enterRule(_localctx, 34, QasmParser.RULE_body);
 		try {
 			this.state = 213;
 			this._errHandler.sync(this);
@@ -988,7 +988,7 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public bodyExpression(): BodyExpressionContext {
 		let _localctx: BodyExpressionContext = new BodyExpressionContext(this._ctx, this.state);
-		this.enterRule(_localctx, 36, QasmParserV2.RULE_bodyExpression);
+		this.enterRule(_localctx, 36, QasmParser.RULE_bodyExpression);
 		try {
 			this.state = 237;
 			this._errHandler.sync(this);
@@ -997,11 +997,11 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 1);
 				{
 				this.state = 215;
-				this.match(QasmParserV2.Cx);
+				this.match(QasmParser.Cx);
 				this.state = 216;
 				this.paramsList();
 				this.state = 217;
-				this.match(QasmParserV2.Semi);
+				this.match(QasmParser.Semi);
 				}
 				break;
 
@@ -1009,17 +1009,17 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 2);
 				{
 				this.state = 219;
-				this.match(QasmParserV2.U);
+				this.match(QasmParser.U);
 				this.state = 220;
-				this.match(QasmParserV2.LeftParen);
+				this.match(QasmParser.LeftParen);
 				this.state = 221;
 				this.paramsListBody(0);
 				this.state = 222;
-				this.match(QasmParserV2.RightParen);
+				this.match(QasmParser.RightParen);
 				this.state = 223;
 				this.paramsList();
 				this.state = 224;
-				this.match(QasmParserV2.Semi);
+				this.match(QasmParser.Semi);
 				}
 				break;
 
@@ -1027,11 +1027,11 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 3);
 				{
 				this.state = 226;
-				this.match(QasmParserV2.Id);
+				this.match(QasmParser.Id);
 				this.state = 227;
 				this.paramsList();
 				this.state = 228;
-				this.match(QasmParserV2.Semi);
+				this.match(QasmParser.Semi);
 				}
 				break;
 
@@ -1039,17 +1039,17 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 4);
 				{
 				this.state = 230;
-				this.match(QasmParserV2.Id);
+				this.match(QasmParser.Id);
 				this.state = 231;
-				this.match(QasmParserV2.LeftParen);
+				this.match(QasmParser.LeftParen);
 				this.state = 232;
 				this.paramsListBody(0);
 				this.state = 233;
-				this.match(QasmParserV2.RightParen);
+				this.match(QasmParser.RightParen);
 				this.state = 234;
 				this.paramsList();
 				this.state = 235;
-				this.match(QasmParserV2.Semi);
+				this.match(QasmParser.Semi);
 				}
 				break;
 			}
@@ -1082,7 +1082,7 @@ export class QasmParserV2 extends Parser {
 		let _localctx: ParamsListBodyContext = new ParamsListBodyContext(this._ctx, _parentState);
 		let _prevctx: ParamsListBodyContext = _localctx;
 		let _startState: number = 38;
-		this.enterRecursionRule(_localctx, 38, QasmParserV2.RULE_paramsListBody, _p);
+		this.enterRecursionRule(_localctx, 38, QasmParser.RULE_paramsListBody, _p);
 		try {
 			let _alt: number;
 			this.enterOuterAlt(_localctx, 1);
@@ -1102,11 +1102,11 @@ export class QasmParserV2 extends Parser {
 					{
 					{
 					_localctx = new ParamsListBodyContext(_parentctx, _parentState);
-					this.pushNewRecursionContext(_localctx, _startState, QasmParserV2.RULE_paramsListBody);
+					this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_paramsListBody);
 					this.state = 242;
 					if (!(this.precpred(this._ctx, 1))) throw new FailedPredicateException(this, "this.precpred(this._ctx, 1)");
 					this.state = 243;
-					this.match(QasmParserV2.Comma);
+					this.match(QasmParser.Comma);
 					this.state = 244;
 					this.exp(0);
 					}
@@ -1146,7 +1146,7 @@ export class QasmParserV2 extends Parser {
 		let _localctx: ExpContext = new ExpContext(this._ctx, _parentState);
 		let _prevctx: ExpContext = _localctx;
 		let _startState: number = 40;
-		this.enterRecursionRule(_localctx, 40, QasmParserV2.RULE_exp, _p);
+		this.enterRecursionRule(_localctx, 40, QasmParser.RULE_exp, _p);
 		try {
 			let _alt: number;
 			this.enterOuterAlt(_localctx, 1);
@@ -1154,63 +1154,63 @@ export class QasmParserV2 extends Parser {
 			this.state = 266;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
-			case QasmParserV2.Int:
+			case QasmParser.Int:
 				{
 				this.state = 251;
-				this.match(QasmParserV2.Int);
+				this.match(QasmParser.Int);
 				}
 				break;
-			case QasmParserV2.Real:
+			case QasmParser.Real:
 				{
 				this.state = 252;
-				this.match(QasmParserV2.Real);
+				this.match(QasmParser.Real);
 				}
 				break;
-			case QasmParserV2.Pi:
+			case QasmParser.Pi:
 				{
 				this.state = 253;
-				this.match(QasmParserV2.Pi);
+				this.match(QasmParser.Pi);
 				}
 				break;
-			case QasmParserV2.Id:
+			case QasmParser.Id:
 				{
 				this.state = 254;
-				this.match(QasmParserV2.Id);
+				this.match(QasmParser.Id);
 				}
 				break;
-			case QasmParserV2.Sin:
-			case QasmParserV2.Cos:
-			case QasmParserV2.Tan:
-			case QasmParserV2.Exp:
-			case QasmParserV2.Ln:
-			case QasmParserV2.Sqrt:
+			case QasmParser.Sin:
+			case QasmParser.Cos:
+			case QasmParser.Tan:
+			case QasmParser.Exp:
+			case QasmParser.Ln:
+			case QasmParser.Sqrt:
 				{
 				this.state = 255;
 				this.unaryOp();
 				this.state = 256;
-				this.match(QasmParserV2.LeftParen);
+				this.match(QasmParser.LeftParen);
 				this.state = 257;
 				this.exp(0);
 				this.state = 258;
-				this.match(QasmParserV2.RightParen);
+				this.match(QasmParser.RightParen);
 				}
 				break;
-			case QasmParserV2.Subs:
+			case QasmParser.Subs:
 				{
 				this.state = 260;
-				this.match(QasmParserV2.Subs);
+				this.match(QasmParser.Subs);
 				this.state = 261;
 				this.exp(7);
 				}
 				break;
-			case QasmParserV2.LeftParen:
+			case QasmParser.LeftParen:
 				{
 				this.state = 262;
-				this.match(QasmParserV2.LeftParen);
+				this.match(QasmParser.LeftParen);
 				this.state = 263;
 				this.exp(0);
 				this.state = 264;
-				this.match(QasmParserV2.RightParen);
+				this.match(QasmParser.RightParen);
 				}
 				break;
 			default:
@@ -1231,11 +1231,11 @@ export class QasmParserV2 extends Parser {
 					case 1:
 						{
 						_localctx = new ExpContext(_parentctx, _parentState);
-						this.pushNewRecursionContext(_localctx, _startState, QasmParserV2.RULE_exp);
+						this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_exp);
 						this.state = 268;
 						if (!(this.precpred(this._ctx, 5))) throw new FailedPredicateException(this, "this.precpred(this._ctx, 5)");
 						this.state = 269;
-						this.match(QasmParserV2.Sum);
+						this.match(QasmParser.Sum);
 						this.state = 270;
 						this.exp(6);
 						}
@@ -1244,11 +1244,11 @@ export class QasmParserV2 extends Parser {
 					case 2:
 						{
 						_localctx = new ExpContext(_parentctx, _parentState);
-						this.pushNewRecursionContext(_localctx, _startState, QasmParserV2.RULE_exp);
+						this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_exp);
 						this.state = 271;
 						if (!(this.precpred(this._ctx, 4))) throw new FailedPredicateException(this, "this.precpred(this._ctx, 4)");
 						this.state = 272;
-						this.match(QasmParserV2.Subs);
+						this.match(QasmParser.Subs);
 						this.state = 273;
 						this.exp(5);
 						}
@@ -1257,11 +1257,11 @@ export class QasmParserV2 extends Parser {
 					case 3:
 						{
 						_localctx = new ExpContext(_parentctx, _parentState);
-						this.pushNewRecursionContext(_localctx, _startState, QasmParserV2.RULE_exp);
+						this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_exp);
 						this.state = 274;
 						if (!(this.precpred(this._ctx, 3))) throw new FailedPredicateException(this, "this.precpred(this._ctx, 3)");
 						this.state = 275;
-						this.match(QasmParserV2.Mult);
+						this.match(QasmParser.Mult);
 						this.state = 276;
 						this.exp(4);
 						}
@@ -1270,11 +1270,11 @@ export class QasmParserV2 extends Parser {
 					case 4:
 						{
 						_localctx = new ExpContext(_parentctx, _parentState);
-						this.pushNewRecursionContext(_localctx, _startState, QasmParserV2.RULE_exp);
+						this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_exp);
 						this.state = 277;
 						if (!(this.precpred(this._ctx, 2))) throw new FailedPredicateException(this, "this.precpred(this._ctx, 2)");
 						this.state = 278;
-						this.match(QasmParserV2.Div);
+						this.match(QasmParser.Div);
 						this.state = 279;
 						this.exp(3);
 						}
@@ -1283,11 +1283,11 @@ export class QasmParserV2 extends Parser {
 					case 5:
 						{
 						_localctx = new ExpContext(_parentctx, _parentState);
-						this.pushNewRecursionContext(_localctx, _startState, QasmParserV2.RULE_exp);
+						this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_exp);
 						this.state = 280;
 						if (!(this.precpred(this._ctx, 1))) throw new FailedPredicateException(this, "this.precpred(this._ctx, 1)");
 						this.state = 281;
-						this.match(QasmParserV2.Pow);
+						this.match(QasmParser.Pow);
 						this.state = 282;
 						this.exp(2);
 						}
@@ -1318,14 +1318,14 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public unaryOp(): UnaryOpContext {
 		let _localctx: UnaryOpContext = new UnaryOpContext(this._ctx, this.state);
-		this.enterRule(_localctx, 42, QasmParserV2.RULE_unaryOp);
+		this.enterRule(_localctx, 42, QasmParser.RULE_unaryOp);
 		let _la: number;
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			this.state = 288;
 			_la = this._input.LA(1);
-			if ( !((((_la) & ~0x1F) === 0 && ((1 << _la) & ((1 << QasmParserV2.Sin) | (1 << QasmParserV2.Cos) | (1 << QasmParserV2.Tan) | (1 << QasmParserV2.Exp) | (1 << QasmParserV2.Ln) | (1 << QasmParserV2.Sqrt))) !== 0)) ) {
+			if ( !((((_la) & ~0x1F) === 0 && ((1 << _la) & ((1 << QasmParser.Sin) | (1 << QasmParser.Cos) | (1 << QasmParser.Tan) | (1 << QasmParser.Exp) | (1 << QasmParser.Ln) | (1 << QasmParser.Sqrt))) !== 0)) ) {
 			this._errHandler.recoverInline(this);
 			} else {
 				if (this._input.LA(1) === Token.EOF) {
@@ -1354,7 +1354,7 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public measure(): MeasureContext {
 		let _localctx: MeasureContext = new MeasureContext(this._ctx, this.state);
-		this.enterRule(_localctx, 44, QasmParserV2.RULE_measure);
+		this.enterRule(_localctx, 44, QasmParser.RULE_measure);
 		try {
 			this.state = 299;
 			this._errHandler.sync(this);
@@ -1363,11 +1363,11 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 1);
 				{
 				this.state = 290;
-				this.match(QasmParserV2.Measure);
+				this.match(QasmParser.Measure);
 				this.state = 291;
 				this.qubit();
 				this.state = 292;
-				this.match(QasmParserV2.Assign);
+				this.match(QasmParser.Assign);
 				this.state = 293;
 				this.cbit();
 				}
@@ -1377,13 +1377,13 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 2);
 				{
 				this.state = 295;
-				this.match(QasmParserV2.Measure);
+				this.match(QasmParser.Measure);
 				this.state = 296;
-				_localctx._quantumRegister = this.match(QasmParserV2.Id);
+				_localctx._quantumRegister = this.match(QasmParser.Id);
 				this.state = 297;
-				this.match(QasmParserV2.Assign);
+				this.match(QasmParser.Assign);
 				this.state = 298;
-				_localctx._classicalRegister = this.match(QasmParserV2.Id);
+				_localctx._classicalRegister = this.match(QasmParser.Id);
 				}
 				break;
 			}
@@ -1405,18 +1405,18 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public qubit(): QubitContext {
 		let _localctx: QubitContext = new QubitContext(this._ctx, this.state);
-		this.enterRule(_localctx, 46, QasmParserV2.RULE_qubit);
+		this.enterRule(_localctx, 46, QasmParser.RULE_qubit);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			this.state = 301;
-			this.match(QasmParserV2.Id);
+			this.match(QasmParser.Id);
 			this.state = 302;
-			this.match(QasmParserV2.LeftBrace);
+			this.match(QasmParser.LeftBrace);
 			this.state = 303;
-			_localctx._position = this.match(QasmParserV2.Int);
+			_localctx._position = this.match(QasmParser.Int);
 			this.state = 304;
-			this.match(QasmParserV2.RightBrace);
+			this.match(QasmParser.RightBrace);
 			}
 		}
 		catch (re) {
@@ -1436,18 +1436,18 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public cbit(): CbitContext {
 		let _localctx: CbitContext = new CbitContext(this._ctx, this.state);
-		this.enterRule(_localctx, 48, QasmParserV2.RULE_cbit);
+		this.enterRule(_localctx, 48, QasmParser.RULE_cbit);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			this.state = 306;
-			this.match(QasmParserV2.Id);
+			this.match(QasmParser.Id);
 			this.state = 307;
-			this.match(QasmParserV2.LeftBrace);
+			this.match(QasmParser.LeftBrace);
 			this.state = 308;
-			_localctx._position = this.match(QasmParserV2.Int);
+			_localctx._position = this.match(QasmParser.Int);
 			this.state = 309;
-			this.match(QasmParserV2.RightBrace);
+			this.match(QasmParser.RightBrace);
 			}
 		}
 		catch (re) {
@@ -1467,7 +1467,7 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public customArglist(): CustomArglistContext {
 		let _localctx: CustomArglistContext = new CustomArglistContext(this._ctx, this.state);
-		this.enterRule(_localctx, 50, QasmParserV2.RULE_customArglist);
+		this.enterRule(_localctx, 50, QasmParser.RULE_customArglist);
 		try {
 			this.state = 319;
 			this._errHandler.sync(this);
@@ -1476,13 +1476,13 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 1);
 				{
 				this.state = 311;
-				_localctx._gate = this.match(QasmParserV2.Id);
+				_localctx._gate = this.match(QasmParser.Id);
 				this.state = 312;
-				this.match(QasmParserV2.LeftParen);
+				this.match(QasmParser.LeftParen);
 				this.state = 313;
 				this.paramsListNumber(0);
 				this.state = 314;
-				this.match(QasmParserV2.RightParen);
+				this.match(QasmParser.RightParen);
 				this.state = 315;
 				this.qubitAndQregList();
 				}
@@ -1492,7 +1492,7 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 2);
 				{
 				this.state = 317;
-				_localctx._gate = this.match(QasmParserV2.Id);
+				_localctx._gate = this.match(QasmParser.Id);
 				this.state = 318;
 				this.qubitAndQregList();
 				}
@@ -1527,7 +1527,7 @@ export class QasmParserV2 extends Parser {
 		let _localctx: ParamsListNumberContext = new ParamsListNumberContext(this._ctx, _parentState);
 		let _prevctx: ParamsListNumberContext = _localctx;
 		let _startState: number = 52;
-		this.enterRecursionRule(_localctx, 52, QasmParserV2.RULE_paramsListNumber, _p);
+		this.enterRecursionRule(_localctx, 52, QasmParser.RULE_paramsListNumber, _p);
 		try {
 			let _alt: number;
 			this.enterOuterAlt(_localctx, 1);
@@ -1547,11 +1547,11 @@ export class QasmParserV2 extends Parser {
 					{
 					{
 					_localctx = new ParamsListNumberContext(_parentctx, _parentState);
-					this.pushNewRecursionContext(_localctx, _startState, QasmParserV2.RULE_paramsListNumber);
+					this.pushNewRecursionContext(_localctx, _startState, QasmParser.RULE_paramsListNumber);
 					this.state = 324;
 					if (!(this.precpred(this._ctx, 1))) throw new FailedPredicateException(this, "this.precpred(this._ctx, 1)");
 					this.state = 325;
-					this.match(QasmParserV2.Comma);
+					this.match(QasmParser.Comma);
 					this.state = 326;
 					this.exp(0);
 					}
@@ -1580,7 +1580,7 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public qubitAndQregList(): QubitAndQregListContext {
 		let _localctx: QubitAndQregListContext = new QubitAndQregListContext(this._ctx, this.state);
-		this.enterRule(_localctx, 54, QasmParserV2.RULE_qubitAndQregList);
+		this.enterRule(_localctx, 54, QasmParser.RULE_qubitAndQregList);
 		try {
 			this.state = 337;
 			this._errHandler.sync(this);
@@ -1599,7 +1599,7 @@ export class QasmParserV2 extends Parser {
 				this.state = 333;
 				this.qbitOrQreg();
 				this.state = 334;
-				this.match(QasmParserV2.Comma);
+				this.match(QasmParser.Comma);
 				this.state = 335;
 				this.qubitAndQregList();
 				}
@@ -1623,7 +1623,7 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public qbitOrQreg(): QbitOrQregContext {
 		let _localctx: QbitOrQregContext = new QbitOrQregContext(this._ctx, this.state);
-		this.enterRule(_localctx, 56, QasmParserV2.RULE_qbitOrQreg);
+		this.enterRule(_localctx, 56, QasmParser.RULE_qbitOrQreg);
 		try {
 			this.state = 344;
 			this._errHandler.sync(this);
@@ -1632,7 +1632,7 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 1);
 				{
 				this.state = 339;
-				this.match(QasmParserV2.Id);
+				this.match(QasmParser.Id);
 				}
 				break;
 
@@ -1640,13 +1640,13 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 2);
 				{
 				this.state = 340;
-				this.match(QasmParserV2.Id);
+				this.match(QasmParser.Id);
 				this.state = 341;
-				this.match(QasmParserV2.LeftBrace);
+				this.match(QasmParser.LeftBrace);
 				this.state = 342;
-				_localctx._position = this.match(QasmParserV2.Int);
+				_localctx._position = this.match(QasmParser.Int);
 				this.state = 343;
-				this.match(QasmParserV2.RightBrace);
+				this.match(QasmParser.RightBrace);
 				}
 				break;
 			}
@@ -1668,12 +1668,12 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public cxGate(): CxGateContext {
 		let _localctx: CxGateContext = new CxGateContext(this._ctx, this.state);
-		this.enterRule(_localctx, 58, QasmParserV2.RULE_cxGate);
+		this.enterRule(_localctx, 58, QasmParser.RULE_cxGate);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			this.state = 346;
-			this.match(QasmParserV2.Cx);
+			this.match(QasmParser.Cx);
 			this.state = 347;
 			this.qubitAndQregList();
 			}
@@ -1695,7 +1695,7 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public barrierGate(): BarrierGateContext {
 		let _localctx: BarrierGateContext = new BarrierGateContext(this._ctx, this.state);
-		this.enterRule(_localctx, 60, QasmParserV2.RULE_barrierGate);
+		this.enterRule(_localctx, 60, QasmParser.RULE_barrierGate);
 		try {
 			this.state = 353;
 			this._errHandler.sync(this);
@@ -1704,9 +1704,9 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 1);
 				{
 				this.state = 349;
-				this.match(QasmParserV2.Barrier);
+				this.match(QasmParser.Barrier);
 				this.state = 350;
-				this.match(QasmParserV2.Id);
+				this.match(QasmParser.Id);
 				}
 				break;
 
@@ -1714,7 +1714,7 @@ export class QasmParserV2 extends Parser {
 				this.enterOuterAlt(_localctx, 2);
 				{
 				this.state = 351;
-				this.match(QasmParserV2.Barrier);
+				this.match(QasmParser.Barrier);
 				this.state = 352;
 				this.qubitList();
 				}
@@ -1738,7 +1738,7 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public qubitList(): QubitListContext {
 		let _localctx: QubitListContext = new QubitListContext(this._ctx, this.state);
-		this.enterRule(_localctx, 62, QasmParserV2.RULE_qubitList);
+		this.enterRule(_localctx, 62, QasmParser.RULE_qubitList);
 		try {
 			this.state = 360;
 			this._errHandler.sync(this);
@@ -1757,7 +1757,7 @@ export class QasmParserV2 extends Parser {
 				this.state = 356;
 				this.qubit();
 				this.state = 357;
-				this.match(QasmParserV2.Comma);
+				this.match(QasmParser.Comma);
 				this.state = 358;
 				this.qubitList();
 				}
@@ -1781,12 +1781,12 @@ export class QasmParserV2 extends Parser {
 	@RuleVersion(0)
 	public resetGate(): ResetGateContext {
 		let _localctx: ResetGateContext = new ResetGateContext(this._ctx, this.state);
-		this.enterRule(_localctx, 64, QasmParserV2.RULE_resetGate);
+		this.enterRule(_localctx, 64, QasmParser.RULE_resetGate);
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			this.state = 362;
-			this.match(QasmParserV2.Reset);
+			this.match(QasmParser.Reset);
 			this.state = 363;
 			this.qbitOrQreg();
 			}
@@ -2022,11 +2022,11 @@ export class QasmParserV2 extends Parser {
 		"\xF9\u010C\u011D\u011F\u012D\u0141\u014B\u0153\u015A\u0163\u016A";
 	public static __ATN: ATN;
 	public static get _ATN(): ATN {
-		if (!QasmParserV2.__ATN) {
-			QasmParserV2.__ATN = new ATNDeserializer().deserialize(Utils.toCharArray(QasmParserV2._serializedATN));
+		if (!QasmParser.__ATN) {
+			QasmParser.__ATN = new ATNDeserializer().deserialize(Utils.toCharArray(QasmParser._serializedATN));
 		}
 
-		return QasmParserV2.__ATN;
+		return QasmParser.__ATN;
 	}
 
 }
@@ -2046,17 +2046,17 @@ export class CodeContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_code; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_code; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterCode) listener.enterCode(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitCode) listener.exitCode(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitCode) return visitor.visitCode(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2064,7 +2064,7 @@ export class CodeContext extends ParserRuleContext {
 
 
 export class HeadersContext extends ParserRuleContext {
-	public QasmDescriptor(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.QasmDescriptor, 0); }
+	public QasmDescriptor(): TerminalNode | undefined { return this.tryGetToken(QasmParser.QasmDescriptor, 0); }
 	public includeLibrary(): IncludeLibraryContext | undefined {
 		return this.tryGetRuleContext(0, IncludeLibraryContext);
 	}
@@ -2073,17 +2073,17 @@ export class HeadersContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_headers; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_headers; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterHeaders) listener.enterHeaders(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitHeaders) listener.exitHeaders(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitHeaders) return visitor.visitHeaders(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2091,25 +2091,25 @@ export class HeadersContext extends ParserRuleContext {
 
 
 export class IncludeLibraryContext extends ParserRuleContext {
-	public Include(): TerminalNode { return this.getToken(QasmParserV2.Include, 0); }
-	public Library(): TerminalNode { return this.getToken(QasmParserV2.Library, 0); }
-	public Semi(): TerminalNode { return this.getToken(QasmParserV2.Semi, 0); }
+	public Include(): TerminalNode { return this.getToken(QasmParser.Include, 0); }
+	public Library(): TerminalNode { return this.getToken(QasmParser.Library, 0); }
+	public Semi(): TerminalNode { return this.getToken(QasmParser.Semi, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_includeLibrary; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_includeLibrary; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterIncludeLibrary) listener.enterIncludeLibrary(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitIncludeLibrary) listener.exitIncludeLibrary(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitIncludeLibrary) return visitor.visitIncludeLibrary(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2128,17 +2128,17 @@ export class SentencesContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_sentences; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_sentences; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterSentences) listener.enterSentences(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitSentences) listener.exitSentences(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitSentences) return visitor.visitSentences(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2146,24 +2146,24 @@ export class SentencesContext extends ParserRuleContext {
 
 
 export class CleanContext extends ParserRuleContext {
-	public Clean(): TerminalNode { return this.getToken(QasmParserV2.Clean, 0); }
-	public EOF(): TerminalNode { return this.getToken(QasmParserV2.EOF, 0); }
+	public Clean(): TerminalNode { return this.getToken(QasmParser.Clean, 0); }
+	public EOF(): TerminalNode { return this.getToken(QasmParser.EOF, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_clean; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_clean; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterClean) listener.enterClean(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitClean) listener.exitClean(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitClean) return visitor.visitClean(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2180,23 +2180,23 @@ export class SentenceContext extends ParserRuleContext {
 	public conditional(): ConditionalContext | undefined {
 		return this.tryGetRuleContext(0, ConditionalContext);
 	}
-	public EOF(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.EOF, 0); }
+	public EOF(): TerminalNode | undefined { return this.tryGetToken(QasmParser.EOF, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_sentence; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_sentence; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterSentence) listener.enterSentence(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitSentence) listener.exitSentence(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitSentence) return visitor.visitSentence(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2216,23 +2216,23 @@ export class DefinitionContext extends ParserRuleContext {
 	public opaqueDefinition(): OpaqueDefinitionContext | undefined {
 		return this.tryGetRuleContext(0, OpaqueDefinitionContext);
 	}
-	public Semi(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Semi, 0); }
+	public Semi(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Semi, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_definition; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_definition; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterDefinition) listener.enterDefinition(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitDefinition) listener.exitDefinition(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitDefinition) return visitor.visitDefinition(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2243,7 +2243,7 @@ export class ExpressionContext extends ParserRuleContext {
 	public measure(): MeasureContext | undefined {
 		return this.tryGetRuleContext(0, MeasureContext);
 	}
-	public Semi(): TerminalNode { return this.getToken(QasmParserV2.Semi, 0); }
+	public Semi(): TerminalNode { return this.getToken(QasmParser.Semi, 0); }
 	public customArglist(): CustomArglistContext | undefined {
 		return this.tryGetRuleContext(0, CustomArglistContext);
 	}
@@ -2261,17 +2261,17 @@ export class ExpressionContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_expression; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_expression; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterExpression) listener.enterExpression(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitExpression) listener.exitExpression(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitExpression) return visitor.visitExpression(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2279,28 +2279,28 @@ export class ExpressionContext extends ParserRuleContext {
 
 
 export class ConditionalContext extends ParserRuleContext {
-	public If(): TerminalNode { return this.getToken(QasmParserV2.If, 0); }
-	public LeftParen(): TerminalNode { return this.getToken(QasmParserV2.LeftParen, 0); }
-	public Id(): TerminalNode { return this.getToken(QasmParserV2.Id, 0); }
-	public Equals(): TerminalNode { return this.getToken(QasmParserV2.Equals, 0); }
-	public Int(): TerminalNode { return this.getToken(QasmParserV2.Int, 0); }
-	public RightParen(): TerminalNode { return this.getToken(QasmParserV2.RightParen, 0); }
+	public If(): TerminalNode { return this.getToken(QasmParser.If, 0); }
+	public LeftParen(): TerminalNode { return this.getToken(QasmParser.LeftParen, 0); }
+	public Id(): TerminalNode { return this.getToken(QasmParser.Id, 0); }
+	public Equals(): TerminalNode { return this.getToken(QasmParser.Equals, 0); }
+	public Int(): TerminalNode { return this.getToken(QasmParser.Int, 0); }
+	public RightParen(): TerminalNode { return this.getToken(QasmParser.RightParen, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_conditional; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_conditional; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterConditional) listener.enterConditional(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitConditional) listener.exitConditional(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitConditional) return visitor.visitConditional(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2308,30 +2308,30 @@ export class ConditionalContext extends ParserRuleContext {
 
 
 export class QregDefinitionContext extends ParserRuleContext {
-	public Qreg(): TerminalNode { return this.getToken(QasmParserV2.Qreg, 0); }
-	public Id(): TerminalNode { return this.getToken(QasmParserV2.Id, 0); }
-	public LeftBrace(): TerminalNode { return this.getToken(QasmParserV2.LeftBrace, 0); }
+	public Qreg(): TerminalNode { return this.getToken(QasmParser.Qreg, 0); }
+	public Id(): TerminalNode { return this.getToken(QasmParser.Id, 0); }
+	public LeftBrace(): TerminalNode { return this.getToken(QasmParser.LeftBrace, 0); }
 	public dimension(): DimensionContext {
 		return this.getRuleContext(0, DimensionContext);
 	}
-	public RightBrace(): TerminalNode { return this.getToken(QasmParserV2.RightBrace, 0); }
-	public Semi(): TerminalNode { return this.getToken(QasmParserV2.Semi, 0); }
+	public RightBrace(): TerminalNode { return this.getToken(QasmParser.RightBrace, 0); }
+	public Semi(): TerminalNode { return this.getToken(QasmParser.Semi, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_qregDefinition; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_qregDefinition; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterQregDefinition) listener.enterQregDefinition(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitQregDefinition) listener.exitQregDefinition(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitQregDefinition) return visitor.visitQregDefinition(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2339,30 +2339,30 @@ export class QregDefinitionContext extends ParserRuleContext {
 
 
 export class CregDefinitionContext extends ParserRuleContext {
-	public Creg(): TerminalNode { return this.getToken(QasmParserV2.Creg, 0); }
-	public Id(): TerminalNode { return this.getToken(QasmParserV2.Id, 0); }
-	public LeftBrace(): TerminalNode { return this.getToken(QasmParserV2.LeftBrace, 0); }
+	public Creg(): TerminalNode { return this.getToken(QasmParser.Creg, 0); }
+	public Id(): TerminalNode { return this.getToken(QasmParser.Id, 0); }
+	public LeftBrace(): TerminalNode { return this.getToken(QasmParser.LeftBrace, 0); }
 	public dimension(): DimensionContext {
 		return this.getRuleContext(0, DimensionContext);
 	}
-	public RightBrace(): TerminalNode { return this.getToken(QasmParserV2.RightBrace, 0); }
-	public Semi(): TerminalNode { return this.getToken(QasmParserV2.Semi, 0); }
+	public RightBrace(): TerminalNode { return this.getToken(QasmParser.RightBrace, 0); }
+	public Semi(): TerminalNode { return this.getToken(QasmParser.Semi, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_cregDefinition; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_cregDefinition; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterCregDefinition) listener.enterCregDefinition(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitCregDefinition) listener.exitCregDefinition(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitCregDefinition) return visitor.visitCregDefinition(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2370,23 +2370,23 @@ export class CregDefinitionContext extends ParserRuleContext {
 
 
 export class DimensionContext extends ParserRuleContext {
-	public Int(): TerminalNode { return this.getToken(QasmParserV2.Int, 0); }
+	public Int(): TerminalNode { return this.getToken(QasmParser.Int, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_dimension; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_dimension; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterDimension) listener.enterDimension(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitDimension) listener.exitDimension(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitDimension) return visitor.visitDimension(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2394,8 +2394,8 @@ export class DimensionContext extends ParserRuleContext {
 
 
 export class GateDefinitionContext extends ParserRuleContext {
-	public Gate(): TerminalNode { return this.getToken(QasmParserV2.Gate, 0); }
-	public Id(): TerminalNode { return this.getToken(QasmParserV2.Id, 0); }
+	public Gate(): TerminalNode { return this.getToken(QasmParser.Gate, 0); }
+	public Id(): TerminalNode { return this.getToken(QasmParser.Id, 0); }
 	public gateDefinitionArguments(): GateDefinitionArgumentsContext {
 		return this.getRuleContext(0, GateDefinitionArgumentsContext);
 	}
@@ -2404,17 +2404,17 @@ export class GateDefinitionContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_gateDefinition; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_gateDefinition; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterGateDefinition) listener.enterGateDefinition(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitGateDefinition) listener.exitGateDefinition(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitGateDefinition) return visitor.visitGateDefinition(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2422,8 +2422,8 @@ export class GateDefinitionContext extends ParserRuleContext {
 
 
 export class OpaqueDefinitionContext extends ParserRuleContext {
-	public Opaque(): TerminalNode { return this.getToken(QasmParserV2.Opaque, 0); }
-	public Id(): TerminalNode { return this.getToken(QasmParserV2.Id, 0); }
+	public Opaque(): TerminalNode { return this.getToken(QasmParser.Opaque, 0); }
+	public Id(): TerminalNode { return this.getToken(QasmParser.Id, 0); }
 	public opaqueDefinitionArguments(): OpaqueDefinitionArgumentsContext {
 		return this.getRuleContext(0, OpaqueDefinitionArgumentsContext);
 	}
@@ -2432,17 +2432,17 @@ export class OpaqueDefinitionContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_opaqueDefinition; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_opaqueDefinition; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterOpaqueDefinition) listener.enterOpaqueDefinition(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitOpaqueDefinition) listener.exitOpaqueDefinition(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitOpaqueDefinition) return visitor.visitOpaqueDefinition(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2459,29 +2459,29 @@ export class GateDefinitionArgumentsContext extends ParserRuleContext {
 			return this.getRuleContext(i, ParamsListContext);
 		}
 	}
-	public LeftCurlyBrace(): TerminalNode { return this.getToken(QasmParserV2.LeftCurlyBrace, 0); }
+	public LeftCurlyBrace(): TerminalNode { return this.getToken(QasmParser.LeftCurlyBrace, 0); }
 	public body(): BodyContext | undefined {
 		return this.tryGetRuleContext(0, BodyContext);
 	}
-	public RightCurlyBrace(): TerminalNode { return this.getToken(QasmParserV2.RightCurlyBrace, 0); }
-	public LeftParen(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.LeftParen, 0); }
-	public RightParen(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.RightParen, 0); }
+	public RightCurlyBrace(): TerminalNode { return this.getToken(QasmParser.RightCurlyBrace, 0); }
+	public LeftParen(): TerminalNode | undefined { return this.tryGetToken(QasmParser.LeftParen, 0); }
+	public RightParen(): TerminalNode | undefined { return this.tryGetToken(QasmParser.RightParen, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_gateDefinitionArguments; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_gateDefinitionArguments; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterGateDefinitionArguments) listener.enterGateDefinitionArguments(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitGateDefinitionArguments) listener.exitGateDefinitionArguments(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitGateDefinitionArguments) return visitor.visitGateDefinitionArguments(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2498,24 +2498,24 @@ export class OpaqueDefinitionArgumentsContext extends ParserRuleContext {
 			return this.getRuleContext(i, ParamsListContext);
 		}
 	}
-	public LeftParen(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.LeftParen, 0); }
-	public RightParen(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.RightParen, 0); }
+	public LeftParen(): TerminalNode | undefined { return this.tryGetToken(QasmParser.LeftParen, 0); }
+	public RightParen(): TerminalNode | undefined { return this.tryGetToken(QasmParser.RightParen, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_opaqueDefinitionArguments; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_opaqueDefinitionArguments; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterOpaqueDefinitionArguments) listener.enterOpaqueDefinitionArguments(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitOpaqueDefinitionArguments) listener.exitOpaqueDefinitionArguments(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitOpaqueDefinitionArguments) return visitor.visitOpaqueDefinitionArguments(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2523,8 +2523,8 @@ export class OpaqueDefinitionArgumentsContext extends ParserRuleContext {
 
 
 export class ParamsListContext extends ParserRuleContext {
-	public Id(): TerminalNode { return this.getToken(QasmParserV2.Id, 0); }
-	public Comma(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Comma, 0); }
+	public Id(): TerminalNode { return this.getToken(QasmParser.Id, 0); }
+	public Comma(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Comma, 0); }
 	public paramsList(): ParamsListContext | undefined {
 		return this.tryGetRuleContext(0, ParamsListContext);
 	}
@@ -2533,17 +2533,17 @@ export class ParamsListContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_paramsList; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_paramsList; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterParamsList) listener.enterParamsList(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitParamsList) listener.exitParamsList(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitParamsList) return visitor.visitParamsList(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2562,17 +2562,17 @@ export class BodyContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_body; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_body; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterBody) listener.enterBody(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitBody) listener.exitBody(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitBody) return visitor.visitBody(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2580,34 +2580,34 @@ export class BodyContext extends ParserRuleContext {
 
 
 export class BodyExpressionContext extends ParserRuleContext {
-	public Cx(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Cx, 0); }
+	public Cx(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Cx, 0); }
 	public paramsList(): ParamsListContext {
 		return this.getRuleContext(0, ParamsListContext);
 	}
-	public Semi(): TerminalNode { return this.getToken(QasmParserV2.Semi, 0); }
-	public U(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.U, 0); }
-	public LeftParen(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.LeftParen, 0); }
+	public Semi(): TerminalNode { return this.getToken(QasmParser.Semi, 0); }
+	public U(): TerminalNode | undefined { return this.tryGetToken(QasmParser.U, 0); }
+	public LeftParen(): TerminalNode | undefined { return this.tryGetToken(QasmParser.LeftParen, 0); }
 	public paramsListBody(): ParamsListBodyContext | undefined {
 		return this.tryGetRuleContext(0, ParamsListBodyContext);
 	}
-	public RightParen(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.RightParen, 0); }
-	public Id(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Id, 0); }
+	public RightParen(): TerminalNode | undefined { return this.tryGetToken(QasmParser.RightParen, 0); }
+	public Id(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Id, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_bodyExpression; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_bodyExpression; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterBodyExpression) listener.enterBodyExpression(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitBodyExpression) listener.exitBodyExpression(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitBodyExpression) return visitor.visitBodyExpression(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2621,23 +2621,23 @@ export class ParamsListBodyContext extends ParserRuleContext {
 	public paramsListBody(): ParamsListBodyContext | undefined {
 		return this.tryGetRuleContext(0, ParamsListBodyContext);
 	}
-	public Comma(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Comma, 0); }
+	public Comma(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Comma, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_paramsListBody; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_paramsListBody; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterParamsListBody) listener.enterParamsListBody(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitParamsListBody) listener.exitParamsListBody(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitParamsListBody) return visitor.visitParamsListBody(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2645,14 +2645,14 @@ export class ParamsListBodyContext extends ParserRuleContext {
 
 
 export class ExpContext extends ParserRuleContext {
-	public Int(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Int, 0); }
-	public Real(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Real, 0); }
-	public Pi(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Pi, 0); }
-	public Id(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Id, 0); }
+	public Int(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Int, 0); }
+	public Real(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Real, 0); }
+	public Pi(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Pi, 0); }
+	public Id(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Id, 0); }
 	public unaryOp(): UnaryOpContext | undefined {
 		return this.tryGetRuleContext(0, UnaryOpContext);
 	}
-	public LeftParen(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.LeftParen, 0); }
+	public LeftParen(): TerminalNode | undefined { return this.tryGetToken(QasmParser.LeftParen, 0); }
 	public exp(): ExpContext[];
 	public exp(i: number): ExpContext;
 	public exp(i?: number): ExpContext | ExpContext[] {
@@ -2662,23 +2662,23 @@ export class ExpContext extends ParserRuleContext {
 			return this.getRuleContext(i, ExpContext);
 		}
 	}
-	public RightParen(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.RightParen, 0); }
+	public RightParen(): TerminalNode | undefined { return this.tryGetToken(QasmParser.RightParen, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_exp; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_exp; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterExp) listener.enterExp(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitExp) listener.exitExp(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitExp) return visitor.visitExp(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2686,28 +2686,28 @@ export class ExpContext extends ParserRuleContext {
 
 
 export class UnaryOpContext extends ParserRuleContext {
-	public Sin(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Sin, 0); }
-	public Cos(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Cos, 0); }
-	public Tan(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Tan, 0); }
-	public Exp(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Exp, 0); }
-	public Ln(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Ln, 0); }
-	public Sqrt(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Sqrt, 0); }
+	public Sin(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Sin, 0); }
+	public Cos(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Cos, 0); }
+	public Tan(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Tan, 0); }
+	public Exp(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Exp, 0); }
+	public Ln(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Ln, 0); }
+	public Sqrt(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Sqrt, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_unaryOp; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_unaryOp; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterUnaryOp) listener.enterUnaryOp(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitUnaryOp) listener.exitUnaryOp(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitUnaryOp) return visitor.visitUnaryOp(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2717,11 +2717,11 @@ export class UnaryOpContext extends ParserRuleContext {
 export class MeasureContext extends ParserRuleContext {
 	public _quantumRegister: Token;
 	public _classicalRegister: Token;
-	public Measure(): TerminalNode { return this.getToken(QasmParserV2.Measure, 0); }
+	public Measure(): TerminalNode { return this.getToken(QasmParser.Measure, 0); }
 	public qubit(): QubitContext | undefined {
 		return this.tryGetRuleContext(0, QubitContext);
 	}
-	public Assign(): TerminalNode { return this.getToken(QasmParserV2.Assign, 0); }
+	public Assign(): TerminalNode { return this.getToken(QasmParser.Assign, 0); }
 	public cbit(): CbitContext | undefined {
 		return this.tryGetRuleContext(0, CbitContext);
 	}
@@ -2729,9 +2729,9 @@ export class MeasureContext extends ParserRuleContext {
 	public Id(i: number): TerminalNode;
 	public Id(i?: number): TerminalNode | TerminalNode[] {
 		if (i === undefined) {
-			return this.getTokens(QasmParserV2.Id);
+			return this.getTokens(QasmParser.Id);
 		} else {
-			return this.getToken(QasmParserV2.Id, i);
+			return this.getToken(QasmParser.Id, i);
 		}
 	}
 	constructor(parent: ParserRuleContext, invokingState: number);
@@ -2739,17 +2739,17 @@ export class MeasureContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_measure; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_measure; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterMeasure) listener.enterMeasure(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitMeasure) listener.exitMeasure(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitMeasure) return visitor.visitMeasure(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2758,26 +2758,26 @@ export class MeasureContext extends ParserRuleContext {
 
 export class QubitContext extends ParserRuleContext {
 	public _position: Token;
-	public Id(): TerminalNode { return this.getToken(QasmParserV2.Id, 0); }
-	public LeftBrace(): TerminalNode { return this.getToken(QasmParserV2.LeftBrace, 0); }
-	public RightBrace(): TerminalNode { return this.getToken(QasmParserV2.RightBrace, 0); }
-	public Int(): TerminalNode { return this.getToken(QasmParserV2.Int, 0); }
+	public Id(): TerminalNode { return this.getToken(QasmParser.Id, 0); }
+	public LeftBrace(): TerminalNode { return this.getToken(QasmParser.LeftBrace, 0); }
+	public RightBrace(): TerminalNode { return this.getToken(QasmParser.RightBrace, 0); }
+	public Int(): TerminalNode { return this.getToken(QasmParser.Int, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_qubit; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_qubit; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterQubit) listener.enterQubit(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitQubit) listener.exitQubit(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitQubit) return visitor.visitQubit(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2786,26 +2786,26 @@ export class QubitContext extends ParserRuleContext {
 
 export class CbitContext extends ParserRuleContext {
 	public _position: Token;
-	public Id(): TerminalNode { return this.getToken(QasmParserV2.Id, 0); }
-	public LeftBrace(): TerminalNode { return this.getToken(QasmParserV2.LeftBrace, 0); }
-	public RightBrace(): TerminalNode { return this.getToken(QasmParserV2.RightBrace, 0); }
-	public Int(): TerminalNode { return this.getToken(QasmParserV2.Int, 0); }
+	public Id(): TerminalNode { return this.getToken(QasmParser.Id, 0); }
+	public LeftBrace(): TerminalNode { return this.getToken(QasmParser.LeftBrace, 0); }
+	public RightBrace(): TerminalNode { return this.getToken(QasmParser.RightBrace, 0); }
+	public Int(): TerminalNode { return this.getToken(QasmParser.Int, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_cbit; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_cbit; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterCbit) listener.enterCbit(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitCbit) listener.exitCbit(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitCbit) return visitor.visitCbit(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2814,31 +2814,31 @@ export class CbitContext extends ParserRuleContext {
 
 export class CustomArglistContext extends ParserRuleContext {
 	public _gate: Token;
-	public LeftParen(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.LeftParen, 0); }
+	public LeftParen(): TerminalNode | undefined { return this.tryGetToken(QasmParser.LeftParen, 0); }
 	public paramsListNumber(): ParamsListNumberContext | undefined {
 		return this.tryGetRuleContext(0, ParamsListNumberContext);
 	}
-	public RightParen(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.RightParen, 0); }
+	public RightParen(): TerminalNode | undefined { return this.tryGetToken(QasmParser.RightParen, 0); }
 	public qubitAndQregList(): QubitAndQregListContext {
 		return this.getRuleContext(0, QubitAndQregListContext);
 	}
-	public Id(): TerminalNode { return this.getToken(QasmParserV2.Id, 0); }
+	public Id(): TerminalNode { return this.getToken(QasmParser.Id, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_customArglist; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_customArglist; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterCustomArglist) listener.enterCustomArglist(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitCustomArglist) listener.exitCustomArglist(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitCustomArglist) return visitor.visitCustomArglist(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2852,23 +2852,23 @@ export class ParamsListNumberContext extends ParserRuleContext {
 	public paramsListNumber(): ParamsListNumberContext | undefined {
 		return this.tryGetRuleContext(0, ParamsListNumberContext);
 	}
-	public Comma(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Comma, 0); }
+	public Comma(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Comma, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_paramsListNumber; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_paramsListNumber; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterParamsListNumber) listener.enterParamsListNumber(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitParamsListNumber) listener.exitParamsListNumber(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitParamsListNumber) return visitor.visitParamsListNumber(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2879,7 +2879,7 @@ export class QubitAndQregListContext extends ParserRuleContext {
 	public qbitOrQreg(): QbitOrQregContext {
 		return this.getRuleContext(0, QbitOrQregContext);
 	}
-	public Comma(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Comma, 0); }
+	public Comma(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Comma, 0); }
 	public qubitAndQregList(): QubitAndQregListContext | undefined {
 		return this.tryGetRuleContext(0, QubitAndQregListContext);
 	}
@@ -2888,17 +2888,17 @@ export class QubitAndQregListContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_qubitAndQregList; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_qubitAndQregList; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterQubitAndQregList) listener.enterQubitAndQregList(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitQubitAndQregList) listener.exitQubitAndQregList(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitQubitAndQregList) return visitor.visitQubitAndQregList(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2907,26 +2907,26 @@ export class QubitAndQregListContext extends ParserRuleContext {
 
 export class QbitOrQregContext extends ParserRuleContext {
 	public _position: Token;
-	public Id(): TerminalNode { return this.getToken(QasmParserV2.Id, 0); }
-	public LeftBrace(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.LeftBrace, 0); }
-	public RightBrace(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.RightBrace, 0); }
-	public Int(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Int, 0); }
+	public Id(): TerminalNode { return this.getToken(QasmParser.Id, 0); }
+	public LeftBrace(): TerminalNode | undefined { return this.tryGetToken(QasmParser.LeftBrace, 0); }
+	public RightBrace(): TerminalNode | undefined { return this.tryGetToken(QasmParser.RightBrace, 0); }
+	public Int(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Int, 0); }
 	constructor(parent: ParserRuleContext, invokingState: number);
 	constructor(parent: ParserRuleContext, invokingState: number) {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_qbitOrQreg; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_qbitOrQreg; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterQbitOrQreg) listener.enterQbitOrQreg(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitQbitOrQreg) listener.exitQbitOrQreg(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitQbitOrQreg) return visitor.visitQbitOrQreg(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2934,7 +2934,7 @@ export class QbitOrQregContext extends ParserRuleContext {
 
 
 export class CxGateContext extends ParserRuleContext {
-	public Cx(): TerminalNode { return this.getToken(QasmParserV2.Cx, 0); }
+	public Cx(): TerminalNode { return this.getToken(QasmParser.Cx, 0); }
 	public qubitAndQregList(): QubitAndQregListContext {
 		return this.getRuleContext(0, QubitAndQregListContext);
 	}
@@ -2943,17 +2943,17 @@ export class CxGateContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_cxGate; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_cxGate; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterCxGate) listener.enterCxGate(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitCxGate) listener.exitCxGate(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitCxGate) return visitor.visitCxGate(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2961,8 +2961,8 @@ export class CxGateContext extends ParserRuleContext {
 
 
 export class BarrierGateContext extends ParserRuleContext {
-	public Barrier(): TerminalNode { return this.getToken(QasmParserV2.Barrier, 0); }
-	public Id(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Id, 0); }
+	public Barrier(): TerminalNode { return this.getToken(QasmParser.Barrier, 0); }
+	public Id(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Id, 0); }
 	public qubitList(): QubitListContext | undefined {
 		return this.tryGetRuleContext(0, QubitListContext);
 	}
@@ -2971,17 +2971,17 @@ export class BarrierGateContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_barrierGate; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_barrierGate; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterBarrierGate) listener.enterBarrierGate(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitBarrierGate) listener.exitBarrierGate(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitBarrierGate) return visitor.visitBarrierGate(this);
 		else return visitor.visitChildren(this);
 	}
@@ -2992,7 +2992,7 @@ export class QubitListContext extends ParserRuleContext {
 	public qubit(): QubitContext {
 		return this.getRuleContext(0, QubitContext);
 	}
-	public Comma(): TerminalNode | undefined { return this.tryGetToken(QasmParserV2.Comma, 0); }
+	public Comma(): TerminalNode | undefined { return this.tryGetToken(QasmParser.Comma, 0); }
 	public qubitList(): QubitListContext | undefined {
 		return this.tryGetRuleContext(0, QubitListContext);
 	}
@@ -3001,17 +3001,17 @@ export class QubitListContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_qubitList; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_qubitList; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterQubitList) listener.enterQubitList(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitQubitList) listener.exitQubitList(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitQubitList) return visitor.visitQubitList(this);
 		else return visitor.visitChildren(this);
 	}
@@ -3019,7 +3019,7 @@ export class QubitListContext extends ParserRuleContext {
 
 
 export class ResetGateContext extends ParserRuleContext {
-	public Reset(): TerminalNode { return this.getToken(QasmParserV2.Reset, 0); }
+	public Reset(): TerminalNode { return this.getToken(QasmParser.Reset, 0); }
 	public qbitOrQreg(): QbitOrQregContext {
 		return this.getRuleContext(0, QbitOrQregContext);
 	}
@@ -3028,17 +3028,17 @@ export class ResetGateContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParserV2.RULE_resetGate; }
+	@Override public get ruleIndex(): number { return QasmParser.RULE_resetGate; }
 	@Override
-	public enterRule(listener: QasmParserV2Listener): void {
+	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterResetGate) listener.enterResetGate(this);
 	}
 	@Override
-	public exitRule(listener: QasmParserV2Listener): void {
+	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitResetGate) listener.exitResetGate(this);
 	}
 	@Override
-	public accept<Result>(visitor: QasmParserV2Visitor<Result>): Result {
+	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitResetGate) return visitor.visitResetGate(this);
 		else return visitor.visitChildren(this);
 	}

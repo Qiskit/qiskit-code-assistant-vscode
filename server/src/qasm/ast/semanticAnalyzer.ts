@@ -18,7 +18,7 @@
 import { ParserRuleContext } from 'antlr4ts';
 import { SymbolTable } from '../../tools/symbolTable';
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree';
-import { QasmParserV2Visitor } from '../antlrV2/QasmParserV2Visitor';
+import { QasmParserVisitor } from '../antlr/QasmParserVisitor';
 import {
     CodeContext,
     ConditionalContext,
@@ -28,7 +28,7 @@ import {
     QbitOrQregContext,
     BarrierGateContext,
     CustomArglistContext
-} from '../antlrV2/QasmParserV2';
+} from '../antlr/QasmParser';
 import { PositionAdapter } from './errorBuilder';
 import { ErrorListener } from '../parser';
 import {
@@ -49,7 +49,7 @@ export namespace SemanticAnalyzer {
     }
 }
 
-class SemanticValidator extends AbstractParseTreeVisitor<void> implements QasmParserV2Visitor<void> {
+class SemanticValidator extends AbstractParseTreeVisitor<void> implements QasmParserVisitor<void> {
     constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {
         super();
     }
@@ -66,7 +66,7 @@ class SemanticValidator extends AbstractParseTreeVisitor<void> implements QasmPa
     }
 }
 
-class SentenceValidator extends AbstractParseTreeVisitor<void> implements QasmParserV2Visitor<void> {
+class SentenceValidator extends AbstractParseTreeVisitor<void> implements QasmParserVisitor<void> {
     private rulesValidator: SemanticRulesValidator;
 
     constructor(symbolTable: SymbolTable, errorListener: ErrorListener) {

@@ -23,16 +23,16 @@ import {
     CommonToken,
     ConsoleErrorListener
 } from 'antlr4ts';
-import { QasmLexerV2 } from './antlrV2/QasmLexerV2';
-import { QasmParserV2 } from './antlrV2/QasmParserV2';
+import { QasmLexer } from './antlr/QasmLexer';
+import { QasmParser } from './antlr/QasmParser';
 
 export namespace QASMSyntacticParser {
     export function parse(input: string): ParserRuleContext {
         let inputStream = new ANTLRInputStream(input);
-        let lexer = new QasmLexerV2(inputStream);
+        let lexer = new QasmLexer(inputStream);
 
         let tokenStream = new CommonTokenStream(lexer);
-        let parser = new QasmParserV2(tokenStream);
+        let parser = new QasmParser(tokenStream);
 
         return parser.code();
     }
@@ -42,17 +42,17 @@ export namespace QASMSyntacticParser {
         errorListener: ANTLRErrorListener<CommonToken>
     ): ParserRuleContext {
         let inputStream = new ANTLRInputStream(input);
-        let lexer = new QasmLexerV2(inputStream);
+        let lexer = new QasmLexer(inputStream);
         lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
 
         let tokenStream = new CommonTokenStream(lexer);
-        let parser = new QasmParserV2(tokenStream);
+        let parser = new QasmParser(tokenStream);
         parser.addErrorListener(errorListener);
 
         return parser.code();
     }
 
     export function ruleNames(): string[] {
-        return QasmParserV2.ruleNames;
+        return QasmParser.ruleNames;
     }
 }

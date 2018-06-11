@@ -13,7 +13,7 @@
 // limitations under the License.
 // =============================================================================
 
-lexer grammar QasmLexerV2;
+lexer grammar QasmLexer;
 
 
 Comment: '//' ~[\r\n]* -> skip;
