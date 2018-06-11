@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### ✏️ Changed
 
+- Allow users to select if they want explicit information or not at the boot of extension ([#122](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/122) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Improved the NPM tasks to be more clear and readable ([#117](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/117) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 - Adding prettier formatter to client code ([#116](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/116) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Refactorization of the QISKit symbol table generation and semantic errors detection ([#111](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/111) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))

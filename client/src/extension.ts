@@ -17,7 +17,7 @@ import { QLogger } from './logger';
 export function activate(context: vscode.ExtensionContext) {
     QLogger.verbose('Activating IBM Q Studio extension ...', this);
 
-    vscode.window.showInformationMessage('✨ Activating IBM Q Studio extension... ✨');
+    ActivationUtils.showExtensionBootInfo('✨ Activating IBM Q Studio extension... ✨', false);
 
     let languagesActivation = new LanguagesActivation(context);
 
@@ -29,10 +29,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     ActivationUtils.registerCommands(context);
 
-    ActivationUtils.checkDependencies()
+    ActivationUtils.checkDependencies(false)
         .then(() => {
             QLogger.verbose('IBM Q Studio extension successfully loaded!', this);
-            vscode.window.showInformationMessage('🚀 IBM Q Studio extension loaded! 🚀');
+            ActivationUtils.showExtensionBootInfo('🚀 IBM Q Studio extension loaded! 🚀', false);
         })
         .catch(err => {
             QLogger.error(`Dependencies error: ${err}`, this);

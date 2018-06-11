@@ -7,7 +7,7 @@
  * the LICENSE.txt file in the root directory of this source tree.
  */
 
-import * as Q from "q";
+import * as Q from 'q';
 
 export interface IVersionInfo {
     Major: Number;
@@ -42,7 +42,7 @@ export interface IPackage {
     Info: IPackageInfo;
     // Checks whether or not the package is installed, and if installed, check
     // for newer versions
-    checkVersion(pkgVersion: string): Q.Promise<void>;
+    checkVersion(pkgVersion: string, verbose: boolean | false): Q.Promise<void>;
     update(pkg: string): Q.Promise<string>;
     install(pkg: string): Q.Promise<string>;
 }
