@@ -17,7 +17,6 @@
 
 import { ParserRuleContext } from 'antlr4ts';
 import { SymbolTable } from '../../tools/symbolTable';
-import { ParserError } from '../../types';
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree';
 import { QasmParserV2Visitor } from '../antlrV2/QasmParserV2Visitor';
 import {
@@ -29,9 +28,8 @@ import {
     QbitOrQregContext,
     BarrierGateContext,
     CustomArglistContext
-} from '../antlrv2/QasmParserV2';
-import { ErrorMessages } from './errorMessages';
-import { ErrorBuilder, PositionAdapter } from './errorBuilder';
+} from '../antlrV2/QasmParserV2';
+import { PositionAdapter } from './errorBuilder';
 import { ErrorListener } from '../parser';
 import {
     SemanticRulesValidator,
