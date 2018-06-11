@@ -18,9 +18,10 @@
 import { SymbolTable, Symbol } from '../../../tools/symbolTable';
 import { ErrorListener } from '../tools/errorListener';
 import { ErrorMessages } from '../tools/errorMessages';
-import { PositionAdapter, ErrorBuilder } from '../tools/errorBuilder';
+import { ErrorBuilder } from '../tools/errorBuilder';
 import { Override } from 'antlr4ts/Decorators';
 import { RegisterSymbol, QASMSymbols } from '../symbolTable';
+import { ContentPosition } from '../types';
 
 export class SemanticRulesValidator {
     constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {}
@@ -42,7 +43,7 @@ export class RegistersOfSameSizeRule implements SemanticRule {
     constructor(
         private quantumRegister: string,
         private classicalRegister: string,
-        private position: PositionAdapter
+        private position: ContentPosition
     ) {}
 
     @Override
@@ -76,7 +77,7 @@ export class RegistersOfSameSizeRule implements SemanticRule {
 }
 
 export class ExistingSymbolValidationRule implements SemanticRule {
-    constructor(private variableName: string, private position: PositionAdapter) {}
+    constructor(private variableName: string, private position: ContentPosition) {}
 
     @Override
     applyWith(symbolTable: SymbolTable, errorListener: ErrorListener) {
@@ -92,7 +93,7 @@ export class ExistingSymbolValidationRule implements SemanticRule {
 }
 
 export class ClassicalRegisterTypeRule implements SemanticRule {
-    constructor(private variableName: string, private position: PositionAdapter) {}
+    constructor(private variableName: string, private position: ContentPosition) {}
 
     @Override
     applyWith(symbolTable: SymbolTable, errorListener: ErrorListener) {
@@ -119,7 +120,7 @@ export class ClassicalRegisterTypeRule implements SemanticRule {
 }
 
 export class QuantumRegisterTypeRule implements SemanticRule {
-    constructor(private variableName: string, private position: PositionAdapter) {}
+    constructor(private variableName: string, private position: ContentPosition) {}
 
     @Override
     applyWith(symbolTable: SymbolTable, errorListener: ErrorListener) {
@@ -146,7 +147,7 @@ export class QuantumRegisterTypeRule implements SemanticRule {
 }
 
 export class ClassicalRegisterComparationRule implements SemanticRule {
-    constructor(private variableName: string, private comparison: number, private position: PositionAdapter) {}
+    constructor(private variableName: string, private comparison: number, private position: ContentPosition) {}
 
     @Override
     applyWith(symbolTable: SymbolTable, errorListener: ErrorListener) {
@@ -177,7 +178,7 @@ export class ClassicalRegisterComparationRule implements SemanticRule {
 }
 
 export class ValidRegisterReferenceRule implements SemanticRule {
-    constructor(private variableName: string, private reference: number, private position: PositionAdapter) {}
+    constructor(private variableName: string, private reference: number, private position: ContentPosition) {}
 
     @Override
     applyWith(symbolTable: SymbolTable, errorListener: ErrorListener) {
@@ -206,7 +207,7 @@ export class ValidRegisterReferenceRule implements SemanticRule {
 export class PreviousDefinitionValidation {
     constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {}
 
-    apply(variableName: string, position: PositionAdapter) {
+    apply(variableName: string, position: ContentPosition) {
         if (this.symbolTable.lookup(variableName) === null) {
             return;
         }

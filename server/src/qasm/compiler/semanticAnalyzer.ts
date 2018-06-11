@@ -29,7 +29,7 @@ import {
     BarrierGateContext,
     CustomArglistContext
 } from '../antlr/QasmParser';
-import { PositionAdapter } from './tools/errorBuilder';
+import { PositionAdapter } from './tools/positionAdapter';
 import { ErrorListener } from './tools/errorListener';
 import {
     SemanticRulesValidator,

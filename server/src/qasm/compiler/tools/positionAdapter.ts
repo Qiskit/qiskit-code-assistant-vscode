@@ -15,27 +15,24 @@
 
 'use strict';
 
-import { ParserError, ParseErrorLevel } from '../../../types';
+import { TerminalNode } from 'antlr4ts/tree';
 import { ContentPosition } from '../types';
+import { Token } from 'antlr4ts';
 
-export namespace ErrorBuilder {
-    export function error(message: string, position: ContentPosition): ParserError {
+export namespace PositionAdapter {
+    export function fromTerminalNode(node: TerminalNode): ContentPosition {
         return {
-            line: position.line,
-            start: position.start,
-            end: position.end,
-            message: message,
-            level: ParseErrorLevel.ERROR
+            line: node.symbol.line - 1,
+            start: node.symbol.charPositionInLine,
+            end: node.symbol.charPositionInLine + node.text.length
         };
     }
 
-    export function warning(message: string, position: ContentPosition): ParserError {
+    export function fromToken(token: Token): ContentPosition {
         return {
-            line: position.line,
-            start: position.start,
-            end: position.end,
-            message: message,
-            level: ParseErrorLevel.WARNING
+            line: token.line - 1,
+            start: token.charPositionInLine,
+            end: token.charPositionInLine + token.text.length
         };
     }
 }
