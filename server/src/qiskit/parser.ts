@@ -23,19 +23,15 @@ import {
     Token,
     Recognizer,
     RecognitionException,
-    ConsoleErrorListener,
-    ParserRuleContext
+    ConsoleErrorListener
 } from 'antlr4ts';
 import { Override } from 'antlr4ts/Decorators';
 import { Parser, ParserResult, ParserError, ParseErrorLevel } from '../types';
 import { Python3Parser } from './antlr/Python3Parser';
 import { Python3Lexer } from './antlr/Python3Lexer';
-import { TreePrinter } from '../tools';
-import { ParseTreeWalker } from 'antlr4ts/tree';
 import { TreeFolder } from './ast/treeFolder';
 import { SymbolTableGenerator } from './ast/symbolTableGenerator';
 import { SemanticAnalyzer } from './ast/semanticAnalyzer';
-import { QLogger } from '../logger';
 
 export class QiskitParser implements Parser {
     parse(input: string): ParserResult {
