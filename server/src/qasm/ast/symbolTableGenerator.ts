@@ -35,9 +35,10 @@ import { PositionAdapter } from './errorBuilder';
 import { PreviousDefinitionValidation } from './validations';
 
 export namespace SymbolTableGenerator {
-    export function symbolTableFor(tree: ParserRuleContext, errorListener: ErrorListener): SymbolTable {
+    export function symbolTableFor(tree: ParserRuleContext, _errorListener?: ErrorListener): SymbolTable {
         let symbolTable = SymbolTableBuilder.build();
 
+        let errorListener = _errorListener || new ErrorListener();
         let matcher = new DefinitionMatcher(symbolTable, errorListener);
         tree.accept(matcher);
 
