@@ -29,10 +29,10 @@ import { SymbolTableBuilder, RegisterSymbol, VariableSymbol } from '../compiler/
 import path = require('path');
 import fs = require('fs');
 import { ParserRuleContext } from 'antlr4ts';
-import { QASMSyntacticParser } from '../qasmSyntacticParser';
-import { ErrorListener } from '../parser';
-import { PositionAdapter } from './errorBuilder';
-import { PreviousDefinitionValidation } from './validations';
+import { QASMSyntacticParser } from '../compiler/qasmSyntacticParser';
+import { ErrorListener } from './tools/errorListener';
+import { PositionAdapter } from './tools/errorBuilder';
+import { PreviousDefinitionValidation } from './validations/validations';
 
 export namespace SymbolTableGenerator {
     export function symbolTableFor(tree: ParserRuleContext, _errorListener?: ErrorListener): SymbolTable {

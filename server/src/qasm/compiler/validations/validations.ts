@@ -15,12 +15,12 @@
 
 'use strict';
 
-import { SymbolTable, Symbol } from '../../tools/symbolTable';
-import { ErrorListener } from '../parser';
-import { ErrorMessages } from './errorMessages';
-import { PositionAdapter, ErrorBuilder } from './errorBuilder';
+import { SymbolTable, Symbol } from '../../../tools/symbolTable';
+import { ErrorListener } from '../tools/errorListener';
+import { ErrorMessages } from '../tools/errorMessages';
+import { PositionAdapter, ErrorBuilder } from '../tools/errorBuilder';
 import { Override } from 'antlr4ts/Decorators';
-import { RegisterSymbol, QASMSymbols } from '../compiler/symbolTable';
+import { RegisterSymbol, QASMSymbols } from '../symbolTable';
 
 export class SemanticRulesValidator {
     constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {}

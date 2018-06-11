@@ -23,8 +23,8 @@ import {
     CommonToken,
     ConsoleErrorListener
 } from 'antlr4ts';
-import { QasmLexer } from './antlr/QasmLexer';
-import { QasmParser } from './antlr/QasmParser';
+import { QasmLexer } from '../antlr/QasmLexer';
+import { QasmParser } from '../antlr/QasmParser';
 
 export namespace QASMSyntacticParser {
     export function parse(input: string): ParserRuleContext {

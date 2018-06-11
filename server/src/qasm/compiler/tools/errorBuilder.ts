@@ -15,7 +15,7 @@
 
 'use strict';
 
-import { ParserError, ParseErrorLevel } from '../../types';
+import { ParserError, ParseErrorLevel } from '../../../types';
 import { TerminalNode } from 'antlr4ts/tree';
 import { Token } from 'antlr4ts';
 

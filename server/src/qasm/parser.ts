@@ -15,12 +15,11 @@
 
 'use strict';
 
-import { ANTLRErrorListener, CommonToken, Token, Recognizer, RecognitionException } from 'antlr4ts';
-import { Parser, ParserResult, ParserError, ParseErrorLevel } from '../types';
-import { Override } from 'antlr4ts/Decorators';
-import { SymbolTableGenerator } from './ast/symbolTableGenerator';
-import { SemanticAnalyzer } from './ast/semanticAnalyzer';
-import { QASMSyntacticParser } from './qasmSyntacticParser';
+import { Parser, ParserResult } from '../types';
+import { SymbolTableGenerator } from './compiler/symbolTableGenerator';
+import { SemanticAnalyzer } from './compiler/semanticAnalyzer';
+import { QASMSyntacticParser } from './compiler/qasmSyntacticParser';
+import { ErrorListener } from './compiler/tools/errorListener';
 
 export class QASMParser implements Parser {
     parse(input: string): ParserResult {
@@ -34,43 +33,5 @@ export class QASMParser implements Parser {
             ast: tree,
             errors: errorListener.errors
         };
-    }
-}
-
-export class ErrorListener implements ANTLRErrorListener<CommonToken> {
-    errors: ParserError[] = [];
-
-    addError(error: ParserError) {
-        this.errors.push(error);
-    }
-
-    @Override
-    syntaxError<T extends Token>(
-        _recognizer: Recognizer<T, any>,
-        offendingSymbol: T | undefined,
-        line: number,
-        charPositionInLine: number,
-        msg: string,
-        _e: RecognitionException | undefined
-    ): void {
-        // _e contains the first token of the rule that failed
-
-        if (offendingSymbol.text === ')') {
-            this.errors.push({
-                line: line - 1,
-                start: charPositionInLine,
-                end: charPositionInLine + offendingSymbol.text.length,
-                message: 'Expecting arguments before symbol )',
-                level: ParseErrorLevel.ERROR
-            });
-        } else {
-            this.errors.push({
-                line: line - 1,
-                start: charPositionInLine,
-                end: charPositionInLine + offendingSymbol.text.length,
-                message: msg,
-                level: ParseErrorLevel.ERROR
-            });
-        }
     }
 }

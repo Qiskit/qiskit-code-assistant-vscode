@@ -21,7 +21,7 @@ import { Suggester, SuggestionSymbol } from '../types';
 import { QLogger } from '../logger';
 import { QasmLexer } from './antlr/QasmLexer';
 import { QasmParser } from './antlr/QasmParser';
-import { SymbolTableGenerator } from './ast/symbolTableGenerator';
+import { SymbolTableGenerator } from './compiler/symbolTableGenerator';
 import { SymbolTable } from '../tools/symbolTable';
 
 export class QASMSuggester implements Suggester {

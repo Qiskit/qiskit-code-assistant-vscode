@@ -18,7 +18,7 @@
 import { expect } from 'chai';
 import { QASMParser } from '../src/qasm/parser';
 import { Parser, ParseErrorLevel, ParserError } from '../src/types';
-import { ErrorMessages } from '../src/qasm/ast/errorMessages';
+import { ErrorMessages } from '../src/qasm/compiler/tools/errorMessages';
 
 describe('A QASM parser', () => {
     let parser: Parser = new QASMParser();
