@@ -25,7 +25,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### 🐛 Fixed
 
-- Syntax descriptor file customized for QASM language([#123](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/123) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- Validation at the QASM conditional clauses ([#128](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/128) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- Syntax descriptor file customized for QASM language ([#123](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/123) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 - Fixed an error in the message to users when qiskit installed is not the last version available ([#110](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/110) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 
 ### ✏️ Changed
