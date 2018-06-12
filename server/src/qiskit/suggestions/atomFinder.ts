@@ -37,7 +37,7 @@ export class AtomFinder {
 
     private getAtomToken(tokenStream: CommonTokenStream): Token {
         let position = tokenStream.getTokens().length - 1;
-        while(tokenStream.getTokens()[position].text !== '.') {
+        while (tokenStream.getTokens()[position].text !== '.') {
             position--;
         }
         return tokenStream.getTokens()[position - 1];

@@ -9,17 +9,16 @@
 
 'use strict';
 
-import { ParserRuleContext } from "antlr4ts";
+import { ParserRuleContext } from 'antlr4ts';
 
 export namespace TreePrinter {
-
     export function print(ruleNames: string[], root: ParserRuleContext): void {
         console.log(`START : ${ruleNames[root.ruleIndex]} > `);
         printChildren(ruleNames, root.children as ParserRuleContext[], 1);
     }
 
     function printChildren(ruleNames: string[], children: ParserRuleContext[], level: number): void {
-        children.forEach((child) => {
+        children.forEach(child => {
             let spaces = '';
             let spacePosition = 0;
             while (spacePosition < level) {
@@ -37,5 +36,4 @@ export namespace TreePrinter {
             }
         });
     }
-
 }

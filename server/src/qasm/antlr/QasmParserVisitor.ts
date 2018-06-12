@@ -1,15 +1,6 @@
 // Generated from QasmParser.g4 by ANTLR 4.6-SNAPSHOT
 
 
-import { Register, SymbolsTable } from './utils';
-import { QasmLexer } from './QasmLexer';
-import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts'; 
-import { SymbolTable, BuiltInTypeSymbol } from '../../tools/symbolTable'; 
-import { SymbolTableBuilder, VariableSymbol, RegisterSymbol } from '../compiler/symbolTable';
-import fs = require('fs');
-import path = require('path');
-
-
 import { ParseTreeVisitor } from 'antlr4ts/tree/ParseTreeVisitor';
 
 import { CodeContext } from './QasmParser';
@@ -21,6 +12,9 @@ import { SentenceContext } from './QasmParser';
 import { DefinitionContext } from './QasmParser';
 import { ExpressionContext } from './QasmParser';
 import { ConditionalContext } from './QasmParser';
+import { QregDefinitionContext } from './QasmParser';
+import { CregDefinitionContext } from './QasmParser';
+import { DimensionContext } from './QasmParser';
 import { GateDefinitionContext } from './QasmParser';
 import { OpaqueDefinitionContext } from './QasmParser';
 import { GateDefinitionArgumentsContext } from './QasmParser';
@@ -114,6 +108,27 @@ export interface QasmParserVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitConditional?: (ctx: ConditionalContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.qregDefinition`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitQregDefinition?: (ctx: QregDefinitionContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.cregDefinition`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitCregDefinition?: (ctx: CregDefinitionContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `QasmParser.dimension`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitDimension?: (ctx: DimensionContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `QasmParser.gateDefinition`.

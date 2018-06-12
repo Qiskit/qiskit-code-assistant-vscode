@@ -11,11 +11,13 @@
 
 import { ANTLRInputStream, CommonTokenStream } from 'antlr4ts';
 import { CodeCompletionCore } from 'antlr4-c3';
-import { QasmLexer } from './antlr/QasmLexer';
-import { QasmParser } from './antlr/QasmParser';
 import { Suggester, SuggestionSymbol } from '../types';
 import { QLogger } from '../logger';
 import { SuggestionSymbolAdapter } from '../tools/suggestionSymbolAdapter';
+import { SymbolTableGenerator } from './compiler/symbolTableGenerator';
+import { SymbolTable } from '../tools/symbolTable';
+import { QasmParser } from './antlr/QasmParser';
+import { QasmLexer } from './antlr/QasmLexer';
 
 export class QASMSuggester implements Suggester {
     dictionary: SymbolsDictionary = new SymbolsDictionary();
@@ -26,21 +28,27 @@ export class QASMSuggester implements Suggester {
         let tokenStream = new CommonTokenStream(lexer);
         let parser = new QasmParser(tokenStream);
 
-        parser.code();
+        let tree = parser.code();
 
-        return this.calculateCandidates(parser, tokenStream.getTokens().length);
+        let symbolTable = SymbolTableGenerator.symbolTableFor(tree);
+
+        return this.calculateCandidates(parser, symbolTable, tokenStream.getTokens().length);
     }
 
     availableSymbols(): SuggestionSymbol[] {
-        let inputStream = new ANTLRInputStream('');
-        let lexer = new QasmLexer(inputStream);
-        let tokenStream = new CommonTokenStream(lexer);
-        let parser = new QasmParser(tokenStream);
+        // let inputStream = new ANTLRInputStream('');
+        // let lexer = new QasmLexer(inputStream);
+        // let tokenStream = new CommonTokenStream(lexer);
+        // let parser = new QasmParser(tokenStream);
 
         return this.dictionary.allSymbols();
     }
 
-    private calculateCandidates(parser: QasmParser, caretPosition: number): SuggestionSymbol[] {
+    private calculateCandidates(
+        parser: QasmParser,
+        symbolTable: SymbolTable,
+        caretPosition: number
+    ): SuggestionSymbol[] {
         let core = new CodeCompletionCore(parser);
 
         core.ignoredTokens = new Set([
@@ -72,15 +80,11 @@ export class QASMSuggester implements Suggester {
 
         let result: SuggestionSymbol[] = [];
         result.push(...this.dictionary.symbolsWithTypeIn(suggestions));
-        result.push(...this.foundVariablesAt(parser));
+        result.push(...symbolTable.definedSymbols().map(SuggestionSymbolAdapter.toSymbolVariable()));
 
         QLogger.verbose(`Available suggestions > ${result}`, this);
 
         return result;
-    }
-
-    private foundVariablesAt(parser: QasmParser): SuggestionSymbol[] {
-        return parser.declaredVariables().map(SuggestionSymbolAdapter.toSymbolVariable());
     }
 }
 

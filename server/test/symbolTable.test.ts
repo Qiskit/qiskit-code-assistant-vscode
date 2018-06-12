@@ -11,10 +11,9 @@
 
 import { expect } from 'chai';
 import { SymbolTable } from '../src/tools/symbolTable';
-import { SymbolTableBuilder, VariableSymbol, GateSymbol, RegisterSymbol } from '../src/qasm/compiler/symbolTable';
+import { SymbolTableBuilder, VariableSymbol, RegisterSymbol } from '../src/qasm/compiler/symbolTable';
 
 describe('A symbol table', () => {
-
     let symbolTable: SymbolTable;
 
     beforeEach(() => {
@@ -50,7 +49,9 @@ describe('A symbol table', () => {
 
             let result = symbolTable.lookup('q') as RegisterSymbol;
 
-            expect(result).to.have.property('size').to.be.equals(4);
+            expect(result)
+                .to.have.property('size')
+                .to.be.equals(4);
         });
 
         it('in a child scope', () => {
@@ -65,7 +66,7 @@ describe('A symbol table', () => {
     describe('when discards a scope', () => {
         it('can no longer access to previous scope variables', () => {
             let gateSymbol = symbolTable.lookup('Gate');
-            symbolTable.define(new GateSymbol('foo', gateSymbol.type));
+            symbolTable.define(new VariableSymbol('foo', gateSymbol.type));
             symbolTable.push('foo');
             let qregSymbol = symbolTable.lookup('Qreg');
             symbolTable.define(new VariableSymbol('q', qregSymbol.type));
@@ -90,7 +91,7 @@ describe('A symbol table', () => {
     describe('when returns the defined symbols', () => {
         it('does not return the built in type symbols', () => {
             let gateSymbol = symbolTable.lookup('Gate');
-            symbolTable.define(new GateSymbol('foo', gateSymbol.type));
+            symbolTable.define(new VariableSymbol('foo', gateSymbol.type));
             symbolTable.push('foo');
             let qregSymbol = symbolTable.lookup('Qreg');
             symbolTable.define(new VariableSymbol('q', qregSymbol.type));
@@ -101,5 +102,4 @@ describe('A symbol table', () => {
                 .to.include('foo');
         });
     });
-
 });
