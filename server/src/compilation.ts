@@ -1,23 +1,16 @@
-// Copyright 2018 IBM RESEARCH. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//    http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// =============================================================================
+/**
+ * @license
+ *
+ * Copyright (c) 2018, IBM.
+ *
+ * This source code is licensed under the Apache License, Version 2.0 found in
+ * the LICENSE.txt file in the root directory of this source tree.
+ */
 
 'use strict';
 
 import {
     CompletionItem,
-    CompletionItemKind,
     Diagnostic,
     DiagnosticSeverity,
     IConnection,
@@ -25,20 +18,11 @@ import {
     TextDocumentPositionParams
 } from 'vscode-languageserver';
 import { Parser, Suggester, ParserError, ParseErrorLevel, SuggestionSymbol } from './types';
+import { SuggestionSymbolAdapter } from './tools/suggestionSymbolAdapter';
 
 export class CompilationTool {
     currentDocument: TextDocument = null;
     currentSuggestions: CompletionItem[] = [];
-
-    toCompletionItem = (symbol: SuggestionSymbol, index: number) => {
-        return {
-            label: symbol.label,
-            kind: CompletionItemKind.Text,
-            data: index,
-            detail: symbol.detail,
-            documentation: symbol.documentation
-        };
-    };
 
     constructor(private connection: IConnection, private parser: Parser, private suggester: Suggester) {}
 
@@ -58,7 +42,9 @@ export class CompilationTool {
             .getText()
             .substring(0, this.currentDocument.offsetAt(documentPosition.position));
 
-        this.currentSuggestions = this.suggester.calculateSuggestionsFor(textToCaret).map(this.toCompletionItem);
+        this.currentSuggestions = this.suggester
+            .calculateSuggestionsFor(textToCaret)
+            .map(SuggestionSymbolAdapter.toCompletionItem());
 
         return this.currentSuggestions;
     }

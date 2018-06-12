@@ -1,17 +1,11 @@
-// Copyright 2018 IBM RESEARCH. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//    http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// =============================================================================
+/**
+ * @license
+ *
+ * Copyright (c) 2018, IBM.
+ *
+ * This source code is licensed under the Apache License, Version 2.0 found in
+ * the LICENSE.txt file in the root directory of this source tree.
+ */
 
 'use strict';
 
@@ -21,6 +15,7 @@ import { QasmLexer } from './antlr/QasmLexer';
 import { QasmParser } from './antlr/QasmParser';
 import { Suggester, SuggestionSymbol } from '../types';
 import { QLogger } from '../logger';
+import { SuggestionSymbolAdapter } from '../tools/suggestionSymbolAdapter';
 
 export class QASMSuggester implements Suggester {
     dictionary: SymbolsDictionary = new SymbolsDictionary();
@@ -85,18 +80,8 @@ export class QASMSuggester implements Suggester {
     }
 
     private foundVariablesAt(parser: QasmParser): SuggestionSymbol[] {
-        return parser.declaredVariables().map(this.toSymbolVariable);
+        return parser.declaredVariables().map(SuggestionSymbolAdapter.toSymbolVariable());
     }
-
-    private toSymbolVariable = (input: string): SuggestionSymbol => {
-        return {
-            label: input,
-            detail: 'Declared variable',
-            documentation: 'This is a previously declared variable',
-            type: 'Variable',
-            parent: input
-        };
-    };
 }
 
 class SymbolsDictionary {

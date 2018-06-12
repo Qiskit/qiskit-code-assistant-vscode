@@ -1,3 +1,8 @@
+# Copyright (c) 2018, IBM.
+#
+# This source code is licensed under the Apache License, Version 2.0 found in
+# the LICENSE.txt file in the root directory of this source tree.
+
 from qiskit import available_backends, register
 from IBMQuantumExperience import IBMQuantumExperience
 import argparse
@@ -11,11 +16,11 @@ def main():
     parser.add_argument('--hub', nargs='?', default=None)
     parser.add_argument('--group', nargs='?', default=None)
     parser.add_argument('--project', nargs='?', default=None)
-    
+
     args = vars(parser.parse_args())
 
     if (args['url'] is None):
-        args['url'] = 'https://quantumexperience.ng.bluemix.net/api' 
+        args['url'] = 'https://quantumexperience.ng.bluemix.net/api'
 
     if (args['hub'] is None) or (args['group'] is None) or (args['project'] is None):
         api = IBMQuantumExperience(args['apiToken'], {'url': args['url']})
@@ -27,7 +32,7 @@ def main():
     backs = available_backends()
 
     for back in backs:
-        try: 
+        try:
             back_status = api.backend_status(back)
             print(json.dumps(back_status, indent=2, sort_keys=True))
         except:
