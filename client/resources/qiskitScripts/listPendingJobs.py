@@ -1,3 +1,8 @@
+# Copyright (c) 2018, IBM.
+#
+# This source code is licensed under the Apache License, Version 2.0 found in
+# the LICENSE.txt file in the root directory of this source tree.
+
 from IBMQuantumExperience import IBMQuantumExperience
 import argparse
 import json
@@ -10,11 +15,11 @@ def main():
     parser.add_argument('--hub', nargs='?', default=None)
     parser.add_argument('--group', nargs='?', default=None)
     parser.add_argument('--project', nargs='?', default=None)
-    
+
     args = vars(parser.parse_args())
 
     if (args['url'] is None):
-        args['url'] = 'https://quantumexperience.ng.bluemix.net/api' 
+        args['url'] = 'https://quantumexperience.ng.bluemix.net/api'
 
     if (args['hub'] is None) or (args['group'] is None) or (args['project'] is None):
         api = IBMQuantumExperience(args['apiToken'], {'url': args['url']})
