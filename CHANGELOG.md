@@ -14,11 +14,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > - 🐛 **Fixed**: for any bug fixes.
 > - 👾 **Security**: in case of vulnerabilities.
 
+## [Unreleased]
+
+### 🎉 Added
+- Add a button to run getDevicesStatus command ([#132](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/132) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+
+### 🐛 Fixed
+- Enhance UX & visualizations related to UI buttons ([#132](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/132) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+
+### ✏️ Changed
+
+### 👾 Security
+
+
 ## [v0.1.0] - 2018-06-13
 
 ### 🎉 Added
 
-- Winston as the logging library ([#118](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/118)) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- Winston as the logging library ([#118](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/118) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 - Adding controls to enable/disable visualizations for code execution ([#120](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/120) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Meeting internal guidelines for Github repos (Adding changelog, contributing, issues&PR templates, and code of conduct files) ([#106](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/106) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Follow the dev guidelines: update the issue templates & move contributing ([#108](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/108) by [@abdonrod](https://github.ibm.com/abdonrod) & [@Juan-Cruz](https://github.ibm.com/abdonrod))
