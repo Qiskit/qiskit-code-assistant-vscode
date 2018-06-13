@@ -252,12 +252,12 @@
 					"group": "navigation"
 				},
 				{
-					"when": "editorLangId == 'python'",
+					"when": "editorTextFocus && editorLangId == 'python'",
 					"command": "qstudio.runQISKitCode",
 					"group": "navigation"
 				},
 				{
-					"when": "editorLangId == 'qasm-lang'",
+					"when": "editorTextFocus && editorLangId == 'qasm-lang'",
 					"command": "qstudio.runQASMCode",
 					"group": "navigation"
 				}
