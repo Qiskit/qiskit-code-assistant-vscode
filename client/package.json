@@ -245,6 +245,16 @@
 			}
 		],
 		"menus": {
+			"commandPalette": [
+				{
+					"when": "editorLangId == 'python'",
+					"command": "qstudio.runQISKitCode"
+				},
+				{
+					"when": "editorLangId == 'qasm-lang'",
+					"command": "qstudio.runQASMCode"
+				}
+			],
 			"editor/title": [
 				{
 					"when": "editorTextFocus",
