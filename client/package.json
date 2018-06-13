@@ -186,7 +186,7 @@
 			},
 			{
 				"command": "qstudio.getDevicesStatus",
-				"title": "Get the status of remote devices available",
+				"title": "⚙ IBMQ devices status",
 				"category": "qstudio"
 			},
 			{
@@ -246,6 +246,11 @@
 		],
 		"menus": {
 			"editor/title": [
+				{
+					"when": "editorTextFocus",
+					"command": "qstudio.getDevicesStatus",
+					"group": "navigation"
+				},
 				{
 					"when": "editorLangId == 'python'",
 					"command": "qstudio.runQISKitCode",
