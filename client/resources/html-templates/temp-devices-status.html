@@ -95,7 +95,7 @@ the LICENSE.txt file in the root directory of this source tree.
 
         ibm-q-tag {
             font-family: var(--ibm-q-font-family-base);
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             display: -webkit-inline-box;
             display: -ms-inline-flexbox;
             display: inline-flex;
@@ -107,6 +107,8 @@ the LICENSE.txt file in the root directory of this source tree.
             margin: .1875rem;
             color: #325c80;
             background-color: #c0e6ff;
+            overflow: hidden;
+            white-space: nowrap;
         }
 
         [ng\:cloak],
@@ -170,14 +172,14 @@ the LICENSE.txt file in the root directory of this source tree.
                                         <!--Don't format the following line, it is used in a Regex and it would crash-->
                                         <small class="">[ibmqx5]</small></span><div class="pull-right"><ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger','label-success': $ctrl.backendStatus[backend.name].tag.color === 'success','label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}"ng-show="$ctrl.backendStatus[backend.name].tag" class="label-success">Active: Calibrating</ibm-q-tag>
                                         <!---->
-                                        <a href="https://www.qiskit.org" ng-if="$ctrl.availableInfo &amp;&amp; backend.name !== 'QS1_1'" class="">
-                                            <ibm-q-tag class="label-info">
-                                                AVAILABLE ON QISKIT
-                                            </ibm-q-tag>
-                                        </a>
+                                        <ibm-q-tag class="label-info">
+                                            AVAILABLE ON QISKIT
+                                        </ibm-q-tag>
                                         <!---->
                                         <!---->
                                     </div>
+                                    <!--Don't format the following line, it is used in a Regex and it would crash-->
+                                    <div class="pull-right"><ibm-q-tag class="label-info">Jobs pending [ibmqx5]: 0</ibm-q-tag></div>
                                 </div>
                             </div>
                         </a>
@@ -193,14 +195,14 @@ the LICENSE.txt file in the root directory of this source tree.
                                         <!--Don't format the following line, it is used in a Regex and it would crash-->
                                         <small class="">[ibmqx4]</small></span><div class="pull-right"><ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger','label-success': $ctrl.backendStatus[backend.name].tag.color === 'success','label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}"ng-show="$ctrl.backendStatus[backend.name].tag" class="label-success">Active: Calibrating</ibm-q-tag>
                                         <!---->
-                                        <a href="https://www.qiskit.org" ng-if="$ctrl.availableInfo &amp;&amp; backend.name !== 'QS1_1'" class="">
-                                            <ibm-q-tag class="label-info">
-                                                AVAILABLE ON QISKIT
-                                            </ibm-q-tag>
-                                        </a>
+                                        <ibm-q-tag class="label-info">
+                                            AVAILABLE ON QISKIT
+                                        </ibm-q-tag>
                                         <!---->
                                         <!---->
                                     </div>
+                                    <!--Don't format the following line, it is used in a Regex and it would crash-->
+                                    <div class="pull-right"><ibm-q-tag class="label-info">Jobs pending [ibmqx4]: 0</ibm-q-tag></div>
                                 </div>
                             </div>
                         </a>
@@ -216,14 +218,14 @@ the LICENSE.txt file in the root directory of this source tree.
                                         <!--Don't format the following line, it is used in a Regex and it would crash-->
                                         <small class="">[ibmqx2]</small></span><div class="pull-right"><ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger','label-success': $ctrl.backendStatus[backend.name].tag.color === 'success','label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}"ng-show="$ctrl.backendStatus[backend.name].tag" class="label-success">Active: Calibrating</ibm-q-tag>
                                         <!---->
-                                        <a href="https://www.qiskit.org" ng-if="$ctrl.availableInfo &amp;&amp; backend.name !== 'QS1_1'" class="">
-                                            <ibm-q-tag class="label-info">
-                                                AVAILABLE ON QISKIT
-                                            </ibm-q-tag>
-                                        </a>
+                                        <ibm-q-tag class="label-info">
+                                            AVAILABLE ON QISKIT
+                                        </ibm-q-tag>
                                         <!---->
                                         <!---->
                                     </div>
+                                    <!--Don't format the following line, it is used in a Regex and it would crash-->    
+                                    <div class="pull-right"><ibm-q-tag class="label-info">Jobs pending [ibmqx2]: 0</ibm-q-tag></div>
                                 </div>
                             </div>
                         </a>
@@ -241,12 +243,15 @@ the LICENSE.txt file in the root directory of this source tree.
                                         <ibm-q-tag class="label-info">
                                             SIMULATOR
                                         </ibm-q-tag>
-                                        <a href="https://www.qiskit.org" class="">
-                                            <ibm-q-tag class="label-info">
-                                                AVAILABLE ON QISKIT
-                                            </ibm-q-tag>
-                                        </a>
+                                        <!---->
+                                        <ibm-q-tag class="label-info">
+                                            AVAILABLE ON QISKIT
+                                        </ibm-q-tag>
+                                        <!---->
+                                        <!---->
                                     </div>
+                                    <!--Don't format the following line, it is used in a Regex and it would crash-->
+                                    <div class="pull-right"><ibm-q-tag class="label-info">Jobs pending [ibmq_qasm_simulator]: 0</ibm-q-tag></div>
                                 </div>
                             </div>
                         </a>

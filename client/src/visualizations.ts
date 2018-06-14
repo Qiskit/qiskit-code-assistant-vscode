@@ -172,8 +172,16 @@ export namespace VizManager {
                     element['status']['name']
                 }]</small></span><div class="pull-right"><ibm-q-tag class="${statusTag}">${statusMessage}</ibm-q-tag>`;
 
+                let str2ReplacePendingJobs = `<div class="pull-right"><ibm-q-tag class="label-info">Jobs pending [${
+                    element['status']['name']
+                }]: 0</ibm-q-tag></div>`;
+                let replacementPendingJobs = `<div class="pull-right"><ibm-q-tag class="label-info">Jobs pending: ${
+                    element['status']['pending_jobs']
+                }</ibm-q-tag></div>`;
+
                 html = html.replace(str2Replace, replacement);
                 html = html.replace(str2ReplaceSimulator, replacementSimulator);
+                html = html.replace(str2ReplacePendingJobs, replacementPendingJobs);
             });
             return html;
         } else {

@@ -186,7 +186,7 @@
 			},
 			{
 				"command": "qstudio.getDevicesStatus",
-				"title": "Get the status of remote devices available",
+				"title": "⚙ IBMQ devices status",
 				"category": "qstudio"
 			},
 			{
@@ -245,14 +245,29 @@
 			}
 		],
 		"menus": {
-			"editor/title": [
+			"commandPalette": [
 				{
 					"when": "editorLangId == 'python'",
+					"command": "qstudio.runQISKitCode"
+				},
+				{
+					"when": "editorLangId == 'qasm-lang'",
+					"command": "qstudio.runQASMCode"
+				}
+			],
+			"editor/title": [
+				{
+					"when": "editorTextFocus",
+					"command": "qstudio.getDevicesStatus",
+					"group": "navigation"
+				},
+				{
+					"when": "editorTextFocus && editorLangId == 'python'",
 					"command": "qstudio.runQISKitCode",
 					"group": "navigation"
 				},
 				{
-					"when": "editorLangId == 'qasm-lang'",
+					"when": "editorTextFocus && editorLangId == 'qasm-lang'",
 					"command": "qstudio.runQASMCode",
 					"group": "navigation"
 				}
