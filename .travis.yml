@@ -7,10 +7,14 @@ node_js:
 install:
   - npm install
 
-script:
-  - npm run compile
-  - npm test
-  - npm run lint
+jobs:
+  include:
+    - stage: build
+      script: npm run compile
+    - stage: test
+      script: npm test
+    - static-analysis: linter
+      script: npm run lint
 
 notifications:
   email:
