@@ -51,6 +51,19 @@ Command | Description
 ```QStudio: Activate the display of information related to the boot of the extension``` | Activate the visualization (bubble messages) of information related to the boot of the extension. This information includes the version of dependencies installed, the different checks performed at the activation of the extension, etc.
 ```QStudio: Deactivate the display of information related to the boot of the extension``` | Deactivate the visualization (bubble messages) of information related to the boot of the extension. It does not deactivate the display of error messages related to dependencies and other checks performed at the boot of the extension
 
+## Settings Options
+
+This extension contributes the following variables to the settings:
+
+`ibm-q-studio.qiskit.token`: QISKit & Q Experience API Token.
+`ibm-q-studio.qiskit.hub`: User's QISKit & Q Experience hub.
+`ibm-q-studio.qiskit.group`: User's QISKit & Q Experience group.
+`ibm-q-studio.qiskit.project`: User's QISKit & Q Experience project.
+`ibm-q-studio.config.visualizationsFlag`: Flag to control if visualizations are displayed or not for code executions.
+`ibm-q-studio.config.displayBootInfo`: Display info about the extension boot process.
+
+Other variables are contributed, but it is not recommended to change them.
+
 ## Authors (alphabetical)
 
 IBM Q Studio was originally authored by Juan Cruz-Benito, Yeray Darias, Ismael Faro, Juan Gómez and Paco Martín.
