@@ -19,6 +19,8 @@ export interface Visitor<T> {
     visitInteger?(item: Integer): T;
     visitFloat?(item: Float): T;
     visitText?(item: Text): T;
+    visitBoolean?(item: Boolean): T;
+    visitDictionary?(item: Dictionary): T;
 
     defaultValue(): T;
 }
@@ -241,6 +243,53 @@ export class Text extends VisitableItem {
 
     toString(): string {
         return `${this.value}`;
+    }
+}
+
+export class Boolean extends VisitableItem {
+    value: boolean;
+
+    constructor(value: boolean, position: Position) {
+        super();
+
+        this.value = value;
+        this.line = position.line;
+        this.start = position.start;
+        this.end = position.end;
+    }
+
+    accept<T>(visitor: Visitor<T>): T {
+        if (visitor.visitText) {
+            return visitor.visitBoolean(this);
+        }
+        return visitor.defaultValue();
+    }
+
+    toString(): string {
+        return `${this.value}`;
+    }
+}
+
+export class Dictionary extends VisitableItem {
+    value = '';
+
+    constructor(position: Position) {
+        super();
+
+        this.line = position.line;
+        this.start = position.start;
+        this.end = position.end;
+    }
+
+    accept<T>(visitor: Visitor<T>): T {
+        if (visitor.visitText) {
+            return visitor.visitDictionary(this);
+        }
+        return visitor.defaultValue();
+    }
+
+    toString(): string {
+        return `Dictionary()`;
     }
 }
 
