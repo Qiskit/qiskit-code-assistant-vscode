@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > - 🐛 **Fixed**: for any bug fixes.
 > - 👾 **Security**: in case of vulnerabilities.
 
-## [Unreleased]
+## [v0.1.1] - 2018-06-14
 
 ### 🎉 Added
 - Add a button to run getDevicesStatus command ([#132](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/132) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
