@@ -10,11 +10,11 @@ install:
 jobs:
   include:
     - stage: build
-      script: npm run compile
-    - stage: test
-      script: npm test
-    - stage: static-analysis
-      script: npm run lint
+      script: 'npm run compile'
+    - stage: unit tests
+      script: 'npm test'
+    - stage: static analysis
+      script: 'npm run lint'
 
 notifications:
   email:
