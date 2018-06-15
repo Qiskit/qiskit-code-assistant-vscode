@@ -13,7 +13,7 @@ jobs:
       script: npm run compile
     - stage: test
       script: npm test
-    - static-analysis: linter
+    - stage: static-analysis
       script: npm run lint
 
 notifications:
