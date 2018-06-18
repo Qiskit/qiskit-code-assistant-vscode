@@ -8,6 +8,7 @@ from qiskit import execute
 import argparse
 import json
 
+
 def main():
     parser = argparse.ArgumentParser()
 
@@ -21,6 +22,7 @@ def main():
     result = job_sim.result()
 
     print(json.dumps(result._result, indent=2, sort_keys=True))
+
 
 if __name__ == '__main__':
     main()
