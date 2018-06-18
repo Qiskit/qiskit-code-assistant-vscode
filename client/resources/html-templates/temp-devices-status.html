@@ -141,6 +141,32 @@ the LICENSE.txt file in the root directory of this source tree.
                             </svg>
                             <div slot="title" ng-click="$ctrl.trackExpandedBackends &amp;&amp; $ctrl.updateExpandedBackends(backend)" class="">
                                 <span class="backend-title">
+                                    <b class="">IBM Q 20 Tokyo</b>&nbsp;&nbsp;
+                                    <small class="">[ibmq_20_tokyo]</small>
+                                </span>
+                                <div class="pull-right">
+                                    <ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger',
+                                                            'label-success': $ctrl.backendStatus[backend.name].tag.color === 'success',
+                                                            'label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}"
+                                        ng-show="$ctrl.backendStatus[backend.name].tag" class="ng-hide">
+
+                                    </ibm-q-tag>
+                                    <!---->
+                                    <!---->
+                                    <ibm-q-tag class="label-info" ng-if="$ctrl.availableInfo &amp;&amp; backend.name === 'QS1_1'">
+                                        AVAILABLE TO HUBS, PARTNERS, AND MEMBERS OF THE IBM Q NETWORK
+                                    </ibm-q-tag>
+                                    <!---->
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div id="header" tabindex="0" class="style-scope ibm-q-accordion-item">
+                            <svg class="arrow style-scope ibm-q-accordion-item" width="8" height="12" viewBox="0 0 8 12" fill-rule="evenodd">
+                                <path d="M0 10.6L4.7 6 0 1.4 1.4 0l6.1 6-6.1 6z" class="style-scope ibm-q-accordion-item"></path>
+                            </svg>
+                            <div slot="title" ng-click="$ctrl.trackExpandedBackends &amp;&amp; $ctrl.updateExpandedBackends(backend)" class="">
+                                <span class="backend-title">
                                     <b class="">IBM Q 20 Austin</b>&nbsp;&nbsp;
                                     <small class="">[QS1_1]</small>
                                 </span>
