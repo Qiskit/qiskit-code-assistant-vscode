@@ -21,7 +21,7 @@ import {
     Integer,
     Text
 } from './types';
-import { SymbolTable, Type, Symbol } from '../../tools/symbolTable';
+import { SymbolTable, Type } from '../../tools/symbolTable';
 import {
     QiskitSymbolTable,
     VariableSymbol,
@@ -29,7 +29,6 @@ import {
     VariableMetadata,
     MethodSymbol
 } from '../compiler/qiskitSymbolTable';
-import { stat } from 'fs';
 
 export namespace SymbolTableGenerator {
     export function symbolTableFor(statements: Statement[]): SymbolTable {

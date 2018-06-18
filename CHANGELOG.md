@@ -14,6 +14,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > - 🐛 **Fixed**: for any bug fixes.
 > - 👾 **Security**: in case of vulnerabilities.
 
+## [Unreleased]
+
+### 🎉 Added
+
+### 🐛 Fixed
+- QISKit parser does not halt at dictionary data ([#135](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/135) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+
+### ✏️ Changed
+
+### 👾 Security
+
+
 ## [v0.1.1] - 2018-06-14
 
 ### 🎉 Added
