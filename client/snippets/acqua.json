@@ -1,4 +1,9 @@
 {
+    "import": {
+        "prefix": "import",
+        "body": [ "from qiskit_acqua import run_algorithm" ],
+        "description": "Code snippet for the basic Acqua imports"
+    },
     "grover": {
         "prefix": "grover",
         "body": [
