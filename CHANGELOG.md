@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### 🎉 Added
+- qiskit-acqua and qiskit-acqua-chemistry added to dependencies ([#143](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/143) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- Added IBM Q 20 Tokyo backend ([#141](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/141) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- Added readme file to the client folder ([#134](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/134) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 
 ### 🐛 Fixed
 - QISKit parser does not halt at dictionary data ([#135](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/135) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
@@ -29,8 +32,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v0.1.1] - 2018-06-14
 
 ### 🎉 Added
-- Added IBM Q 20 Tokyo backend ([#141](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/141) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
-- Added readme file to the client folder ([#134](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/134) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 - Add a button to run getDevicesStatus command ([#132](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/132) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 
 ### 🐛 Fixed
