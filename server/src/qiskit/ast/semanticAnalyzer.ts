@@ -40,6 +40,11 @@ class StatementSemanticValidator implements Visitor<ParserError[]> {
     }
 
     visitStatement(statement: Statement): ParserError[] {
+        // in partial compilations this case could happen *do not delete without thinking twice*
+        if (statement.expression === null) {
+            return this.defaultValue();
+        }
+
         return statement.expression.accept(this);
     }
 
@@ -52,6 +57,11 @@ class StatementSemanticValidator implements Visitor<ParserError[]> {
 
     visitExpression(expression: Expression): ParserError[] {
         let visitingTerms = (a: ExpressionAnalysis, b: VisitableItem) => {
+            // in partial compilations this case could happen *do not delete without thinking twice*
+            if (b === null) {
+                return a;
+            }
+
             let termValidator = new TermSemanticValidator(this.symbolTable, a);
             let currentAnalysis = b.accept(termValidator);
 

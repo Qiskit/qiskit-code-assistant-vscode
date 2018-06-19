@@ -26,6 +26,7 @@ import { Python3Lexer } from './antlr/Python3Lexer';
 import { TreeFolder } from './ast/treeFolder';
 import { SymbolTableGenerator } from './ast/symbolTableGenerator';
 import { SemanticAnalyzer } from './ast/semanticAnalyzer';
+import { TreePrinter } from '../tools/treePrinter';
 
 export class QiskitParser implements Parser {
     parse(input: string): ParserResult {
@@ -33,6 +34,8 @@ export class QiskitParser implements Parser {
         let parser = this.buildQiskitParser(input, errorListener);
 
         let tree = parser.program();
+
+        TreePrinter.print(parser.ruleNames, tree);
 
         let folder = new TreeFolder();
         let statements = folder.visit(tree);

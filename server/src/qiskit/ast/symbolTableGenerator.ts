@@ -84,6 +84,11 @@ class AssignmentSymbolTableUpdater implements Visitor<MethodInvocationData> {
 
     visitExpression(expression: Expression): MethodInvocationData {
         let lookingForTrailingType = (a: MethodInvocationData, b: VisitableItem) => {
+            // in partial compilations this case could happen *do not delete without thinking twice*
+            if (b === null) {
+                return a;
+            }
+
             if (a === null) {
                 return b.accept(this);
             }
@@ -95,7 +100,9 @@ class AssignmentSymbolTableUpdater implements Visitor<MethodInvocationData> {
             return a;
         };
 
-        return expression.terms.reduce(lookingForTrailingType, null);
+        let defaultResult = this.symbolTable.lookup('void');
+
+        return expression.terms.reduce(lookingForTrailingType, defaultResult);
     }
 
     visitVariableReference(reference: VariableReference): MethodInvocationData {
