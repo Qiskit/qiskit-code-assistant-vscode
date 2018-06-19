@@ -1,0 +1,11 @@
+{
+    "grover": {
+        "prefix": "grover",
+        "body": [
+            "this is grover",
+            "with param 1 ${1:expression}",
+            "and a param 2 ${2:pass}"
+        ],
+        "description": "Code snippet for the Grover algorithm"
+    }
+}
