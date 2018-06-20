@@ -27,7 +27,8 @@ import {
     VariableSymbol,
     ClassSymbol,
     VariableMetadata,
-    MethodSymbol
+    MethodSymbol,
+    QiskitSymbols
 } from '../compiler/qiskitSymbolTable';
 
 export namespace SymbolTableGenerator {
@@ -63,7 +64,7 @@ class AssignmentSymbolTableUpdater implements Visitor<MethodInvocationData> {
 
     defaultValue(): MethodInvocationData {
         return {
-            type: this.symbolTable.lookup('void')
+            type: this.symbolTable.lookup(QiskitSymbols.void)
         };
     }
 
@@ -79,7 +80,7 @@ class AssignmentSymbolTableUpdater implements Visitor<MethodInvocationData> {
             return invocationData;
         }
 
-        return this.symbolTable.lookup('void');
+        return this.symbolTable.lookup(QiskitSymbols.void);
     }
 
     visitExpression(expression: Expression): MethodInvocationData {
@@ -190,7 +191,7 @@ class MethodCallUnwrapper implements Visitor<MethodInvocationData> {
 
     defaultValue(): MethodInvocationData {
         return {
-            type: this.symbolTable.lookup('void')
+            type: this.symbolTable.lookup(QiskitSymbols.void)
         };
     }
 
