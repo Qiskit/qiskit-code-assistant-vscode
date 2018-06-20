@@ -25,9 +25,6 @@ export class MethodsDictionary {
     currentMethods(): SuggestionSymbol[] {
         let atom = this.atomFinder.firstViableAtomFor(this.tokenStream);
         if (atom && atom.type instanceof ClassSymbol) {
-            let classType = atom.type as ClassSymbol;
-            let atomMethods = classType.getMethods().map(method => method.getName());
-
             return this.suggestionsDictionary
                 .allMethods()
                 .filter(suggestion => suggestion.parent === atom.type.getName())

@@ -195,7 +195,7 @@ class MethodCallUnwrapper implements Visitor<MethodInvocationData> {
     }
 
     visitMethodReference(reference: MethodReference): MethodInvocationData {
-        let method = this.currentType.getMethods().find(method => method.name === reference.name);
+        let method = this.currentType.methods.find(method => method.name === reference.name);
         if (method) {
             return {
                 type: method.type,

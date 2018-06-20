@@ -70,11 +70,6 @@ export class ClassSymbol extends Symbol {
         super(name, type);
     }
 
-    // DEPRECATED
-    getMethods(): MethodSymbol[] {
-        return this.methods;
-    }
-
     toString() {
         return `{ name: ${this.name}, type: ${this.type.getName()}, methods: [${this.methods}] }`;
     }
@@ -100,17 +95,6 @@ export class MethodSymbol extends Symbol {
 export class ArgumentSymbol extends Symbol {
     constructor(name: string, type: Type, public optional: boolean = false) {
         super(name, type);
-    }
-
-    isSameType(input: any): boolean {
-        if (typeof input === 'string') {
-            return this.type.getName() === 'string';
-        }
-        if (typeof input === 'number') {
-            return this.type.getName() === 'number';
-        }
-
-        return false;
     }
 
     toString() {
