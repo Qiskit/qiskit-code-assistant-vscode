@@ -155,7 +155,7 @@ export interface VariableMetadata {
     size?: number;
 }
 
-interface QiskitSDK {
+export interface QiskitSDK {
     classes: QiskitClass[];
 }
 
