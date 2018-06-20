@@ -16,9 +16,3 @@ export interface SymbolTableResult {
     symbolTable: SymbolTable;
     errors: ParserError[];
 }
-
-export interface ContentPosition {
-    line: number;
-    start: number;
-    end: number;
-}

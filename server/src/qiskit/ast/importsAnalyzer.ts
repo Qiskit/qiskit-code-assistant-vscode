@@ -8,14 +8,14 @@
  */
 
 import { ParserRuleContext } from 'antlr4ts';
-import { ErrorListener } from '../parser';
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree';
 import { Python3Visitor } from '../antlr/Python3Visitor';
 import { Import_as_nameContext, AtomContext } from '../antlr/Python3Parser';
 import { ErrorBuilder } from '../../tools/errorBuilder';
-import { PositionAdapter } from '../compiler/tools/positionAdapter';
 import { QiskitSDK } from '../compiler/qiskitSymbolTable';
 import { ErrorMessages } from '../compiler/tools/errorMessages';
+import { PositionAdapter } from '../../tools/positionAdapter';
+import { ErrorListener } from '../../tools/errorListener';
 
 export namespace ImportsAnalyzer {
     export function analyze(tree: ParserRuleContext, errorListener: ErrorListener) {
@@ -48,7 +48,7 @@ class ImportsValidator extends AbstractParseTreeVisitor<void> implements Python3
             let position = PositionAdapter.fromToken(ctx._start);
             let error = ErrorBuilder.warning(message, position);
 
-            this.errorListener.semanticError(error);
+            this.errorListener.addError(error);
         }
     }
 }
