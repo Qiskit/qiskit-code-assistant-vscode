@@ -10,6 +10,7 @@
 'use strict';
 
 import { SymbolTable, Symbol, GlobalScope, Type, BuiltInTypeSymbol } from '../../tools/symbolTable';
+import { QiskitSDK, QiskitMethod, QiskitArgument } from '../libs/qiskitSDK';
 
 export namespace QiskitSymbolTable {
     export function build(): SymbolTable {
@@ -25,15 +26,13 @@ export namespace QiskitSymbolTable {
         symbolTable.define(new BuiltInTypeSymbol('qubit_pol'));
         symbolTable.define(new BuiltInTypeSymbol('class'));
 
-        const qiskitSymbols: QiskitSDK = require('../libs/qiskitSDK.json');
-
-        load(qiskitSymbols, symbolTable);
+        loadQiskitSymbolsAt(symbolTable);
 
         return symbolTable;
     }
 
-    function load(qiskitSymbols: QiskitSDK, symbolTable: SymbolTable): void {
-        qiskitSymbols.classes.forEach(qclass => {
+    function loadQiskitSymbolsAt(symbolTable: SymbolTable): void {
+        QiskitSDK.classes().forEach(qclass => {
             let type = symbolTable.lookup('class');
             let args: ArgumentSymbol[] = getArgumentsSymbols(qclass.arguments, symbolTable);
             let methods: MethodSymbol[] = getMethodsSymbols(qclass.methods, symbolTable);
@@ -153,30 +152,4 @@ export class VariableSymbol extends Symbol {
 export interface VariableMetadata {
     name?: string;
     size?: number;
-}
-
-export interface QiskitSDK {
-    classes: QiskitClass[];
-}
-
-interface QiskitClass {
-    name: string;
-    detail: string;
-    documentation: string;
-    arguments?: QiskitArgument[];
-    methods: QiskitMethod[];
-}
-
-interface QiskitMethod {
-    name: string;
-    type: string;
-    detail: string;
-    documentation: string;
-    arguments?: QiskitArgument[];
-}
-
-interface QiskitArgument {
-    name: string;
-    type: string;
-    optional?: boolean;
 }

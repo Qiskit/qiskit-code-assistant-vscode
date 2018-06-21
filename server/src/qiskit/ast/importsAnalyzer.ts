@@ -12,10 +12,10 @@ import { AbstractParseTreeVisitor } from 'antlr4ts/tree';
 import { Python3Visitor } from '../antlr/Python3Visitor';
 import { Import_as_nameContext, AtomContext } from '../antlr/Python3Parser';
 import { ErrorBuilder } from '../../tools/errorBuilder';
-import { QiskitSDK } from '../compiler/qiskitSymbolTable';
 import { ErrorMessages } from '../compiler/tools/errorMessages';
 import { PositionAdapter } from '../../tools/positionAdapter';
 import { ErrorListener } from '../../tools/errorListener';
+import { QiskitSDK } from '../libs/qiskitSDK';
 
 export namespace ImportsAnalyzer {
     export function analyze(tree: ParserRuleContext, errorListener: ErrorListener) {
@@ -26,11 +26,9 @@ export namespace ImportsAnalyzer {
 
 class ImportsValidator extends AbstractParseTreeVisitor<void> implements Python3Visitor<void> {
     imported: String[] = [];
-    qiskitSymbols: QiskitSDK;
 
     constructor(private errorListener: ErrorListener) {
         super();
-        this.qiskitSymbols = require('../libs/qiskitSDK.json');
     }
 
     defaultResult() {}
@@ -40,8 +38,8 @@ class ImportsValidator extends AbstractParseTreeVisitor<void> implements Python3
     }
 
     visitAtom(ctx: AtomContext) {
-        let isFromQiskit = this.qiskitSymbols.classes.find(theClass => theClass.name === ctx.text);
-        let isPreviouslyImported = this.imported.find(importedValue => importedValue === ctx.text);
+        let isFromQiskit = QiskitSDK.containsClass(ctx.text);
+        let isPreviouslyImported = this.imported.some(importedValue => importedValue === ctx.text);
 
         if (isFromQiskit && !isPreviouslyImported) {
             let message = ErrorMessages.notPreviouslyImported(ctx.text);

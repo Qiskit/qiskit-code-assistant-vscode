@@ -27,7 +27,6 @@ import { TreeFolder } from './ast/treeFolder';
 import { SymbolTableGenerator } from './ast/symbolTableGenerator';
 import { SemanticAnalyzer } from './ast/semanticAnalyzer';
 import { ImportsAnalyzer } from './ast/importsAnalyzer';
-import { TreePrinter } from '../tools/treePrinter';
 import { ErrorListener } from '../tools/errorListener';
 
 export class QiskitParser implements Parser {
@@ -36,8 +35,6 @@ export class QiskitParser implements Parser {
         let parser = this.buildQiskitParser(input, errorListener);
 
         let tree = parser.program();
-
-        TreePrinter.print(parser.ruleNames, tree);
 
         let folder = new TreeFolder();
         let statements = folder.visit(tree);
