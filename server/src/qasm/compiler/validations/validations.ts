@@ -151,6 +151,7 @@ export class ClassicalRegisterComparationRule implements SemanticRule {
         }
 
         let registerSize = (symbol as RegisterSymbol).size;
+        //tslint:disable-next-line
         let maximumValue = Math.pow(2, registerSize) - 1;
         if (this.comparison > maximumValue) {
             let message = ErrorMessages.incompatibleComparationValue(this.variableName, maximumValue);

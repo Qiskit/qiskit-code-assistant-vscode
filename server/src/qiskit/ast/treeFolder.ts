@@ -36,7 +36,7 @@ import {
     MethodReference,
     Visitor,
     Position,
-    Boolean,
+    QiskitBoolean,
     Dictionary
 } from './types';
 import { ParserRuleContext, Token } from 'antlr4ts';
@@ -202,12 +202,12 @@ class TerminalFolder extends AbstractParseTreeVisitor<VisitableItem> implements 
             case Python3Lexer.NAME:
                 return new VariableReference(node.text, PositionFrom.token(node.symbol));
             case Python3Lexer.TRUE:
-                return new Boolean(true, PositionFrom.token(node.symbol));
+                return new QiskitBoolean(true, PositionFrom.token(node.symbol));
             case Python3Lexer.FALSE:
-                return new Boolean(false, PositionFrom.token(node.symbol));
+                return new QiskitBoolean(false, PositionFrom.token(node.symbol));
+            default:
+                return this.result;
         }
-
-        return this.result;
     }
 
     visitDictorsetmaker(ctx: DictorsetmakerContext): VisitableItem {

@@ -152,7 +152,7 @@ class TermSemanticValidator implements Visitor<ExpressionAnalysis> {
             line: item.line,
             start: item.start,
             end: item.end,
-            message: message,
+            message,
             level: ParseErrorLevel.WARNING
         };
     }
@@ -231,7 +231,7 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
             line: item.line,
             start: item.start,
             end: item.end,
-            message: message,
+            message,
             level: ParseErrorLevel.WARNING
         };
     }

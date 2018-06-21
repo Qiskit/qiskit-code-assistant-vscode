@@ -18,7 +18,7 @@ export namespace ErrorBuilder {
             line: position.line,
             start: position.start,
             end: position.end,
-            message: message,
+            message,
             level: ParseErrorLevel.ERROR
         };
     }
@@ -28,7 +28,7 @@ export namespace ErrorBuilder {
             line: position.line,
             start: position.start,
             end: position.end,
-            message: message,
+            message,
             level: ParseErrorLevel.WARNING
         };
     }
