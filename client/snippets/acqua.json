@@ -7,18 +7,30 @@
     "grover": {
         "prefix": "grover",
         "body": [
-            "params = {",
-            "\t'problem': {'name': 'search'},",
+            "${1:params} = {",
+            "\t'problem': {'name': '${2:search}'},",
             "\t'algorithm': {'name': 'Grover'},",
-            "\t'oracle': {'name': 'SAT', 'cnf': ${1:oracle_cnf_reference},",
+            "\t'oracle': {'name': 'SAT', 'cnf': ${3:oracle_cnf_reference},",
             "\t'backend': {'name': 'local_qasm_simulator'}",
-            "}"
+            "}",
+            "",
+            "${4:result} = run_algorithm(${1:params})"
         ],
         "description": "Code snippet for the Grover algorithm"
     },
-    "run": {
-        "prefix": "run",
-        "body": [ "result = run_algorithm(params)" ],
-        "description": "Code snippet for the Acqua algorihtm execution"
+    "vqe": {
+        "prefix": "vqe",
+        "body": [
+            "${1:params} = {",
+            "\t'problem': {'name': '${2:ising}'},",
+            "\t'algorithm': {'name': 'VQE', 'operator_mode': 'matrix'},",
+            "\t'optimizer': {'name': 'L_BFGS_B', 'maxfun': 6000},",
+            "\t'variational_form': {'name': 'RYRZ', 'depth': 3, 'entanglement': 'linear'},",
+            "\t'backend': {'name': 'local_qasm_simulator'}",
+            "}",
+            "",
+            "${3:result} = run_algorithm(${1:params}, ${4:input})"
+        ],
+        "description": "Code snippet for the Grover algorithm"
     }
 }
