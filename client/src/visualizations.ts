@@ -13,6 +13,7 @@ import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { Util } from './utils';
 import { QLogger } from './logger';
+import * as nunjucks from 'nunjucks';
 
 export namespace VizManager {
     export function createViz(codePath: string, result: object): string {
@@ -130,17 +131,24 @@ export namespace VizManager {
         let html = undefined;
         html = fs.readFileSync(templatePath, { encoding: 'utf8' });
         if (html !== undefined) {
-            let str2Replace =
-                '"x": ["000", "001", "010", "011", "100", "101", "110", "111"], "y": [117, 136, 119, 119, 149, 142, 129, 113]';
+            // let str2Replace =
+            //     '"x": ["000", "001", "010", "011", "100", "101", "110", "111"], "y": [117, 136, 119, 119, 149, 142, 129, 113]';
 
-            let xArrayUnrolled: String = xArray.map(element => `"${element}"`).join(',');
-            let yArrayUnrolled: String = yArray.map(element => `${element}`).join(',');
+            // let xArrayUnrolled: String = xArray.map(element => `"${element}"`).join(',');
+            // let yArrayUnrolled: String = yArray.map(element => `${element}`).join(',');
 
-            let replacement = `"x": [${xArrayUnrolled}], "y": [${yArrayUnrolled}]`;
+            // let replacement = `"x": [${xArrayUnrolled}], "y": [${yArrayUnrolled}]`;
 
-            html = html.replace(str2Replace, replacement);
+            // html = html.replace(str2Replace, replacement);
 
-            return html;
+            // return html;
+            let context = {
+                bits: xArray.map(element => `"${element}"`).join(','),
+                bitsValues: yArray.map(element => `${element}`).join(',')
+            };
+
+            nunjucks.configure({ autoescape: false });
+            return nunjucks.renderString(html, context);
         } else {
             return `<pre>${countsArray}</pre>`;
         }
