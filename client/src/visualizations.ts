@@ -14,6 +14,7 @@ import * as vscode from 'vscode';
 import { Util } from './utils';
 import { QLogger } from './logger';
 import { HistogramRenderer } from './visualizations/histogramRenderer';
+import { PreformattedRenderer } from './visualizations/preformattedRenderer';
 
 export namespace VizManager {
     export function createViz(codePath: string, result: object): string {
@@ -33,7 +34,9 @@ export namespace VizManager {
             return renderer.render();
         } else if (visualizationType === 'TEXT') {
             QLogger.verbose('Text detected', this);
-            return `<pre>${result}</pre>`;
+
+            let renderer = new PreformattedRenderer(result);
+            return renderer.render();
         } else if (visualizationType === 'STATUS') {
             QLogger.verbose('Device status detected', this);
             let templatePath = Util.getOSDependentPath('../../resources/html-templates/temp-devices-status.html');
@@ -41,16 +44,12 @@ export namespace VizManager {
             let resultString = result.toString().replace(/'/g, '"');
             let execResult = JSON.parse(String(resultString));
 
-            // console.log("execResult", execResult);
-            // console.log("execResult[0].hasOwnProperty('status')", execResult[0].hasOwnProperty('status'));
-
             if (execResult[0].hasOwnProperty('status')) {
                 return VizManager.createDeviceStatus(execResult, templatePath);
             } else {
                 return `${result}`;
             }
         } else {
-            // console.log("none detected");
             return `${result}`;
         }
     }
