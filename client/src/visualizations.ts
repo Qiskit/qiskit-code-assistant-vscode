@@ -13,7 +13,7 @@ import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { Util } from './utils';
 import { QLogger } from './logger';
-import * as nunjucks from 'nunjucks';
+import { HistogramRenderer } from './visualizations/histogramRenderer';
 
 export namespace VizManager {
     export function createViz(codePath: string, result: object): string {
@@ -28,20 +28,9 @@ export namespace VizManager {
 
         if (visualizationType === 'HISTOGRAM') {
             QLogger.verbose('Histogram detected', this);
-            let templatePath = Util.getOSDependentPath('../../resources/html-templates/temp-plot-shots.html');
 
-            let resultString = result.toString().replace(/'/g, '"');
-            try {
-                let execResult = JSON.parse(String(resultString));
-                return VizManager.createHistogram(execResult.result[0].data.counts, templatePath);
-            } catch (err) {
-                try {
-                    let execResult = JSON.parse(String(resultString));
-                    return VizManager.createHistogram(execResult, templatePath);
-                } catch (err) {
-                    return `<pre>${resultString}</pre>`;
-                }
-            }
+            let renderer = new HistogramRenderer(result);
+            return renderer.render();
         } else if (visualizationType === 'TEXT') {
             QLogger.verbose('Text detected', this);
             return `<pre>${result}</pre>`;
@@ -109,48 +98,6 @@ export namespace VizManager {
             return 'TEXT';
         } else {
             return 'TEXT';
-        }
-    }
-
-    export function createHistogram(countsArray: object | string, templatePath: string): string {
-        let xArray = [];
-        let yArray = [];
-
-        const countsArrayOrd = {};
-        Object.keys(countsArray)
-            .sort()
-            .forEach(function(key) {
-                countsArrayOrd[key] = countsArray[key];
-            });
-
-        for (let element in countsArrayOrd) {
-            xArray.push(element);
-            yArray.push(countsArray[element]);
-        }
-
-        let html = undefined;
-        html = fs.readFileSync(templatePath, { encoding: 'utf8' });
-        if (html !== undefined) {
-            // let str2Replace =
-            //     '"x": ["000", "001", "010", "011", "100", "101", "110", "111"], "y": [117, 136, 119, 119, 149, 142, 129, 113]';
-
-            // let xArrayUnrolled: String = xArray.map(element => `"${element}"`).join(',');
-            // let yArrayUnrolled: String = yArray.map(element => `${element}`).join(',');
-
-            // let replacement = `"x": [${xArrayUnrolled}], "y": [${yArrayUnrolled}]`;
-
-            // html = html.replace(str2Replace, replacement);
-
-            // return html;
-            let context = {
-                bits: xArray.map(element => `"${element}"`).join(','),
-                bitsValues: yArray.map(element => `${element}`).join(',')
-            };
-
-            nunjucks.configure({ autoescape: false });
-            return nunjucks.renderString(html, context);
-        } else {
-            return `<pre>${countsArray}</pre>`;
         }
     }
 
