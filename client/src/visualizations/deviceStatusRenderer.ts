@@ -7,6 +7,8 @@
  * the LICENSE.txt file in the root directory of this source tree.
  */
 
+'use strict';
+
 import * as fs from 'fs';
 import { RenderStrategy } from './types';
 import { Util } from '../utils';

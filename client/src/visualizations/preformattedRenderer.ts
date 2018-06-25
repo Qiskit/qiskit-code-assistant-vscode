@@ -7,6 +7,8 @@
  * the LICENSE.txt file in the root directory of this source tree.
  */
 
+'use strict';
+
 import { RenderStrategy } from './types';
 
 export class PreformattedRenderer implements RenderStrategy {

@@ -7,6 +7,8 @@
  * the LICENSE.txt file in the root directory of this source tree.
  */
 
+'use strict';
+
 export interface RenderStrategy {
     render(): string;
 }
