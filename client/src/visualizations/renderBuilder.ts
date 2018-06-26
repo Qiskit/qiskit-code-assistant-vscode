@@ -11,10 +11,8 @@
 
 import * as fs from 'fs';
 import * as vscode from 'vscode';
-import { Util } from '../utils';
 import { RenderStrategy } from './types';
 import { PreformattedRenderer } from './preformattedRenderer';
-import { DeviceStatusRenderer } from './deviceStatusRenderer';
 import { HistogramRenderer } from './histogramRenderer';
 
 export namespace RenderBuilder {
@@ -31,11 +29,6 @@ export namespace RenderBuilder {
 
     function detectProperViz(codePath: string, result: object): RenderStrategy {
         let codeFile = undefined;
-
-        //console.log("codePath", codePath);
-        if (codePath === Util.getOSDependentPath('../../resources/qiskitScripts/listRemoteBackends.py')) {
-            return new DeviceStatusRenderer(result);
-        }
 
         codeFile = fs.readFileSync(codePath, { encoding: 'utf8' });
         if (codeFile !== undefined) {

@@ -11,28 +11,28 @@
 
 import * as fs from 'fs';
 import * as nunjucks from 'nunjucks';
-import { RenderStrategy } from './types';
 import { Util } from '../utils';
 
-export class DeviceStatusRenderer implements RenderStrategy {
-    constructor(private result: object) {}
-
-    render(): string {
+export namespace DeviceStatusVisualization {
+    export function render(result: object): string {
         let templatePath = Util.getOSDependentPath('../../resources/html-templates/temp-devices-status.html');
+        let devices = asDevices(result);
 
-        let resultString = this.result.toString().replace(/'/g, '"');
-        let execResult = JSON.parse(String(resultString));
-
-        if (execResult[0].hasOwnProperty('status')) {
-            return this.createDeviceStatus(execResult, templatePath);
-        } else {
-            return `${this.result}`;
+        try {
+            return renderDeviceStatus(devices, templatePath);
+        } catch {
+            return `${result}`;
         }
     }
 
-    createDeviceStatus(devices: Array<Device>, templatePath: string): string {
+    function asDevices(result: object): Array<Device> {
+        let resultString = result.toString().replace(/'/g, '"');
+        return JSON.parse(String(resultString));
+    }
+
+    function renderDeviceStatus(devices: Array<Device>, templatePath: string): string {
         let template = fs.readFileSync(templatePath, { encoding: 'utf8' });
-        let sortFunction = (a, b) => this.sortWeight(a) - this.sortWeight(b);
+        let sortFunction = (a, b) => sortWeight(a) - sortWeight(b);
 
         if (template !== undefined) {
             let context = {
@@ -46,7 +46,7 @@ export class DeviceStatusRenderer implements RenderStrategy {
         }
     }
 
-    sortWeight(device: Device) {
+    function sortWeight(device: Device) {
         let weightsDictionary = {
             ibmq_qasm_simulator: 100,
             ibmqx2: 50,
