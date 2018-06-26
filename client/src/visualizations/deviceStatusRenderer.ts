@@ -10,6 +10,7 @@
 'use strict';
 
 import * as fs from 'fs';
+import * as nunjucks from 'nunjucks';
 import { RenderStrategy } from './types';
 import { Util } from '../utils';
 
@@ -29,46 +30,41 @@ export class DeviceStatusRenderer implements RenderStrategy {
         }
     }
 
-    createDeviceStatus(devicesArray: Array<object>, templatePath: string): string {
-        let html = undefined;
-        html = fs.readFileSync(templatePath, { encoding: 'utf8' });
-        if (html !== undefined) {
-            devicesArray.forEach(element => {
-                let str2Replace = `<small class="">[${
-                    element['status']['name']
-                }]</small></span><div class="pull-right"><ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger','label-success': $ctrl.backendStatus[backend.name].tag.color === 'success','label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}"ng-show="$ctrl.backendStatus[backend.name].tag" class="label-success">Active: Calibrating</ibm-q-tag>`;
-                let str2ReplaceSimulator = `<small class="">[${
-                    element['status']['name']
-                }]</small></span><div class="pull-right"><ibm-q-tag class="label-success">ACTIVE</ibm-q-tag>`;
+    createDeviceStatus(devices: Array<Device>, templatePath: string): string {
+        let template = fs.readFileSync(templatePath, { encoding: 'utf8' });
+        let sortFunction = (a, b) => this.sortWeight(a) - this.sortWeight(b);
 
-                let statusTag = 'label-success';
-                let statusMessage = 'Active';
-                if (element['status']['available'] === false) {
-                    statusTag = 'label-danger';
-                    statusMessage = 'Maintenance';
-                }
+        if (template !== undefined) {
+            let context = {
+                devices: devices.sort(sortFunction)
+            };
 
-                let replacement = `<small class="">[${
-                    element['status']['name']
-                }]</small></span><div class="pull-right"><ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger','label-success': $ctrl.backendStatus[backend.name].tag.color === 'success', 'label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}" ng-show="$ctrl.backendStatus[backend.name].tag" class="${statusTag}">${statusMessage}</ibm-q-tag>`;
-                let replacementSimulator = `<small class="">[${
-                    element['status']['name']
-                }]</small></span><div class="pull-right"><ibm-q-tag class="${statusTag}">${statusMessage}</ibm-q-tag>`;
-
-                let str2ReplacePendingJobs = `<div class="pull-right"><ibm-q-tag class="label-info">Jobs pending [${
-                    element['status']['name']
-                }]: 0</ibm-q-tag></div>`;
-                let replacementPendingJobs = `<div class="pull-right"><ibm-q-tag class="label-info">Jobs pending: ${
-                    element['status']['pending_jobs']
-                }</ibm-q-tag></div>`;
-
-                html = html.replace(str2Replace, replacement);
-                html = html.replace(str2ReplaceSimulator, replacementSimulator);
-                html = html.replace(str2ReplacePendingJobs, replacementPendingJobs);
-            });
-            return html;
+            nunjucks.configure({ autoescape: false });
+            return nunjucks.renderString(template, context);
         } else {
-            return `<pre>${devicesArray}</pre>`;
+            return `<pre>${devices}</pre>`;
         }
     }
+
+    sortWeight(device: Device) {
+        let weightsDictionary = {
+            ibmq_qasm_simulator: 100,
+            ibmqx2: 50,
+            ibmqx4: 30,
+            ibmqx5: 10
+        };
+
+        return weightsDictionary[device.status.name] || 1;
+    }
+}
+
+interface Device {
+    name: string;
+    status: Status;
+}
+
+interface Status {
+    available: boolean;
+    name: string;
+    pending_jobs: number;
 }
