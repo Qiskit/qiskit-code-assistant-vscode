@@ -154,7 +154,7 @@ class TermSemanticValidator implements Visitor<ExpressionAnalysis> {
     }
 
     extractMethodFromClass(classSymbol: ClassSymbol, method: string): MethodSymbol {
-        return classSymbol.getMethods().find(symbol => symbol.name === method);
+        return classSymbol.methods.find(symbol => symbol.name === method);
     }
 
     warning(message: string, item: VisitableItem): ParserError {
