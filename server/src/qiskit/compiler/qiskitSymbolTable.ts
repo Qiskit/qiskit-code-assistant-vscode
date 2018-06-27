@@ -10,21 +10,23 @@
 'use strict';
 
 import { SymbolTable, Symbol, GlobalScope, Type, BuiltInTypeSymbol } from '../../tools/symbolTable';
-import { QiskitSDK, QiskitMethod, QiskitArgument } from '../libs/qiskitSDK';
+import { QiskitSDK } from '../libs/qiskitSDK';
 
 export namespace QiskitSymbolTable {
     export function build(): SymbolTable {
         let globalScope = new GlobalScope();
         let symbolTable = new SymbolTable(globalScope);
 
-        symbolTable.define(new BuiltInTypeSymbol('void'));
-        symbolTable.define(new BuiltInTypeSymbol('object'));
-        symbolTable.define(new BuiltInTypeSymbol('string'));
-        symbolTable.define(new BuiltInTypeSymbol('number'));
-        symbolTable.define(new BuiltInTypeSymbol('boolean'));
-        symbolTable.define(new BuiltInTypeSymbol('dict'));
-        symbolTable.define(new BuiltInTypeSymbol('qubit_pol'));
-        symbolTable.define(new BuiltInTypeSymbol('class'));
+        symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.void));
+        symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.object));
+        symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.string));
+        symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.number));
+        symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.boolean));
+        symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.dictionary));
+        symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.qbitPol));
+        symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.class));
+
+        const qiskitSymbols: QiskitSDK = require('../libs/qiskitSDK.json');
 
         loadQiskitSymbolsAt(symbolTable);
 
@@ -33,7 +35,7 @@ export namespace QiskitSymbolTable {
 
     function loadQiskitSymbolsAt(symbolTable: SymbolTable): void {
         QiskitSDK.classes().forEach(qclass => {
-            let type = symbolTable.lookup('class');
+            let type = symbolTable.lookup(QiskitSymbols.class);
             let args: ArgumentSymbol[] = getArgumentsSymbols(qclass.arguments, symbolTable);
             let methods: MethodSymbol[] = getMethodsSymbols(qclass.methods, symbolTable);
             let classSymbol = new ClassSymbol(qclass.name, type, args, methods);
@@ -44,8 +46,8 @@ export namespace QiskitSymbolTable {
 
     function getMethodsSymbols(qmethods: QiskitMethod[], symbolTable: SymbolTable): MethodSymbol[] {
         return qmethods.map(qmethod => {
-            let type = symbolTable.lookup(qmethod.type) || symbolTable.lookup('void');
-            let requiredArguments: ArgumentSymbol[] = getArgumentsSymbols(qmethod.arguments, symbolTable);
+            let type = symbolTable.lookup(qmethod.type) || symbolTable.lookup(QiskitSymbols.void);
+            let requiredArguments = getArgumentsSymbols(qmethod.arguments, symbolTable);
 
             return new MethodSymbol(qmethod.name, type, requiredArguments);
         });
@@ -57,7 +59,7 @@ export namespace QiskitSymbolTable {
         }
 
         return qarguments.map(qargument => {
-            let type = symbolTable.lookup(qargument.type) || symbolTable.lookup('void');
+            let type = symbolTable.lookup(qargument.type) || symbolTable.lookup(QiskitSymbols.void);
 
             return new ArgumentSymbol(qargument.name, type, qargument.optional);
         });
@@ -67,11 +69,6 @@ export namespace QiskitSymbolTable {
 export class ClassSymbol extends Symbol {
     constructor(name: string, type: Type, public requiredArguments: ArgumentSymbol[], public methods: MethodSymbol[]) {
         super(name, type);
-    }
-
-    // DEPRECATED
-    getMethods(): MethodSymbol[] {
-        return this.methods;
     }
 
     toString() {
@@ -99,17 +96,6 @@ export class MethodSymbol extends Symbol {
 export class ArgumentSymbol extends Symbol {
     constructor(name: string, type: Type, public optional: boolean = false) {
         super(name, type);
-    }
-
-    isSameType(input: any): boolean {
-        if (typeof input === 'string') {
-            return this.type.getName() === 'string';
-        }
-        if (typeof input === 'number') {
-            return this.type.getName() === 'number';
-        }
-
-        return false;
     }
 
     toString() {
@@ -152,4 +138,41 @@ export class VariableSymbol extends Symbol {
 export interface VariableMetadata {
     name?: string;
     size?: number;
+}
+
+interface QiskitSDK {
+    classes: QiskitClass[];
+}
+
+interface QiskitClass {
+    name: string;
+    detail: string;
+    documentation: string;
+    arguments?: QiskitArgument[];
+    methods: QiskitMethod[];
+}
+
+interface QiskitMethod {
+    name: string;
+    type: string;
+    detail: string;
+    documentation: string;
+    arguments?: QiskitArgument[];
+}
+
+interface QiskitArgument {
+    name: string;
+    type: string;
+    optional?: boolean;
+}
+
+export enum QiskitSymbols {
+    void = 'void',
+    object = 'object',
+    string = 'string',
+    number = 'number',
+    boolean = 'boolean',
+    dictionary = 'dict',
+    qbitPol = 'qubit_pol',
+    class = 'class'
 }

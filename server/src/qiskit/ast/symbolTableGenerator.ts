@@ -27,7 +27,8 @@ import {
     VariableSymbol,
     ClassSymbol,
     VariableMetadata,
-    MethodSymbol
+    MethodSymbol,
+    QiskitSymbols
 } from '../compiler/qiskitSymbolTable';
 
 export namespace SymbolTableGenerator {
@@ -63,7 +64,7 @@ class AssignmentSymbolTableUpdater implements Visitor<MethodInvocationData> {
 
     defaultValue(): MethodInvocationData {
         return {
-            type: this.symbolTable.lookup('void')
+            type: this.symbolTable.lookup(QiskitSymbols.void)
         };
     }
 
@@ -79,12 +80,17 @@ class AssignmentSymbolTableUpdater implements Visitor<MethodInvocationData> {
             return invocationData;
         }
 
-        return this.symbolTable.lookup('void');
+        return this.symbolTable.lookup(QiskitSymbols.void);
     }
 
     visitExpression(expression: Expression): MethodInvocationData {
         let lookingForTrailingType = (a: MethodInvocationData, b: VisitableItem) => {
-            if (a === null) {
+            // in partial compilations this case could happen *do not delete without thinking twice*
+            if (b === null) {
+                return a;
+            }
+
+            if (a.type === null) {
                 return b.accept(this);
             }
             if (a.type instanceof ClassSymbol) {
@@ -95,7 +101,9 @@ class AssignmentSymbolTableUpdater implements Visitor<MethodInvocationData> {
             return a;
         };
 
-        return expression.terms.reduce(lookingForTrailingType, null);
+        let defaultResult = this.symbolTable.lookup('void');
+
+        return expression.terms.reduce(lookingForTrailingType, defaultResult);
     }
 
     visitVariableReference(reference: VariableReference): MethodInvocationData {
@@ -190,12 +198,12 @@ class MethodCallUnwrapper implements Visitor<MethodInvocationData> {
 
     defaultValue(): MethodInvocationData {
         return {
-            type: this.symbolTable.lookup('void')
+            type: this.symbolTable.lookup(QiskitSymbols.void)
         };
     }
 
     visitMethodReference(reference: MethodReference): MethodInvocationData {
-        let method = this.currentType.getMethods().find(method => method.name === reference.name);
+        let method = this.currentType.methods.find(method => method.name === reference.name);
         if (method) {
             return {
                 type: method.type,
