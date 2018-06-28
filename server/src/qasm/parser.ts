@@ -13,7 +13,7 @@ import { Parser, ParserResult } from '../types';
 import { SymbolTableGenerator } from './compiler/symbolTableGenerator';
 import { SemanticAnalyzer } from './compiler/semanticAnalyzer';
 import { QASMSyntacticParser } from './compiler/qasmSyntacticParser';
-import { ErrorListener } from './compiler/tools/errorListener';
+import { ErrorListener } from '../tools/errorListener';
 
 export class QASMParser implements Parser {
     parse(input: string): ParserResult {
