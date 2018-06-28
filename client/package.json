@@ -136,6 +136,12 @@
 				}
 			}
 		},
+		"snippets": [
+			{
+				"language": "python",
+				"path": "./snippets/acqua.json"
+			}
+		],
 		"languages": [
 			{
 				"id": "qasm-lang",

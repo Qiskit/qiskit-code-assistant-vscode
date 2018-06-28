@@ -36,8 +36,6 @@ export namespace QLogger {
 
     function meta(reference?: any) {
         let label = reference ? reference.constructor.name : 'unknown';
-        return {
-            label: label
-        };
+        return { label };
     }
 }

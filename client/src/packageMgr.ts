@@ -21,7 +21,7 @@ export class PackageMgr {
         try {
             const config = workspace.getConfiguration('ibm-q-studio');
             const qiskitPacks = config.get('qiskit.packages');
-            Object.keys(qiskitPacks).forEach(function(key) {
+            Object.keys(qiskitPacks).forEach(key => {
                 //console.log(key.toString(), qiskitPacks[key].toString());
                 PackageMgr._packages.push(new PipPackage(key.toString(), qiskitPacks[key].toString()));
             });
@@ -31,9 +31,9 @@ export class PackageMgr {
     }
 
     check(verbose: boolean | false): Q.Promise<void> {
-        let packages: Q.Promise<IPackage>[] = [];
+        let packages: Array<Q.Promise<IPackage>> = [];
         PackageMgr._packages.forEach(pkg => {
-            packages.push(pkg.checkVersion(pkg.Info.Version, verbose));
+            packages.push(pkg.checkVersion(pkg.info.version, verbose));
         });
         return Q.all(packages);
     }

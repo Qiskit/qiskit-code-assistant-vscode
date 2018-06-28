@@ -19,7 +19,7 @@ export interface Visitor<T> {
     visitInteger?(item: Integer): T;
     visitFloat?(item: Float): T;
     visitText?(item: Text): T;
-    visitBoolean?(item: Boolean): T;
+    visitBoolean?(item: QiskitBoolean): T;
     visitDictionary?(item: Dictionary): T;
 
     defaultValue(): T;
@@ -246,7 +246,7 @@ export class Text extends VisitableItem {
     }
 }
 
-export class Boolean extends VisitableItem {
+export class QiskitBoolean extends VisitableItem {
     value: boolean;
 
     constructor(value: boolean, position: Position) {

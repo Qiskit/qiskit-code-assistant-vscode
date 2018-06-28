@@ -18,12 +18,12 @@ import { QLogger } from './logger';
 
 export class PipPackage implements IPackage {
     //TODO: Get Info form local installation
-    public Info: IPackageInfo = {
-        Name: '',
-        Version: Version.fromString('-1.-1.-1'),
-        Summary: '',
-        Location: '',
-        Dependencies: '',
+    public info: IPackageInfo = {
+        name: '',
+        version: Version.fromString('-1.-1.-1'),
+        summary: '',
+        location: '',
+        dependencies: '',
         getPackageInfo: () => {}
     };
 
@@ -31,37 +31,37 @@ export class PipPackage implements IPackage {
     private pypi: PyPiWrapper = new PyPiWrapper();
 
     constructor(name: string, version: string) {
-        this.Info.Name = name;
-        this.Info.Version = Version.fromString(version);
+        this.info.name = name;
+        this.info.version = Version.fromString(version);
     }
 
     public checkVersion(pkgVersion: string, verbose: boolean | false): Q.Promise<void> {
         QLogger.verbose(`pkgVersion: ${pkgVersion}`, this);
-        let packageName = this.Info.Name;
+        let packageName = this.info.name;
         return this.pip
-            .getPackageInfo(this.Info.Name)
+            .getPackageInfo(this.info.name)
             .then((installedPkgInfo: IPackageInfo) => {
                 //console.log(installedPkgInfo);
-                this.Info = installedPkgInfo;
+                this.info = installedPkgInfo;
                 // Let's check for new versions
-                return this.pypi.getPackageInfo(this.Info.Name);
+                return this.pypi.getPackageInfo(this.info.name);
             })
             .then((pkgInfo: IPackageInfo) => {
                 // If there is a new version, offer to the user the update.
 
-                if (this.Info.Version.isLesser(Version.fromString(pkgVersion.toString()))) {
-                    QLogger.verbose(`New mandatory version ${pkgInfo.Version.toString()}`, this);
+                if (this.info.version.isLesser(Version.fromString(pkgVersion.toString()))) {
+                    QLogger.verbose(`New mandatory version ${pkgInfo.version.toString()}`, this);
                     return vscode.window.showInputBox({
                         ignoreFocusOut: true,
-                        prompt: `👉 There's a new mandatory ${packageName} release: ${pkgInfo.Version.toString()}. You must upgrade it to enjoy this extension 👈`,
+                        prompt: `👉 There's a new mandatory ${packageName} release: ${pkgInfo.version.toString()}. You must upgrade it to enjoy this extension 👈`,
                         value: 'Yes'
                     });
                 } else {
-                    if (pkgInfo.Version.isGreater(this.Info.Version)) {
-                        QLogger.verbose(`New version ${pkgInfo.Version.toString()}`, this);
+                    if (pkgInfo.version.isGreater(this.info.version)) {
+                        QLogger.verbose(`New version ${pkgInfo.version.toString()}`, this);
                         return vscode.window.showInputBox({
                             ignoreFocusOut: true,
-                            prompt: `👉 There's a new ${packageName} release: ${pkgInfo.Version.toString()}. Do you want to upgrade? 👈`,
+                            prompt: `👉 There's a new ${packageName} release: ${pkgInfo.version.toString()}. Do you want to upgrade? 👈`,
                             value: 'Yes'
                         });
                     }
@@ -74,7 +74,7 @@ export class PipPackage implements IPackage {
                 if (selection === 'Yes') {
                     return this.update(packageName);
                 } else {
-                    if (this.Info.Version.isLesser(Version.fromString(pkgVersion.toString()))) {
+                    if (this.info.version.isLesser(Version.fromString(pkgVersion.toString()))) {
                         return Q.reject(
                             `The ${packageName} version you have installed is older than the version required (v.${pkgVersion}). The extension will not work properly`
                         );
