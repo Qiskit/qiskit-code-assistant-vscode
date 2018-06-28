@@ -25,7 +25,7 @@ export namespace ImportsAnalyzer {
 }
 
 class ImportsValidator extends AbstractParseTreeVisitor<void> implements Python3Visitor<void> {
-    imported: String[] = [];
+    imported: string[] = [];
 
     constructor(private errorListener: ErrorListener) {
         super();
