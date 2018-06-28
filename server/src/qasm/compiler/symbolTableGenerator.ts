@@ -24,9 +24,9 @@ import path = require('path');
 import fs = require('fs');
 import { ParserRuleContext } from 'antlr4ts';
 import { QASMSyntacticParser } from '../compiler/qasmSyntacticParser';
-import { ErrorListener } from './tools/errorListener';
-import { PositionAdapter } from './tools/positionAdapter';
 import { PreviousDefinitionValidation } from './validations/validations';
+import { PositionAdapter } from '../../tools/positionAdapter';
+import { ErrorListener } from '../../tools/errorListener';
 
 export namespace SymbolTableGenerator {
     export function symbolTableFor(tree: ParserRuleContext, _errorListener?: ErrorListener): SymbolTable {

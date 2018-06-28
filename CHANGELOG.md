@@ -17,14 +17,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### 🎉 Added
+- Imports validation for QISKit files ([#150](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/150) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 - qiskit-acqua and qiskit-acqua-chemistry added to dependencies ([#143](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/143) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Added IBM Q 20 Tokyo backend ([#141](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/141) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Added readme file to the client folder ([#134](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/134) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 
 ### 🐛 Fixed
+- QISKit parser does not fail with incomplete sentences ([#146](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/146) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 - QISKit parser does not halt at dictionary data ([#135](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/135) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 
 ### ✏️ Changed
+- No magic numbers at the QISKit symbol table ([#148](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/148) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 
 ### 👾 Security
 

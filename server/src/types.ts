@@ -63,3 +63,9 @@ export interface CompilationError {
         lastColumn: number;
     };
 }
+
+export interface ContentPosition {
+    line: number;
+    start: number;
+    end: number;
+}

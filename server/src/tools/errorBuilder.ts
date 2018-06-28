@@ -9,7 +9,7 @@
 
 'use strict';
 
-import { ParserError, ParseErrorLevel } from '../../../types';
+import { ParserError, ParseErrorLevel } from '../types';
 import { ContentPosition } from '../types';
 
 export namespace ErrorBuilder {

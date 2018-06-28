@@ -11,7 +11,7 @@
 
 import { ANTLRErrorListener, CommonToken, Token, Recognizer, RecognitionException } from 'antlr4ts';
 import { Override } from 'antlr4ts/Decorators';
-import { ParserError, ParseErrorLevel } from '../../../types';
+import { ParserError, ParseErrorLevel } from '../types';
 
 export class ErrorListener implements ANTLRErrorListener<CommonToken> {
     errors: ParserError[] = [];
