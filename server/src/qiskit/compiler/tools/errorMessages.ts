@@ -9,10 +9,8 @@
 
 'use strict';
 
-import { SymbolTable } from '../../tools/symbolTable';
-import { ParserError } from '../../types';
-
-export interface SymbolTableResult {
-    symbolTable: SymbolTable;
-    errors: ParserError[];
+export namespace ErrorMessages {
+    export function notPreviouslyImported(expectedImport: string): string {
+        return `${expectedImport} must be previously imported.`;
+    }
 }

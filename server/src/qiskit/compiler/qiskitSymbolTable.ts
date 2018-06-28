@@ -10,6 +10,7 @@
 'use strict';
 
 import { SymbolTable, Symbol, GlobalScope, Type, BuiltInTypeSymbol } from '../../tools/symbolTable';
+import { QiskitSDK } from '../libs/qiskitSDK';
 
 export namespace QiskitSymbolTable {
     export function build(): SymbolTable {
@@ -27,13 +28,13 @@ export namespace QiskitSymbolTable {
 
         const qiskitSymbols: QiskitSDK = require('../libs/qiskitSDK.json');
 
-        load(qiskitSymbols, symbolTable);
+        loadQiskitSymbolsAt(symbolTable);
 
         return symbolTable;
     }
 
-    function load(qiskitSymbols: QiskitSDK, symbolTable: SymbolTable): void {
-        qiskitSymbols.classes.forEach(qclass => {
+    function loadQiskitSymbolsAt(symbolTable: SymbolTable): void {
+        QiskitSDK.classes().forEach(qclass => {
             let type = symbolTable.lookup(QiskitSymbols.class);
             let args: ArgumentSymbol[] = getArgumentsSymbols(qclass.arguments, symbolTable);
             let methods: MethodSymbol[] = getMethodsSymbols(qclass.methods, symbolTable);
