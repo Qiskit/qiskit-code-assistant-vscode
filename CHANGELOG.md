@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### 🎉 Added
+- Added snippets for some of the Aqua optimization algorithms ([#152](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/152) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 - Imports validation for QISKit files ([#150](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/150) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 - qiskit-acqua and qiskit-acqua-chemistry added to dependencies ([#143](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/143) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Added IBM Q 20 Tokyo backend ([#141](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/141) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
