@@ -94,7 +94,7 @@ export class MethodSymbol extends Symbol {
 }
 
 export class ArgumentSymbol extends Symbol {
-    constructor(name: string, type: Type, public optional: boolean = false) {
+    constructor(name: string, type: Type, public optional = false) {
         super(name, type);
     }
 

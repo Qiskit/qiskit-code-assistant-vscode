@@ -28,6 +28,7 @@ export class AtomFinder {
         if (tokenStream.getTokens()[lastPosition - 1].text === '.') {
             return true;
         }
+        // tslint:disable-next-line
         if (tokenStream.getTokens()[lastPosition - 2].text === '.') {
             return true;
         }

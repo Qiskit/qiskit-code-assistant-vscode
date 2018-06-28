@@ -79,10 +79,12 @@ export namespace VizManager {
             codeFile = codeFile.split('\n');
             codeFile = codeFile.filter(Boolean);
 
-            let codeFileArray: Array<string> = [];
+            let codeFileArray: string[] = [];
 
             for (let key in codeFile) {
-                codeFileArray.push(codeFile[key]);
+                if (codeFile.hasOwnProperty(key)) {
+                    codeFileArray.push(codeFile[key]);
+                }
             }
 
             // console.log(codeFileArray);
@@ -118,13 +120,13 @@ export namespace VizManager {
         const countsArrayOrd = {};
         Object.keys(countsArray)
             .sort()
-            .forEach(function(key) {
-                countsArrayOrd[key] = countsArray[key];
-            });
+            .forEach(key => (countsArrayOrd[key] = countsArray[key]));
 
         for (let element in countsArrayOrd) {
-            xArray.push(element);
-            yArray.push(countsArray[element]);
+            if (countsArrayOrd.hasOwnProperty(element)) {
+                xArray.push(element);
+                yArray.push(countsArray[element]);
+            }
         }
 
         let html = undefined;
@@ -133,8 +135,8 @@ export namespace VizManager {
             let str2Replace =
                 '"x": ["000", "001", "010", "011", "100", "101", "110", "111"], "y": [117, 136, 119, 119, 149, 142, 129, 113]';
 
-            let xArrayUnrolled: String = xArray.map(element => `"${element}"`).join(',');
-            let yArrayUnrolled: String = yArray.map(element => `${element}`).join(',');
+            let xArrayUnrolled = xArray.map(element => `"${element}"`).join(',');
+            let yArrayUnrolled = yArray.map(element => `${element}`).join(',');
 
             let replacement = `"x": [${xArrayUnrolled}], "y": [${yArrayUnrolled}]`;
 
@@ -146,7 +148,7 @@ export namespace VizManager {
         }
     }
 
-    export function createDeviceStatus(devicesArray: Array<object>, templatePath: string): string {
+    export function createDeviceStatus(devicesArray: object[], templatePath: string): string {
         let html = undefined;
         html = fs.readFileSync(templatePath, { encoding: 'utf8' });
         if (html !== undefined) {

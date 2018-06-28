@@ -10,13 +10,14 @@
 import * as Q from 'q';
 
 export interface IVersionInfo {
-    Major: Number;
-    Minor: Number;
-    Maintenance: Number;
+    major: number;
+    minor: number;
+    maintenance: number;
 }
 
 export interface IVersion {
-    Info: IVersionInfo;
+    info: IVersionInfo;
+
     toString(): string;
     isEqual(version: IVersion): boolean;
     isGreater(version: IVersion): boolean;
@@ -24,22 +25,24 @@ export interface IVersion {
 }
 
 export interface IPackageInfo {
-    Name: string;
-    Version: IVersion;
-    Summary: string;
-    Location: string;
-    Dependencies: string; //TODO:Should be [IPackageInfo]
+    name: string;
+    version: IVersion;
+    summary: string;
+    location: string;
+    dependencies: string; //TODO:Should be [IPackageInfo]
+
     getPackageInfo(pkg: string): Q.Promise<IPackageInfo>;
 }
 
 export interface IDependency {
-    Name: string;
-    RequiredVersion: IVersion;
+    name: string;
+    requiredVersion: IVersion;
+
     isInstalled(): Q.Promise<void>;
 }
 
 export interface IPackage {
-    Info: IPackageInfo;
+    info: IPackageInfo;
     // Checks whether or not the package is installed, and if installed, check
     // for newer versions
     checkVersion(pkgVersion: string, verbose: boolean | false): Q.Promise<void>;
