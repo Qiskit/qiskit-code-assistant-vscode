@@ -25,12 +25,12 @@ export namespace DeviceStatusVisualization {
         }
     }
 
-    function asDevices(result: object): Array<Device> {
+    function asDevices(result: object): Device[] {
         let resultString = result.toString().replace(/'/g, '"');
         return JSON.parse(String(resultString));
     }
 
-    function renderDeviceStatus(devices: Array<Device>, templatePath: string): string {
+    function renderDeviceStatus(devices: Device[], templatePath: string): string {
         let template = fs.readFileSync(templatePath, { encoding: 'utf8' });
         let sortFunction = (a, b) => sortWeight(a) - sortWeight(b);
 

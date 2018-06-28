@@ -46,10 +46,12 @@ export namespace RenderBuilder {
             codeFile = codeFile.split('\n');
             codeFile = codeFile.filter(Boolean);
 
-            let codeFileArray: Array<string> = [];
+            let codeFileArray: string[] = [];
 
             for (let key in codeFile) {
-                codeFileArray.push(codeFile[key]);
+                if (key) {
+                    codeFileArray.push(codeFile[key]);
+                }
             }
 
             let codeFileArrayRev = codeFileArray.reverse();

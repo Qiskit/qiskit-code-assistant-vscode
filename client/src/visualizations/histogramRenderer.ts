@@ -39,13 +39,15 @@ export class HistogramRenderer implements RenderStrategy {
         const countsArrayOrd = {};
         Object.keys(countsArray)
             .sort()
-            .forEach(function(key) {
+            .forEach(key => {
                 countsArrayOrd[key] = countsArray[key];
             });
 
         for (let element in countsArrayOrd) {
-            xArray.push(element);
-            yArray.push(countsArray[element]);
+            if (element) {
+                xArray.push(element);
+                yArray.push(countsArray[element]);
+            }
         }
 
         let template = fs.readFileSync(templatePath, { encoding: 'utf8' });
