@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > - 🐛 **Fixed**: for any bug fixes.
 > - 👾 **Security**: in case of vulnerabilities.
 
-## [Unreleased]
+## [v0.2.0] - 2018-07-02
 
 ### 🎉 Added
 - Added snippets for some of the Aqua optimization algorithms ([#152](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/152) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
