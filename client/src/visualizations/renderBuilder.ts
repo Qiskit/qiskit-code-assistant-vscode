@@ -25,7 +25,7 @@ export namespace RenderBuilder {
     }
 
     function detectProperViz(codePath: string, result: object): RenderStrategy {
-        if (neededInstogramRenderer(codePath)) {
+        if (neededHistogramRenderer(codePath)) {
             return new HistogramRenderer(result);
         }
 
@@ -38,7 +38,7 @@ export namespace RenderBuilder {
         return config.get('config.visualizationsFlag');
     }
 
-    function neededInstogramRenderer(codePath: string): boolean {
+    function neededHistogramRenderer(codePath: string): boolean {
         let codeFile = undefined;
 
         codeFile = fs.readFileSync(codePath, { encoding: 'utf8' });
