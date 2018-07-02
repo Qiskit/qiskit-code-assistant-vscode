@@ -6,7 +6,7 @@
 
 A Visual Studio Code extension with support for QISKit and the QASM language. It provides some useful commands to make easier launching jobs and visualizing results among others.
 
-![alt text](./docs/images/execute-sample.gif "Example of running Q Studio")
+![alt text](../docs/images/execute-sample.gif "Example of running Q Studio")
 
 
 ## Quick start
