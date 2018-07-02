@@ -2,11 +2,9 @@
 
 > IBM Q Studio is a tool that makes simple working with QASM files and QISKit SDK.
 
-[![Build Status](https://travis.ibm.com/IBMQuantum/qiskit-studio.svg?token=xyzxnZp9ALxp71M92JLp&branch=master)](https://travis.ibm.com/IBMQuantum/qiskit-studio)
-
 A Visual Studio Code extension with support for QISKit and the QASM language. It provides some useful commands to make easier launching jobs and visualizing results among others.
 
-![alt text](./docs/images/execute-sample.gif "Example of running Q Studio")
+![Qiskit Studio](https://github.ibm.com/IBMQuantum/qiskit-studio/blob/master/docs/images/execute-sample.gif)
 
 
 ## Quick start
