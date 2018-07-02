@@ -14,6 +14,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > - 🐛 **Fixed**: for any bug fixes.
 > - 👾 **Security**: in case of vulnerabilities.
 
+## [Unreleased]
+
+### 🎉 Added
+
+### 🐛 Fixed
+
+### ✏️ Changed
+- Changed visualizations workflow to use a Template Engine ([#153](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/53) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+
+### 👾 Security
+
 ## [v0.2.0] - 2018-07-02
 
 ### 🎉 Added

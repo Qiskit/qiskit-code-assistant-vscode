@@ -16,6 +16,7 @@ import { ResultProvider } from './resultProvider';
 import { CommandExecutor } from './commandExecutor';
 import { VizManager } from './visualizations';
 import { QLogger } from './logger';
+import { DeviceStatusVisualization } from './visualizations/deviceStatusVisualization';
 
 export namespace ActivationUtils {
     export function checkFirstRun(): Q.Promise<string> {
@@ -262,8 +263,8 @@ export namespace ActivationUtils {
                     let resultProvider = new ResultProvider();
                     vscode.workspace.registerTextDocumentContentProvider('qiskit-devicesStatus-result', resultProvider);
                     let previewUri = vscode.Uri.parse(`qiskit-devicesStatus-result://authority/status-preview`);
-                    let execPath = Util.getOSDependentPath(remoteBackendsScript);
-                    resultProvider.displayContent(VizManager.createViz(execPath, remoteDevicesStatus), previewUri);
+
+                    resultProvider.displayContent(DeviceStatusVisualization.render(remoteDevicesStatus), previewUri);
 
                     vscode.commands
                         .executeCommand(
