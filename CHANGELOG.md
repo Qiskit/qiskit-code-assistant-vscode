@@ -120,6 +120,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Re-styling charts ([#97](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/97) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Extension size reduction ([#76](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/76) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 
-[Unreleased]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.0.2...HEAD
+[Unreleased]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.2.0...HEAD
+[v0.2.0]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.1.1...v0.2.0
+[v0.1.1]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.1.0...v0.1.1
+[v0.1.0]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.0.2...v0.1.0
 [v0.0.2]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.0.1...v0.0.2
 [v0.0.1]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/d35decaf632f7b197c9df496a624baf2f46400d7...v0.0.1
