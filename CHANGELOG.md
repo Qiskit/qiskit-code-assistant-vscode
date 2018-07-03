@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### 🎉 Added
 
 ### 🐛 Fixed
+- Fixed error when rendering Histograms based on outputs that contain a WARNING ([#161](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/161) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Fixed errors in management of dependencies ([#159](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/159) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 
 ### ✏️ Changed
