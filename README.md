@@ -1,10 +1,10 @@
 # IBM Q Studio
 
-> IBM Q Studio is a tool that makes simple working with QASM files and QISKit SDK.
+> IBM Q Studio is a tool that makes simple working with Open QASM files and QISKit SDK.
 
 [![Build Status](https://travis.ibm.com/IBMQuantum/qiskit-studio.svg?token=xyzxnZp9ALxp71M92JLp&branch=master)](https://travis.ibm.com/IBMQuantum/qiskit-studio)
 
-A Visual Studio Code extension with support for QISKit and the QASM language. It provides some useful commands to make easier launching jobs and visualizing results among others.
+A Visual Studio Code extension with support for QISKit and the Open QASM language. It provides some useful commands to make easier launching jobs and visualizing results among others.
 
 ![alt text](./docs/images/execute-sample.gif "Example of running Q Studio")
 
@@ -16,7 +16,7 @@ A Visual Studio Code extension with support for QISKit and the QASM language. It
 3. Click Install.
 4. Click Reload.
 
-Now the Q Studio extension will be available in QASM and Python(QISKit) files.
+Now the Q Studio extension will be available in Open QASM and Python(QISKit) files.
 
 ### To install the extension from a local file
 
@@ -27,14 +27,14 @@ We encourage you to visit [https://qiskit.org/](https://qiskit.org/) to explore 
 
 ## Feature details
 
-* Check necessary dependencies to execute QASM or QISKit files.
+* Check necessary dependencies to execute Open QASM or QISKit files.
 * Run QISKit source code in a backend.
-* Run QASM source code in a local backend.
+* Run Open QASM source code in a local backend.
 * Backends (local and remote ones) discovery.
 * Job's execution management.
 * User's credit management.
-* QASM error detection.
-* QASM autocompletion.
+* Open QASM error detection.
+* Open QASM autocompletion.
 * QISKit static analysis.  
 
 ## Useful commands
@@ -45,7 +45,7 @@ Command | Description
 --- | ---
 ```QStudio: Check IBM Q Studio dependencies``` | Check that the required dependencies are properly installed.
 ```QStudio: Enter your QConfig``` | Allow the user to configure her QISKit credentials. Please, note that you will need to run this command prior to use `Get the status of IBM Q devices`, `QStudio: Discover remote backends available`, `QStudio: List the user's pending jobs`, `QStudio: List the user's executed jobs`, `QStudio: Get the queue status` and `QStudio: Get the user's available credits` or they will fail.
-```QStudio: Run this Q code``` | Executes the code at the current editor tab (QISKit or QASM).
+```QStudio: Run this Q code``` | Executes the code at the current editor tab (QISKit or Open QASM).
 ```QStudio: Discover local backends available``` | The local backend available will be presented in a new tab.
 ```QStudio: Get the status of IBM Q devices``` | The status for remote IBM Q devices available for the current user will be presented in a new tab. This information mixes also data from `Discover remote backends available` and `QStudio: Get the queue status`.
 ```QStudio: Discover remote backends available``` | The remote backends available for the current user will be presented in a new tab.
