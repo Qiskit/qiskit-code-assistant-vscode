@@ -41,9 +41,13 @@ export class PipWrapper implements IPackageInfo {
                 }
 
                 pkg.name = pkgInfo[packageInfo];
+                pkgInfo = regEx.exec(stdout);
                 pkg.version = Version.fromString(pkgInfo[packageInfo]);
+                pkgInfo = regEx.exec(stdout);
                 pkg.summary = pkgInfo[packageInfo];
+                pkgInfo = regEx.exec(stdout);
                 pkg.location = pkgInfo[packageInfo];
+                pkgInfo = regEx.exec(stdout);
                 pkg.dependencies = pkgInfo[packageInfo];
 
                 return Q.resolve(pkg);
