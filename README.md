@@ -12,9 +12,9 @@ A Visual Studio Code extension with support for QISKit and the QASM language. It
 ## Quick start
 
 1. Open the Extensions sidebar panel in VS Code. `Ctrl + Shift + X` on Windows or `⇧ + ⌘ + X` on Mac.
-1. Search for Q Studio.
-1. Click Install.
-1. Click Reload.
+2. Search for Q Studio.
+3. Click Install.
+4. Click Reload.
 
 Now the Q Studio extension will be available in QASM and Python(QISKit) files.
 
@@ -22,7 +22,8 @@ Now the Q Studio extension will be available in QASM and Python(QISKit) files.
 
 Download the [latest release](https://github.ibm.com/IBMQuantum/qiskit-studio/releases) of the extension from and follow the [instructions to install it](https://code.visualstudio.com/docs/editor/extension-gallery#_install-from-a-vsix)
 
-##
+### Your first program using QISKit
+We encourage you to visit [https://qiskit.org/](https://qiskit.org/) to explore the different examples, documentation and tutorials. 
 
 ## Feature details
 
