@@ -20,11 +20,12 @@ export class HistogramRenderer implements RenderStrategy {
     render(): string {
         let templatePath = Util.getOSDependentPath('../../resources/html-templates/temp-plot-shots.html');
         let resultString = this.result.toString().replace(/'/g, '"');
-        let execResult = JSON.parse(String(resultString));
         try {
+            let execResult = JSON.parse(String(resultString));
             return this.createHistogram(execResult.result[0].data.counts, templatePath);
         } catch (err) {
             try {
+                let execResult = JSON.parse(String(resultString));
                 return this.createHistogram(execResult, templatePath);
             } catch (err) {
                 return `<pre>${resultString}</pre>`;
