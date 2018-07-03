@@ -22,7 +22,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed errors in management of dependencies ([#159](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/159) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 
 ### ✏️ Changed
-- Changed visualizations workflow to use a Template Engine ([#153](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/53) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- Improved readme for newcomers ([#154](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/154) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- Changed visualizations workflow to use a Template Engine ([#153](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/153) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+
 
 ### 👾 Security
 
