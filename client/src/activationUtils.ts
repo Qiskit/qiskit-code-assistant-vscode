@@ -81,8 +81,8 @@ export namespace ActivationUtils {
                     //vscode.window.showInformationMessage("Checking for Python dependencies...");
                     let depsList = '';
                     deps.forEach(dep => {
-                        QLogger.verbose(`Package: ${dep.Name} Version: ${dep.InstalledVersion}`, this);
-                        depsList += `👌 ${dep.Name} v ${dep.InstalledVersion}\n`;
+                        QLogger.verbose(`Package: ${dep.name} Version: ${dep.installedVersion}`, this);
+                        depsList += `👌 ${dep.name} v ${dep.installedVersion}\n`;
                     });
                     showExtensionBootInfo(`IBM Q Studio dependencies found! ${depsList}`, verbose);
                     // Check for pyhton packages!
