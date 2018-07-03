@@ -9,7 +9,7 @@
 
 'use strict';
 
-import { ParserError, ParseErrorLevel } from '../../../types';
+import { ParserError, ParseErrorLevel } from '../types';
 import { ContentPosition } from '../types';
 
 export namespace ErrorBuilder {
@@ -18,7 +18,7 @@ export namespace ErrorBuilder {
             line: position.line,
             start: position.start,
             end: position.end,
-            message: message,
+            message,
             level: ParseErrorLevel.ERROR
         };
     }
@@ -28,7 +28,7 @@ export namespace ErrorBuilder {
             line: position.line,
             start: position.start,
             end: position.end,
-            message: message,
+            message,
             level: ParseErrorLevel.WARNING
         };
     }

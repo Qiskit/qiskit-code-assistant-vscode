@@ -1,0 +1,61 @@
+{
+    "import": {
+        "prefix": "import",
+        "body": [ 
+            "from qiskit_acqua import run_algorithm",
+            "from qiskit_acqua.input import get_input_instance",
+            "from qiskit_acqua.ising import partition" 
+        ],
+        "description": "Code snippet for the basic Acqua imports"
+    },
+    "input_partition": {
+        "prefix": "input_partition",
+        "body": [
+            "qubitOp, offset = partition.get_partition_qubitops(${1:number_list})",
+            "${2:input} = get_input_instance('EnergyInput')",
+            "${2:input}.qubit_op = qubitOp"
+        ],
+        "description": "Code snippet for a partition problem input"
+    },
+    "grover": {
+        "prefix": "grover",
+        "body": [
+            "${1:params} = {",
+            "\t'problem': {'name': '${2:search}'},",
+            "\t'algorithm': {'name': 'Grover'},",
+            "\t'oracle': {'name': 'SAT', 'cnf': ${3:oracle_cnf_reference},",
+            "\t'backend': {'name': 'local_qasm_simulator'}",
+            "}",
+            "",
+            "${4:result} = run_algorithm(${1:params})"
+        ],
+        "description": "Code snippet for the Grover algorithm"
+    },
+    "vqe": {
+        "prefix": "vqe",
+        "body": [
+            "${1:params} = {",
+            "\t'problem': {'name': '${2:ising}'},",
+            "\t'algorithm': {'name': 'VQE', 'operator_mode': 'matrix'},",
+            "\t'optimizer': {'name': 'L_BFGS_B', 'maxfun': 6000},",
+            "\t'variational_form': {'name': 'RYRZ', 'depth': 3, 'entanglement': 'linear'},",
+            "\t'backend': {'name': 'local_qasm_simulator'}",
+            "}",
+            "",
+            "${3:result} = run_algorithm(${1:params}, ${4:input})"
+        ],
+        "description": "Code snippet for the Grover algorithm"
+    },
+    "print_eigensolver_result": {
+        "prefix": "print_eigensolver_result",
+        "body": [
+            "x = partition.sample_most_likely(len(number_list), ${1:result}['eigvecs'][0])",
+            "print('energy:', ${1:result}['energy'])",
+            "print('time:', ${1:result}['eval_time'])",
+            "print('partition objective:', ${1:result}['energy'] + offset)",
+            "print('solution:', x)",
+            "print('solution objective:', partition.partition_value(x, number_list))"
+        ],
+        "description": "Code snippet to print an Eigensolver solution"
+    }
+}

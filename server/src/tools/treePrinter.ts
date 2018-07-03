@@ -31,8 +31,7 @@ export namespace TreePrinter {
                 console.log(`${spaces}${ruleNames[child.ruleIndex]} > `);
             }
             if (child.childCount > 0) {
-                printChildren(ruleNames, child.children as ParserRuleContext[], ++level);
-                level--;
+                printChildren(ruleNames, child.children as ParserRuleContext[], level + 1);
             }
         });
     }

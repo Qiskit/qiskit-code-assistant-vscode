@@ -19,9 +19,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### 🎉 Added
 
 ### 🐛 Fixed
+
+### ✏️ Changed
+- Changed visualizations workflow to use a Template Engine ([#153](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/53) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+
+### 👾 Security
+
+## [v0.2.0] - 2018-07-02
+
+### 🎉 Added
+- Added snippets for some of the Aqua optimization algorithms ([#152](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/152) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- Imports validation for QISKit files ([#150](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/150) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- qiskit-acqua and qiskit-acqua-chemistry added to dependencies ([#143](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/143) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- Added IBM Q 20 Tokyo backend ([#141](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/141) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- Added readme file to the client folder ([#134](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/134) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+
+### 🐛 Fixed
+- QISKit parser does not fail with incomplete sentences ([#146](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/146) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 - QISKit parser does not halt at dictionary data ([#135](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/135) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 
 ### ✏️ Changed
+- No magic numbers at the QISKit symbol table ([#148](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/148) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 
 ### 👾 Security
 
@@ -29,8 +47,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v0.1.1] - 2018-06-14
 
 ### 🎉 Added
-- Added IBM Q 20 Tokyo backend ([#141](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/141) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
-- Added readme file to the client folder ([#134](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/134) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 - Add a button to run getDevicesStatus command ([#132](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/132) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 
 ### 🐛 Fixed
@@ -115,6 +131,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Re-styling charts ([#97](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/97) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Extension size reduction ([#76](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/76) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 
-[Unreleased]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.0.2...HEAD
+[Unreleased]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.2.0...HEAD
+[v0.2.0]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.1.1...v0.2.0
+[v0.1.1]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.1.0...v0.1.1
+[v0.1.0]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.0.2...v0.1.0
 [v0.0.2]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.0.1...v0.0.2
 [v0.0.1]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/d35decaf632f7b197c9df496a624baf2f46400d7...v0.0.1
