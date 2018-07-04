@@ -15,6 +15,7 @@ import { PipWrapper } from './pipWrapper';
 import { PyPiWrapper } from './pypiWrapper';
 import { ActivationUtils } from './activationUtils';
 import { QLogger } from './logger';
+import { ChildProcessCommandExecutor } from './pip/pipCommandExecutor';
 
 export class PipPackage implements IPackage {
     //TODO: Get Info form local installation
@@ -27,12 +28,16 @@ export class PipPackage implements IPackage {
         getPackageInfo: () => {}
     };
 
-    private pip: PipWrapper = new PipWrapper();
+    private pip: PipWrapper;
     private pypi: PyPiWrapper = new PyPiWrapper();
 
     constructor(name: string, version: string) {
         this.info.name = name;
         this.info.version = Version.fromString(version);
+
+        // TODO take this initialization to a builder class
+        let pipCommandExecutor = new ChildProcessCommandExecutor();
+        this.pip = new PipWrapper(pipCommandExecutor);
     }
 
     public checkVersion(pkgVersion: string, verbose: boolean | false): Q.Promise<void> {
