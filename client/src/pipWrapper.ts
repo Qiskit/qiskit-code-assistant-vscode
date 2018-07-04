@@ -10,10 +10,10 @@
 import * as Q from 'q';
 import { IPackageInfo, IVersion } from './interfaces';
 import { Version } from './version';
-import { CommandExecutor } from './pip/pipCommandExecutor';
+import { CommandExecutor, ParserFunction } from './pip/pipCommandExecutor';
 import { PackageInfoParser } from './pip/packageInfoParser';
 
-type ParserFunction = (out: string) => string;
+const getOutput: ParserFunction = (stdout: string) => stdout;
 
 export class PipWrapper implements IPackageInfo {
     public name: string;
@@ -43,37 +43,22 @@ export class PipWrapper implements IPackageInfo {
     }
 
     public show(pkg: string): Q.Promise<string> {
-        let parserFunc: ParserFunction = (stdout: string) => {
-            return stdout;
-        };
-        return this.pipCommandExecutor.exec('show', [pkg], parserFunc);
+        return this.pipCommandExecutor.exec('show', [pkg], getOutput);
     }
 
     public search(pkg: string): Q.Promise<boolean> {
-        let parserFunc: ParserFunction = (stdout: string) => {
-            return stdout;
-        };
-        return this.pipCommandExecutor.exec('search', [pkg], parserFunc);
+        return this.pipCommandExecutor.exec('search', [pkg], getOutput);
     }
 
     public install(pkg: string): Q.Promise<string> {
-        let parserFunc: ParserFunction = (stdout: string) => {
-            return stdout;
-        };
-        return this.pipCommandExecutor.exec('install', [pkg], parserFunc);
+        return this.pipCommandExecutor.exec('install', [pkg], getOutput);
     }
 
     public update(pkg: string): Q.Promise<string> {
-        let parserFunc: ParserFunction = (stdout: string) => {
-            return stdout;
-        };
-        return this.pipCommandExecutor.exec('install', ['-U', '--no-cache-dir', pkg], parserFunc);
+        return this.pipCommandExecutor.exec('install', ['-U', '--no-cache-dir', pkg], getOutput);
     }
 
     public list(): Q.Promise<string> {
-        let parserFunc: ParserFunction = (stdout: string) => {
-            return stdout;
-        };
-        return this.pipCommandExecutor.exec('list', [], parserFunc);
+        return this.pipCommandExecutor.exec('list', [], getOutput);
     }
 }
