@@ -23,7 +23,7 @@
             "${1:params} = {",
             "\t'problem': {'name': '${2:search}'},",
             "\t'algorithm': {'name': 'Grover'},",
-            "\t'oracle': {'name': 'SAT', 'cnf': ${3:oracle_cnf_reference},",
+            "\t'oracle': {'name': 'SAT', 'cnf': ${3:oracle_cnf_reference}},",
             "\t'backend': {'name': 'local_qasm_simulator'}",
             "}",
             "",
