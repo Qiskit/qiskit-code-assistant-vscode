@@ -19,6 +19,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### 🎉 Added
 
 ### 🐛 Fixed
+- The Grover snippet does not generate a syntactic error ([#167](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/167) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+
+### ✏️ Changed
+- The language server log level setted to info ([#167](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/167) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+
+### 👾 Security
+
+## [v0.2.1] - 2018-07-03
+
+### 🎉 Added
+
+### 🐛 Fixed
 - Fixed error when rendering Histograms based on outputs that contain a WARNING ([#161](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/161) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Fixed errors in management of dependencies ([#159](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/159) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 
