@@ -7,9 +7,21 @@ from qiskit import register, available_backends, get_backend
 from IBMQuantumExperience import IBMQuantumExperience
 import argparse
 import json
+import warnings
+from multiprocessing import Pool
 
+PUBLIC_NAMES = {
+    'ibmq_20_tokyo': 'IBM Q 20 Tokyo',
+    'QS1_1': 'IBM Q 20 Austin',
+    'ibmqx5': 'IBM Q 16 Rueschlikon',
+    'ibmqx4': 'IBM Q 5 Tenerife',
+    'ibmqx2': 'IBM Q 5 Yorktown',
+    'ibmq_qasm_simulator': 'IBM Q QASM Simulator'
+}
 
 def main():
+    warnings.simplefilter('ignore')
+
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--apiToken')
@@ -33,25 +45,31 @@ def main():
 
     backs = available_backends({'local': False})
 
-    publicNameDevices = {}
-    publicNameDevices['ibmq_20_tokyo'] = "IBM Q 20 Tokyo"
-    publicNameDevices['QS1_1'] = "IBM Q 20 Austin"
-    publicNameDevices['ibmqx5'] = "IBM Q 16 Rueschlikon"
-    publicNameDevices['ibmqx4'] = "IBM Q 5 Tenerife"
-    publicNameDevices['ibmqx2'] = "IBM Q 5 Yorktown"
-    publicNameDevices['ibmq_qasm_simulator'] = "IBM Q QASM Simulator"
-
     if str(args['status']) == "True":
-        statusDevices = []
-        for back in backs:
-            deviceStatus = {}
-            deviceStatus['name'] = publicNameDevices[get_backend(back).name]
-            deviceStatus['status'] = get_backend(back).status
-            statusDevices.append(deviceStatus)
+        with Pool(3) as p:
+            statusDevices = list(p.map(createDeviceStatus, backs))
         print(json.dumps(statusDevices, indent=2, sort_keys=True))
     else:
         print(json.dumps(backs, indent=2, sort_keys=True))
 
+def createDeviceStatus(back):
+    return {
+        'name': PUBLIC_NAMES[back],
+        'status': parseBackendStatus(get_backend(back).status)
+    }
+
+def parseBackendStatus(backendStatus):
+    return {
+        'name': backendStatus['name'],
+        'pending_jobs': backendStatus['pending_jobs'],
+        'available': parseAvailability(backendStatus)
+    }
+
+def parseAvailability(backendStatus): 
+    try:
+        return backendStatus['available']
+    except KeyError:
+        return backendStatus['operational']
 
 if __name__ == '__main__':
     main()
