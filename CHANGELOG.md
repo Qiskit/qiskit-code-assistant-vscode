@@ -14,6 +14,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 > - 🐛 **Fixed**: for any bug fixes.
 > - 👾 **Security**: in case of vulnerabilities.
 
+## [Unreleased]
+
+### 🎉 Added
+
+### 🐛 Fixed
+- Get remote devices status now works fine with Qiskit Terra v0.5.5 ([#168](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/168) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+
+### ✏️ Changed
+
 ## [v0.2.1] - 2018-07-03
 
 ### 🎉 Added
