@@ -92,6 +92,9 @@ export namespace ActivationUtils {
                     //vscode.window.showInformationMessage("Checking for required python packages...");
 
                     let packMgr = new PackageMgr();
+
+                    packMgr.checkInstallation();
+
                     return packMgr
                         .check(verbose)
                         .then(results => {

@@ -1,0 +1,229 @@
+verbose - Object: Activating IBM Q Studio extension ...
+verbose - Object: ✨ Activating IBM Q Studio extension... ✨
+verbose - Object: Checking for Python dependencies...
+verbose - Object: Package: python Version: 3.6.4
+verbose - Object: Package: pip Version: 10.0.1
+verbose - Object: Check for required python packages...
+verbose - PipPackage: pkgVersion: 0.5.3
+verbose - PipPackage: pkgVersion: 0.1.1
+verbose - PipPackage: pkgVersion: 0.1.0
+verbose - unknown: IBM Q Studio dependencies found! 👌 python v 3.6.4
+👌 pip v 10.0.1
+
+error - PipPackage: 
+error - PipPackage: 
+verbose - PipPackage: qiskit-acqua not installed
+verbose - PipPackage: qiskit-acqua-chemistry not installed
+error - PipPackage: Error: pip list QISKit not installed. The extension will not work properly
+error - Object: packMgr.check error extension.ts QISKit not installed. The extension will not work properly
+error - Object: Seems like there was a problem: QISKit not installed. The extension will not work properly
+error - Object: Dependencies error: QISKit not installed. The extension will not work properly
+verbose - PipPackage: qiskit is already installed
+verbose - Object: 👌 qiskit is already installed
+verbose - Object: Activating IBM Q Studio extension ...
+debug - DependencyMgr: Checking if python 3.5 is installed ...
+debug - DependencyMgr: Checking if pip 9.0.0 is installed ...
+verbose - Object: ✨ Activating IBM Q Studio extension... ✨
+verbose - Object: Checking for Python dependencies...
+verbose - Object: Package: python Version: 3.6.4
+verbose - Object: Package: pip Version: 10.0.1
+verbose - Object: Check for required python packages...
+verbose - PipPackage: pkgVersion: 0.5.3
+verbose - PipPackage: pkgVersion: 0.1.1
+verbose - PipPackage: pkgVersion: 0.1.0
+verbose - unknown: IBM Q Studio dependencies found! 👌 python v 3.6.4
+👌 pip v 10.0.1
+
+error - PipPackage: 
+error - PipPackage: 
+verbose - PipPackage: qiskit-acqua not installed
+verbose - PipPackage: qiskit-acqua-chemistry not installed
+error - PipPackage: Error: pip list QISKit not installed. The extension will not work properly
+error - Object: packMgr.check error extension.ts QISKit not installed. The extension will not work properly
+error - Object: Seems like there was a problem: QISKit not installed. The extension will not work properly
+error - Object: Dependencies error: QISKit not installed. The extension will not work properly
+verbose - PipPackage: qiskit is already installed
+verbose - Object: 👌 qiskit is already installed
+verbose - Object: Activating IBM Q Studio extension ...
+verbose - Object: ✨ Activating IBM Q Studio extension... ✨
+verbose - Object: Checking for Python dependencies...
+verbose - Object: Package: python Version: 3.6.4
+verbose - Object: Package: pip Version: 10.0.1
+verbose - Object: Check for required python packages...
+verbose - PipPackage: pkgVersion: 0.5.3
+verbose - PipPackage: pkgVersion: 0.1.1
+verbose - PipPackage: pkgVersion: 0.1.0
+verbose - unknown: IBM Q Studio dependencies found! 👌 python v 3.6.4
+👌 pip v 10.0.1
+
+error - PipPackage: 
+error - PipPackage: 
+verbose - PipPackage: qiskit-acqua not installed
+verbose - PipPackage: qiskit-acqua-chemistry not installed
+error - PipPackage: Error: pip list QISKit not installed. The extension will not work properly
+error - Object: packMgr.check error extension.ts QISKit not installed. The extension will not work properly
+error - Object: Seems like there was a problem: QISKit not installed. The extension will not work properly
+error - Object: Dependencies error: QISKit not installed. The extension will not work properly
+verbose - PipPackage: qiskit is already installed
+verbose - Object: 👌 qiskit is already installed
+error - PipPackage: Error: pip list QISKit not installed. The extension will not work properly
+verbose - Object: Activating IBM Q Studio extension ...
+verbose - Object: ✨ Activating IBM Q Studio extension... ✨
+verbose - Object: Checking for Python dependencies...
+verbose - Object: Package: python Version: 3.6.4
+verbose - Object: Package: pip Version: 10.0.1
+verbose - Object: Check for required python packages...
+debug - PackageMgr: Checking package qiskit 0.5.3 installation
+debug - PackageMgr: Checking package qiskit-acqua 0.1.1 installation
+debug - PackageMgr: Checking package qiskit-acqua-chemistry 0.1.0 installation
+verbose - PipPackage: pkgVersion: 0.5.3
+verbose - PipPackage: pkgVersion: 0.1.1
+verbose - PipPackage: pkgVersion: 0.1.0
+verbose - unknown: IBM Q Studio dependencies found! 👌 python v 3.6.4
+👌 pip v 10.0.1
+
+error - PipPackage: 
+error - PipPackage: 
+verbose - PipPackage: qiskit-acqua not installed
+verbose - PipPackage: qiskit-acqua-chemistry not installed
+error - PipPackage: Error: pip list QISKit not installed. The extension will not work properly
+error - Object: packMgr.check error extension.ts QISKit not installed. The extension will not work properly
+error - Object: Seems like there was a problem: QISKit not installed. The extension will not work properly
+error - Object: Dependencies error: QISKit not installed. The extension will not work properly
+verbose - PipPackage: qiskit is already installed
+verbose - Object: 👌 qiskit is already installed
+error - PipPackage: Error: pip list QISKit not installed. The extension will not work properly
+verbose - Object: Deactivating Qiskit extension ...
+verbose - Object: Activating IBM Q Studio extension ...
+verbose - Object: ✨ Activating IBM Q Studio extension... ✨
+verbose - Object: Checking for Python dependencies...
+verbose - Object: Package: python Version: 3.6.4
+verbose - Object: Package: pip Version: 10.0.1
+verbose - Object: Check for required python packages...
+debug - PackageMgr: Checking package qiskit 0.5.3 installation
+debug - PackageMgr: Checking package qiskit-acqua 0.1.1 installation
+debug - PackageMgr: Checking package qiskit-acqua-chemistry 0.1.0 installation
+verbose - PipPackage: pkgVersion: 0.5.3
+verbose - PipPackage: pkgVersion: 0.1.1
+verbose - PipPackage: pkgVersion: 0.1.0
+verbose - unknown: IBM Q Studio dependencies found! 👌 python v 3.6.4
+👌 pip v 10.0.1
+
+error - PipPackage: 
+error - PipPackage: 
+verbose - PipPackage: qiskit-acqua-chemistry not installed
+verbose - PipPackage: qiskit-acqua not installed
+error - PipPackage: Error: pip list QISKit not installed. The extension will not work properly
+error - Object: packMgr.check error extension.ts QISKit not installed. The extension will not work properly
+error - Object: Seems like there was a problem: QISKit not installed. The extension will not work properly
+error - Object: Dependencies error: QISKit not installed. The extension will not work properly
+verbose - PipPackage: qiskit is already installed
+verbose - Object: 👌 qiskit is already installed
+error - PipPackage: Error: pip list QISKit not installed. The extension will not work properly
+verbose - Object: Deactivating Qiskit extension ...
+verbose - Object: Activating IBM Q Studio extension ...
+verbose - Object: ✨ Activating IBM Q Studio extension... ✨
+verbose - Object: Checking for Python dependencies...
+verbose - Object: Package: python Version: 3.6.4
+verbose - Object: Package: pip Version: 10.0.1
+verbose - Object: Check for required python packages...
+debug - PackageMgr: Checking package qiskit 0.5.3 installation
+debug - PackageMgr: Checking package qiskit-acqua 0.1.1 installation
+debug - PackageMgr: Checking package qiskit-acqua-chemistry 0.1.0 installation
+verbose - PipPackage: pkgVersion: 0.5.3
+verbose - PipPackage: pkgVersion: 0.1.1
+verbose - PipPackage: pkgVersion: 0.1.0
+verbose - unknown: IBM Q Studio dependencies found! 👌 python v 3.6.4
+👌 pip v 10.0.1
+
+verbose - PipPackageValidator: Package qiskit-acqua-chemistry 0.1.0 is not installed
+verbose - PipPackageValidator: Package qiskit-acqua 0.1.1 is not installed
+error - PipPackage: 
+error - PipPackage: 
+verbose - PipPackageValidator: Package qiskit 0.5.3 is not installed
+verbose - PipPackage: qiskit-acqua not installed
+verbose - PipPackage: qiskit-acqua-chemistry not installed
+error - PipPackage: Error: pip list QISKit not installed. The extension will not work properly
+error - Object: packMgr.check error extension.ts QISKit not installed. The extension will not work properly
+error - Object: Seems like there was a problem: QISKit not installed. The extension will not work properly
+error - Object: Dependencies error: QISKit not installed. The extension will not work properly
+verbose - PipPackage: qiskit is already installed
+verbose - Object: 👌 qiskit is already installed
+verbose - Object: Deactivating Qiskit extension ...
+verbose - Object: Activating IBM Q Studio extension ...
+verbose - Object: ✨ Activating IBM Q Studio extension... ✨
+verbose - Object: Checking for Python dependencies...
+verbose - Object: Package: python Version: 3.6.4
+verbose - Object: Package: pip Version: 10.0.1
+verbose - Object: Check for required python packages...
+debug - PackageMgr: Checking package qiskit 0.5.3 installation
+debug - PackageMgr: Checking package qiskit-acqua 0.1.1 installation
+debug - PackageMgr: Checking package qiskit-acqua-chemistry 0.1.0 installation
+verbose - PipPackage: pkgVersion: 0.5.3
+verbose - PipPackage: pkgVersion: 0.1.1
+verbose - PipPackage: pkgVersion: 0.1.0
+verbose - unknown: IBM Q Studio dependencies found! 👌 python v 3.6.4
+👌 pip v 10.0.1
+
+verbose - PipPackageValidator: Package qiskit-acqua 0.1.1 is not installed
+error - PipPackage: 
+error - PipPackage: 
+verbose - PipPackageValidator: Package qiskit-acqua-chemistry 0.1.0 is not installed
+verbose - PipPackageValidator: Package qiskit 0.5.3 is not installed
+verbose - PipPackage: qiskit-acqua not installed
+verbose - PipPackage: qiskit-acqua-chemistry not installed
+error - PipPackage: Error: pip list QISKit not installed. The extension will not work properly
+error - Object: packMgr.check error extension.ts QISKit not installed. The extension will not work properly
+error - Object: Seems like there was a problem: QISKit not installed. The extension will not work properly
+error - Object: Dependencies error: QISKit not installed. The extension will not work properly
+verbose - PipPackage: qiskit is already installed
+verbose - Object: 👌 qiskit is already installed
+error - PipPackage: Error: pip list QISKit not installed. The extension will not work properly
+verbose - Object: Deactivating Qiskit extension ...
+verbose - Object: Activating IBM Q Studio extension ...
+verbose - Object: ✨ Activating IBM Q Studio extension... ✨
+verbose - Object: Checking for Python dependencies...
+verbose - Object: Package: python Version: 3.6.4
+verbose - Object: Package: pip Version: 10.0.1
+verbose - Object: Check for required python packages...
+debug - PackageMgr: Checking package qiskit 0.5.3 installation
+debug - PackageMgr: Checking package qiskit-acqua 0.1.1 installation
+debug - PackageMgr: Checking package qiskit-acqua-chemistry 0.1.0 installation
+verbose - PipPackage: pkgVersion: 0.5.3
+verbose - PipPackage: pkgVersion: 0.1.1
+verbose - PipPackage: pkgVersion: 0.1.0
+verbose - unknown: IBM Q Studio dependencies found! 👌 python v 3.6.4
+👌 pip v 10.0.1
+
+error - PipPackage: 
+verbose - PipPackageValidator: Package qiskit-acqua 0.1.1 is not installed
+verbose - PipPackageValidator: Package qiskit-acqua-chemistry 0.1.0 is not installed
+error - PipPackage: 
+verbose - Object: Activating IBM Q Studio extension ...
+verbose - Object: ✨ Activating IBM Q Studio extension... ✨
+verbose - Object: Checking for Python dependencies...
+verbose - Object: Package: python Version: 3.6.4
+verbose - Object: Package: pip Version: 10.0.1
+verbose - Object: Check for required python packages...
+debug - PackageMgr: Checking package qiskit 0.5.3 installation
+debug - PackageMgr: Checking package qiskit-acqua 0.1.1 installation
+debug - PackageMgr: Checking package qiskit-acqua-chemistry 0.1.0 installation
+verbose - PipPackage: pkgVersion: 0.5.3
+verbose - PipPackage: pkgVersion: 0.1.1
+verbose - PipPackage: pkgVersion: 0.1.0
+verbose - unknown: IBM Q Studio dependencies found! 👌 python v 3.6.4
+👌 pip v 10.0.1
+
+verbose - PipPackageValidator: Package qiskit-acqua 0.1.1 is not installed
+error - PipPackage: 
+error - PipPackage: 
+verbose - PipPackageValidator: Package qiskit-acqua-chemistry 0.1.0 is not installed
+verbose - PipPackageValidator: Package qiskit 0.5.3 is at version 0.5.5
+verbose - PipPackage: qiskit-acqua not installed
+verbose - PipPackage: qiskit-acqua-chemistry not installed
+error - PipPackage: Error: pip list QISKit not installed. The extension will not work properly
+error - Object: packMgr.check error extension.ts QISKit not installed. The extension will not work properly
+error - Object: Seems like there was a problem: QISKit not installed. The extension will not work properly
+error - Object: Dependencies error: QISKit not installed. The extension will not work properly
+verbose - PipPackage: qiskit is already installed
+verbose - Object: 👌 qiskit is already installed

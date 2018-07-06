@@ -34,6 +34,14 @@ export interface IPackageInfo {
     getPackageInfo(pkg: string): Q.Promise<IPackageInfo>;
 }
 
+export interface PackageInfo {
+    name: string;
+    version: IVersion;
+    summary: string;
+    location: string;
+    dependencies: string; //TODO:Should be [PackageInfo]
+}
+
 export interface IDependency {
     name: string;
     requiredVersion: IVersion;
