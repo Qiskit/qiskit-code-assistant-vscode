@@ -198,9 +198,10 @@ the LICENSE.txt file in the root directory of this source tree.
                                         <b class="">{{ device.name }}</b>&nbsp;&nbsp;
                                         <!--Don't format the following line, it is used in a Regex and it would crash-->
                                         <small class="">[{{ device.status.name }}]</small></span><div class="pull-right"><ibm-q-tag class="{% if device.status.available %}label-success{% else %}label-danger{% endif %}">{% if device.status.available %}Active{% else %}Maintenance{% endif %}</ibm-q-tag>
-                                        <ibm-q-tag class="label-info">
+                                        {% set regExp = r/.*simulator.*/g %}
+                                        {% if regExp.test(device.status.name) %}<ibm-q-tag class="label-info">
                                             SIMULATOR
-                                        </ibm-q-tag>
+                                        </ibm-q-tag>{% endif %}
                                         <!---->
                                         <ibm-q-tag class="label-info">
                                             AVAILABLE ON QISKIT
