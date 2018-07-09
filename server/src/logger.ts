@@ -17,7 +17,7 @@ export namespace QLogger {
     const logFormat = printf(event => `${event.level} - ${event.label}: ${event.message}`);
 
     const logger = winston.createLogger({
-        level: 'silly',
+        level: 'info',
         format: logFormat,
         transports: [new winston.transports.Console()]
     });

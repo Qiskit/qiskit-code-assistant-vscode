@@ -72,8 +72,6 @@ export class QiskitSuggester implements Suggester {
         let statements = treeFolder.visit(tree);
         let symbolTable = SymbolTableGenerator.symbolTableFor(statements);
 
-        symbolTable.print();
-
         return symbolTable;
     }
 }
