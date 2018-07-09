@@ -19,6 +19,7 @@ PUBLIC_NAMES = {
     'ibmq_qasm_simulator': 'IBM Q QASM Simulator'
 }
 
+
 def main():
     warnings.simplefilter('ignore')
 
@@ -52,11 +53,13 @@ def main():
     else:
         print(json.dumps(backs, indent=2, sort_keys=True))
 
+
 def createDeviceStatus(back):
     return {
         'name': PUBLIC_NAMES[back],
         'status': parseBackendStatus(get_backend(back).status)
     }
+
 
 def parseBackendStatus(backendStatus):
     return {
@@ -65,11 +68,13 @@ def parseBackendStatus(backendStatus):
         'available': parseAvailability(backendStatus)
     }
 
-def parseAvailability(backendStatus): 
+
+def parseAvailability(backendStatus):
     try:
         return backendStatus['available']
     except KeyError:
         return backendStatus['operational']
+
 
 if __name__ == '__main__':
     main()
