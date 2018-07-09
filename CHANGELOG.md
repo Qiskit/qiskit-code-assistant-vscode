@@ -20,8 +20,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### 🐛 Fixed
 - Get remote devices status now works fine with Qiskit Terra v0.5.5 ([#168](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/168) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- The Grover snippet does not generate a syntactic error ([#167](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/167) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 
 ### ✏️ Changed
+- The language server log level setted to info ([#167](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/167) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+
+### 👾 Security
 
 ## [v0.2.1] - 2018-07-03
 
