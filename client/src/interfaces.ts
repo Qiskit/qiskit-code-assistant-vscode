@@ -37,9 +37,9 @@ export interface IPackageInfo {
 export interface PackageInfo {
     name: string;
     version: IVersion;
-    summary: string;
-    location: string;
-    dependencies: string; //TODO:Should be [PackageInfo]
+    summary?: string;
+    location?: string;
+    dependencies?: string; //TODO:Should be [PackageInfo]
 }
 
 export interface IDependency {

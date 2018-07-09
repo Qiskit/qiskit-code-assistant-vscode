@@ -51,6 +51,7 @@ export class PackageMgr {
     checkInstallation(): Promise<boolean[]> {
         return this._packagesV2.map(pkg => {
             QLogger.debug(`Checking package ${pkg.info.name} ${pkg.info.version} installation`, this);
+
             return this.packageValidator.isInstalled(pkg.info.name, pkg.info.version);
         });
     }

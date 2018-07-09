@@ -17,6 +17,11 @@ import { CommandExecutor } from './commandExecutor';
 import { VizManager } from './visualizations';
 import { QLogger } from './logger';
 import { DeviceStatusVisualization } from './visualizations/deviceStatusVisualization';
+import { PackageManager } from './packages/packageManager';
+import { ChildProcessCommandExecutor } from './pip/pipCommandExecutor';
+import { PipExecutor } from './pip/pipExecutor';
+import { QStudioConfiguration } from './configuration';
+import { PackageInfo } from './interfaces';
 
 export namespace ActivationUtils {
     export function checkFirstRun(): Q.Promise<string> {
@@ -91,10 +96,18 @@ export namespace ActivationUtils {
                     QLogger.verbose('Check for required python packages...', this);
                     //vscode.window.showInformationMessage("Checking for required python packages...");
 
+                    let commandExecutor = new ChildProcessCommandExecutor();
+                    let pipExecutor = new PipExecutor(commandExecutor);
+                    let packageManager = new PackageManager(pipExecutor);
+
+                    let notInstalled = (packageInfo: PackageInfo) =>
+                        QLogger.info(`Go to install ${packageInfo.name}`, this);
+                    let oldVersion = (packageInfo: PackageInfo) =>
+                        QLogger.info(`Go to update ${packageInfo.name}`, this);
+
+                    packageManager.verifyAndApply(QStudioConfiguration.requiredPackages(), notInstalled, oldVersion);
+
                     let packMgr = new PackageMgr();
-
-                    packMgr.checkInstallation();
-
                     return packMgr
                         .check(verbose)
                         .then(results => {
