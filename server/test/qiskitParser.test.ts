@@ -14,7 +14,7 @@ import { QiskitParser } from '../src/qiskit/parser';
 import { ErrorMessages } from '../src/qiskit/compiler/tools/errorMessages';
 import { Parser } from '../src/types';
 
-describe('A QISKit parser', () => {
+describe('A Qiskit parser', () => {
     let parser: Parser = new QiskitParser();
 
     describe('will end without errors', () => {
@@ -30,7 +30,7 @@ describe('A QISKit parser', () => {
     });
 
     describe('will show warnings if', () => {
-        it('a QISKit element is used without its import', () => {
+        it('a Qiskit element is used without its import', () => {
             let code = `q = QuantumRegister(2)\n`;
             let result = parser.parse(code);
 
