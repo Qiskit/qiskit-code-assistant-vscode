@@ -20,7 +20,7 @@ import {
     ArrayReference
 } from './types';
 import { SymbolTable, Type, BuiltInTypeSymbol } from '../../tools/symbolTable';
-import { ParserError } from '../../types';
+import { ParserError, ParseErrorLevel } from '../../types';
 import { VariableSymbol, ClassSymbol, MethodSymbol, ArgumentSymbol } from '../compiler/qiskitSymbolTable';
 import { ErrorBuilder } from './tools/errorBuilder';
 
@@ -41,17 +41,12 @@ class StatementSemanticValidator implements Visitor<ParserError[]> {
     }
 
     visitStatement(statement: Statement): ParserError[] {
-        // in partial compilations this case could happen *do not delete without thinking twice*
-        if (statement.expression === null) {
-            return this.defaultValue();
-        }
-
-        return statement.expression.accept(this);
+        return this.safeAccept(statement.expression, this);
     }
 
     visitAssignment(assignment: Assignment): ParserError[] {
-        let leftErrors = assignment.left.accept(this);
-        let rightErrors = assignment.right.accept(this);
+        let leftErrors = this.safeAccept(assignment.left, this);
+        let rightErrors = this.safeAccept(assignment.right, this);
 
         return leftErrors.concat(rightErrors);
     }
@@ -71,6 +66,15 @@ class StatementSemanticValidator implements Visitor<ParserError[]> {
         let expressionAnalysis = expression.terms.reduce(visitingTerms, new ExpressionAnalysis());
 
         return expressionAnalysis.errors;
+    }
+
+    private safeAccept(element: VisitableItem, visitor: Visitor<ParserError[]>): ParserError[] {
+        // in partial compilations this case could happen *do not delete without thinking twice*
+        if (element === null) {
+            return this.defaultValue();
+        }
+
+        return element.accept(visitor);
     }
 }
 
