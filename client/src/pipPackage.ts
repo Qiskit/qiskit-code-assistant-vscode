@@ -150,7 +150,7 @@ export class PipPackage implements IPackage {
                                         return Q.reject(err);
                                     });
                             } else {
-                                return Q.reject('QISKit not installed. The extension will not work properly');
+                                return Q.reject('Qiskit not installed. The extension will not work properly');
                             }
                         })
                         .catch(err => {

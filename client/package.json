@@ -26,7 +26,7 @@
 	"activationEvents": [
 		"onLanguage:qasm-lang",
 		"onLanguage:python",
-		"onCommand:qstudio.runQISKitCode",
+		"onCommand:qstudio.runQiskitCode",
 		"onCommand:qstudio.runQASMCode",
 		"onCommand:qstudio.checkDependencies",
 		"onCommand:qstudio.initQConfig",
@@ -92,12 +92,12 @@
 						"qiskit-acqua": "0.1.1",
 						"qiskit-acqua-chemistry": "0.1.0"
 					},
-					"description": "QISKit and libraries related to run code"
+					"description": "Qiskit and libraries related to run code"
 				},
 				"ibm-q-studio.qiskit.token": {
 					"type": "string",
 					"default": null,
-					"description": "QISKit & Q Experience API Token"
+					"description": "Qiskit & Q Experience API Token"
 				},
 				"ibm-q-studio.qiskit.url": {
 					"type": "string",
@@ -107,17 +107,17 @@
 				"ibm-q-studio.qiskit.hub": {
 					"type": "string",
 					"default": null,
-					"description": "User's QISKit & Q Experience hub"
+					"description": "User's Qiskit & Q Experience hub"
 				},
 				"ibm-q-studio.qiskit.group": {
 					"type": "string",
 					"default": null,
-					"description": "User's QISKit & Q Experience group"
+					"description": "User's Qiskit & Q Experience group"
 				},
 				"ibm-q-studio.qiskit.project": {
 					"type": "string",
 					"default": null,
-					"description": "User's QISKit & Q Experience project"
+					"description": "User's Qiskit & Q Experience project"
 				},
 				"ibm-q-studio.config.firstRun": {
 					"type": "boolean",
@@ -168,7 +168,7 @@
 				"category": "qstudio"
 			},
 			{
-				"command": "qstudio.runQISKitCode",
+				"command": "qstudio.runQiskitCode",
 				"title": "▶ Run this Python",
 				"category": "qstudio"
 			},
@@ -240,7 +240,7 @@
 		],
 		"keybindings": [
 			{
-				"command": "qstudio.runQISKitCode",
+				"command": "qstudio.runQiskitCode",
 				"key": "shift+enter",
 				"mac": "shift+enter",
 				"when": "editorTextFocus && editorLangId == 'python'"
@@ -256,7 +256,7 @@
 			"commandPalette": [
 				{
 					"when": "editorLangId == 'python'",
-					"command": "qstudio.runQISKitCode"
+					"command": "qstudio.runQiskitCode"
 				},
 				{
 					"when": "editorLangId == 'qasm-lang'",
@@ -271,7 +271,7 @@
 				},
 				{
 					"when": "editorTextFocus && editorLangId == 'python'",
-					"command": "qstudio.runQISKitCode",
+					"command": "qstudio.runQiskitCode",
 					"group": "navigation"
 				},
 				{

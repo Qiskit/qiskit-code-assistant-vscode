@@ -31,7 +31,7 @@ sim_result = job_sim.result()
 
 `;
 
-describe('From a parsed and folded QISKit code of a valid source', () => {
+describe('From a parsed and folded Qiskit code of a valid source', () => {
     let folder = new TreeFolder();
     let tree = parse(validSource);
     let statements = folder.visit(tree);
@@ -60,7 +60,7 @@ sim_result = job_sim.result()
 
 `;
 
-describe('From a parsed and folded QISKit code of a wrong source', () => {
+describe('From a parsed and folded Qiskit code of a wrong source', () => {
     let folder = new TreeFolder();
     let tree = parse(wrongSource);
     let statements = folder.visit(tree);
