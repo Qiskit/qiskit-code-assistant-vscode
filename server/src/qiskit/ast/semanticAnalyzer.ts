@@ -20,7 +20,7 @@ import {
     ArrayReference
 } from './types';
 import { SymbolTable, Type, BuiltInTypeSymbol } from '../../tools/symbolTable';
-import { ParserError, ParseErrorLevel } from '../../types';
+import { ParserError } from '../../types';
 import { VariableSymbol, ClassSymbol, MethodSymbol, ArgumentSymbol } from '../compiler/qiskitSymbolTable';
 import { ErrorBuilder } from './tools/errorBuilder';
 
