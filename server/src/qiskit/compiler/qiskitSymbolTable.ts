@@ -26,6 +26,7 @@ export namespace QiskitSymbolTable {
         symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.qbitPol));
         symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.class));
 
+        // TODO What is the intention of this line?
         const qiskitSymbols: QiskitSDK = require('../libs/qiskitSDK.json');
 
         loadQiskitSymbolsAt(symbolTable);
