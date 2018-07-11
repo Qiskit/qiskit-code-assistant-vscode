@@ -18,9 +18,9 @@ import { SuggestionsCalculator } from './suggestions/suggestionsCalculator';
 import { AtomFinder } from './suggestions/atomFinder';
 import { MethodsDictionary } from './suggestions/methodsDictionary';
 import { VariablesDictionary } from './suggestions/variablesDictionary';
-import { SymbolTable } from '../tools/symbolTable';
 import { SymbolTableGenerator } from './ast/symbolTableGenerator';
 import { TreeFolder } from './ast/treeFolder';
+import { SymbolTable } from './compiler/types';
 
 export class QiskitSuggester implements Suggester {
     private dictionary = new SuggestionsDictionary();

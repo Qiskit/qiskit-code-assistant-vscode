@@ -40,6 +40,9 @@ export class Statement extends VisitableItem {
         super();
 
         this.expression = expression;
+        if (expression) {
+            this.line = expression.line;
+        }
     }
 
     accept<T>(visitor: Visitor<T>): T {
@@ -63,6 +66,7 @@ export class Assignment extends VisitableItem {
 
         this.left = left;
         this.right = right;
+        this.line = left.line;
     }
 
     accept<T>(visitor: Visitor<T>): T {
@@ -84,6 +88,9 @@ export class Expression extends VisitableItem {
         super();
 
         this.terms = terms;
+        if (terms.length > 0) {
+            this.line = terms[0].line;
+        }
     }
 
     accept<T>(visitor: Visitor<T>): T {

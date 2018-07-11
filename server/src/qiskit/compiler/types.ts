@@ -26,5 +26,8 @@ export interface SymbolTable {
     /** Returns to the parent scope closing the current one. */
     pop(line: number): void;
 
+    /** Returns a list of the defined symbols for the current scope. */
+    currentSymbols(): Symbol[];
+
     print(): void;
 }

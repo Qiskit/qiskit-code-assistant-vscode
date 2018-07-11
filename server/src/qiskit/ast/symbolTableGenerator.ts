@@ -21,19 +21,20 @@ import {
     Integer,
     Text
 } from './types';
-import { SymbolTable, Type } from '../../tools/symbolTable';
+import { Type } from '../../tools/symbolTable';
 import {
-    QiskitSymbolTable,
     VariableSymbol,
     ClassSymbol,
     VariableMetadata,
     MethodSymbol,
     QiskitSymbols
 } from '../compiler/qiskitSymbolTable';
+import { SymbolTable } from '../compiler/types';
+import { QiskitSymbolTableBuilder } from '../compiler/qiskitSymbolTableBuilder';
 
 export namespace SymbolTableGenerator {
     export function symbolTableFor(statements: Statement[]): SymbolTable {
-        let symbolTable = QiskitSymbolTable.build();
+        let symbolTable = QiskitSymbolTableBuilder.create();
 
         statements.forEach(statement => {
             let updater = new StatementSymbolTableUpdater(symbolTable);
@@ -75,7 +76,7 @@ class AssignmentSymbolTableUpdater implements Visitor<MethodInvocationData> {
 
             let symbol = new VariableSymbol(variable, invocationData.type, invocationData.metadata);
 
-            this.symbolTable.define(symbol);
+            this.symbolTable.define(symbol, assignment.line);
 
             return invocationData;
         }

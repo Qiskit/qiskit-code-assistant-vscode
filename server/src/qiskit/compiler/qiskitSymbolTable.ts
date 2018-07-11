@@ -12,60 +12,60 @@
 import { SymbolTable, Symbol, GlobalScope, Type, BuiltInTypeSymbol } from '../../tools/symbolTable';
 import { QiskitSDK } from '../libs/qiskitSDK';
 
-export namespace QiskitSymbolTable {
-    export function build(): SymbolTable {
-        let globalScope = new GlobalScope();
-        let symbolTable = new SymbolTable(globalScope);
+// export namespace QiskitSymbolTable {
+//     export function build(): SymbolTable {
+//         let globalScope = new GlobalScope();
+//         let symbolTable = new SymbolTable(globalScope);
 
-        symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.void));
-        symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.object));
-        symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.string));
-        symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.number));
-        symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.boolean));
-        symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.dictionary));
-        symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.qbitPol));
-        symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.class));
+//         symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.void));
+//         symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.object));
+//         symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.string));
+//         symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.number));
+//         symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.boolean));
+//         symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.dictionary));
+//         symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.qbitPol));
+//         symbolTable.define(new BuiltInTypeSymbol(QiskitSymbols.class));
 
-        // TODO What is the intention of this line?
-        const qiskitSymbols: QiskitSDK = require('../libs/qiskitSDK.json');
+//         // TODO What is the intention of this line?
+//         const qiskitSymbols: QiskitSDK = require('../libs/qiskitSDK.json');
 
-        loadQiskitSymbolsAt(symbolTable);
+//         loadQiskitSymbolsAt(symbolTable);
 
-        return symbolTable;
-    }
+//         return symbolTable;
+//     }
 
-    function loadQiskitSymbolsAt(symbolTable: SymbolTable): void {
-        QiskitSDK.classes().forEach(qclass => {
-            let type = symbolTable.lookup(QiskitSymbols.class);
-            let args: ArgumentSymbol[] = getArgumentsSymbols(qclass.arguments, symbolTable);
-            let methods: MethodSymbol[] = getMethodsSymbols(qclass.methods, symbolTable);
-            let classSymbol = new ClassSymbol(qclass.name, type, args, methods);
+//     function loadQiskitSymbolsAt(symbolTable: SymbolTable): void {
+//         QiskitSDK.classes().forEach(qclass => {
+//             let type = symbolTable.lookup(QiskitSymbols.class);
+//             let args: ArgumentSymbol[] = getArgumentsSymbols(qclass.arguments, symbolTable);
+//             let methods: MethodSymbol[] = getMethodsSymbols(qclass.methods, symbolTable);
+//             let classSymbol = new ClassSymbol(qclass.name, type, args, methods);
 
-            symbolTable.define(classSymbol);
-        });
-    }
+//             symbolTable.define(classSymbol);
+//         });
+//     }
 
-    function getMethodsSymbols(qmethods: QiskitMethod[], symbolTable: SymbolTable): MethodSymbol[] {
-        return qmethods.map(qmethod => {
-            let type = symbolTable.lookup(qmethod.type) || symbolTable.lookup(QiskitSymbols.void);
-            let requiredArguments = getArgumentsSymbols(qmethod.arguments, symbolTable);
+//     function getMethodsSymbols(qmethods: QiskitMethod[], symbolTable: SymbolTable): MethodSymbol[] {
+//         return qmethods.map(qmethod => {
+//             let type = symbolTable.lookup(qmethod.type) || symbolTable.lookup(QiskitSymbols.void);
+//             let requiredArguments = getArgumentsSymbols(qmethod.arguments, symbolTable);
 
-            return new MethodSymbol(qmethod.name, type, requiredArguments);
-        });
-    }
+//             return new MethodSymbol(qmethod.name, type, requiredArguments);
+//         });
+//     }
 
-    function getArgumentsSymbols(qarguments: QiskitArgument[] | undefined, symbolTable: SymbolTable): ArgumentSymbol[] {
-        if (qarguments === undefined) {
-            return [];
-        }
+//     function getArgumentsSymbols(qarguments: QiskitArgument[] | undefined, symbolTable: SymbolTable): ArgumentSymbol[] {
+//         if (qarguments === undefined) {
+//             return [];
+//         }
 
-        return qarguments.map(qargument => {
-            let type = symbolTable.lookup(qargument.type) || symbolTable.lookup(QiskitSymbols.void);
+//         return qarguments.map(qargument => {
+//             let type = symbolTable.lookup(qargument.type) || symbolTable.lookup(QiskitSymbols.void);
 
-            return new ArgumentSymbol(qargument.name, type, qargument.optional);
-        });
-    }
-}
+//             return new ArgumentSymbol(qargument.name, type, qargument.optional);
+//         });
+//     }
+// }
 
 export class ClassSymbol extends Symbol {
     constructor(name: string, type: Type, public requiredArguments: ArgumentSymbol[], public methods: MethodSymbol[]) {

@@ -10,8 +10,9 @@
 'use strict';
 
 import { expect } from 'chai';
-import { PersistentSymbolTable, QiskitInitialScope } from '../src/qiskit/compiler/persistentSymbolTable';
 import { VariableSymbol, QiskitSymbols } from '../src/qiskit/compiler/qiskitSymbolTable';
+import { QiskitSymbolTableBuilder } from '../src/qiskit/compiler/qiskitSymbolTableBuilder';
+import { SymbolTable } from '../src/qiskit/compiler/types';
 
 let secondLine = 2;
 let thirdLine = 3;
@@ -21,11 +22,10 @@ let seventhLine = 7;
 
 describe('A persistent symbol table', () => {
     describe('with a variable b in a global scope', () => {
-        let symbolTable: PersistentSymbolTable;
+        let symbolTable: SymbolTable;
 
         beforeEach(() => {
-            let initialScope = QiskitInitialScope.create();
-            symbolTable = new PersistentSymbolTable(initialScope);
+            symbolTable = QiskitSymbolTableBuilder.create();
             let numberB = new VariableSymbol('b', symbolTable.lookup(QiskitSymbols.number));
             symbolTable.define(numberB, secondLine);
         });
@@ -56,8 +56,7 @@ describe('A persistent symbol table', () => {
     });
 
     describe('with a variable c in a local scope', () => {
-        let initialScope = QiskitInitialScope.create();
-        let symbolTable = new PersistentSymbolTable(initialScope);
+        let symbolTable = QiskitSymbolTableBuilder.create();
         let numberB = new VariableSymbol('b', symbolTable.lookup(QiskitSymbols.number));
         symbolTable.define(numberB, secondLine);
         symbolTable.push('new scope', thirdLine);
@@ -71,7 +70,7 @@ describe('A persistent symbol table', () => {
             expect(result).to.be.null;
         });
 
-        it('is able to recover the definition of c event with the scope closed', () => {
+        it('is able to recover the definition of c even with the scope closed', () => {
             let result = symbolTable.lookup('c', sixthLine);
 
             expect(result.type).to.be.eq(stringC.type);
