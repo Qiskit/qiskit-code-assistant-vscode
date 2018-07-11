@@ -52,11 +52,11 @@ class StatementSymbolTableUpdater implements Visitor<void> {
     defaultValue() {}
 
     visitCodeBlock(block: Block) {
-        this.symbolTable.push('local', block.line);
+        this.symbolTable.push('local', block.start.line);
 
         block.childs.map(innerBlock => innerBlock.accept(new StatementSymbolTableUpdater(this.symbolTable)));
 
-        this.symbolTable.pop(block.line);
+        this.symbolTable.pop(block.end.line);
     }
 
     visitStatement(statement: Statement) {
@@ -85,7 +85,7 @@ class AssignmentSymbolTableUpdater implements Visitor<MethodInvocationData> {
 
             let symbol = new VariableSymbol(variable, invocationData.type, invocationData.metadata);
 
-            this.symbolTable.define(symbol, assignment.line);
+            this.symbolTable.define(symbol, assignment.start.line);
 
             return invocationData;
         }

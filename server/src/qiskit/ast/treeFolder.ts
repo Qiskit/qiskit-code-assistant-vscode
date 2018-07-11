@@ -38,11 +38,11 @@ import {
     Integer,
     MethodReference,
     Visitor,
-    Position,
     QiskitBoolean,
     Dictionary,
     Block,
-    CodeBlock
+    CodeBlock,
+    Position
 } from './types';
 import { ParserRuleContext, Token } from 'antlr4ts';
 import { QLogger } from '../../logger';
@@ -77,7 +77,17 @@ export class StatementFolder extends AbstractParseTreeVisitor<Block> implements 
     visitCompound_stmt(ctx: Compound_stmtContext): Block {
         let innerBlocks = ctx.accept(new CompoundStatementFolder());
 
-        return new CodeBlock(innerBlocks);
+        let result = new CodeBlock(innerBlocks);
+        result.start = {
+            line: ctx.start.line,
+            column: ctx.start.charPositionInLine
+        };
+        result.end = {
+            line: ctx.stop.line,
+            column: ctx.stop.charPositionInLine
+        };
+
+        return result;
     }
 }
 
@@ -159,24 +169,13 @@ export class ExpressionFolder extends AbstractParseTreeVisitor<VisitableItem> im
     }
 
     asMethodReference(variable: VariableReference, argsItem: Arguments): MethodReference {
-        let position = {
-            line: variable.line,
-            start: variable.start,
-            end: variable.end
-        } as Position;
-
-        return new MethodReference(variable.value, argsItem.args, position);
+        return new MethodReference(variable.value, argsItem.args, variable.start, variable.end);
     }
 
     asArrayReference(variable: VariableReference, arrayIndex: ArrayIndex): ArrayReference {
-        let position = {
-            line: variable.line,
-            start: variable.start,
-            end: variable.end
-        } as Position;
         let index = arrayIndex.indexes.reduce((a, b) => this.numberValue(b) || a, 0);
 
-        return new ArrayReference(variable.value, index, position);
+        return new ArrayReference(variable.value, index, variable.start, variable.end);
     }
 
     numberValue(item: VisitableItem) {
@@ -196,9 +195,12 @@ class TrailerFolder extends AbstractParseTreeVisitor<VisitableItem> implements P
     }
 
     visitTrailer(ctx: TrailerContext): VisitableItem {
+        let start = PositionCalc.startContext(ctx);
+        let end = PositionCalc.endContext(ctx);
+
         if (ctx.text.startsWith('(')) {
             if (ctx.arglist() === undefined) {
-                return new Arguments([], PositionFrom.context(ctx));
+                return new Arguments([], start, end);
             }
 
             let expressionFolder = new ExpressionFolder();
@@ -207,10 +209,10 @@ class TrailerFolder extends AbstractParseTreeVisitor<VisitableItem> implements P
                 .argument()
                 .map(argument => argument.accept(expressionFolder));
 
-            return new Arguments(args, PositionFrom.context(ctx));
+            return new Arguments(args, start, end);
         } else if (ctx.text.startsWith('[')) {
             if (ctx.subscriptlist() === undefined) {
-                return new ArrayIndex([], PositionFrom.context(ctx));
+                return new ArrayIndex([], start, end);
             }
 
             let expressionFolder = new ExpressionFolder();
@@ -219,7 +221,7 @@ class TrailerFolder extends AbstractParseTreeVisitor<VisitableItem> implements P
                 .subscript()
                 .map(subscript => subscript.accept(expressionFolder));
 
-            return new ArrayIndex(expressions, PositionFrom.context(ctx));
+            return new ArrayIndex(expressions, start, end);
         }
 
         let terminalFolder = new TerminalFolder();
@@ -235,65 +237,58 @@ class TerminalFolder extends AbstractParseTreeVisitor<VisitableItem> implements 
     }
 
     visitTerminal(node: TerminalNode): VisitableItem {
+        let start = PositionCalc.startToken(node.symbol);
+        let end = PositionCalc.endToken(node.symbol);
+
         switch (node.symbol.type) {
             case Python3Lexer.NAME:
-                return new VariableReference(node.text, PositionFrom.token(node.symbol));
+                return new VariableReference(node.text, start, end);
             case Python3Lexer.TRUE:
-                return new QiskitBoolean(true, PositionFrom.token(node.symbol));
+                return new QiskitBoolean(true, start, end);
             case Python3Lexer.FALSE:
-                return new QiskitBoolean(false, PositionFrom.token(node.symbol));
+                return new QiskitBoolean(false, start, end);
             default:
                 return this.result;
         }
     }
 
     visitDictorsetmaker(ctx: DictorsetmakerContext): VisitableItem {
-        this.result = new Dictionary(PositionFrom.context(ctx));
+        let start = PositionCalc.startContext(ctx);
+        let end = PositionCalc.endContext(ctx);
+
+        this.result = new Dictionary(start, end);
 
         return this.result;
     }
 
     visitNumber(ctx: NumberContext): VisitableItem {
+        let start = PositionCalc.startContext(ctx);
+        let end = PositionCalc.endContext(ctx);
+
         if (ctx.text.includes('.')) {
-            return new Float(+ctx.text, PositionFrom.context(ctx));
+            return new Float(+ctx.text, start, end);
         } else {
-            return new Integer(+ctx.text, PositionFrom.context(ctx));
+            return new Integer(+ctx.text, start, end);
         }
     }
 
     visitStr(ctx: StrContext): VisitableItem {
-        return new Text(ctx.text, PositionFrom.context(ctx));
-    }
-}
+        let start = PositionCalc.startContext(ctx);
+        let end = PositionCalc.endContext(ctx);
 
-namespace PositionFrom {
-    export function context(ctx: ParserRuleContext): Position {
-        return {
-            line: ctx.start.line - 1,
-            start: ctx.start.charPositionInLine,
-            end: ctx.stop.charPositionInLine + 1
-        };
-    }
-
-    export function token(token: Token): Position {
-        return {
-            line: token.line - 1,
-            start: token.charPositionInLine,
-            end: token.charPositionInLine + token.text.length + 1
-        };
+        return new Text(ctx.text, start, end);
     }
 }
 
 class Arguments extends VisitableItem {
     args: VisitableItem[] = [];
 
-    constructor(args: VisitableItem[], position: Position) {
+    constructor(args: VisitableItem[], start: Position, end: Position) {
         super();
 
         this.args = args;
-        this.line = position.line;
-        this.start = position.start;
-        this.end = position.end;
+        this.start = start;
+        this.end = end;
     }
 
     accept<T>(_visitor: Visitor<T>): T {
@@ -308,13 +303,12 @@ class Arguments extends VisitableItem {
 class ArrayIndex extends VisitableItem {
     indexes: VisitableItem[] = [];
 
-    constructor(indexes: VisitableItem[], position: Position) {
+    constructor(indexes: VisitableItem[], start: Position, end: Position) {
         super();
 
         this.indexes = indexes;
-        this.line = position.line;
-        this.start = position.start;
-        this.end = position.end;
+        this.start = start;
+        this.end = end;
     }
 
     accept<T>(_visitor: Visitor<T>): T {
@@ -323,5 +317,35 @@ class ArrayIndex extends VisitableItem {
 
     toString(): string {
         return `ArrayIndex(${this.indexes.join(',')})`;
+    }
+}
+
+namespace PositionCalc {
+    export function startContext(ctx: ParserRuleContext): Position {
+        return {
+            line: ctx.start.line - 1,
+            column: ctx.start.charPositionInLine
+        };
+    }
+
+    export function endContext(ctx: ParserRuleContext): Position {
+        return {
+            line: ctx.stop.line - 1,
+            column: ctx.stop.charPositionInLine
+        };
+    }
+
+    export function startToken(token: Token): Position {
+        return {
+            line: token.line - 1,
+            column: token.charPositionInLine
+        };
+    }
+
+    export function endToken(token: Token): Position {
+        return {
+            line: token.line - 1,
+            column: token.charPositionInLine + token.text.length + 1
+        };
     }
 }

@@ -26,10 +26,14 @@ export interface Visitor<T> {
     defaultValue(): T;
 }
 
-export abstract class VisitableItem {
+export interface Position {
     line: number;
-    start: number;
-    end: number;
+    column: number;
+}
+
+export abstract class VisitableItem {
+    start: Position;
+    end: Position;
 
     abstract accept<T>(visitor: Visitor<T>): T;
 }
@@ -67,7 +71,8 @@ export class Statement extends Block {
 
         this.expression = expression;
         if (expression) {
-            this.line = expression.line;
+            this.start = expression.start;
+            this.end = expression.end;
         }
     }
 
@@ -92,7 +97,12 @@ export class Assignment extends VisitableItem {
 
         this.left = left;
         this.right = right;
-        this.line = left.line;
+        this.start = left.start;
+        if (right) {
+            this.end = right.end;
+        } else {
+            this.end = left.end;
+        }
     }
 
     accept<T>(visitor: Visitor<T>): T {
@@ -115,7 +125,8 @@ export class Expression extends VisitableItem {
 
         this.terms = terms;
         if (terms.length > 0) {
-            this.line = terms[0].line;
+            this.start = terms[0].start;
+            this.end = terms[terms.length - 1].end;
         }
     }
 
@@ -134,13 +145,12 @@ export class Expression extends VisitableItem {
 export class VariableReference extends VisitableItem {
     value: string;
 
-    constructor(value: string, position: Position) {
+    constructor(value: string, start: Position, end: Position) {
         super();
 
         this.value = value;
-        this.line = position.line;
-        this.start = position.start;
-        this.end = position.end;
+        this.start = start;
+        this.end = end;
     }
 
     accept<T>(visitor: Visitor<T>): T {
@@ -159,14 +169,13 @@ export class MethodReference extends VisitableItem {
     name: string;
     args: VisitableItem[] = [];
 
-    constructor(name: string, args: VisitableItem[], position: Position) {
+    constructor(name: string, args: VisitableItem[], start: Position, end: Position) {
         super();
 
         this.name = name;
         this.args = args;
-        this.line = position.line;
-        this.start = position.start;
-        this.end = position.end;
+        this.start = start;
+        this.end = end;
     }
 
     accept<T>(visitor: Visitor<T>): T {
@@ -185,14 +194,13 @@ export class ArrayReference extends VisitableItem {
     variable: string;
     index: number;
 
-    constructor(variable: string, index: number, position: Position) {
+    constructor(variable: string, index: number, start: Position, end: Position) {
         super();
 
         this.variable = variable;
         this.index = index;
-        this.line = position.line;
-        this.start = position.start;
-        this.end = position.end;
+        this.start = start;
+        this.end = end;
     }
 
     accept<T>(visitor: Visitor<T>): T {
@@ -210,13 +218,12 @@ export class ArrayReference extends VisitableItem {
 export class Integer extends VisitableItem {
     value: number;
 
-    constructor(value: number, position: Position) {
+    constructor(value: number, start: Position, end: Position) {
         super();
 
         this.value = value;
-        this.line = position.line;
-        this.start = position.start;
-        this.end = position.end;
+        this.start = start;
+        this.end = end;
     }
 
     accept<T>(visitor: Visitor<T>): T {
@@ -234,13 +241,12 @@ export class Integer extends VisitableItem {
 export class Float extends VisitableItem {
     value: number;
 
-    constructor(value: number, position: Position) {
+    constructor(value: number, start: Position, end: Position) {
         super();
 
         this.value = value;
-        this.line = position.line;
-        this.start = position.start;
-        this.end = position.end;
+        this.start = start;
+        this.end = end;
     }
 
     accept<T>(visitor: Visitor<T>): T {
@@ -258,13 +264,12 @@ export class Float extends VisitableItem {
 export class Text extends VisitableItem {
     value: string;
 
-    constructor(value: string, position: Position) {
+    constructor(value: string, start: Position, end: Position) {
         super();
 
         this.value = value;
-        this.line = position.line;
-        this.start = position.start;
-        this.end = position.end;
+        this.start = start;
+        this.end = end;
     }
 
     accept<T>(visitor: Visitor<T>): T {
@@ -282,13 +287,12 @@ export class Text extends VisitableItem {
 export class QiskitBoolean extends VisitableItem {
     value: boolean;
 
-    constructor(value: boolean, position: Position) {
+    constructor(value: boolean, start: Position, end: Position) {
         super();
 
         this.value = value;
-        this.line = position.line;
-        this.start = position.start;
-        this.end = position.end;
+        this.start = start;
+        this.end = end;
     }
 
     accept<T>(visitor: Visitor<T>): T {
@@ -306,12 +310,11 @@ export class QiskitBoolean extends VisitableItem {
 export class Dictionary extends VisitableItem {
     value = '';
 
-    constructor(position: Position) {
+    constructor(start: Position, end: Position) {
         super();
 
-        this.line = position.line;
-        this.start = position.start;
-        this.end = position.end;
+        this.start = start;
+        this.end = end;
     }
 
     accept<T>(visitor: Visitor<T>): T {
@@ -324,10 +327,4 @@ export class Dictionary extends VisitableItem {
     toString(): string {
         return `Dictionary()`;
     }
-}
-
-export interface Position {
-    line: number;
-    start: number;
-    end: number;
 }
