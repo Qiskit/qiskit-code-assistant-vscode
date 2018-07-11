@@ -51,6 +51,14 @@ class StatementSymbolTableUpdater implements Visitor<void> {
 
     defaultValue() {}
 
+    visitCodeBlock(block: Block) {
+        this.symbolTable.push('local', block.line);
+
+        block.childs.map(innerBlock => innerBlock.accept(new StatementSymbolTableUpdater(this.symbolTable)));
+
+        this.symbolTable.pop(block.line);
+    }
+
     visitStatement(statement: Statement) {
         if (statement.expression === null) {
             return;

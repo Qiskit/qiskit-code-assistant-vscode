@@ -76,4 +76,17 @@ describe('A persistent symbol table', () => {
             expect(result.type).to.be.eq(stringC.type);
         });
     });
+
+    describe('currently in a local scope', () => {
+        let symbolTable = QiskitSymbolTableBuilder.create();
+        let numberB = new VariableSymbol('b', symbolTable.lookup(QiskitSymbols.number));
+        symbolTable.define(numberB, secondLine);
+        symbolTable.push('new scope', thirdLine);
+
+        it('should recover parent scope symbols', () => {
+            let result = symbolTable.lookup('b');
+
+            expect(result.type).to.be.eq(numberB.type);
+        });
+    });
 });

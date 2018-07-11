@@ -22,7 +22,8 @@ import {
     Testlist_star_exprContext,
     DictorsetmakerContext,
     Simple_stmtContext,
-    Compound_stmtContext
+    Compound_stmtContext,
+    SuiteContext
 } from '../antlr/Python3Parser';
 import { Python3Lexer } from '../antlr/Python3Lexer';
 import {
@@ -71,6 +72,28 @@ export class StatementFolder extends AbstractParseTreeVisitor<Block> implements 
 
     visitSimple_stmt(ctx: Simple_stmtContext): Block {
         return ctx.accept(new ExpressionStatementFolder());
+    }
+
+    visitCompound_stmt(ctx: Compound_stmtContext): Block {
+        let innerBlocks = ctx.accept(new CompoundStatementFolder());
+
+        return new CodeBlock(innerBlocks);
+    }
+}
+
+export class CompoundStatementFolder extends AbstractParseTreeVisitor<Block[]> implements Python3Visitor<Block[]> {
+    defaultResult(): Block[] {
+        return [];
+    }
+
+    visitSuite(ctx: SuiteContext): Block[] {
+        let toStatement = (statement: StmtContext) => statement.accept(new StatementFolder());
+        let notUndefinedStatements = (block: Block) => block !== undefined;
+
+        return ctx
+            .stmt()
+            .map(toStatement)
+            .filter(notUndefinedStatements);
     }
 }
 

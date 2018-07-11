@@ -41,6 +41,9 @@ export class QiskitParser implements Parser {
 
         let folder = new TreeFolder();
         let codeBlock = folder.visit(tree);
+
+        console.log(codeBlock);
+
         let symbolTable = SymbolTableGenerator.symbolTableFor(codeBlock);
 
         symbolTable.print();

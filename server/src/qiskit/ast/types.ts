@@ -53,6 +53,10 @@ export class CodeBlock extends Block {
         }
         return visitor.defaultValue();
     }
+
+    toString(): string {
+        return `CodeBlock(${this.childs.join(', ')})`;
+    }
 }
 
 export class Statement extends Block {

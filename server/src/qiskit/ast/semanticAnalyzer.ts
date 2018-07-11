@@ -42,6 +42,12 @@ class StatementSemanticValidator implements Visitor<ParserError[]> {
         return [];
     }
 
+    visitCodeBlock(block: Block): ParserError[] {
+        return block.childs
+            .map(innerBlock => innerBlock.accept(new StatementSemanticValidator(this.symbolTable)))
+            .reduce((acc, value) => acc.concat(value), []);
+    }
+
     visitStatement(statement: Statement): ParserError[] {
         // in partial compilations this case could happen *do not delete without thinking twice*
         if (statement.expression === null) {

@@ -11,6 +11,7 @@
 
 import { VariableDefinition } from './variableDefinition';
 import { Symbol, BuiltInTypeSymbol } from '../../tools/symbolTable';
+import { VariableSymbol } from '../../../node_modules/antlr4-c3';
 
 const MAX_LINE = 65536;
 
@@ -23,23 +24,17 @@ export class Scope {
     constructor(public parentScope: Scope, public name: string, public startLine = 1) {}
 
     lookup(symbolName: string, line = MAX_LINE): Symbol {
-        if (!this.dictionary.has(symbolName)) {
-            let inRangeScope = this.childs.find(scope => scope.inScopeAt(line));
-            if (inRangeScope) {
-                return inRangeScope.lookup(symbolName, line);
-            }
-
-            return null;
+        let symbol = this.searchInScope(symbolName, line);
+        if (symbol) {
+            return symbol;
         }
 
-        let result = this.dictionary.get(symbolName).find(variableDefinition => {
-            return variableDefinition.nameEquals(symbolName) && variableDefinition.inScope(line);
-        });
-        if (result) {
-            return result.symbol;
+        symbol = this.searchInLocalScope(symbolName, line);
+        if (symbol) {
+            return symbol;
         }
 
-        return null;
+        return this.lookupParent(symbolName, line);
     }
 
     define(symbol: Symbol, declarationLine: number) {
@@ -88,6 +83,48 @@ export class Scope {
         this.printEntries(level);
 
         this.childs.forEach(child => child.print(level + 1));
+    }
+
+    private searchInScope(symbolName: string, line = MAX_LINE): Symbol {
+        if (!this.dictionary.has(symbolName)) {
+            return null;
+        }
+
+        let variableDefinition = this.dictionary.get(symbolName).find(variableDefinition => {
+            return variableDefinition.nameEquals(symbolName) && variableDefinition.inScope(line);
+        });
+
+        return this.unwrapSymbol(variableDefinition);
+    }
+
+    private searchInLocalScope(symbolName: string, line = MAX_LINE): Symbol {
+        let inRangeScope = this.childs.find(scope => scope.inScopeAt(line));
+        if (inRangeScope) {
+            return inRangeScope.lookup(symbolName, line);
+        }
+
+        return null;
+    }
+
+    private lookupParent(symbolName: string, line = MAX_LINE): Symbol {
+        if (this.parentScope) {
+            let result = this.parentScope.searchInScope(symbolName, line);
+            if (result) {
+                return result;
+            }
+
+            this.parentScope.lookupParent(symbolName, line);
+        }
+
+        return null;
+    }
+
+    private unwrapSymbol(variableDef: VariableDefinition): Symbol {
+        if (variableDef) {
+            return variableDef.symbol;
+        }
+
+        return null;
     }
 
     private printEntries(level: number) {
