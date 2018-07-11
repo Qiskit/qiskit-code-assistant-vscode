@@ -20,8 +20,9 @@ import {
     ArrayReference
 } from './types';
 import { SymbolTable, Type, BuiltInTypeSymbol } from '../../tools/symbolTable';
-import { ParserError, ParseErrorLevel } from '../../types';
+import { ParserError } from '../../types';
 import { VariableSymbol, ClassSymbol, MethodSymbol, ArgumentSymbol } from '../compiler/qiskitSymbolTable';
+import { ErrorBuilder } from './tools/errorBuilder';
 
 export namespace SemanticAnalyzer {
     export function analyze(statements: Statement[], symbolTable: SymbolTable): ParserError[] {
@@ -40,6 +41,11 @@ class StatementSemanticValidator implements Visitor<ParserError[]> {
     }
 
     visitStatement(statement: Statement): ParserError[] {
+        // in partial compilations this case could happen *do not delete without thinking twice*
+        if (statement.expression === null) {
+            return this.defaultValue();
+        }
+
         return statement.expression.accept(this);
     }
 
@@ -52,6 +58,11 @@ class StatementSemanticValidator implements Visitor<ParserError[]> {
 
     visitExpression(expression: Expression): ParserError[] {
         let visitingTerms = (a: ExpressionAnalysis, b: VisitableItem) => {
+            // in partial compilations this case could happen *do not delete without thinking twice*
+            if (b === null) {
+                return a;
+            }
+
             let termValidator = new TermSemanticValidator(this.symbolTable, a);
             let currentAnalysis = b.accept(termValidator);
 
@@ -114,7 +125,7 @@ class TermSemanticValidator implements Visitor<ExpressionAnalysis> {
         let requiredArguments = methodSymbol.arguments.filter(arg => arg.optional === false).length;
         if (method.args.length < requiredArguments) {
             let message = `Expecting ${requiredArguments} arguments but ${method.args.length} received`;
-            let error = this.warning(message, method);
+            let error = ErrorBuilder.warning(message, method);
 
             result.push(error);
         }
@@ -144,17 +155,7 @@ class TermSemanticValidator implements Visitor<ExpressionAnalysis> {
     }
 
     extractMethodFromClass(classSymbol: ClassSymbol, method: string): MethodSymbol {
-        return classSymbol.getMethods().find(symbol => symbol.name === method);
-    }
-
-    warning(message: string, item: VisitableItem): ParserError {
-        return {
-            line: item.line,
-            start: item.start,
-            end: item.end,
-            message: message,
-            level: ParseErrorLevel.WARNING
-        };
+        return classSymbol.methods.find(symbol => symbol.name === method);
     }
 }
 
@@ -211,7 +212,7 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
 
             let errorMessage = `Expecting argument of type ${expectedType}, but ${name} doesn't match it`;
 
-            return [this.warning(errorMessage, item)];
+            return [ErrorBuilder.warning(errorMessage, item)];
         }
 
         return [];
@@ -220,20 +221,10 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
     checkArrayPosition(variable: ArrayReference, variableSymbol: VariableSymbol): ParserError[] {
         if (variableSymbol.hasSize() && variable.index >= variableSymbol.size()) {
             let message = `Position ${variable.index} is not valid at ${variable.variable}`;
-            return [this.warning(message, variable)];
+            return [ErrorBuilder.warning(message, variable)];
         }
 
         return [];
-    }
-
-    warning(message: string, item: VisitableItem): ParserError {
-        return {
-            line: item.line,
-            start: item.start,
-            end: item.end,
-            message: message,
-            level: ParseErrorLevel.WARNING
-        };
     }
 }
 

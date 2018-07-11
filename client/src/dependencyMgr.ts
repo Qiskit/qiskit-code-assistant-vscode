@@ -20,7 +20,7 @@ export class DependencyMgr {
         const config = workspace.getConfiguration('ibm-q-studio');
         const dependList = config.get('python.dependencies');
 
-        Object.keys(dependList).forEach(function(key) {
+        Object.keys(dependList).forEach(key => {
             DependencyMgr._dependencies.push(
                 new Dependency(key.toString(), Version.fromString(dependList[key].toString()))
             );
@@ -28,7 +28,7 @@ export class DependencyMgr {
     }
 
     checkDependencies(): Q.Promise<void> {
-        let packages: Q.Promise<IDependency>[] = [];
+        let packages: Array<Q.Promise<IDependency>> = [];
 
         DependencyMgr._dependencies.forEach(dep => {
             packages.push(dep.isInstalled());

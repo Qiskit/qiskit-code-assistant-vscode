@@ -7,52 +7,49 @@
  * the LICENSE.txt file in the root directory of this source tree.
  */
 
-import * as Q from "q";
-import { CommandExecutor } from "./commandExecutor";
-import { IPackageInfo, IVersion } from "./interfaces";
-import { Version } from "./version";
+import * as Q from 'q';
+import { CommandExecutor } from './commandExecutor';
+import { IPackageInfo, IVersion } from './interfaces';
+import { Version } from './version';
 
 type ParserFunction = (out: string) => string;
 
 export class PipWrapper implements IPackageInfo {
-    public Name: string;
-    public Version: IVersion;
-    public Summary: string;
-    public Location: string;
-    public Dependencies: string;
+    private static PIP_COMMAND = 'pip';
 
-    private static PIP_COMMAND = "pip";
+    public name: string;
+    public version: IVersion;
+    public summary: string;
+    public location: string;
+    public dependencies: string;
 
-    constructor() { }
+    constructor() {}
 
     public getPackageInfo(pkgStr: string): Q.Promise<IPackageInfo> {
+        const packageInfo = 2;
+
         return this.show(pkgStr)
             .then((stdout: string) => {
-                let regEx = new RegExp(
-                    /(Name:\ |Version:\ |Summary:\ |Location:\ |Requires:\ )(.*)/g
-                );
+                let regEx = new RegExp(/(Name:\ |Version:\ |Summary:\ |Location:\ |Requires:\ )(.*)/g);
                 let pkg = new PipWrapper();
                 let pkgInfo;
-                let failed: boolean = false;
+
                 pkgInfo = regEx.exec(stdout);
-                failed = failed || pkgInfo === null;
-                pkg.Name = pkgInfo[2];
-                pkgInfo = regEx.exec(stdout);
-                failed = failed || pkgInfo === null;
-                pkg.Version = Version.fromString(pkgInfo[2]);
-                pkgInfo = regEx.exec(stdout);
-                failed = failed || pkgInfo === null;
-                pkg.Summary = pkgInfo[2];
-                pkgInfo = regEx.exec(stdout);
-                failed = failed || pkgInfo === null;
-                pkg.Location = pkgInfo[2];
-                pkgInfo = regEx.exec(stdout);
-                failed = failed || pkgInfo === null;
-                pkg.Dependencies = pkgInfo[2];
-                if (failed) {
+                if (pkgInfo === null) {
                     return Q.reject(`ERROR: Couldn't parse package information from
-                               'pip show' command output!`);
+                    'pip show' command output!`);
                 }
+
+                pkg.name = pkgInfo[packageInfo];
+                pkgInfo = regEx.exec(stdout);
+                pkg.version = Version.fromString(pkgInfo[packageInfo]);
+                pkgInfo = regEx.exec(stdout);
+                pkg.summary = pkgInfo[packageInfo];
+                pkgInfo = regEx.exec(stdout);
+                pkg.location = pkgInfo[packageInfo];
+                pkgInfo = regEx.exec(stdout);
+                pkg.dependencies = pkgInfo[packageInfo];
+
                 return Q.resolve(pkg);
             })
             .catch(err => {
@@ -64,46 +61,39 @@ export class PipWrapper implements IPackageInfo {
         let parserFunc: ParserFunction = (stdout: string) => {
             return stdout;
         };
-        return this.exec("show", [pkg], parserFunc);
+        return this.exec('show', [pkg], parserFunc);
     }
 
     public search(pkg: string): Q.Promise<boolean> {
         let parserFunc: ParserFunction = (stdout: string) => {
             return stdout;
         };
-        return this.exec("search", [pkg], parserFunc);
+        return this.exec('search', [pkg], parserFunc);
     }
 
     public install(pkg: string): Q.Promise<string> {
         let parserFunc: ParserFunction = (stdout: string) => {
             return stdout;
         };
-        return this.exec("install", [pkg], parserFunc);
+        return this.exec('install', [pkg], parserFunc);
     }
 
     public update(pkg: string): Q.Promise<string> {
         let parserFunc: ParserFunction = (stdout: string) => {
             return stdout;
         };
-        return this.exec("install", ["-U", "--no-cache-dir", pkg], parserFunc);
+        return this.exec('install', ['-U', '--no-cache-dir', pkg], parserFunc);
     }
 
     public list(): Q.Promise<string> {
         let parserFunc: ParserFunction = (stdout: string) => {
             return stdout;
         };
-        return this.exec("list", [], parserFunc);
+        return this.exec('list', [], parserFunc);
     }
 
-    private exec(
-        command: string,
-        args: string[],
-        parser: ParserFunction
-    ): Q.Promise<string> {
-        return CommandExecutor.exec(
-            PipWrapper.PIP_COMMAND,
-            [command].concat(args)
-        )
+    private exec(command: string, args: string[], parser: ParserFunction): Q.Promise<string> {
+        return CommandExecutor.exec(PipWrapper.PIP_COMMAND, [command].concat(args))
             .then(stdout => {
                 return Q.resolve(parser(stdout));
             })

@@ -23,8 +23,6 @@ import {
     BarrierGateContext,
     CustomArglistContext
 } from '../antlr/QasmParser';
-import { PositionAdapter } from './tools/positionAdapter';
-import { ErrorListener } from './tools/errorListener';
 import {
     SemanticRulesValidator,
     RegistersOfSameSizeRule,
@@ -35,6 +33,8 @@ import {
     SemanticRule,
     ValidRegisterReferenceRule
 } from './validations/validations';
+import { PositionAdapter } from '../../tools/positionAdapter';
+import { ErrorListener } from '../../tools/errorListener';
 
 export namespace SemanticAnalyzer {
     export function analyze(tree: ParserRuleContext, symbolTable: SymbolTable, errorListener: ErrorListener) {

@@ -7,52 +7,59 @@
  * the LICENSE.txt file in the root directory of this source tree.
  */
 
-import { IVersion, IVersionInfo } from "./interfaces";
+import { IVersion, IVersionInfo } from './interfaces';
 
 export class Version implements IVersion {
-    Info: IVersionInfo = { Major: -1, Minor: -1, Maintenance: -1 };
-    constructor(major: Number, minor: Number, maintenance: Number) {
-        this.Info.Major = major;
-        this.Info.Minor = minor;
-        this.Info.Maintenance = maintenance;
+    info: IVersionInfo = { major: -1, minor: -1, maintenance: -1 };
+
+    constructor(major: number, minor: number, maintenance: number) {
+        this.info = { major, minor, maintenance };
     }
 
     public static fromString(versionString: string): IVersion {
+        const majorKey = 0;
+        const minorKey = 1;
+        const maintenanceKey = 2;
+
         let versionStrings = versionString.split('.') || versionString;
-        let major: Number = -1;
-        let minor: Number = -1;
-        let maintenance: Number = -1;
-        if (versionStrings[0] !== null) {
-            major = Number(versionStrings[0]);
+        let major = -1;
+        let minor = -1;
+        let maintenance = -1;
+
+        if (versionStrings[majorKey] !== null) {
+            major = Number(versionStrings[majorKey]);
         }
-        if (versionStrings[1] !== null) {
-            minor = Number(versionStrings[1]);
+        if (versionStrings[minorKey] !== null) {
+            minor = Number(versionStrings[minorKey]);
         }
-        if (versionStrings[2] !== null) {
-            maintenance = Number(versionStrings[2]);
+        if (versionStrings[maintenanceKey] !== null) {
+            maintenance = Number(versionStrings[maintenanceKey]);
         }
+
         return new Version(major, minor, maintenance);
     }
 
     toString(): string {
-        let version = "Invalid version";
-        if (this.Info.Major > -1) {
-            version = this.Info.Major.toString();
+        let version = 'Invalid version';
+        if (this.info.major > -1) {
+            version = this.info.major.toString();
         }
-        if (this.Info.Minor > -1) {
-            version = version.concat('.' + this.Info.Minor.toString());
+        if (this.info.minor > -1) {
+            version = version.concat('.' + this.info.minor.toString());
         }
-        if (this.Info.Maintenance > -1) {
-            version = version.concat('.' + this.Info.Maintenance.toString());
+        if (this.info.maintenance > -1) {
+            version = version.concat('.' + this.info.maintenance.toString());
         }
 
         return version;
     }
 
     isEqual(version: IVersion): boolean {
-        if (version.Info.Major === this.Info.Major ||
-            version.Info.Minor === this.Info.Minor ||
-            version.Info.Maintenance === this.Info.Maintenance) {
+        if (
+            version.info.major === this.info.major ||
+            version.info.minor === this.info.minor ||
+            version.info.maintenance === this.info.maintenance
+        ) {
             return true;
         } else {
             return false;
@@ -60,13 +67,13 @@ export class Version implements IVersion {
     }
 
     isGreater(version: IVersion): boolean {
-        if (version.Info.Major < this.Info.Major) {
+        if (version.info.major < this.info.major) {
             return true;
-        } else if (version.Info.Major === this.Info.Major) {
-            if (version.Info.Minor < this.Info.Minor) {
+        } else if (version.info.major === this.info.major) {
+            if (version.info.minor < this.info.minor) {
                 return true;
-            } else if (version.Info.Minor === this.Info.Minor) {
-                if (version.Info.Maintenance < this.Info.Maintenance) {
+            } else if (version.info.minor === this.info.minor) {
+                if (version.info.maintenance < this.info.maintenance) {
                     return true;
                 }
             }
@@ -75,13 +82,13 @@ export class Version implements IVersion {
     }
 
     isLesser(version: IVersion): boolean {
-        if (version.Info.Major > this.Info.Major) {
+        if (version.info.major > this.info.major) {
             return true;
-        } else if (version.Info.Major === this.Info.Major) {
-            if (version.Info.Minor > this.Info.Minor) {
+        } else if (version.info.major === this.info.major) {
+            if (version.info.minor > this.info.minor) {
                 return true;
-            } else if (version.Info.Minor === this.Info.Minor) {
-                if (version.Info.Maintenance > this.Info.Maintenance) {
+            } else if (version.info.minor === this.info.minor) {
+                if (version.info.maintenance > this.info.maintenance) {
                     return true;
                 }
             }

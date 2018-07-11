@@ -73,7 +73,7 @@ We use the [Github Flow model](https://guides.github.com/introduction/flow/), so
 
 - ``master``
 
-  - This is the branch that originates the releases. 
+  - This is the branch that originates the releases.
   - You should expect this branch to be frequently updated.
 
 - Other branches
@@ -87,7 +87,7 @@ To get (most possible) stable versions of this extensions, retrieve that from th
 
 ### Release cycle
 
-From time to time, we will release brand new versions of the QISKit Studio. These are well-tested versions of the software.
+From time to time, we will release brand new versions of the Qiskit Studio. These are well-tested versions of the software.
 
 When it is necessary to release a new version, we follow the Semantic Versioning and this process:
 
@@ -95,7 +95,7 @@ When it is necessary to release a new version, we follow the Semantic Versioning
   * Title: Prepare release `vMAJOR.MINOR.PATCH`
   * Changes:
     * Update the project version number.
-      * For example, the version of the package.json 
+      * For example, the version of the package.json
       * Update the CHANGELOG.md file: Move the content from the Unreleased section to a new version section as Keep a Changelog suggest.
 
 2. Merge the pull request
@@ -114,12 +114,12 @@ Master, always master to begin the development.
 
 For the moment, the documentation is compiled in the `README.md`, in this `CONTRIBUTING.md` and the [Wiki](https://github.ibm.com/IBMQuantum/qiskit-studio/wiki).
 
-## Developing code for QISKit Studio
+## Developing code for Qiskit Studio
 
-This section includes some tips that will help you to develop code for this extension. 
+This section includes some tips that will help you to develop code for this extension.
 
 ### Style guide
-To be defined our own style guide, but we like those defined by [AirBnB](https://github.com/airbnb/javascript) and [Google](https://google.github.io/styleguide/jsguide.html) 
+To be defined our own style guide, but we like those defined by [AirBnB](https://github.com/airbnb/javascript) and [Google](https://google.github.io/styleguide/jsguide.html)
 
 
 ### How to run locally the extension
@@ -149,20 +149,20 @@ In Visual Studio Code, a language support extension is a little bit different fr
 │   ├── settings.json
 │   └── tasks.json
 ├── .vscodeignore                       // files ignored when publishing extension
-├── client                      
+├── client
 │   ├── out
 |   |   └── ...                         // compiled code from the client
 │   ├── src                             // source code from the client
 │   |   ├── extension.ts                // client extension entry point
 |   |   └── test                        // test folder
-│   |       ├── extension.test.ts       
-│   |       └── index.ts                
+│   |       ├── extension.test.ts
+│   |       └── index.ts
 │   ├── syntaxes
 |   |   └── ...                         // files related with syntax completion and hightlight
 |   ├── package.json                    // client extension's manifest
 |   ├── *.configuration.json            // files related with closing brackets helper and comments detection
 |   └── tsconfig.json                   // Typescript client extension descriptor file
-├── server                      
+├── server
 │   ├── out
 |   |   └── ...                         // compiled code from the server
 │   ├── src                             // source code from the server
@@ -173,7 +173,7 @@ In Visual Studio Code, a language support extension is a little bit different fr
 └── tslint.json                         // TypeScript linter configuration file
 ```
 
-### Parser design 
+### Parser design
 
 The server side of the extension is divided into various components to being able to evolve it more easily.
 
@@ -210,6 +210,6 @@ To assure the proper work of this extension, it checks your environment to verif
 
 
 ### Work with different _virtualenvs_
-In the Python ecosystem is common to use different _virtualenvs_ to manage the execution environment. In our case, we allow users to change their python virtualenvs using the VSCode utilities as documented in  https://code.visualstudio.com/docs/python/environments 
+In the Python ecosystem is common to use different _virtualenvs_ to manage the execution environment. In our case, we allow users to change their python virtualenvs using the VSCode utilities as documented in  https://code.visualstudio.com/docs/python/environments
 
 If you change your Python _virtualenv_ after beginning your use of VSCode, please check the IBM Q Studio-related dependencies again using the command `qstudio.checkDependencies` to assure the proper running of this extension.

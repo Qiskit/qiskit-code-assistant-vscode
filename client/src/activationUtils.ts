@@ -16,6 +16,7 @@ import { ResultProvider } from './resultProvider';
 import { CommandExecutor } from './commandExecutor';
 import { VizManager } from './visualizations';
 import { QLogger } from './logger';
+import { DeviceStatusVisualization } from './visualizations/deviceStatusVisualization';
 
 export namespace ActivationUtils {
     export function checkFirstRun(): Q.Promise<string> {
@@ -78,10 +79,10 @@ export namespace ActivationUtils {
                 .then(deps => {
                     QLogger.verbose('Checking for Python dependencies...', this);
                     //vscode.window.showInformationMessage("Checking for Python dependencies...");
-                    let depsList: string = '';
+                    let depsList = '';
                     deps.forEach(dep => {
-                        QLogger.verbose(`Package: ${dep.Name} Version: ${dep.InstalledVersion}`, this);
-                        depsList += `👌 ${dep.Name} v ${dep.InstalledVersion}\n`;
+                        QLogger.verbose(`Package: ${dep.name} Version: ${dep.installedVersion}`, this);
+                        depsList += `👌 ${dep.name} v ${dep.installedVersion}\n`;
                     });
                     showExtensionBootInfo(`IBM Q Studio dependencies found! ${depsList}`, verbose);
                     // Check for pyhton packages!
@@ -126,7 +127,7 @@ export namespace ActivationUtils {
 
         context.subscriptions.push(
             vscode.commands.registerCommand('qstudio.checkDependencies', () => ActivationUtils.checkDependencies(true)),
-            vscode.commands.registerCommand('qstudio.runQISKitCode', () =>
+            vscode.commands.registerCommand('qstudio.runQiskitCode', () =>
                 CommandExecutor.execPythonActiveEditor().then(codeResult => {
                     let resultProvider = new ResultProvider();
                     vscode.workspace.registerTextDocumentContentProvider('qiskit-preview-result', resultProvider);
@@ -144,7 +145,7 @@ export namespace ActivationUtils {
                             'vscode.previewHtml',
                             previewUri,
                             vscode.ViewColumn.Two,
-                            'Execution result - QISKit'
+                            'Execution result - Qiskit'
                         )
                         .then(
                             _success => {},
@@ -262,8 +263,8 @@ export namespace ActivationUtils {
                     let resultProvider = new ResultProvider();
                     vscode.workspace.registerTextDocumentContentProvider('qiskit-devicesStatus-result', resultProvider);
                     let previewUri = vscode.Uri.parse(`qiskit-devicesStatus-result://authority/status-preview`);
-                    let execPath = Util.getOSDependentPath(remoteBackendsScript);
-                    resultProvider.displayContent(VizManager.createViz(execPath, remoteDevicesStatus), previewUri);
+
+                    resultProvider.displayContent(DeviceStatusVisualization.render(remoteDevicesStatus), previewUri);
 
                     vscode.commands
                         .executeCommand(

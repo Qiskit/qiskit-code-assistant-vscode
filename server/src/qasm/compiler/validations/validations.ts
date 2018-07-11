@@ -10,12 +10,12 @@
 'use strict';
 
 import { SymbolTable, Symbol } from '../../../tools/symbolTable';
-import { ErrorListener } from '../tools/errorListener';
 import { ErrorMessages } from '../tools/errorMessages';
-import { ErrorBuilder } from '../tools/errorBuilder';
 import { Override } from 'antlr4ts/Decorators';
 import { RegisterSymbol, QASMSymbols } from '../symbolTable';
-import { ContentPosition } from '../types';
+import { ErrorBuilder } from '../../../tools/errorBuilder';
+import { ContentPosition } from '../../../types';
+import { ErrorListener } from '../../../tools/errorListener';
 
 export class SemanticRulesValidator {
     constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {}
@@ -151,6 +151,7 @@ export class ClassicalRegisterComparationRule implements SemanticRule {
         }
 
         let registerSize = (symbol as RegisterSymbol).size;
+        //tslint:disable-next-line
         let maximumValue = Math.pow(2, registerSize) - 1;
         if (this.comparison > maximumValue) {
             let message = ErrorMessages.incompatibleComparationValue(this.variableName, maximumValue);

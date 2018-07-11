@@ -15,13 +15,12 @@ import {
     ProgramContext,
     Expr_stmtContext,
     PowerContext,
-    AtomContext,
     TrailerContext,
     NumberContext,
     StrContext,
     StmtContext,
-    Simple_stmtContext,
-    Testlist_star_exprContext
+    Testlist_star_exprContext,
+    DictorsetmakerContext
 } from '../antlr/Python3Parser';
 import { Python3Lexer } from '../antlr/Python3Lexer';
 import {
@@ -36,7 +35,9 @@ import {
     Integer,
     MethodReference,
     Visitor,
-    Position
+    Position,
+    QiskitBoolean,
+    Dictionary
 } from './types';
 import { ParserRuleContext, Token } from 'antlr4ts';
 import { QLogger } from '../../logger';
@@ -190,16 +191,29 @@ class TrailerFolder extends AbstractParseTreeVisitor<VisitableItem> implements P
 }
 
 class TerminalFolder extends AbstractParseTreeVisitor<VisitableItem> implements Python3Visitor<VisitableItem> {
+    private result: VisitableItem = null;
+
     defaultResult(): VisitableItem {
-        return null;
+        return this.result;
     }
 
     visitTerminal(node: TerminalNode): VisitableItem {
-        if (node.symbol.type === Python3Lexer.NAME) {
-            return new VariableReference(node.text, PositionFrom.token(node.symbol));
+        switch (node.symbol.type) {
+            case Python3Lexer.NAME:
+                return new VariableReference(node.text, PositionFrom.token(node.symbol));
+            case Python3Lexer.TRUE:
+                return new QiskitBoolean(true, PositionFrom.token(node.symbol));
+            case Python3Lexer.FALSE:
+                return new QiskitBoolean(false, PositionFrom.token(node.symbol));
+            default:
+                return this.result;
         }
+    }
 
-        return null;
+    visitDictorsetmaker(ctx: DictorsetmakerContext): VisitableItem {
+        this.result = new Dictionary(PositionFrom.context(ctx));
+
+        return this.result;
     }
 
     visitNumber(ctx: NumberContext): VisitableItem {

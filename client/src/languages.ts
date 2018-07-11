@@ -11,18 +11,17 @@
 
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { LanguageClient, ServerOptions, TransportKind, LanguageClientOptions } from "vscode-languageclient/lib/main";
-import { ExtensionContext } from "vscode";
+import { LanguageClient, ServerOptions, TransportKind, LanguageClientOptions } from 'vscode-languageclient/lib/main';
+import { ExtensionContext } from 'vscode';
 
 export class LanguagesActivation {
-
-    constructor(private context: ExtensionContext) { }
+    constructor(private context: ExtensionContext) {}
 
     qasmLanguageClient(): LanguageClient {
         let serverModule = this.context.asAbsolutePath(path.join('server', 'serverQasm.js'));
 
         let debugOptions = {
-            execArgv: ["--nolazy", "--inspect=6009"]
+            execArgv: ['--nolazy', '--inspect=6009']
         };
 
         let serverOptions = this.buildServerOptions(serverModule, debugOptions);
@@ -36,14 +35,14 @@ export class LanguagesActivation {
         let serverModule = this.context.asAbsolutePath(path.join('server', 'serverQiskit.js'));
 
         let debugOptions = {
-            execArgv: ["--nolazy", "--inspect=6010"]
+            execArgv: ['--nolazy', '--inspect=6010']
         };
 
         let serverOptions = this.buildServerOptions(serverModule, debugOptions);
 
         let clientOptions = this.buildClientOptions('python', 'qiskitLang');
 
-        return new LanguageClient('qiskitLang', 'QISKit support', serverOptions, clientOptions);
+        return new LanguageClient('qiskitLang', 'Qiskit support', serverOptions, clientOptions);
     }
 
     private buildServerOptions(serverModule: string, debugOptions: any): ServerOptions {
@@ -62,15 +61,16 @@ export class LanguagesActivation {
 
     private buildClientOptions(language: string, configurationSection: string): LanguageClientOptions {
         return {
-            documentSelector: [{
-                scheme: 'file',
-                language: language
-            }],
+            documentSelector: [
+                {
+                    scheme: 'file',
+                    language
+                }
+            ],
             synchronize: {
-                configurationSection: configurationSection,
+                configurationSection,
                 fileEvents: vscode.workspace.createFileSystemWatcher('**/.clientrc')
             }
         };
     }
-
 }

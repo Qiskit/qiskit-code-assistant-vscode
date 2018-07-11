@@ -26,6 +26,8 @@ import { Python3Lexer } from './antlr/Python3Lexer';
 import { TreeFolder } from './ast/treeFolder';
 import { SymbolTableGenerator } from './ast/symbolTableGenerator';
 import { SemanticAnalyzer } from './ast/semanticAnalyzer';
+import { ImportsAnalyzer } from './ast/importsAnalyzer';
+import { ErrorListener } from '../tools/errorListener';
 
 export class QiskitParser implements Parser {
     parse(input: string): ParserResult {
@@ -38,6 +40,7 @@ export class QiskitParser implements Parser {
         let statements = folder.visit(tree);
         let symbolTable = SymbolTableGenerator.symbolTableFor(statements);
         let errors = SemanticAnalyzer.analyze(statements, symbolTable);
+        ImportsAnalyzer.analyze(tree, errorListener);
 
         return {
             ast: tree,
@@ -55,31 +58,5 @@ export class QiskitParser implements Parser {
         parser.addErrorListener(errorListener);
 
         return parser;
-    }
-}
-
-export class ErrorListener implements ANTLRErrorListener<CommonToken> {
-    errors: ParserError[] = [];
-
-    @Override
-    syntaxError<T extends Token>(
-        _recognizer: Recognizer<T, any>,
-        offendingSymbol: T | undefined,
-        line: number,
-        charPositionInLine: number,
-        msg: string,
-        _e: RecognitionException | undefined
-    ): void {
-        this.errors.push({
-            line: line - 1,
-            start: charPositionInLine,
-            end: charPositionInLine + offendingSymbol.text.length,
-            message: msg,
-            level: ParseErrorLevel.ERROR
-        });
-    }
-
-    semanticError(error: ParserError): void {
-        this.errors.push(error);
     }
 }

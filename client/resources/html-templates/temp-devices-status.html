@@ -141,6 +141,32 @@ the LICENSE.txt file in the root directory of this source tree.
                             </svg>
                             <div slot="title" ng-click="$ctrl.trackExpandedBackends &amp;&amp; $ctrl.updateExpandedBackends(backend)" class="">
                                 <span class="backend-title">
+                                    <b class="">IBM Q 20 Tokyo</b>&nbsp;&nbsp;
+                                    <small class="">[ibmq_20_tokyo]</small>
+                                </span>
+                                <div class="pull-right">
+                                    <ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger',
+                                                            'label-success': $ctrl.backendStatus[backend.name].tag.color === 'success',
+                                                            'label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}"
+                                        ng-show="$ctrl.backendStatus[backend.name].tag" class="ng-hide">
+
+                                    </ibm-q-tag>
+                                    <!---->
+                                    <!---->
+                                    <ibm-q-tag class="label-info" ng-if="$ctrl.availableInfo &amp;&amp; backend.name === 'QS1_1'">
+                                        AVAILABLE TO HUBS, PARTNERS, AND MEMBERS OF THE IBM Q NETWORK
+                                    </ibm-q-tag>
+                                    <!---->
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div id="header" tabindex="0" class="style-scope ibm-q-accordion-item">
+                            <svg class="arrow style-scope ibm-q-accordion-item" width="8" height="12" viewBox="0 0 8 12" fill-rule="evenodd">
+                                <path d="M0 10.6L4.7 6 0 1.4 1.4 0l6.1 6-6.1 6z" class="style-scope ibm-q-accordion-item"></path>
+                            </svg>
+                            <div slot="title" ng-click="$ctrl.trackExpandedBackends &amp;&amp; $ctrl.updateExpandedBackends(backend)" class="">
+                                <span class="backend-title">
                                     <b class="">IBM Q 20 Austin</b>&nbsp;&nbsp;
                                     <small class="">[QS1_1]</small>
                                 </span>
@@ -160,75 +186,7 @@ the LICENSE.txt file in the root directory of this source tree.
                                 </div>
                             </div>
                         </div>
-                        <hr>
-                        <a href="https://quantumexperience.ng.bluemix.net/qx/devices">
-                            <div id="header" tabindex="0" class="style-scope ibm-q-accordion-item">
-                                <svg class="arrow style-scope ibm-q-accordion-item" width="8" height="12" viewBox="0 0 8 12" fill-rule="evenodd">
-                                    <path d="M0 10.6L4.7 6 0 1.4 1.4 0l6.1 6-6.1 6z" class="style-scope ibm-q-accordion-item"></path>
-                                </svg>
-                                <div slot="title" ng-click="$ctrl.trackExpandedBackends &amp;&amp; $ctrl.updateExpandedBackends(backend)" class="">
-                                    <span class="backend-title">
-                                        <b class="">IBM Q 16 Rueschlikon</b>&nbsp;&nbsp;
-                                        <!--Don't format the following line, it is used in a Regex and it would crash-->
-                                        <small class="">[ibmqx5]</small></span><div class="pull-right"><ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger','label-success': $ctrl.backendStatus[backend.name].tag.color === 'success','label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}"ng-show="$ctrl.backendStatus[backend.name].tag" class="label-success">Active: Calibrating</ibm-q-tag>
-                                        <!---->
-                                        <ibm-q-tag class="label-info">
-                                            AVAILABLE ON QISKIT
-                                        </ibm-q-tag>
-                                        <!---->
-                                        <!---->
-                                    </div>
-                                    <!--Don't format the following line, it is used in a Regex and it would crash-->
-                                    <div class="pull-right"><ibm-q-tag class="label-info">Jobs pending [ibmqx5]: 0</ibm-q-tag></div>
-                                </div>
-                            </div>
-                        </a>
-                        <hr>
-                        <a href="https://quantumexperience.ng.bluemix.net/qx/devices">
-                            <div id="header" tabindex="0" class="style-scope ibm-q-accordion-item">
-                                <svg class="arrow style-scope ibm-q-accordion-item" width="8" height="12" viewBox="0 0 8 12" fill-rule="evenodd">
-                                    <path d="M0 10.6L4.7 6 0 1.4 1.4 0l6.1 6-6.1 6z" class="style-scope ibm-q-accordion-item"></path>
-                                </svg>
-                                <div slot="title" ng-click="$ctrl.trackExpandedBackends &amp;&amp; $ctrl.updateExpandedBackends(backend)" class="">
-                                    <span class="backend-title">
-                                        <b class="">IBM Q 5 Tenerife</b>&nbsp;&nbsp;
-                                        <!--Don't format the following line, it is used in a Regex and it would crash-->
-                                        <small class="">[ibmqx4]</small></span><div class="pull-right"><ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger','label-success': $ctrl.backendStatus[backend.name].tag.color === 'success','label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}"ng-show="$ctrl.backendStatus[backend.name].tag" class="label-success">Active: Calibrating</ibm-q-tag>
-                                        <!---->
-                                        <ibm-q-tag class="label-info">
-                                            AVAILABLE ON QISKIT
-                                        </ibm-q-tag>
-                                        <!---->
-                                        <!---->
-                                    </div>
-                                    <!--Don't format the following line, it is used in a Regex and it would crash-->
-                                    <div class="pull-right"><ibm-q-tag class="label-info">Jobs pending [ibmqx4]: 0</ibm-q-tag></div>
-                                </div>
-                            </div>
-                        </a>
-                        <hr>
-                        <a href="https://quantumexperience.ng.bluemix.net/qx/devices">
-                            <div id="header" tabindex="0" class="style-scope ibm-q-accordion-item">
-                                <svg class="arrow style-scope ibm-q-accordion-item" width="8" height="12" viewBox="0 0 8 12" fill-rule="evenodd">
-                                    <path d="M0 10.6L4.7 6 0 1.4 1.4 0l6.1 6-6.1 6z" class="style-scope ibm-q-accordion-item"></path>
-                                </svg>
-                                <div slot="title" ng-click="$ctrl.trackExpandedBackends &amp;&amp; $ctrl.updateExpandedBackends(backend)" class="">
-                                    <span class="backend-title">
-                                        <b class="">IBM Q 5 Yorktown</b>&nbsp;&nbsp;
-                                        <!--Don't format the following line, it is used in a Regex and it would crash-->
-                                        <small class="">[ibmqx2]</small></span><div class="pull-right"><ibm-q-tag ng-class="{'label-danger': $ctrl.backendStatus[backend.name].tag.color === 'danger','label-success': $ctrl.backendStatus[backend.name].tag.color === 'success','label-info': $ctrl.backendStatus[backend.name].tag.color === 'info'}"ng-show="$ctrl.backendStatus[backend.name].tag" class="label-success">Active: Calibrating</ibm-q-tag>
-                                        <!---->
-                                        <ibm-q-tag class="label-info">
-                                            AVAILABLE ON QISKIT
-                                        </ibm-q-tag>
-                                        <!---->
-                                        <!---->
-                                    </div>
-                                    <!--Don't format the following line, it is used in a Regex and it would crash-->    
-                                    <div class="pull-right"><ibm-q-tag class="label-info">Jobs pending [ibmqx2]: 0</ibm-q-tag></div>
-                                </div>
-                            </div>
-                        </a>
+                        {% for device in devices %}
                         <hr>
                         <a href="https://quantumexperience.ng.bluemix.net/qx/devices">
                             <div id="header" tabindex="0" class="style-scope ibm-q-accordion-item">
@@ -237,12 +195,13 @@ the LICENSE.txt file in the root directory of this source tree.
                                 </svg>
                                 <div slot="title" class="">
                                     <span class="backend-title">
-                                        <b class="">IBM Q QASM Simulator</b>&nbsp;&nbsp;
+                                        <b class="">{{ device.name }}</b>&nbsp;&nbsp;
                                         <!--Don't format the following line, it is used in a Regex and it would crash-->
-                                        <small class="">[ibmq_qasm_simulator]</small></span><div class="pull-right"><ibm-q-tag class="label-success">ACTIVE</ibm-q-tag>
-                                        <ibm-q-tag class="label-info">
+                                        <small class="">[{{ device.status.name }}]</small></span><div class="pull-right"><ibm-q-tag class="{% if device.status.available %}label-success{% else %}label-danger{% endif %}">{% if device.status.available %}Active{% else %}Maintenance{% endif %}</ibm-q-tag>
+                                        {% set regExp = r/.*simulator.*/g %}
+                                        {% if regExp.test(device.status.name) %}<ibm-q-tag class="label-info">
                                             SIMULATOR
-                                        </ibm-q-tag>
+                                        </ibm-q-tag>{% endif %}
                                         <!---->
                                         <ibm-q-tag class="label-info">
                                             AVAILABLE ON QISKIT
@@ -251,10 +210,11 @@ the LICENSE.txt file in the root directory of this source tree.
                                         <!---->
                                     </div>
                                     <!--Don't format the following line, it is used in a Regex and it would crash-->
-                                    <div class="pull-right"><ibm-q-tag class="label-info">Jobs pending [ibmq_qasm_simulator]: 0</ibm-q-tag></div>
+                                    <div class="pull-right"><ibm-q-tag class="label-info">Pending jobs: {{ device.status.pending_jobs }}</ibm-q-tag></div>
                                 </div>
                             </div>
                         </a>
+                        {% endfor %}
                 </div>
             </div>
         </div>
