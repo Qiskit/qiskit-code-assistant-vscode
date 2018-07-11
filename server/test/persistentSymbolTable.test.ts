@@ -49,7 +49,7 @@ describe('A persistent symbol table', () => {
             let stringB = new VariableSymbol('b', symbolTable.lookup(QiskitSymbols.string));
             symbolTable.define(stringB, thirdLine);
 
-            let result = symbolTable.lookup('b', secondLine);
+            let result = symbolTable.lookup('b', thirdLine);
 
             expect(result.type).to.be.eq(symbolTable.lookup(QiskitSymbols.number));
         });
@@ -72,8 +72,6 @@ describe('A persistent symbol table', () => {
         });
 
         it('is able to recover the definition of c event with the scope closed', () => {
-            symbolTable.print();
-
             let result = symbolTable.lookup('c', sixthLine);
 
             expect(result.type).to.be.eq(stringC.type);

@@ -73,7 +73,7 @@ export class ClassSymbol extends Symbol {
     }
 
     toString() {
-        return `{ name: ${this.name}, type: ${this.type.getName()}, methods: [${this.methods}] }`;
+        return `{ name: ${this.name}, type: ${this.type.getName()} }`;
     }
 }
 
