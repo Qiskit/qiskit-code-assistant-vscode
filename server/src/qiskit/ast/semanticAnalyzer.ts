@@ -83,7 +83,7 @@ class TermSemanticValidator implements Visitor<ExpressionAnalysis> {
     }
 
     visitVariableReference(variable: VariableReference): ExpressionAnalysis {
-        this.currentAnalysis.lastSymbol = this.symbolTable.lookup(variable.value);
+        this.currentAnalysis.lastSymbol = this.symbolTable.lookup(variable.value, variable.line);
 
         return this.currentAnalysis;
     }
@@ -172,7 +172,7 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
     }
 
     visitVariableReference(variable: VariableReference): ParserError[] {
-        let variableSymbol = this.symbolTable.lookup(variable.value);
+        let variableSymbol = this.symbolTable.lookup(variable.value, variable.line);
         if (variableSymbol === null) {
             return [];
         }
@@ -185,7 +185,7 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
     }
 
     visitArrayReference(arrayReference: ArrayReference): ParserError[] {
-        let variableSymbol = this.symbolTable.lookup(arrayReference.variable);
+        let variableSymbol = this.symbolTable.lookup(arrayReference.variable, arrayReference.line);
         if (variableSymbol === null) {
             return [];
         }
@@ -206,7 +206,7 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
 
             // checks on primitive types should be avoided because this kind of variables are not properly
             // registered at the symbol table
-            let symbol = this.symbolTable.lookup(expectedType);
+            let symbol = this.symbolTable.lookup(expectedType, item.line);
             if (symbol === null || symbol instanceof BuiltInTypeSymbol) {
                 return [];
             }
