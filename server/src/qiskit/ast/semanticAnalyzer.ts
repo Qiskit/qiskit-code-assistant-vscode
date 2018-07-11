@@ -17,7 +17,8 @@ import {
     VisitableItem,
     MethodReference,
     VariableReference,
-    ArrayReference
+    ArrayReference,
+    Block
 } from './types';
 import { Type, BuiltInTypeSymbol } from '../../tools/symbolTable';
 import { ParserError } from '../../types';
@@ -26,11 +27,11 @@ import { ErrorBuilder } from './tools/errorBuilder';
 import { SymbolTable } from '../compiler/types';
 
 export namespace SemanticAnalyzer {
-    export function analyze(statements: Statement[], symbolTable: SymbolTable): ParserError[] {
+    export function analyze(codeBlock: Block, symbolTable: SymbolTable): ParserError[] {
         let statementValidator = new StatementSemanticValidator(symbolTable);
         let validatingStatement = (a: ParserError[], b: Statement) => a.concat(b.accept(statementValidator));
 
-        return statements.reduce(validatingStatement, []);
+        return codeBlock.childs.reduce(validatingStatement, []);
     }
 }
 

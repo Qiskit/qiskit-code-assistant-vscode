@@ -20,7 +20,9 @@ import {
     StrContext,
     StmtContext,
     Testlist_star_exprContext,
-    DictorsetmakerContext
+    DictorsetmakerContext,
+    Simple_stmtContext,
+    Compound_stmtContext
 } from '../antlr/Python3Parser';
 import { Python3Lexer } from '../antlr/Python3Lexer';
 import {
@@ -37,31 +39,43 @@ import {
     Visitor,
     Position,
     QiskitBoolean,
-    Dictionary
+    Dictionary,
+    Block,
+    CodeBlock
 } from './types';
 import { ParserRuleContext, Token } from 'antlr4ts';
 import { QLogger } from '../../logger';
 
-export class TreeFolder extends AbstractParseTreeVisitor<Statement[]> implements Python3Visitor<Statement[]> {
-    defaultResult(): Statement[] {
-        return [];
+export class TreeFolder extends AbstractParseTreeVisitor<Block> implements Python3Visitor<Block> {
+    defaultResult(): Block {
+        return new CodeBlock();
     }
 
-    visitProgram(ctx: ProgramContext): Statement[] {
-        let toStatement = (statement: StmtContext) => {
-            let statementFolder = new StatementFolder();
-            return statement.accept(statementFolder);
-        };
-        let undefinedStatements = (statement: Statement) => statement !== undefined;
+    visitProgram(ctx: ProgramContext): Block {
+        let toStatement = (statement: StmtContext) => statement.accept(new StatementFolder());
+        let notUndefinedStatements = (block: Block) => block !== undefined;
 
-        return ctx
+        let innerBlocks = ctx
             .stmt()
             .map(toStatement)
-            .filter(undefinedStatements);
+            .filter(notUndefinedStatements);
+
+        return new CodeBlock(innerBlocks);
     }
 }
 
-export class StatementFolder extends AbstractParseTreeVisitor<Statement> implements Python3Visitor<Statement> {
+export class StatementFolder extends AbstractParseTreeVisitor<Block> implements Python3Visitor<Block> {
+    defaultResult(): Block {
+        return undefined;
+    }
+
+    visitSimple_stmt(ctx: Simple_stmtContext): Block {
+        return ctx.accept(new ExpressionStatementFolder());
+    }
+}
+
+export class ExpressionStatementFolder extends AbstractParseTreeVisitor<Statement>
+    implements Python3Visitor<Statement> {
     foldedStatement: Statement;
 
     defaultResult(): Statement {

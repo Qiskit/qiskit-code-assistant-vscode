@@ -19,7 +19,8 @@ import {
     MethodReference,
     Float,
     Integer,
-    Text
+    Text,
+    Block
 } from './types';
 import { Type } from '../../tools/symbolTable';
 import {
@@ -33,12 +34,12 @@ import { SymbolTable } from '../compiler/types';
 import { QiskitSymbolTableBuilder } from '../compiler/qiskitSymbolTableBuilder';
 
 export namespace SymbolTableGenerator {
-    export function symbolTableFor(statements: Statement[]): SymbolTable {
+    export function symbolTableFor(codeBlock: Block): SymbolTable {
         let symbolTable = QiskitSymbolTableBuilder.create();
 
-        statements.forEach(statement => {
+        codeBlock.childs.forEach(block => {
             let updater = new StatementSymbolTableUpdater(symbolTable);
-            statement.accept(updater);
+            block.accept(updater);
         });
 
         return symbolTable;

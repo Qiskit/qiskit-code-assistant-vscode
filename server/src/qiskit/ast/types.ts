@@ -10,6 +10,7 @@
 'use strict';
 
 export interface Visitor<T> {
+    visitCodeBlock?(item: CodeBlock): T;
     visitStatement?(item: Statement): T;
     visitAssignment?(item: Assignment): T;
     visitExpression?(item: Expression): T;
@@ -33,7 +34,28 @@ export abstract class VisitableItem {
     abstract accept<T>(visitor: Visitor<T>): T;
 }
 
-export class Statement extends VisitableItem {
+export abstract class Block extends VisitableItem {
+    childs: Block[] = [];
+
+    constructor(childs?: Block[]) {
+        super();
+
+        if (childs) {
+            this.childs = childs;
+        }
+    }
+}
+
+export class CodeBlock extends Block {
+    accept<T>(visitor: Visitor<T>): T {
+        if (visitor.visitCodeBlock) {
+            return visitor.visitCodeBlock(this);
+        }
+        return visitor.defaultValue();
+    }
+}
+
+export class Statement extends Block {
     expression: VisitableItem;
 
     constructor(expression: VisitableItem) {

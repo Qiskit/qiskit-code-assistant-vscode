@@ -28,6 +28,7 @@ import { SymbolTableGenerator } from './ast/symbolTableGenerator';
 import { SemanticAnalyzer } from './ast/semanticAnalyzer';
 import { ImportsAnalyzer } from './ast/importsAnalyzer';
 import { ErrorListener } from '../tools/errorListener';
+import { TreePrinter } from '../tools/treePrinter';
 
 export class QiskitParser implements Parser {
     parse(input: string): ParserResult {
@@ -36,13 +37,15 @@ export class QiskitParser implements Parser {
 
         let tree = parser.program();
 
+        TreePrinter.print(parser.ruleNames, tree);
+
         let folder = new TreeFolder();
-        let statements = folder.visit(tree);
-        let symbolTable = SymbolTableGenerator.symbolTableFor(statements);
+        let codeBlock = folder.visit(tree);
+        let symbolTable = SymbolTableGenerator.symbolTableFor(codeBlock);
 
         symbolTable.print();
 
-        let errors = SemanticAnalyzer.analyze(statements, symbolTable);
+        let errors = SemanticAnalyzer.analyze(codeBlock, symbolTable);
         ImportsAnalyzer.analyze(tree, errorListener);
 
         return {
