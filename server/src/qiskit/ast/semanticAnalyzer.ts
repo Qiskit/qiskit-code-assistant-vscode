@@ -175,7 +175,14 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
     }
 
     visitExpression(expression: Expression): ParserError[] {
-        return expression.terms.reduce((a: ParserError[], b: VisitableItem) => a.concat(b.accept(this)), []);
+        let contenatingErrors = (a: ParserError[], b: VisitableItem) => {
+            if (b === null) {
+                return a;
+            }
+
+            return a.concat(b.accept(this));
+        };
+        return expression.terms.reduce(contenatingErrors, []);
     }
 
     visitVariableReference(variable: VariableReference): ParserError[] {

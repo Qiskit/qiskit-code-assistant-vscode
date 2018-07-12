@@ -124,9 +124,11 @@ export class Expression extends VisitableItem {
         super();
 
         this.terms = terms;
-        if (terms.length > 0) {
-            this.start = terms[0].start;
-            this.end = terms[terms.length - 1].end;
+
+        let term = terms.filter(term => term !== null).find(term => term.start !== null && term.end !== null);
+        if (term) {
+            this.start = term.start;
+            this.end = term.end;
         }
     }
 

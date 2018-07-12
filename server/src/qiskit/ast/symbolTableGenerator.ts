@@ -94,7 +94,7 @@ class AssignmentSymbolTableUpdater implements Visitor<MethodInvocationData> {
                 return a;
             }
 
-            if (a.type === null) {
+            if (a === null || a.type === null) {
                 return b.accept(this);
             }
             if (a.type instanceof ClassSymbol) {
