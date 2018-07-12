@@ -43,7 +43,7 @@ export class PackageManager {
                 const updateAccepted = await this.offerUpdate(packageInfo, packageInfo.version, needsMandatoryUpdate);
                 if (updateAccepted) {
                     const updated = await this.update(packageInfo.name);
-                    if (updated === true) {
+                    if (updated) {
                         QLogger.error(`Package ${packageInfo} updated`, this);
                         oldVersionCallback(packageInfo);
                     } else {
@@ -57,7 +57,7 @@ export class PackageManager {
                 QLogger.verbose(`Starting non-mandatory update process for ${packageInfo.name} ...`, this);
                 const pypiPackageInfo = await this.pypiExecutor.getPackageInfo(packageInfo.name);
                 const availableUpdate = await pypiPackageInfo.version.isGreater(systemPackageInfo.version);
-                if (availableUpdate === true) {
+                if (availableUpdate) {
                     QLogger.verbose(`Starting update process for ${packageInfo.name} ...`, this);
 
                     if ((await this.offerUpdate(packageInfo, pypiPackageInfo.version, needsMandatoryUpdate)) === true) {
@@ -80,9 +80,9 @@ export class PackageManager {
             const installAccepted = await this.offerInstall(packageInfo);
             if (installAccepted) {
                 const installed = await this.install(packageInfo.name);
-                if (installed === true) {
+                if (installed) {
                     QLogger.error(`Package ${packageInfo} installed`, this);
-                    oldVersionCallback(packageInfo);
+                    notInstalledCallback(packageInfo);
                 } else {
                     QLogger.error(`Package ${packageInfo} do not installed`, this);
                     notInstalledCallback(packageInfo);
