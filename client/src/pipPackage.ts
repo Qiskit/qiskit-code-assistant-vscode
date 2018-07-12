@@ -12,7 +12,7 @@ import * as Q from 'q';
 import { Version } from './version';
 import { IPackageInfo, IPackage } from './interfaces';
 import { PipWrapper } from './pipWrapper';
-import { PyPiWrapper } from './pypiWrapper';
+//import { PyPiWrapper } from './pypiWrapper';
 import { ActivationUtils } from './activationUtils';
 import { QLogger } from './logger';
 import { ChildProcessCommandExecutor } from './pip/pipCommandExecutor';
@@ -29,7 +29,7 @@ export class PipPackage implements IPackage {
     };
 
     private pip: PipWrapper;
-    private pypi: PyPiWrapper = new PyPiWrapper();
+    //private pypi: PyPiWrapper = new PyPiWrapper();
 
     constructor(name: string, version: string) {
         this.info.name = name;
@@ -41,6 +41,7 @@ export class PipPackage implements IPackage {
     }
 
     public checkVersion(pkgVersion: string, verbose: boolean | false): Q.Promise<void> {
+        /*
         QLogger.verbose(`pkgVersion: ${pkgVersion}`, this);
         let packageName = this.info.name;
         return this.pip
@@ -166,6 +167,8 @@ export class PipPackage implements IPackage {
                     return Q.reject(err);
                 }
             });
+            */
+        return true;
     }
 
     public update(packageName: string): Q.Promise<string> {
