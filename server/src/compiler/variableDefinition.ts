@@ -9,7 +9,7 @@
 
 'use strict';
 
-import { Symbol } from '../../tools/symbolTable';
+import { Symbol } from './symbols';
 
 export class VariableDefinition {
     constructor(public symbol: Symbol, public startLine: number, public endLine: number) {}

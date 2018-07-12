@@ -9,20 +9,22 @@
 
 'use strict';
 
-import { SymbolTable, GlobalScope, Symbol, BuiltInTypeSymbol, Type } from '../../tools/symbolTable';
+import { SymbolTable } from '../../compiler/types';
+import { Scope } from '../../compiler/scope';
+import { BuiltInTypeSymbol, Symbol, Type } from '../../compiler/symbols';
+import { MultiScopeSymbolTable } from '../../compiler/multiScopeSymbolTable';
 
 export namespace SymbolTableBuilder {
     export function build(): SymbolTable {
-        let globalScope = new GlobalScope();
-        let symbolTable = new SymbolTable(globalScope);
-        symbolTable.define(new BuiltInTypeSymbol(QASMSymbols.Creg));
-        symbolTable.define(new BuiltInTypeSymbol(QASMSymbols.Qreg));
-        symbolTable.define(new BuiltInTypeSymbol(QASMSymbols.Int));
-        symbolTable.define(new BuiltInTypeSymbol(QASMSymbols.Real));
-        symbolTable.define(new BuiltInTypeSymbol(QASMSymbols.Gate));
-        symbolTable.define(new BuiltInTypeSymbol(QASMSymbols.Opaque));
+        let rootScope = new Scope(null, 'global');
+        rootScope.define(new BuiltInTypeSymbol(QASMSymbols.Creg), 0);
+        rootScope.define(new BuiltInTypeSymbol(QASMSymbols.Qreg), 0);
+        rootScope.define(new BuiltInTypeSymbol(QASMSymbols.Int), 0);
+        rootScope.define(new BuiltInTypeSymbol(QASMSymbols.Real), 0);
+        rootScope.define(new BuiltInTypeSymbol(QASMSymbols.Gate), 0);
+        rootScope.define(new BuiltInTypeSymbol(QASMSymbols.Opaque), 0);
 
-        return symbolTable;
+        return new MultiScopeSymbolTable(rootScope);
     }
 }
 

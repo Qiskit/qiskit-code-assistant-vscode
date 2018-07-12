@@ -22,16 +22,10 @@ import {
     Text,
     Block
 } from './types';
-import { Type } from '../../tools/symbolTable';
-import {
-    VariableSymbol,
-    ClassSymbol,
-    VariableMetadata,
-    MethodSymbol,
-    QiskitSymbols
-} from '../compiler/qiskitSymbolTable';
-import { SymbolTable } from '../compiler/types';
+import { VariableSymbol, ClassSymbol, VariableMetadata, MethodSymbol, QiskitSymbols } from '../compiler/symbols';
 import { QiskitSymbolTableBuilder } from '../compiler/qiskitSymbolTableBuilder';
+import { SymbolTable } from '../../compiler/types';
+import { Type } from '../../compiler/symbols';
 
 export namespace SymbolTableGenerator {
     export function symbolTableFor(codeBlock: Block): SymbolTable {

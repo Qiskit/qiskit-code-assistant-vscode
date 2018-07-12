@@ -9,8 +9,8 @@
 
 'use strict';
 
-import { SymbolTable } from '../../tools/symbolTable';
 import { ParserError } from '../../types';
+import { SymbolTable } from '../../compiler/types';
 
 export interface SymbolTableResult {
     symbolTable: SymbolTable;

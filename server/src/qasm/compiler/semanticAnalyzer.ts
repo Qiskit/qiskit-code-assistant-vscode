@@ -10,7 +10,6 @@
 'use strict';
 
 import { ParserRuleContext } from 'antlr4ts';
-import { SymbolTable } from '../../tools/symbolTable';
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree';
 import { QasmParserVisitor } from '../antlr/QasmParserVisitor';
 import {
@@ -35,6 +34,7 @@ import {
 } from './validations/validations';
 import { PositionAdapter } from '../../tools/positionAdapter';
 import { ErrorListener } from '../../tools/errorListener';
+import { SymbolTable } from '../../compiler/types';
 
 export namespace SemanticAnalyzer {
     export function analyze(tree: ParserRuleContext, symbolTable: SymbolTable, errorListener: ErrorListener) {

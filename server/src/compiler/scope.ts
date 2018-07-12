@@ -9,8 +9,8 @@
 
 'use strict';
 
-import { VariableDefinition } from '../../compiler/variableDefinition';
-import { Symbol, BuiltInTypeSymbol } from '../../compiler/symbols';
+import { VariableDefinition } from './variableDefinition';
+import { Symbol, BuiltInTypeSymbol } from './symbols';
 
 const MAX_LINE = 65536;
 

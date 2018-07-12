@@ -10,9 +10,9 @@
 'use strict';
 
 import { expect } from 'chai';
-import { VariableSymbol, QiskitSymbols } from '../src/qiskit/compiler/qiskitSymbolTable';
 import { QiskitSymbolTableBuilder } from '../src/qiskit/compiler/qiskitSymbolTableBuilder';
-import { SymbolTable } from '../src/qiskit/compiler/types';
+import { SymbolTable } from '../src/compiler/types';
+import { VariableSymbol, QiskitSymbols } from '../src/qiskit/compiler/symbols';
 
 let secondLine = 2;
 let thirdLine = 3;

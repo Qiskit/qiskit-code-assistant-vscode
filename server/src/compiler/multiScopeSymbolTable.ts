@@ -9,12 +9,12 @@
 
 'use strict';
 
-import { Symbol } from '../../tools/symbolTable';
+import { Symbol } from './symbols';
 import { SymbolTable } from './types';
 import { Scope } from './scope';
 
-export class PersistentSymbolTable implements SymbolTable {
-    private currentScope: Scope;
+export class MultiScopeSymbolTable implements SymbolTable {
+    public currentScope: Scope;
 
     constructor(private rootScope: Scope) {
         this.currentScope = rootScope;
@@ -42,6 +42,10 @@ export class PersistentSymbolTable implements SymbolTable {
 
     currentSymbols(): Symbol[] {
         return this.currentScope.definedSymbols();
+    }
+
+    mergeWith(scope: Scope): void {
+        scope.definedSymbols().forEach(symbol => this.define(symbol, 0));
     }
 
     print() {

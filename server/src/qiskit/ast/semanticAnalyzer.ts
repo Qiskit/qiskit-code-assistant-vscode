@@ -20,11 +20,11 @@ import {
     ArrayReference,
     Block
 } from './types';
-import { Type, BuiltInTypeSymbol } from '../../tools/symbolTable';
 import { ParserError } from '../../types';
-import { VariableSymbol, ClassSymbol, MethodSymbol, ArgumentSymbol } from '../compiler/qiskitSymbolTable';
+import { VariableSymbol, ClassSymbol, MethodSymbol, ArgumentSymbol } from '../compiler/symbols';
 import { ErrorBuilder } from './tools/errorBuilder';
-import { SymbolTable } from '../compiler/types';
+import { SymbolTable } from '../../compiler/types';
+import { Type, BuiltInTypeSymbol } from '../../compiler/symbols';
 
 export namespace SemanticAnalyzer {
     export function analyze(codeBlock: Block, symbolTable: SymbolTable): ParserError[] {

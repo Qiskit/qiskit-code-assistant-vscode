@@ -9,18 +9,8 @@
 
 'use strict';
 
-import {
-    ANTLRInputStream,
-    CommonTokenStream,
-    ANTLRErrorListener,
-    CommonToken,
-    Token,
-    Recognizer,
-    RecognitionException,
-    ConsoleErrorListener
-} from 'antlr4ts';
-import { Override } from 'antlr4ts/Decorators';
-import { Parser, ParserResult, ParserError, ParseErrorLevel } from '../types';
+import { ANTLRInputStream, CommonTokenStream, ConsoleErrorListener } from 'antlr4ts';
+import { Parser, ParserResult } from '../types';
 import { Python3Parser } from './antlr/Python3Parser';
 import { Python3Lexer } from './antlr/Python3Lexer';
 import { TreeFolder } from './ast/treeFolder';
@@ -28,7 +18,6 @@ import { SymbolTableGenerator } from './ast/symbolTableGenerator';
 import { SemanticAnalyzer } from './ast/semanticAnalyzer';
 import { ImportsAnalyzer } from './ast/importsAnalyzer';
 import { ErrorListener } from '../tools/errorListener';
-import { TreePrinter } from '../tools/treePrinter';
 
 export class QiskitParser implements Parser {
     parse(input: string): ParserResult {

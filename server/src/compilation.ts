@@ -16,7 +16,7 @@ import {
     IConnection,
     TextDocument,
     TextDocumentPositionParams
-} from 'vscode-languageserver';
+} from 'vscode-languageserver/lib/main';
 import { Parser, Suggester, ParserError, ParseErrorLevel, SuggestionSymbol } from './types';
 import { SuggestionSymbolAdapter } from './tools/suggestionSymbolAdapter';
 

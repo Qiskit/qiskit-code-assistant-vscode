@@ -9,12 +9,12 @@
 
 'use strict';
 
-import { Scope } from './scope';
-import { QiskitSymbols, ArgumentSymbol, MethodSymbol, ClassSymbol } from './qiskitSymbolTable';
-import { BuiltInTypeSymbol } from '../../tools/symbolTable';
+import { Scope } from '../../compiler/scope';
+import { QiskitSymbols, ArgumentSymbol, MethodSymbol, ClassSymbol } from './symbols';
 import { QiskitSDK, QiskitMethod, QiskitArgument } from '../libs/qiskitSDK';
-import { SymbolTable } from './types';
-import { PersistentSymbolTable } from './persistentSymbolTable';
+import { SymbolTable } from '../../compiler/types';
+import { BuiltInTypeSymbol } from '../../compiler/symbols';
+import { MultiScopeSymbolTable } from '../../compiler/multiscopeSymbolTable';
 
 export namespace QiskitSymbolTableBuilder {
     export function create(): SymbolTable {
@@ -31,7 +31,7 @@ export namespace QiskitSymbolTableBuilder {
 
         loadQiskitSymbolsAt(scope);
 
-        return new PersistentSymbolTable(scope);
+        return new MultiScopeSymbolTable(scope);
     }
 
     function loadQiskitSymbolsAt(scope: Scope): void {

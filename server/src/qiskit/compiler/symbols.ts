@@ -9,7 +9,7 @@
 
 'use strict';
 
-import { Symbol, Type } from '../../tools/symbolTable';
+import { Symbol, Type } from '../../compiler/symbols';
 
 export class ClassSymbol extends Symbol {
     constructor(name: string, type: Type, public requiredArguments: ArgumentSymbol[], public methods: MethodSymbol[]) {
@@ -83,32 +83,6 @@ export class VariableSymbol extends Symbol {
 export interface VariableMetadata {
     name?: string;
     size?: number;
-}
-
-interface QiskitSDK {
-    classes: QiskitClass[];
-}
-
-interface QiskitClass {
-    name: string;
-    detail: string;
-    documentation: string;
-    arguments?: QiskitArgument[];
-    methods: QiskitMethod[];
-}
-
-interface QiskitMethod {
-    name: string;
-    type: string;
-    detail: string;
-    documentation: string;
-    arguments?: QiskitArgument[];
-}
-
-interface QiskitArgument {
-    name: string;
-    type: string;
-    optional?: boolean;
 }
 
 export enum QiskitSymbols {

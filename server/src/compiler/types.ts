@@ -9,9 +9,13 @@
 
 'use strict';
 
-import { Symbol } from '../../tools/symbolTable';
+import { Symbol } from './symbols';
+import { Scope } from './scope';
 
 export interface SymbolTable {
+    /** Pointer to the current scope at the symbol table. */
+    currentScope: Scope;
+
     /** Searches the given symbol name at the root scope, if a line number is specified searches for a scope
      *  containing that symbol.
      */
@@ -26,8 +30,11 @@ export interface SymbolTable {
     /** Returns to the parent scope closing the current one. */
     pop(line: number): void;
 
-    /** Returns a list of the defined symbols for the current scope. */
+    /** Returns a list of the USER DEFINED symbols for the current scope and its parents. */
     currentSymbols(): Symbol[];
+
+    /** Merge into the global scope the symbols at the given scope. */
+    mergeWith(scope: Scope): void;
 
     print(): void;
 }

@@ -9,13 +9,14 @@
 
 'use strict';
 
-import { SymbolTable, Symbol } from '../../../tools/symbolTable';
 import { ErrorMessages } from '../tools/errorMessages';
 import { Override } from 'antlr4ts/Decorators';
 import { RegisterSymbol, QASMSymbols } from '../symbolTable';
 import { ErrorBuilder } from '../../../tools/errorBuilder';
 import { ContentPosition } from '../../../types';
 import { ErrorListener } from '../../../tools/errorListener';
+import { SymbolTable } from '../../../compiler/types';
+import { Symbol } from '../../../compiler/symbols';
 
 export class SemanticRulesValidator {
     constructor(private symbolTable: SymbolTable, private errorListener: ErrorListener) {}

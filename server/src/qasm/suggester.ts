@@ -15,9 +15,10 @@ import { Suggester, SuggestionSymbol } from '../types';
 import { QLogger } from '../logger';
 import { SuggestionSymbolAdapter } from '../tools/suggestionSymbolAdapter';
 import { SymbolTableGenerator } from './compiler/symbolTableGenerator';
-import { SymbolTable } from '../tools/symbolTable';
 import { QasmParser } from './antlr/QasmParser';
 import { QasmLexer } from './antlr/QasmLexer';
+import { SymbolTable } from '../compiler/types';
+import { Symbol } from '../compiler/symbols';
 
 export class QASMSuggester implements Suggester {
     dictionary: SymbolsDictionary = new SymbolsDictionary();
@@ -36,11 +37,6 @@ export class QASMSuggester implements Suggester {
     }
 
     availableSymbols(): SuggestionSymbol[] {
-        // let inputStream = new ANTLRInputStream('');
-        // let lexer = new QasmLexer(inputStream);
-        // let tokenStream = new CommonTokenStream(lexer);
-        // let parser = new QasmParser(tokenStream);
-
         return this.dictionary.allSymbols();
     }
 
@@ -61,8 +57,6 @@ export class QASMSuggester implements Suggester {
             QasmLexer.Semi
         ]);
 
-        // core.preferredRules = new Set([QasmParser.RULE_statement]);
-
         let candidates = core.collectCandidates(caretPosition);
 
         let keywords: string[] = [];
@@ -80,12 +74,22 @@ export class QASMSuggester implements Suggester {
 
         let result: SuggestionSymbol[] = [];
         result.push(...this.dictionary.symbolsWithTypeIn(suggestions));
-        result.push(...symbolTable.definedSymbols().map(SuggestionSymbolAdapter.toSymbolVariable()));
+        result.push(...symbolTable.currentSymbols().map(this.symbolToSuggestion));
 
         QLogger.verbose(`Available suggestions > ${result}`, this);
 
         return result;
     }
+
+    private symbolToSuggestion = (symbol: Symbol) => {
+        return {
+            label: symbol.name,
+            detail: 'Declared variable',
+            documentation: 'This is a previously declared variable',
+            type: 'Variable',
+            parent: symbol.name
+        };
+    };
 }
 
 class SymbolsDictionary {
