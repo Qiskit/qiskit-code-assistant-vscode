@@ -77,7 +77,19 @@ export class PackageManager {
         } catch (err) {
             QLogger.verbose(`Starting installation process for ${packageInfo.name} ...`, this);
 
-            notInstalledCallback(packageInfo);
+            const installAccepted = await this.offerInstall(packageInfo);
+            if (installAccepted) {
+                const installed = await this.install(packageInfo.name);
+                if (installed === true) {
+                    QLogger.error(`Package ${packageInfo} installed`, this);
+                    oldVersionCallback(packageInfo);
+                } else {
+                    QLogger.error(`Package ${packageInfo} do not installed`, this);
+                    notInstalledCallback(packageInfo);
+                }
+            } else {
+                notInstalledCallback(packageInfo);
+            }
         }
     }
 
@@ -109,6 +121,35 @@ export class PackageManager {
         vscode.window.showInformationMessage(`Updating ${packageName}... (this may take some time, be patient 🙏)`);
 
         const updated = await this.pipExecutor.update(packageName);
+        if (updated) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private async offerInstall(packageInfo: PackageInfo): Promise<boolean> {
+        let installMsg = `You must install ${
+            packageInfo.name
+        } to use properly this extension. Do you want to install it now?`;
+
+        const selection = await vscode.window.showInformationMessage(installMsg, 'Ok', 'Dismiss');
+        if (selection === 'Ok') {
+            QLogger.verbose(`Clicked on OK!`, this);
+            return true;
+        } else if (selection === 'Dismiss') {
+            QLogger.verbose(`Clicked on Dismiss!`, this);
+            return false;
+        } else {
+            QLogger.verbose(`Clicked on other element!`, this);
+            return false;
+        }
+    }
+
+    private async install(packageName: string): Promise<boolean> {
+        vscode.window.showInformationMessage(`Installing ${packageName}... (this may take some time, be patient 🙏)`);
+
+        const updated = await this.pipExecutor.install(packageName);
         if (updated) {
             return true;
         } else {

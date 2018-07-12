@@ -43,6 +43,17 @@ export class PipExecutor {
         }
     }
 
+    async install(pkg: string): Promise<boolean> {
+        try {
+            const updateResult = await this.commandExecutor.exec('install', [pkg], (stdout: string) => stdout);
+            QLogger.verbose(`Package ${pkg} installed: ${updateResult}`, this);
+            return true;
+        } catch (err) {
+            QLogger.verbose(`Package ${pkg} not installed: ${err}`, this);
+            return false;
+        }
+    }
+
     private async show(pkg: string): Promise<string> {
         return this.commandExecutor.exec('show', [pkg], (stdout: string) => stdout);
     }
