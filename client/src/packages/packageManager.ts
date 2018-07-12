@@ -63,7 +63,6 @@ export class PackageManager {
                 const availableUpdate = pypiPackageInfo.version.isGreater(systemPackageInfo.version);
                 if (availableUpdate) {
                     QLogger.verbose(`Starting update process for ${packageInfo.name} ...`, this);
-                    console.log(`Starting update process for: ${packageInfo.name}`);
 
                     const updateAccepted = await this.offerUpdate(
                         packageInfo,
@@ -116,5 +115,11 @@ export class PackageManager {
                 console.log('Clicked on other element!');
             }
         });
+    }
+
+    private async update(packageName: string) {
+        vscode.window.showInformationMessage(`Updating ${packageName}... (this may take some time, be patient 🙏)`);
+
+        //TODO -> include update code
     }
 }
