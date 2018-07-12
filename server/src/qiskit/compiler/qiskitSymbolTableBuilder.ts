@@ -14,7 +14,7 @@ import { QiskitSymbols, ArgumentSymbol, MethodSymbol, ClassSymbol } from './symb
 import { QiskitSDK, QiskitMethod, QiskitArgument } from '../libs/qiskitSDK';
 import { SymbolTable } from '../../compiler/types';
 import { BuiltInTypeSymbol } from '../../compiler/symbols';
-import { MultiScopeSymbolTable } from '../../compiler/multiscopeSymbolTable';
+import { MultiScopeSymbolTable } from '../../compiler/multiScopeSymbolTable';
 
 export namespace QiskitSymbolTableBuilder {
     export function create(): SymbolTable {
