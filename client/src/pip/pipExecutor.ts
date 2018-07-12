@@ -11,6 +11,7 @@ import { CommandExecutor } from './pipCommandExecutor';
 import { PackageInfo } from '../interfaces';
 import { PackageInfoParser } from './packageInfoParser';
 import { Version } from '../version';
+import { QLogger } from '../logger';
 
 export class PipExecutor {
     constructor(private commandExecutor: CommandExecutor) {}
@@ -25,6 +26,21 @@ export class PipExecutor {
             location: PackageInfoParser.parseLocation(stdout),
             dependencies: PackageInfoParser.parseDependencies(stdout)
         };
+    }
+
+    async update(pkg: string): Promise<boolean> {
+        try {
+            const updateResult = await this.commandExecutor.exec(
+                'install',
+                ['-U', '--no-cache-dir', pkg],
+                (stdout: string) => stdout
+            );
+            QLogger.verbose(`Package ${pkg} updated: ${updateResult}`, this);
+            return true;
+        } catch (err) {
+            QLogger.verbose(`Package ${pkg} not updated: ${err}`, this);
+            return false;
+        }
     }
 
     private async show(pkg: string): Promise<string> {
