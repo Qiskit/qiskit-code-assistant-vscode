@@ -28,9 +28,6 @@ export class QiskitParser implements Parser {
         let folder = new TreeFolder();
         let codeBlock = folder.visit(tree);
         let symbolTable = SymbolTableGenerator.symbolTableFor(codeBlock);
-
-        symbolTable.print();
-
         let errors = SemanticAnalyzer.analyze(codeBlock, symbolTable);
         ImportsAnalyzer.analyze(tree, errorListener);
 
