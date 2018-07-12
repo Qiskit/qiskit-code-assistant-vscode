@@ -22,6 +22,7 @@ import { ChildProcessCommandExecutor } from './pip/pipCommandExecutor';
 import { PipExecutor } from './pip/pipExecutor';
 import { QStudioConfiguration } from './configuration';
 import { PackageInfo } from './interfaces';
+import { PyPiExecutor } from './pip/pypiExecutor';
 
 export namespace ActivationUtils {
     export function checkFirstRun(): Q.Promise<string> {
@@ -98,7 +99,8 @@ export namespace ActivationUtils {
 
                     let commandExecutor = new ChildProcessCommandExecutor();
                     let pipExecutor = new PipExecutor(commandExecutor);
-                    let packageManager = new PackageManager(pipExecutor);
+                    let pypiExecutor = new PyPiExecutor();
+                    let packageManager = new PackageManager(pipExecutor, pypiExecutor);
 
                     let notInstalled = (packageInfo: PackageInfo) =>
                         QLogger.info(`Go to install ${packageInfo.name}`, this);
@@ -107,6 +109,7 @@ export namespace ActivationUtils {
 
                     packageManager.verifyAndApply(QStudioConfiguration.requiredPackages(), notInstalled, oldVersion);
 
+                    /*
                     let packMgr = new PackageMgr();
                     return packMgr
                         .check(verbose)
@@ -119,6 +122,7 @@ export namespace ActivationUtils {
                             QLogger.error(`packMgr.check error extension.ts ${err}`, this);
                             return Q.reject(err);
                         });
+                    */
 
                     // Iterate over the list of packages
                 })
