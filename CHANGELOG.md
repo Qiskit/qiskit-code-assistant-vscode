@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### 🎉 Added
 
 ### 🐛 Fixed
+- The parser does not halt when it founds a malformed JSON ([#173](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/173) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
+- Get remote devices status now works fine with Qiskit Terra v0.5.5 and v0.5.6 ([#168](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/168) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias) & [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Background color fixed for IBMQ devices status template ([#175](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/175) [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Get remote devices status now works fine with Qiskit Terra v0.5.5 and v0.5.6 ([#168](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/168) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias)) & [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Get remote devices status now display the 'SIMULATOR' label when the device is a simulator ([#168](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/168) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
