@@ -14,6 +14,7 @@ import { InstallationCallback } from './types';
 import { PyPiExecutor } from '../pip/pyPiExecutor';
 import * as vscode from 'vscode';
 import { Version } from '../version';
+import { ActivationUtils } from '../activationUtils';
 
 export class PackageManager {
     constructor(private pipExecutor: PipExecutor, private pypiExecutor: PyPiExecutor) {}
@@ -51,6 +52,7 @@ export class PackageManager {
                         oldVersionCallback(packageInfo);
                     }
                 } else {
+                    QLogger.info(`Package ${packageInfo} do not updated. The user rejected the update`, this);
                     oldVersionCallback(packageInfo);
                 }
             } else {
@@ -59,19 +61,29 @@ export class PackageManager {
                 const availableUpdate = await pypiPackageInfo.version.isGreater(systemPackageInfo.version);
                 if (availableUpdate) {
                     QLogger.verbose(`Starting update process for ${packageInfo.name} ...`, this);
-
-                    if ((await this.offerUpdate(packageInfo, pypiPackageInfo.version, needsMandatoryUpdate)) === true) {
+                    const updateAccepted = await this.offerUpdate(
+                        packageInfo,
+                        pypiPackageInfo.version,
+                        needsMandatoryUpdate
+                    );
+                    if (updateAccepted) {
                         const updated = await this.update(packageInfo.name);
                         if (updated) {
-                            QLogger.error(`Package ${packageInfo} updated`, this);
+                            QLogger.info(`Package ${packageInfo} updated`, this);
+                            vscode.window.showInformationMessage(`${packageInfo.name} updated! 🎉🎉🎉`);
                             oldVersionCallback(packageInfo);
                         } else {
                             QLogger.error(`Package ${packageInfo} do not updated`, this);
                             oldVersionCallback(packageInfo);
                         }
                     } else {
+                        QLogger.info(`Package ${packageInfo} do not updated. The user rejected the update`, this);
                         oldVersionCallback(packageInfo);
                     }
+                } else {
+                    QLogger.verbose(`${packageInfo.name} is already installed`, this);
+                    ActivationUtils.showExtensionBootInfo(`👌 ${packageInfo.name} is already installed`, false);
+                    return oldVersionCallback(packageInfo);
                 }
             }
         } catch (err) {
@@ -81,13 +93,15 @@ export class PackageManager {
             if (installAccepted) {
                 const installed = await this.install(packageInfo.name);
                 if (installed) {
-                    QLogger.error(`Package ${packageInfo} installed`, this);
+                    QLogger.info(`Package ${packageInfo} installed`, this);
+                    vscode.window.showInformationMessage(`${packageInfo.name} installed! 🎉🎉🎉`);
                     notInstalledCallback(packageInfo);
                 } else {
                     QLogger.error(`Package ${packageInfo} do not installed`, this);
                     notInstalledCallback(packageInfo);
                 }
             } else {
+                QLogger.info(`Package ${packageInfo} do not updated. The user rejected the update`, this);
                 notInstalledCallback(packageInfo);
             }
         }
@@ -118,12 +132,18 @@ export class PackageManager {
     }
 
     private async update(packageName: string): Promise<boolean> {
-        vscode.window.showInformationMessage(`Updating ${packageName}... (this may take some time, be patient 🙏)`);
+        try {
+            vscode.window.showInformationMessage(`Updating ${packageName}... (this may take some time, be patient 🙏)`);
 
-        const updated = await this.pipExecutor.update(packageName);
-        if (updated) {
-            return true;
-        } else {
+            const updated = await this.pipExecutor.update(packageName);
+            if (updated) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            QLogger.error(`ERROR: Couldn't upgrade ${packageName}. ${error}`, this);
+            vscode.window.showErrorMessage(`ERROR: Couldn't upgrade ${packageName}. ${error}`);
             return false;
         }
     }
@@ -147,12 +167,20 @@ export class PackageManager {
     }
 
     private async install(packageName: string): Promise<boolean> {
-        vscode.window.showInformationMessage(`Installing ${packageName}... (this may take some time, be patient 🙏)`);
+        try {
+            vscode.window.showInformationMessage(
+                `Installing ${packageName}... (this may take some time, be patient 🙏)`
+            );
 
-        const updated = await this.pipExecutor.install(packageName);
-        if (updated) {
-            return true;
-        } else {
+            const updated = await this.pipExecutor.install(packageName);
+            if (updated) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            QLogger.error(`ERROR: Couldn't install ${packageName}. ${error}`, this);
+            vscode.window.showErrorMessage(`ERROR: Couldn't install ${packageName}. ${error}`);
             return false;
         }
     }
