@@ -151,7 +151,7 @@ export class PackageManager {
     private async offerInstall(packageInfo: PackageInfo): Promise<boolean> {
         let installMsg = `You must install ${
             packageInfo.name
-        } to use properly this extension. Do you want to install it now?`;
+        } to take advantage of this extension. Do you want to install it now?`;
 
         const selection = await vscode.window.showInformationMessage(installMsg, 'Ok', 'Dismiss');
         if (selection === 'Ok') {
