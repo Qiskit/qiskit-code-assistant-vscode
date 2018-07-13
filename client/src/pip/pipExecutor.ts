@@ -54,6 +54,14 @@ export class PipExecutor {
         }
     }
 
+    async search(pkg: string): Promise<string> {
+        return this.commandExecutor.exec('search', [pkg], (stdout: string) => stdout);
+    }
+
+    async list(): Promise<string> {
+        return this.commandExecutor.exec('list', [], (stdout: string) => stdout);
+    }
+
     private async show(pkg: string): Promise<string> {
         return this.commandExecutor.exec('show', [pkg], (stdout: string) => stdout);
     }

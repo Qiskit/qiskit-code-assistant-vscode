@@ -10,7 +10,6 @@
 import * as vscode from 'vscode';
 import * as Q from 'q';
 import { DependencyMgr } from './dependencyMgr';
-import { PackageMgr } from './packageMgr';
 import { Util } from './utils';
 import { ResultProvider } from './resultProvider';
 import { CommandExecutor } from './commandExecutor';
@@ -108,27 +107,10 @@ export namespace ActivationUtils {
                         QLogger.info(`Go to update ${packageInfo.name}`, this);
 
                     packageManager.verifyAndApply(QStudioConfiguration.requiredPackages(), notInstalled, oldVersion);
-
-                    /*
-                    let packMgr = new PackageMgr();
-                    return packMgr
-                        .check(verbose)
-                        .then(results => {
-                            QLogger.verbose(`packMgr.check extension.ts ${results}`, this);
-                            showExtensionBootInfo(results, verbose);
-                            return resolve();
-                        })
-                        .catch(err => {
-                            QLogger.error(`packMgr.check error extension.ts ${err}`, this);
-                            return Q.reject(err);
-                        });
-                    */
-
-                    // Iterate over the list of packages
+                    return resolve();
                 })
                 .catch(error => {
                     QLogger.error(`Seems like there was a problem: ${error}`, this);
-                    //vscode.window.showWarningMessage('Seems like there was a problem: ' + error);
                     vscode.window.showErrorMessage(`Seems like there was a problem: ${error}`);
                     return reject(error);
                 });

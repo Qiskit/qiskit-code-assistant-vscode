@@ -19,7 +19,7 @@ import { ActivationUtils } from '../activationUtils';
 export class PackageManager {
     constructor(private pipExecutor: PipExecutor, private pypiExecutor: PyPiExecutor) {}
 
-    verifyAndApply(
+    async verifyAndApply(
         packages: PackageInfo[],
         notInstalledCallback: InstallationCallback,
         oldVersionCallback: InstallationCallback
