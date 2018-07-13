@@ -9,7 +9,7 @@
 
 import * as vscode from 'vscode';
 import * as Q from 'q';
-import { DependencyMgr } from './dependencyMgr';
+import { DependencyMgr } from './dependencies/dependencyMgr';
 import { Util } from './utils';
 import { ResultProvider } from './resultProvider';
 import { CommandExecutor } from './commandExecutor';
@@ -21,7 +21,7 @@ import { ChildProcessCommandExecutor } from './pip/pipCommandExecutor';
 import { PipExecutor } from './pip/pipExecutor';
 import { QStudioConfiguration } from './configuration';
 import { PackageInfo } from './interfaces';
-import { PyPiExecutor } from './pip/pypiExecutor';
+import { PyPiExecutor } from './pip/pyPiExecutor';
 
 export namespace ActivationUtils {
     export function checkFirstRun(): Q.Promise<string> {
