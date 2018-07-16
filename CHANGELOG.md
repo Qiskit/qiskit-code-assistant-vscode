@@ -164,7 +164,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Extension size reduction ([#76](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/76) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 
 [Unreleased]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.2.2...HEAD
-[v0.2.1]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.2.1...v0.2.2
+[v0.2.2]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.2.1...v0.2.2
 [v0.2.1]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.2.0...v0.2.1
 [v0.2.0]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.1.1...v0.2.0
 [v0.1.1]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.1.0...v0.1.1
