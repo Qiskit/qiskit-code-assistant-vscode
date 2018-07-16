@@ -129,7 +129,7 @@ export namespace ActivationUtils {
 
         context.subscriptions.push(
             vscode.commands.registerCommand('qstudio.checkDependencies', () => ActivationUtils.checkDependencies(true)),
-            vscode.commands.registerCommand('qstudio.runQISKitCode', () =>
+            vscode.commands.registerCommand('qstudio.runQiskitCode', () =>
                 CommandExecutor.execPythonActiveEditor().then(codeResult => {
                     let resultProvider = new ResultProvider();
                     vscode.workspace.registerTextDocumentContentProvider('qiskit-preview-result', resultProvider);
@@ -147,7 +147,7 @@ export namespace ActivationUtils {
                             'vscode.previewHtml',
                             previewUri,
                             vscode.ViewColumn.Two,
-                            'Execution result - QISKit'
+                            'Execution result - Qiskit'
                         )
                         .then(
                             _success => {},

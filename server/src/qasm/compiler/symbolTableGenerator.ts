@@ -16,17 +16,17 @@ import {
     OpaqueDefinitionContext,
     IncludeLibraryContext
 } from '../antlr/QasmParser';
-import { SymbolTable } from '../../tools/symbolTable';
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree';
 import { QasmParserVisitor } from '../antlr/QasmParserVisitor';
-import { SymbolTableBuilder, RegisterSymbol, VariableSymbol } from '../compiler/symbolTable';
+import { SymbolTableBuilder, RegisterSymbol, VariableSymbol } from './symbolTable';
 import path = require('path');
 import fs = require('fs');
 import { ParserRuleContext } from 'antlr4ts';
-import { QASMSyntacticParser } from '../compiler/qasmSyntacticParser';
+import { QASMSyntacticParser } from './qasmSyntacticParser';
 import { PreviousDefinitionValidation } from './validations/validations';
 import { PositionAdapter } from '../../tools/positionAdapter';
 import { ErrorListener } from '../../tools/errorListener';
+import { SymbolTable } from '../../compiler/types';
 
 export namespace SymbolTableGenerator {
     export function symbolTableFor(tree: ParserRuleContext, _errorListener?: ErrorListener): SymbolTable {
@@ -68,7 +68,7 @@ class DefinitionMatcher extends AbstractParseTreeVisitor<void> implements QasmPa
         let size = +ctx.dimension().text;
         let register = new RegisterSymbol(registerName, registerType, size);
 
-        this.symbolTable.define(register);
+        this.symbolTable.define(register, ctx.start.line);
     }
 
     visitCregDefinition(ctx: CregDefinitionContext) {
@@ -79,7 +79,7 @@ class DefinitionMatcher extends AbstractParseTreeVisitor<void> implements QasmPa
         let size = +ctx.dimension().text;
         let register = new RegisterSymbol(registerName, registerType, size);
 
-        this.symbolTable.define(register);
+        this.symbolTable.define(register, ctx.start.line);
     }
 
     visitGateDefinition(ctx: GateDefinitionContext) {
@@ -89,11 +89,11 @@ class DefinitionMatcher extends AbstractParseTreeVisitor<void> implements QasmPa
         let gateType = this.symbolTable.lookup('Gate');
         let gate = new VariableSymbol(gateName, gateType);
 
-        this.symbolTable.define(gate);
+        this.symbolTable.define(gate, ctx.start.line);
 
-        this.symbolTable.push(gateName);
+        this.symbolTable.push(gateName, ctx.start.line);
         this.visitChildren(ctx);
-        this.symbolTable.pop();
+        this.symbolTable.pop(ctx.stop.line);
     }
 
     visitOpaqueDefinition(ctx: OpaqueDefinitionContext) {
@@ -103,7 +103,7 @@ class DefinitionMatcher extends AbstractParseTreeVisitor<void> implements QasmPa
         let gateType = this.symbolTable.lookup('Opaque');
         let gate = new VariableSymbol(opaqueName, gateType);
 
-        this.symbolTable.define(gate);
+        this.symbolTable.define(gate, ctx.start.line);
     }
 
     private getLibraryContent(libraryName: string): string {

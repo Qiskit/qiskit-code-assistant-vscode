@@ -17,19 +17,21 @@ import {
     VisitableItem,
     MethodReference,
     VariableReference,
-    ArrayReference
+    ArrayReference,
+    Block
 } from './types';
-import { SymbolTable, Type, BuiltInTypeSymbol } from '../../tools/symbolTable';
 import { ParserError } from '../../types';
-import { VariableSymbol, ClassSymbol, MethodSymbol, ArgumentSymbol } from '../compiler/qiskitSymbolTable';
+import { VariableSymbol, ClassSymbol, MethodSymbol, ArgumentSymbol } from '../compiler/symbols';
 import { ErrorBuilder } from './tools/errorBuilder';
+import { SymbolTable } from '../../compiler/types';
+import { Type, BuiltInTypeSymbol } from '../../compiler/symbols';
 
 export namespace SemanticAnalyzer {
-    export function analyze(statements: Statement[], symbolTable: SymbolTable): ParserError[] {
+    export function analyze(codeBlock: Block, symbolTable: SymbolTable): ParserError[] {
         let statementValidator = new StatementSemanticValidator(symbolTable);
         let validatingStatement = (a: ParserError[], b: Statement) => a.concat(b.accept(statementValidator));
 
-        return statements.reduce(validatingStatement, []);
+        return codeBlock.childs.reduce(validatingStatement, []);
     }
 }
 
@@ -40,18 +42,19 @@ class StatementSemanticValidator implements Visitor<ParserError[]> {
         return [];
     }
 
-    visitStatement(statement: Statement): ParserError[] {
-        // in partial compilations this case could happen *do not delete without thinking twice*
-        if (statement.expression === null) {
-            return this.defaultValue();
-        }
+    visitCodeBlock(block: Block): ParserError[] {
+        return block.childs
+            .map(innerBlock => innerBlock.accept(new StatementSemanticValidator(this.symbolTable)))
+            .reduce((acc, value) => acc.concat(value), []);
+    }
 
-        return statement.expression.accept(this);
+    visitStatement(statement: Statement): ParserError[] {
+        return this.safeAccept(statement.expression, this);
     }
 
     visitAssignment(assignment: Assignment): ParserError[] {
-        let leftErrors = assignment.left.accept(this);
-        let rightErrors = assignment.right.accept(this);
+        let leftErrors = this.safeAccept(assignment.left, this);
+        let rightErrors = this.safeAccept(assignment.right, this);
 
         return leftErrors.concat(rightErrors);
     }
@@ -72,6 +75,15 @@ class StatementSemanticValidator implements Visitor<ParserError[]> {
 
         return expressionAnalysis.errors;
     }
+
+    private safeAccept(element: VisitableItem, visitor: Visitor<ParserError[]>): ParserError[] {
+        // in partial compilations this case could happen *do not delete without thinking twice*
+        if (element === null) {
+            return this.defaultValue();
+        }
+
+        return element.accept(visitor);
+    }
 }
 
 class TermSemanticValidator implements Visitor<ExpressionAnalysis> {
@@ -82,7 +94,7 @@ class TermSemanticValidator implements Visitor<ExpressionAnalysis> {
     }
 
     visitVariableReference(variable: VariableReference): ExpressionAnalysis {
-        this.currentAnalysis.lastSymbol = this.symbolTable.lookup(variable.value);
+        this.currentAnalysis.lastSymbol = this.symbolTable.lookup(variable.value, variable.start.line);
 
         return this.currentAnalysis;
     }
@@ -167,11 +179,18 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
     }
 
     visitExpression(expression: Expression): ParserError[] {
-        return expression.terms.reduce((a: ParserError[], b: VisitableItem) => a.concat(b.accept(this)), []);
+        let contenatingErrors = (a: ParserError[], b: VisitableItem) => {
+            if (b === null) {
+                return a;
+            }
+
+            return a.concat(b.accept(this));
+        };
+        return expression.terms.reduce(contenatingErrors, []);
     }
 
     visitVariableReference(variable: VariableReference): ParserError[] {
-        let variableSymbol = this.symbolTable.lookup(variable.value);
+        let variableSymbol = this.symbolTable.lookup(variable.value, variable.start.line);
         if (variableSymbol === null) {
             return [];
         }
@@ -184,7 +203,7 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
     }
 
     visitArrayReference(arrayReference: ArrayReference): ParserError[] {
-        let variableSymbol = this.symbolTable.lookup(arrayReference.variable);
+        let variableSymbol = this.symbolTable.lookup(arrayReference.variable, arrayReference.start.line);
         if (variableSymbol === null) {
             return [];
         }
@@ -205,7 +224,7 @@ class ArgumentSemanticValidator implements Visitor<ParserError[]> {
 
             // checks on primitive types should be avoided because this kind of variables are not properly
             // registered at the symbol table
-            let symbol = this.symbolTable.lookup(expectedType);
+            let symbol = this.symbolTable.lookup(expectedType, item.start.line);
             if (symbol === null || symbol instanceof BuiltInTypeSymbol) {
                 return [];
             }

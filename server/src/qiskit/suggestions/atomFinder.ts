@@ -10,7 +10,8 @@
 'use strict';
 
 import { CommonTokenStream, Token } from 'antlr4ts';
-import { SymbolTable, Symbol, Type } from '../../tools/symbolTable';
+import { SymbolTable } from '../../compiler/types';
+import { Symbol, Type } from '../../compiler/symbols';
 
 export class AtomFinder {
     constructor(private symbolTable: SymbolTable) {}

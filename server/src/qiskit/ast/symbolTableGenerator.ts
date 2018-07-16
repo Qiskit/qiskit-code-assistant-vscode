@@ -19,25 +19,21 @@ import {
     MethodReference,
     Float,
     Integer,
-    Text
+    Text,
+    Block
 } from './types';
-import { SymbolTable, Type } from '../../tools/symbolTable';
-import {
-    QiskitSymbolTable,
-    VariableSymbol,
-    ClassSymbol,
-    VariableMetadata,
-    MethodSymbol,
-    QiskitSymbols
-} from '../compiler/qiskitSymbolTable';
+import { VariableSymbol, ClassSymbol, VariableMetadata, MethodSymbol, QiskitSymbols } from '../compiler/symbols';
+import { QiskitSymbolTableBuilder } from '../compiler/qiskitSymbolTableBuilder';
+import { SymbolTable } from '../../compiler/types';
+import { Type } from '../../compiler/symbols';
 
 export namespace SymbolTableGenerator {
-    export function symbolTableFor(statements: Statement[]): SymbolTable {
-        let symbolTable = QiskitSymbolTable.build();
+    export function symbolTableFor(codeBlock: Block): SymbolTable {
+        let symbolTable = QiskitSymbolTableBuilder.create();
 
-        statements.forEach(statement => {
+        codeBlock.childs.forEach(block => {
             let updater = new StatementSymbolTableUpdater(symbolTable);
-            statement.accept(updater);
+            block.accept(updater);
         });
 
         return symbolTable;
@@ -48,6 +44,14 @@ class StatementSymbolTableUpdater implements Visitor<void> {
     constructor(private symbolTable: SymbolTable) {}
 
     defaultValue() {}
+
+    visitCodeBlock(block: Block) {
+        this.symbolTable.push('local', block.start.line);
+
+        block.childs.map(innerBlock => innerBlock.accept(new StatementSymbolTableUpdater(this.symbolTable)));
+
+        this.symbolTable.pop(block.end.line);
+    }
 
     visitStatement(statement: Statement) {
         if (statement.expression === null) {
@@ -75,7 +79,7 @@ class AssignmentSymbolTableUpdater implements Visitor<MethodInvocationData> {
 
             let symbol = new VariableSymbol(variable, invocationData.type, invocationData.metadata);
 
-            this.symbolTable.define(symbol);
+            this.symbolTable.define(symbol, assignment.start.line);
 
             return invocationData;
         }
@@ -90,7 +94,7 @@ class AssignmentSymbolTableUpdater implements Visitor<MethodInvocationData> {
                 return a;
             }
 
-            if (a.type === null) {
+            if (a === null || a.type === null) {
                 return b.accept(this);
             }
             if (a.type instanceof ClassSymbol) {

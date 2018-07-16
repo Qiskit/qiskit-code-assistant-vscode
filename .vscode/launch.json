@@ -43,7 +43,7 @@
 			"preLaunchTask": "watch:server"
 		},
 		{
-			"name": "Attach to QISKit Server",
+			"name": "Attach to Qiskit Server",
 			"type": "node",
 			"request": "attach",
 			"port": 6010,
