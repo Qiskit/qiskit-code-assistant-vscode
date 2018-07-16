@@ -19,6 +19,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### 🎉 Added
 
 ### 🐛 Fixed
+
+### ✏️ Changed
+
+### 👾 Security
+
+## [v0.2.2] - 2018-07-16
+
+### 🎉 Added
+
+### 🐛 Fixed
 - Variables at different scopes are now correctly parsed and redefined ones are correctly detected ([#176](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/176) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 - The parser does not halt when it founds a malformed JSON ([#173](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/173) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 - Background color fixed for IBMQ devices status template ([#175](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/175) [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
@@ -153,7 +163,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Re-styling charts ([#97](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/97) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Extension size reduction ([#76](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/76) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 
-[Unreleased]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.2.1...HEAD
+[Unreleased]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.2.2...HEAD
+[v0.2.2]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.2.1...v0.2.2
 [v0.2.1]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.2.0...v0.2.1
 [v0.2.0]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.1.1...v0.2.0
 [v0.1.1]: https://github.ibm.com/IBMQuantum/qiskit-studio/compare/v0.1.0...v0.1.1
