@@ -11,7 +11,7 @@ import { PackageInfo } from '../interfaces';
 import { QLogger } from '../logger';
 import { PipExecutor } from '../pip/pipExecutor';
 import { InstallationCallback } from './types';
-import { PyPiExecutor } from '../pip/pyPiExecutor';
+import { PyPiExecutor } from '../pip/pypiExecutor';
 import * as vscode from 'vscode';
 import { Version } from '../version';
 import { ActivationUtils } from '../activationUtils';

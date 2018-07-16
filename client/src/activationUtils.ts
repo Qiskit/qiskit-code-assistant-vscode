@@ -21,7 +21,7 @@ import { ChildProcessCommandExecutor } from './pip/pipCommandExecutor';
 import { PipExecutor } from './pip/pipExecutor';
 import { QStudioConfiguration } from './configuration';
 import { PackageInfo } from './interfaces';
-import { PyPiExecutor } from './pip/pyPiExecutor';
+import { PyPiExecutor } from './pip/pypiExecutor';
 
 export namespace ActivationUtils {
     export function checkFirstRun(): Q.Promise<string> {
