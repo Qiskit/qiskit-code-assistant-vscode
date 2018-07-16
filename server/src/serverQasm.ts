@@ -18,7 +18,7 @@ import {
     InitializeResult,
     TextDocumentPositionParams,
     CompletionItem
-} from 'vscode-languageserver';
+} from 'vscode-languageserver/lib/main';
 import { CompilationTool } from './compilation';
 import { QASMSuggester } from './qasm/suggester';
 import { QASMParser } from './qasm/parser';

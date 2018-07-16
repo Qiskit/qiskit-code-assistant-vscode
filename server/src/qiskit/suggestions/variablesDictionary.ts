@@ -10,7 +10,8 @@
 'use strict';
 
 import { SuggestionSymbol } from '../../types';
-import { SymbolTable, Symbol } from '../../tools/symbolTable';
+import { SymbolTable } from '../../compiler/types';
+import { Symbol } from '../../compiler/symbols';
 
 export class VariablesDictionary {
     constructor(private symbolTable: SymbolTable) {}

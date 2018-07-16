@@ -12,8 +12,8 @@
 import { SuggestionSymbol, SuggestionSymbolType } from '../../types';
 import { AtomFinder } from './atomFinder';
 import { CommonTokenStream } from 'antlr4ts';
-import { ClassSymbol } from '../compiler/qiskitSymbolTable';
 import { SuggestionsDictionary } from './suggestionsDictionary';
+import { ClassSymbol } from '../compiler/symbols';
 
 export class MethodsDictionary {
     constructor(

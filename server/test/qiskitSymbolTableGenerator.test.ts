@@ -34,6 +34,8 @@ describe('From a parsed and folded Qiskit code of a valid source', () => {
     describe('when a symbol table is generated', () => {
         let symbolTable = SymbolTableGenerator.symbolTableFor(statements);
 
+        symbolTable.print();
+
         it('contains a QuantumRegister named a with size 2', () => {
             expect(symbolTable.lookup('a').type.getName()).to.be.equal('QuantumRegister');
             expect(symbolTable.lookup('a')).to.deep.include({ metadata: { size: 2 } });

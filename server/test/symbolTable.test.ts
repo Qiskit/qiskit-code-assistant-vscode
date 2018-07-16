@@ -10,8 +10,8 @@
 'use strict';
 
 import { expect } from 'chai';
-import { SymbolTable } from '../src/tools/symbolTable';
 import { SymbolTableBuilder, VariableSymbol, RegisterSymbol } from '../src/qasm/compiler/symbolTable';
+import { SymbolTable } from '../src/compiler/types';
 
 describe('A symbol table', () => {
     let symbolTable: SymbolTable;
@@ -38,14 +38,14 @@ describe('A symbol table', () => {
     describe('can define a variable symbol', () => {
         it('with QREG type', () => {
             let qregSymbol = symbolTable.lookup('Qreg');
-            symbolTable.define(new VariableSymbol('q', qregSymbol.type));
+            symbolTable.define(new VariableSymbol('q', qregSymbol.type), 0);
 
             expect(symbolTable.lookup('q').type).to.be.equals(qregSymbol.type);
         });
 
         it('of quantum register type', () => {
             let qregSymbol = symbolTable.lookup('Qreg');
-            symbolTable.define(new RegisterSymbol('q', qregSymbol.type, 4));
+            symbolTable.define(new RegisterSymbol('q', qregSymbol.type, 4), 0);
 
             let result = symbolTable.lookup('q') as RegisterSymbol;
 
@@ -55,9 +55,9 @@ describe('A symbol table', () => {
         });
 
         it('in a child scope', () => {
-            symbolTable.push('foo');
+            symbolTable.push('foo', 0);
             let qregSymbol = symbolTable.lookup('Qreg');
-            symbolTable.define(new VariableSymbol('q', qregSymbol.type));
+            symbolTable.define(new VariableSymbol('q', qregSymbol.type), 0);
 
             expect(symbolTable.lookup('q').type).to.be.equals(qregSymbol.type);
         });
@@ -66,11 +66,11 @@ describe('A symbol table', () => {
     describe('when discards a scope', () => {
         it('can no longer access to previous scope variables', () => {
             let gateSymbol = symbolTable.lookup('Gate');
-            symbolTable.define(new VariableSymbol('foo', gateSymbol.type));
-            symbolTable.push('foo');
+            symbolTable.define(new VariableSymbol('foo', gateSymbol.type), 0);
+            symbolTable.push('foo', 0);
             let qregSymbol = symbolTable.lookup('Qreg');
-            symbolTable.define(new VariableSymbol('q', qregSymbol.type));
-            symbolTable.pop();
+            symbolTable.define(new VariableSymbol('q', qregSymbol.type), 0);
+            symbolTable.pop(1000);
 
             expect(symbolTable.lookup('q')).to.be.null;
         });
@@ -79,10 +79,10 @@ describe('A symbol table', () => {
     describe('when a previous scope defines a variable', () => {
         it('newer scopes return its own symbol', () => {
             let cregSymbol = symbolTable.lookup('Creg');
-            symbolTable.define(new VariableSymbol('myReg', cregSymbol.type));
-            symbolTable.push('foo');
+            symbolTable.define(new VariableSymbol('myReg', cregSymbol.type), 0);
+            symbolTable.push('foo', 0);
             let qregSymbol = symbolTable.lookup('Qreg');
-            symbolTable.define(new VariableSymbol('myReg', cregSymbol.type));
+            symbolTable.define(new VariableSymbol('myReg', cregSymbol.type), 0);
 
             expect(symbolTable.lookup('myReg').type).to.be.equals(qregSymbol.type);
         });
@@ -91,13 +91,13 @@ describe('A symbol table', () => {
     describe('when returns the defined symbols', () => {
         it('does not return the built in type symbols', () => {
             let gateSymbol = symbolTable.lookup('Gate');
-            symbolTable.define(new VariableSymbol('foo', gateSymbol.type));
-            symbolTable.push('foo');
+            symbolTable.define(new VariableSymbol('foo', gateSymbol.type), 0);
+            symbolTable.push('foo', 0);
             let qregSymbol = symbolTable.lookup('Qreg');
-            symbolTable.define(new VariableSymbol('q', qregSymbol.type));
+            symbolTable.define(new VariableSymbol('q', qregSymbol.type), 0);
 
-            expect(symbolTable.definedSymbols()).to.be.length(2);
-            expect(symbolTable.definedSymbols())
+            expect(symbolTable.currentSymbols()).to.be.length(2);
+            expect(symbolTable.currentSymbols().map(symbol => symbol.name))
                 .to.include('q')
                 .to.include('foo');
         });
