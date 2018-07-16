@@ -15,8 +15,8 @@ describe('A PackageInfoParser', () => {
         Name: qiskit   
         Version: 0.5.5   
         Summary: Software for developing quantum computing programs
-        Home-page: https://github.com/QISKit/qiskit-core
-        Author: QISKit Development Team
+        Home-page: https://github.com/Qiskit/qiskit-terra
+        Author: Qiskit Development Team
         Author-email: qiskit@us.ibm.com
         License: Apache 2.0
         Location: /Users/tutu/Documents/workspace/qiskit-studio/pyenv/lib/python3.6/site-packages
