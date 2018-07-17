@@ -22,8 +22,8 @@ export namespace Util {
         return Q.Promise((resolve, reject) => {
             try {
                 let config = vscode.workspace.getConfiguration('ibm-q-studio');
-                let displayBubbles = config.get('qiskit.token');
-                if (displayBubbles === true) {
+                let tokenSetup = config.get('qiskit.token');
+                if (tokenSetup !== '' && tokenSetup !== null) {
                     return resolve(true);
                 } else {
                     return resolve(false);
