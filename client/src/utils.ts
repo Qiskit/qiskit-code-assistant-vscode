@@ -18,6 +18,21 @@ export namespace Util {
         }
         return pathInOS;
     }
+    export function isQConfigConfigured(): Q.Promise<boolean> {
+        return Q.Promise((resolve, reject) => {
+            try {
+                let config = vscode.workspace.getConfiguration('ibm-q-studio');
+                let displayBubbles = config.get('qiskit.token');
+                if (displayBubbles === true) {
+                    return resolve(true);
+                } else {
+                    return resolve(false);
+                }
+            } catch (err) {
+                return reject(err);
+            }
+        });
+    }
     export function reloadAfterSavingSettings(): Q.Promise<string> {
         // vscode.window.showInformationMessage("Saving the QConfig...");
         return Q.Promise((resolve, reject) => {
