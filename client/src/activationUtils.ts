@@ -132,7 +132,9 @@ export namespace ActivationUtils {
         const getUserCreditsScript = Util.getOSDependentPath('../../resources/qiskitScripts/getUserCredits.py');
 
         context.subscriptions.push(
-            vscode.commands.registerCommand('qiskit-vscode.checkDependencies', () => ActivationUtils.checkDependencies(true)),
+            vscode.commands.registerCommand('qiskit-vscode.checkDependencies', () =>
+                ActivationUtils.checkDependencies(true)
+            ),
             vscode.commands.registerCommand('qiskit-vscode.runQiskitCode', () =>
                 CommandExecutor.execPythonActiveEditor().then(codeResult => {
                     let resultProvider = new ResultProvider();
@@ -213,208 +215,415 @@ export namespace ActivationUtils {
             ),
 
             vscode.commands.registerCommand('qiskit-vscode.discoverRemoteBackends', () =>
-                CommandExecutor.execPythonFile(remoteBackendsScript, [
-                    '--apiToken',
-                    config.get('ibmq.token'),
-                    '--url',
-                    config.get('ibmq.url'),
-                    '--hub',
-                    config.get('ibmq.hub'),
-                    '--group',
-                    config.get('ibmq.group'),
-                    '--project',
-                    config.get('ibmq.project')
-                ]).then(remoteBackends => {
-                    let resultProvider = new ResultProvider();
-                    vscode.workspace.registerTextDocumentContentProvider(
-                        'qiskit-remoteBackends-result',
-                        resultProvider
-                    );
-                    let previewUri = vscode.Uri.parse(`qiskit-remoteBackends-result://authority/backends-preview`);
-                    let execPath = Util.getOSDependentPath(remoteBackendsScript);
-                    resultProvider.displayContent(VizManager.createViz(execPath, remoteBackends), previewUri);
+                Util.isQConfigConfigured()
+                    .then(result => {
+                        if (result === true) {
+                            CommandExecutor.execPythonFile(remoteBackendsScript, [
+                                '--apiToken',
+                                config.get('ibmq.token'),
+                                '--url',
+                                config.get('ibmq.url'),
+                                '--hub',
+                                config.get('ibmq.hub'),
+                                '--group',
+                                config.get('ibmq.group'),
+                                '--project',
+                                config.get('ibmq.project')
+                            ]).then(remoteBackends => {
+                                let resultProvider = new ResultProvider();
+                                vscode.workspace.registerTextDocumentContentProvider(
+                                    'qiskit-remoteBackends-result',
+                                    resultProvider
+                                );
+                                let previewUri = vscode.Uri.parse(
+                                    `qiskit-remoteBackends-result://authority/backends-preview`
+                                );
+                                let execPath = Util.getOSDependentPath(remoteBackendsScript);
+                                resultProvider.displayContent(
+                                    VizManager.createViz(execPath, remoteBackends),
+                                    previewUri
+                                );
 
-                    vscode.commands
-                        .executeCommand(
-                            'vscode.previewHtml',
-                            previewUri,
-                            vscode.ViewColumn.Two,
-                            'Remote backends available'
-                        )
-                        .then(
-                            _success => {},
-                            reason => {
-                                QLogger.error(`Error: ${reason}`, this);
-                                vscode.window.showErrorMessage(reason);
-                            }
-                        );
-                })
+                                vscode.commands
+                                    .executeCommand(
+                                        'vscode.previewHtml',
+                                        previewUri,
+                                        vscode.ViewColumn.Two,
+                                        'Remote backends available'
+                                    )
+                                    .then(
+                                        _success => {},
+                                        reason => {
+                                            QLogger.error(`Error: ${reason}`, this);
+                                            vscode.window.showErrorMessage(reason);
+                                        }
+                                    );
+                            });
+                        } else {
+                            QLogger.info(`QConfig is not configured. The command won't be launched`, this);
+                            Util.modalWarningOfferQConfigSetup()
+                                .then(result => {
+                                    if (result === false) {
+                                        QLogger.error(`QConfig setup rejected by the user`, this);
+                                        vscode.window.showErrorMessage(
+                                            `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                        );
+                                    }
+                                })
+                                .catch(error => {
+                                    QLogger.error(error, this);
+                                    vscode.window.showErrorMessage(
+                                        `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                    );
+                                });
+                        }
+                    })
+                    .catch(err => {
+                        QLogger.error(`Error checking the IBMQ Token: ${err}`, this);
+                        vscode.window.showErrorMessage(err);
+                    })
             ),
 
             vscode.commands.registerCommand('qiskit-vscode.getDevicesStatus', () =>
-                CommandExecutor.execPythonFile(remoteBackendsScript, [
-                    '--apiToken',
-                    config.get('ibmq.token'),
-                    '--url',
-                    config.get('ibmq.url'),
-                    '--hub',
-                    config.get('ibmq.hub'),
-                    '--group',
-                    config.get('ibmq.group'),
-                    '--project',
-                    config.get('ibmq.project'),
-                    '--status',
-                    'True'
-                ]).then(remoteDevicesStatus => {
-                    let resultProvider = new ResultProvider();
-                    vscode.workspace.registerTextDocumentContentProvider('qiskit-devicesStatus-result', resultProvider);
-                    let previewUri = vscode.Uri.parse(`qiskit-devicesStatus-result://authority/status-preview`);
+                Util.isQConfigConfigured()
+                    .then(result => {
+                        if (result === true) {
+                            CommandExecutor.execPythonFile(remoteBackendsScript, [
+                                '--apiToken',
+                                config.get('ibmq.token'),
+                                '--url',
+                                config.get('ibmq.url'),
+                                '--hub',
+                                config.get('ibmq.hub'),
+                                '--group',
+                                config.get('ibmq.group'),
+                                '--project',
+                                config.get('ibmq.project'),
+                                '--status',
+                                'True'
+                            ]).then(remoteDevicesStatus => {
+                                let resultProvider = new ResultProvider();
+                                vscode.workspace.registerTextDocumentContentProvider(
+                                    'qiskit-devicesStatus-result',
+                                    resultProvider
+                                );
+                                let previewUri = vscode.Uri.parse(
+                                    `qiskit-devicesStatus-result://authority/status-preview`
+                                );
 
-                    resultProvider.displayContent(DeviceStatusVisualization.render(remoteDevicesStatus), previewUri);
+                                resultProvider.displayContent(
+                                    DeviceStatusVisualization.render(remoteDevicesStatus),
+                                    previewUri
+                                );
 
-                    vscode.commands
-                        .executeCommand(
-                            'vscode.previewHtml',
-                            previewUri,
-                            vscode.ViewColumn.Two,
-                            'Status for remote devices'
-                        )
-                        .then(
-                            _success => {},
-                            reason => {
-                                QLogger.error(`Error: ${reason}`, this);
-                                vscode.window.showErrorMessage(reason);
-                            }
-                        );
-                })
+                                vscode.commands
+                                    .executeCommand(
+                                        'vscode.previewHtml',
+                                        previewUri,
+                                        vscode.ViewColumn.Two,
+                                        'Status for remote devices'
+                                    )
+                                    .then(
+                                        _success => {},
+                                        reason => {
+                                            QLogger.error(`Error: ${reason}`, this);
+                                            vscode.window.showErrorMessage(reason);
+                                        }
+                                    );
+                            });
+                        } else {
+                            QLogger.info(`QConfig is not configured. The command won't be launched`, this);
+                            Util.modalWarningOfferQConfigSetup()
+                                .then(result => {
+                                    if (result === false) {
+                                        QLogger.error(`QConfig setup rejected by the user`, this);
+                                        vscode.window.showErrorMessage(
+                                            `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                        );
+                                    }
+                                })
+                                .catch(error => {
+                                    QLogger.error(error, this);
+                                    vscode.window.showErrorMessage(
+                                        `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                    );
+                                });
+                        }
+                    })
+                    .catch(err => {
+                        QLogger.error(`Error checking the IBMQ Token: ${err}`, this);
+                        vscode.window.showErrorMessage(err);
+                    })
             ),
 
             vscode.commands.registerCommand('qiskit-vscode.listPendingJobs', () =>
-                CommandExecutor.execPythonFile(pendingJobsScript, [
-                    '--apiToken',
-                    config.get('ibmq.token'),
-                    '--url',
-                    config.get('ibmq.url'),
-                    '--hub',
-                    config.get('ibmq.hub'),
-                    '--group',
-                    config.get('ibmq.group'),
-                    '--project',
-                    config.get('ibmq.project')
-                ]).then(pendingJobs => {
-                    let resultProvider = new ResultProvider();
-                    vscode.workspace.registerTextDocumentContentProvider('qiskit-pendingJobs-result', resultProvider);
-                    let previewUri = vscode.Uri.parse(`qiskit-pendingJobs-result://authority/list-preview`);
+                Util.isQConfigConfigured()
+                    .then(result => {
+                        if (result === true) {
+                            CommandExecutor.execPythonFile(pendingJobsScript, [
+                                '--apiToken',
+                                config.get('ibmq.token'),
+                                '--url',
+                                config.get('ibmq.url'),
+                                '--hub',
+                                config.get('ibmq.hub'),
+                                '--group',
+                                config.get('ibmq.group'),
+                                '--project',
+                                config.get('ibmq.project')
+                            ]).then(pendingJobs => {
+                                let resultProvider = new ResultProvider();
+                                vscode.workspace.registerTextDocumentContentProvider(
+                                    'qiskit-pendingJobs-result',
+                                    resultProvider
+                                );
+                                let previewUri = vscode.Uri.parse(`qiskit-pendingJobs-result://authority/list-preview`);
 
-                    let execPath = Util.getOSDependentPath(pendingJobsScript);
-                    resultProvider.displayContent(VizManager.createViz(execPath, pendingJobs), previewUri);
+                                let execPath = Util.getOSDependentPath(pendingJobsScript);
+                                resultProvider.displayContent(VizManager.createViz(execPath, pendingJobs), previewUri);
 
-                    vscode.commands
-                        .executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's pending jobs")
-                        .then(
-                            _success => {},
-                            reason => {
-                                QLogger.error(`Error: ${reason}`, this);
-                                vscode.window.showErrorMessage(reason);
-                            }
-                        );
-                })
+                                vscode.commands
+                                    .executeCommand(
+                                        'vscode.previewHtml',
+                                        previewUri,
+                                        vscode.ViewColumn.Two,
+                                        "User's pending jobs"
+                                    )
+                                    .then(
+                                        _success => {},
+                                        reason => {
+                                            QLogger.error(`Error: ${reason}`, this);
+                                            vscode.window.showErrorMessage(reason);
+                                        }
+                                    );
+                            });
+                        } else {
+                            QLogger.info(`QConfig is not configured. The command won't be launched`, this);
+                            Util.modalWarningOfferQConfigSetup()
+                                .then(result => {
+                                    if (result === false) {
+                                        QLogger.error(`QConfig setup rejected by the user`, this);
+                                        vscode.window.showErrorMessage(
+                                            `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                        );
+                                    }
+                                })
+                                .catch(error => {
+                                    QLogger.error(error, this);
+                                    vscode.window.showErrorMessage(
+                                        `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                    );
+                                });
+                        }
+                    })
+                    .catch(err => {
+                        QLogger.error(`Error checking the IBMQ Token: ${err}`, this);
+                        vscode.window.showErrorMessage(err);
+                    })
             ),
 
             vscode.commands.registerCommand('qiskit-vscode.listExecutedJobs', () =>
-                CommandExecutor.execPythonFile(executedJobsScript, [
-                    '--apiToken',
-                    config.get('ibmq.token'),
-                    '--url',
-                    config.get('ibmq.url'),
-                    '--hub',
-                    config.get('ibmq.hub'),
-                    '--group',
-                    config.get('ibmq.group'),
-                    '--project',
-                    config.get('ibmq.project')
-                ]).then(executedJobs => {
-                    let resultProvider = new ResultProvider();
-                    vscode.workspace.registerTextDocumentContentProvider('qiskit-executedJobs-result', resultProvider);
-                    let previewUri = vscode.Uri.parse(`qiskit-executedJobs-result://authority/list-preview`);
+                Util.isQConfigConfigured()
+                    .then(result => {
+                        if (result === true) {
+                            CommandExecutor.execPythonFile(executedJobsScript, [
+                                '--apiToken',
+                                config.get('ibmq.token'),
+                                '--url',
+                                config.get('ibmq.url'),
+                                '--hub',
+                                config.get('ibmq.hub'),
+                                '--group',
+                                config.get('ibmq.group'),
+                                '--project',
+                                config.get('ibmq.project')
+                            ]).then(executedJobs => {
+                                let resultProvider = new ResultProvider();
+                                vscode.workspace.registerTextDocumentContentProvider(
+                                    'qiskit-executedJobs-result',
+                                    resultProvider
+                                );
+                                let previewUri = vscode.Uri.parse(
+                                    `qiskit-executedJobs-result://authority/list-preview`
+                                );
 
-                    let execPath = Util.getOSDependentPath(executedJobsScript);
-                    resultProvider.displayContent(VizManager.createViz(execPath, executedJobs), previewUri);
+                                let execPath = Util.getOSDependentPath(executedJobsScript);
+                                resultProvider.displayContent(VizManager.createViz(execPath, executedJobs), previewUri);
 
-                    vscode.commands
-                        .executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's executed jobs")
-                        .then(
-                            _success => {},
-                            reason => {
-                                QLogger.error(`Error: ${reason}`, this);
-                                vscode.window.showErrorMessage(reason);
-                            }
-                        );
-                })
+                                vscode.commands
+                                    .executeCommand(
+                                        'vscode.previewHtml',
+                                        previewUri,
+                                        vscode.ViewColumn.Two,
+                                        "User's executed jobs"
+                                    )
+                                    .then(
+                                        _success => {},
+                                        reason => {
+                                            QLogger.error(`Error: ${reason}`, this);
+                                            vscode.window.showErrorMessage(reason);
+                                        }
+                                    );
+                            });
+                        } else {
+                            QLogger.info(`QConfig is not configured. The command won't be launched`, this);
+                            Util.modalWarningOfferQConfigSetup()
+                                .then(result => {
+                                    if (result === false) {
+                                        QLogger.error(`QConfig setup rejected by the user`, this);
+                                        vscode.window.showErrorMessage(
+                                            `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                        );
+                                    }
+                                })
+                                .catch(error => {
+                                    QLogger.error(error, this);
+                                    vscode.window.showErrorMessage(
+                                        `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                    );
+                                });
+                        }
+                    })
+                    .catch(err => {
+                        QLogger.error(`Error checking the IBMQ Token: ${err}`, this);
+                        vscode.window.showErrorMessage(err);
+                    })
             ),
 
             vscode.commands.registerCommand('qiskit-vscode.getQueueStatus', () =>
-                CommandExecutor.execPythonFile(getQueueStatusScript, [
-                    '--apiToken',
-                    config.get('ibmq.token'),
-                    '--url',
-                    config.get('ibmq.url'),
-                    '--hub',
-                    config.get('ibmq.hub'),
-                    '--group',
-                    config.get('ibmq.group'),
-                    '--project',
-                    config.get('ibmq.project')
-                ]).then(queueStatus => {
-                    let resultProvider = new ResultProvider();
-                    vscode.workspace.registerTextDocumentContentProvider('qiskit-queueStatus-result', resultProvider);
-                    let previewUri = vscode.Uri.parse(`qiskit-queueStatus-result://authority/status-preview`);
+                Util.isQConfigConfigured()
+                    .then(result => {
+                        if (result === true) {
+                            CommandExecutor.execPythonFile(getQueueStatusScript, [
+                                '--apiToken',
+                                config.get('ibmq.token'),
+                                '--url',
+                                config.get('ibmq.url'),
+                                '--hub',
+                                config.get('ibmq.hub'),
+                                '--group',
+                                config.get('ibmq.group'),
+                                '--project',
+                                config.get('ibmq.project')
+                            ]).then(queueStatus => {
+                                let resultProvider = new ResultProvider();
+                                vscode.workspace.registerTextDocumentContentProvider(
+                                    'qiskit-queueStatus-result',
+                                    resultProvider
+                                );
+                                let previewUri = vscode.Uri.parse(
+                                    `qiskit-queueStatus-result://authority/status-preview`
+                                );
 
-                    let execPath = Util.getOSDependentPath(getQueueStatusScript);
-                    resultProvider.displayContent(VizManager.createViz(execPath, queueStatus), previewUri);
+                                let execPath = Util.getOSDependentPath(getQueueStatusScript);
+                                resultProvider.displayContent(VizManager.createViz(execPath, queueStatus), previewUri);
 
-                    vscode.commands
-                        .executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, 'Queue status')
-                        .then(
-                            _success => {},
-                            reason => {
-                                QLogger.error(`Error: ${reason}`, this);
-                                vscode.window.showErrorMessage(reason);
-                            }
-                        );
-                })
+                                vscode.commands
+                                    .executeCommand(
+                                        'vscode.previewHtml',
+                                        previewUri,
+                                        vscode.ViewColumn.Two,
+                                        'Queue status'
+                                    )
+                                    .then(
+                                        _success => {},
+                                        reason => {
+                                            QLogger.error(`Error: ${reason}`, this);
+                                            vscode.window.showErrorMessage(reason);
+                                        }
+                                    );
+                            });
+                        } else {
+                            QLogger.info(`QConfig is not configured. The command won't be launched`, this);
+                            Util.modalWarningOfferQConfigSetup()
+                                .then(result => {
+                                    if (result === false) {
+                                        QLogger.error(`QConfig setup rejected by the user`, this);
+                                        vscode.window.showErrorMessage(
+                                            `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                        );
+                                    }
+                                })
+                                .catch(error => {
+                                    QLogger.error(error, this);
+                                    vscode.window.showErrorMessage(
+                                        `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                    );
+                                });
+                        }
+                    })
+                    .catch(err => {
+                        QLogger.error(`Error checking the IBMQ Token: ${err}`, this);
+                        vscode.window.showErrorMessage(err);
+                    })
             ),
 
             vscode.commands.registerCommand('qiskit-vscode.getUserCredits', () =>
-                CommandExecutor.execPythonFile(getUserCreditsScript, [
-                    '--apiToken',
-                    config.get('ibmq.token'),
-                    '--url',
-                    config.get('ibmq.url'),
-                    '--hub',
-                    config.get('ibmq.hub'),
-                    '--group',
-                    config.get('ibmq.group'),
-                    '--project',
-                    config.get('ibmq.project')
-                ]).then(userCredits => {
-                    let resultProvider = new ResultProvider();
-                    vscode.workspace.registerTextDocumentContentProvider('qiskit-userCredits-result', resultProvider);
-                    let previewUri = vscode.Uri.parse(`qiskit-userCredits-result://authority/credits-preview`);
+                Util.isQConfigConfigured()
+                    .then(result => {
+                        if (result === true) {
+                            CommandExecutor.execPythonFile(getUserCreditsScript, [
+                                '--apiToken',
+                                config.get('ibmq.token'),
+                                '--url',
+                                config.get('ibmq.url'),
+                                '--hub',
+                                config.get('ibmq.hub'),
+                                '--group',
+                                config.get('ibmq.group'),
+                                '--project',
+                                config.get('ibmq.project')
+                            ]).then(userCredits => {
+                                let resultProvider = new ResultProvider();
+                                vscode.workspace.registerTextDocumentContentProvider(
+                                    'qiskit-userCredits-result',
+                                    resultProvider
+                                );
+                                let previewUri = vscode.Uri.parse(
+                                    `qiskit-userCredits-result://authority/credits-preview`
+                                );
 
-                    let execPath = Util.getOSDependentPath(getUserCreditsScript);
-                    resultProvider.displayContent(VizManager.createViz(execPath, userCredits), previewUri);
+                                let execPath = Util.getOSDependentPath(getUserCreditsScript);
+                                resultProvider.displayContent(VizManager.createViz(execPath, userCredits), previewUri);
 
-                    vscode.commands
-                        .executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two, "User's credits")
-                        .then(
-                            _success => {},
-                            reason => {
-                                QLogger.error(`Error: ${reason}`, this);
-                                vscode.window.showErrorMessage(reason);
-                            }
-                        );
-                })
+                                vscode.commands
+                                    .executeCommand(
+                                        'vscode.previewHtml',
+                                        previewUri,
+                                        vscode.ViewColumn.Two,
+                                        "User's credits"
+                                    )
+                                    .then(
+                                        _success => {},
+                                        reason => {
+                                            QLogger.error(`Error: ${reason}`, this);
+                                            vscode.window.showErrorMessage(reason);
+                                        }
+                                    );
+                            });
+                        } else {
+                            QLogger.info(`QConfig is not configured. The command won't be launched`, this);
+                            Util.modalWarningOfferQConfigSetup()
+                                .then(result => {
+                                    if (result === false) {
+                                        QLogger.error(`QConfig setup rejected by the user`, this);
+                                        vscode.window.showErrorMessage(
+                                            `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                        );
+                                    }
+                                })
+                                .catch(error => {
+                                    QLogger.error(error, this);
+                                    vscode.window.showErrorMessage(
+                                        `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                    );
+                                });
+                        }
+                    })
+                    .catch(err => {
+                        QLogger.error(`Error checking the IBMQ Token: ${err}`, this);
+                        vscode.window.showErrorMessage(err);
+                    })
             ),
             vscode.commands.registerCommand('qiskit-vscode.initQConfig', () =>
                 ActivationUtils.initQConfig()
