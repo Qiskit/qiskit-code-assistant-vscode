@@ -6,3 +6,4 @@ client/server
 .antlr/
 pyenv/
 coverage/
+*.out
