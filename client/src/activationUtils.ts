@@ -255,22 +255,20 @@ export namespace ActivationUtils {
                             });
                         } else {
                             QLogger.info(`QConfig is not configured. The command won't be launched`, this);
-                            vscode.window
-                                .showErrorMessage(
-                                    `QConfig is not configured. The command won't be launched. Do you want to setup the QConfig now?`,
-                                    'Ok, configure QConfig',
-                                    'Dismiss'
-                                )
-                                .then(selection => {
-                                    if (selection === 'Ok, configure QConfig') {
-                                        QLogger.verbose(`Clicked on OK!`, this);
-                                        vscode.commands.executeCommand('qstudio.initQConfig');
-                                    } else if (selection === 'Dismiss') {
-                                        QLogger.verbose(`Clicked on Dismiss!`, this);
-                                    } else {
-                                        QLogger.verbose(`Clicked on other element! Updating anyway`, this);
-                                        vscode.commands.executeCommand('qstudio.initQConfig');
+                            Util.modalWarningOfferQConfigSetup()
+                                .then(result => {
+                                    if (result === false) {
+                                        QLogger.error(`QConfig setup rejected by the user`, this);
+                                        vscode.window.showErrorMessage(
+                                            `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                        );
                                     }
+                                })
+                                .catch(error => {
+                                    QLogger.error(error, this);
+                                    vscode.window.showErrorMessage(
+                                        `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                    );
                                 });
                         }
                     })
@@ -329,22 +327,20 @@ export namespace ActivationUtils {
                             });
                         } else {
                             QLogger.info(`QConfig is not configured. The command won't be launched`, this);
-                            vscode.window
-                                .showErrorMessage(
-                                    `QConfig is not configured. The command won't be launched. Do you want to setup the QConfig now?`,
-                                    'Ok, configure QConfig',
-                                    'Dismiss'
-                                )
-                                .then(selection => {
-                                    if (selection === 'Ok, configure QConfig') {
-                                        QLogger.verbose(`Clicked on OK!`, this);
-                                        vscode.commands.executeCommand('qstudio.initQConfig');
-                                    } else if (selection === 'Dismiss') {
-                                        QLogger.verbose(`Clicked on Dismiss!`, this);
-                                    } else {
-                                        QLogger.verbose(`Clicked on other element! Updating anyway`, this);
-                                        vscode.commands.executeCommand('qstudio.initQConfig');
+                            Util.modalWarningOfferQConfigSetup()
+                                .then(result => {
+                                    if (result === false) {
+                                        QLogger.error(`QConfig setup rejected by the user`, this);
+                                        vscode.window.showErrorMessage(
+                                            `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                        );
                                     }
+                                })
+                                .catch(error => {
+                                    QLogger.error(error, this);
+                                    vscode.window.showErrorMessage(
+                                        `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                    );
                                 });
                         }
                     })
@@ -397,22 +393,20 @@ export namespace ActivationUtils {
                             });
                         } else {
                             QLogger.info(`QConfig is not configured. The command won't be launched`, this);
-                            vscode.window
-                                .showErrorMessage(
-                                    `QConfig is not configured. The command won't be launched. Do you want to setup the QConfig now?`,
-                                    'Ok, configure QConfig',
-                                    'Dismiss'
-                                )
-                                .then(selection => {
-                                    if (selection === 'Ok, configure QConfig') {
-                                        QLogger.verbose(`Clicked on OK!`, this);
-                                        vscode.commands.executeCommand('qstudio.initQConfig');
-                                    } else if (selection === 'Dismiss') {
-                                        QLogger.verbose(`Clicked on Dismiss!`, this);
-                                    } else {
-                                        QLogger.verbose(`Clicked on other element! Updating anyway`, this);
-                                        vscode.commands.executeCommand('qstudio.initQConfig');
+                            Util.modalWarningOfferQConfigSetup()
+                                .then(result => {
+                                    if (result === false) {
+                                        QLogger.error(`QConfig setup rejected by the user`, this);
+                                        vscode.window.showErrorMessage(
+                                            `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                        );
                                     }
+                                })
+                                .catch(error => {
+                                    QLogger.error(error, this);
+                                    vscode.window.showErrorMessage(
+                                        `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                    );
                                 });
                         }
                     })
@@ -467,22 +461,20 @@ export namespace ActivationUtils {
                             });
                         } else {
                             QLogger.info(`QConfig is not configured. The command won't be launched`, this);
-                            vscode.window
-                                .showErrorMessage(
-                                    `QConfig is not configured. The command won't be launched. Do you want to setup the QConfig now?`,
-                                    'Ok, configure QConfig',
-                                    'Dismiss'
-                                )
-                                .then(selection => {
-                                    if (selection === 'Ok, configure QConfig') {
-                                        QLogger.verbose(`Clicked on OK!`, this);
-                                        vscode.commands.executeCommand('qstudio.initQConfig');
-                                    } else if (selection === 'Dismiss') {
-                                        QLogger.verbose(`Clicked on Dismiss!`, this);
-                                    } else {
-                                        QLogger.verbose(`Clicked on other element! Updating anyway`, this);
-                                        vscode.commands.executeCommand('qstudio.initQConfig');
+                            Util.modalWarningOfferQConfigSetup()
+                                .then(result => {
+                                    if (result === false) {
+                                        QLogger.error(`QConfig setup rejected by the user`, this);
+                                        vscode.window.showErrorMessage(
+                                            `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                        );
                                     }
+                                })
+                                .catch(error => {
+                                    QLogger.error(error, this);
+                                    vscode.window.showErrorMessage(
+                                        `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                    );
                                 });
                         }
                     })
@@ -537,22 +529,20 @@ export namespace ActivationUtils {
                             });
                         } else {
                             QLogger.info(`QConfig is not configured. The command won't be launched`, this);
-                            vscode.window
-                                .showErrorMessage(
-                                    `QConfig is not configured. The command won't be launched. Do you want to setup the QConfig now?`,
-                                    'Ok, configure QConfig',
-                                    'Dismiss'
-                                )
-                                .then(selection => {
-                                    if (selection === 'Ok, configure QConfig') {
-                                        QLogger.verbose(`Clicked on OK!`, this);
-                                        vscode.commands.executeCommand('qstudio.initQConfig');
-                                    } else if (selection === 'Dismiss') {
-                                        QLogger.verbose(`Clicked on Dismiss!`, this);
-                                    } else {
-                                        QLogger.verbose(`Clicked on other element! Updating anyway`, this);
-                                        vscode.commands.executeCommand('qstudio.initQConfig');
+                            Util.modalWarningOfferQConfigSetup()
+                                .then(result => {
+                                    if (result === false) {
+                                        QLogger.error(`QConfig setup rejected by the user`, this);
+                                        vscode.window.showErrorMessage(
+                                            `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                        );
                                     }
+                                })
+                                .catch(error => {
+                                    QLogger.error(error, this);
+                                    vscode.window.showErrorMessage(
+                                        `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                    );
                                 });
                         }
                     })
@@ -607,22 +597,20 @@ export namespace ActivationUtils {
                             });
                         } else {
                             QLogger.info(`QConfig is not configured. The command won't be launched`, this);
-                            vscode.window
-                                .showErrorMessage(
-                                    `QConfig is not configured. The command won't be launched. Do you want to setup the QConfig now?`,
-                                    'Ok, configure QConfig',
-                                    'Dismiss'
-                                )
-                                .then(selection => {
-                                    if (selection === 'Ok, configure QConfig') {
-                                        QLogger.verbose(`Clicked on OK!`, this);
-                                        vscode.commands.executeCommand('qstudio.initQConfig');
-                                    } else if (selection === 'Dismiss') {
-                                        QLogger.verbose(`Clicked on Dismiss!`, this);
-                                    } else {
-                                        QLogger.verbose(`Clicked on other element! Updating anyway`, this);
-                                        vscode.commands.executeCommand('qstudio.initQConfig');
+                            Util.modalWarningOfferQConfigSetup()
+                                .then(result => {
+                                    if (result === false) {
+                                        QLogger.error(`QConfig setup rejected by the user`, this);
+                                        vscode.window.showErrorMessage(
+                                            `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                        );
                                     }
+                                })
+                                .catch(error => {
+                                    QLogger.error(error, this);
+                                    vscode.window.showErrorMessage(
+                                        `QConfig is not configured. The command won't be launched. Setup your QConfig using the extension before launching this command`
+                                    );
                                 });
                         }
                     })

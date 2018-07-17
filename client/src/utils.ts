@@ -9,6 +9,7 @@
 import * as path from 'path';
 import * as Q from 'q';
 import * as vscode from 'vscode';
+import { QLogger } from './logger';
 
 export namespace Util {
     export function getOSDependentPath(_path: string): string {
@@ -29,6 +30,35 @@ export namespace Util {
                     return resolve(false);
                 }
             } catch (err) {
+                return reject(err);
+            }
+        });
+    }
+    export function modalWarningOfferQConfigSetup(): Q.Promise<boolean> {
+        return Q.Promise((resolve, reject) => {
+            try {
+                vscode.window
+                    .showWarningMessage(
+                        `QConfig is not configured. The command won't be launched. Do you want to setup the QConfig now?`,
+                        'Ok, configure QConfig',
+                        'Dismiss'
+                    )
+                    .then(selection => {
+                        if (selection === 'Ok, configure QConfig') {
+                            QLogger.verbose(`Clicked on OK!`, this);
+                            vscode.commands.executeCommand('qstudio.initQConfig');
+                            return resolve(true);
+                        } else if (selection === 'Dismiss') {
+                            QLogger.verbose(`Clicked on Dismiss!`, this);
+                            return resolve(false);
+                        } else {
+                            QLogger.verbose(`Clicked on other element! Redirecting to configuration anyway`, this);
+                            vscode.commands.executeCommand('qstudio.initQConfig');
+                            return resolve(true);
+                        }
+                    });
+            } catch (err) {
+                QLogger.error(`Modal error offer QConfig setup has not been displayed`, this);
                 return reject(err);
             }
         });
