@@ -19,7 +19,7 @@ import { DeviceStatusVisualization } from './visualizations/deviceStatusVisualiz
 import { PackageManager } from './packages/packageManager';
 import { ChildProcessCommandExecutor } from './pip/pipCommandExecutor';
 import { PipExecutor } from './pip/pipExecutor';
-import { QStudioConfiguration } from './configuration';
+import { QiskitVSCodeConfiguration } from './configuration';
 import { PackageInfo } from './interfaces';
 import { PyPiExecutor } from './pip/pypiExecutor';
 
@@ -106,7 +106,11 @@ export namespace ActivationUtils {
                     let oldVersion = (packageInfo: PackageInfo) =>
                         QLogger.info(`Go to update ${packageInfo.name}`, this);
 
-                    packageManager.verifyAndApply(QStudioConfiguration.requiredPackages(), notInstalled, oldVersion);
+                    packageManager.verifyAndApply(
+                        QiskitVSCodeConfiguration.requiredPackages(),
+                        notInstalled,
+                        oldVersion
+                    );
                     return resolve();
                 })
                 .catch(error => {
