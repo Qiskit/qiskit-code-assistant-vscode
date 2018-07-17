@@ -132,8 +132,8 @@ export namespace ActivationUtils {
         const getUserCreditsScript = Util.getOSDependentPath('../../resources/qiskitScripts/getUserCredits.py');
 
         context.subscriptions.push(
-            vscode.commands.registerCommand('qstudio.checkDependencies', () => ActivationUtils.checkDependencies(true)),
-            vscode.commands.registerCommand('qstudio.runQiskitCode', () =>
+            vscode.commands.registerCommand('qiskit-vscode.checkDependencies', () => ActivationUtils.checkDependencies(true)),
+            vscode.commands.registerCommand('qiskit-vscode.runQiskitCode', () =>
                 CommandExecutor.execPythonActiveEditor().then(codeResult => {
                     let resultProvider = new ResultProvider();
                     vscode.workspace.registerTextDocumentContentProvider('qiskit-preview-result', resultProvider);
@@ -162,7 +162,7 @@ export namespace ActivationUtils {
                         );
                 })
             ),
-            vscode.commands.registerCommand('qstudio.runQASMCode', () =>
+            vscode.commands.registerCommand('qiskit-vscode.runQASMCode', () =>
                 CommandExecutor.execQasmActiveEditor(executeQASMScript).then(codeResult => {
                     let resultProvider = new ResultProvider();
                     vscode.workspace.registerTextDocumentContentProvider('qasm-preview-result', resultProvider);
@@ -186,7 +186,7 @@ export namespace ActivationUtils {
                         );
                 })
             ),
-            vscode.commands.registerCommand('qstudio.discoverLocalBackends', () =>
+            vscode.commands.registerCommand('qiskit-vscode.discoverLocalBackends', () =>
                 CommandExecutor.execPythonFile(localBackendsScript, []).then(localBackends => {
                     let resultProvider = new ResultProvider();
                     vscode.workspace.registerTextDocumentContentProvider('qiskit-localBackends-result', resultProvider);
@@ -212,7 +212,7 @@ export namespace ActivationUtils {
                 })
             ),
 
-            vscode.commands.registerCommand('qstudio.discoverRemoteBackends', () =>
+            vscode.commands.registerCommand('qiskit-vscode.discoverRemoteBackends', () =>
                 CommandExecutor.execPythonFile(remoteBackendsScript, [
                     '--apiToken',
                     config.get('qiskit.token'),
@@ -251,7 +251,7 @@ export namespace ActivationUtils {
                 })
             ),
 
-            vscode.commands.registerCommand('qstudio.getDevicesStatus', () =>
+            vscode.commands.registerCommand('qiskit-vscode.getDevicesStatus', () =>
                 CommandExecutor.execPythonFile(remoteBackendsScript, [
                     '--apiToken',
                     config.get('qiskit.token'),
@@ -289,7 +289,7 @@ export namespace ActivationUtils {
                 })
             ),
 
-            vscode.commands.registerCommand('qstudio.listPendingJobs', () =>
+            vscode.commands.registerCommand('qiskit-vscode.listPendingJobs', () =>
                 CommandExecutor.execPythonFile(pendingJobsScript, [
                     '--apiToken',
                     config.get('qiskit.token'),
@@ -321,7 +321,7 @@ export namespace ActivationUtils {
                 })
             ),
 
-            vscode.commands.registerCommand('qstudio.listExecutedJobs', () =>
+            vscode.commands.registerCommand('qiskit-vscode.listExecutedJobs', () =>
                 CommandExecutor.execPythonFile(executedJobsScript, [
                     '--apiToken',
                     config.get('qiskit.token'),
@@ -353,7 +353,7 @@ export namespace ActivationUtils {
                 })
             ),
 
-            vscode.commands.registerCommand('qstudio.getQueueStatus', () =>
+            vscode.commands.registerCommand('qiskit-vscode.getQueueStatus', () =>
                 CommandExecutor.execPythonFile(getQueueStatusScript, [
                     '--apiToken',
                     config.get('qiskit.token'),
@@ -385,7 +385,7 @@ export namespace ActivationUtils {
                 })
             ),
 
-            vscode.commands.registerCommand('qstudio.getUserCredits', () =>
+            vscode.commands.registerCommand('qiskit-vscode.getUserCredits', () =>
                 CommandExecutor.execPythonFile(getUserCreditsScript, [
                     '--apiToken',
                     config.get('qiskit.token'),
@@ -416,7 +416,7 @@ export namespace ActivationUtils {
                         );
                 })
             ),
-            vscode.commands.registerCommand('qstudio.initQConfig', () =>
+            vscode.commands.registerCommand('qiskit-vscode.initQConfig', () =>
                 ActivationUtils.initQConfig()
                     .then(result => {
                         vscode.window.showInformationMessage(result);
@@ -425,7 +425,7 @@ export namespace ActivationUtils {
                         vscode.window.showErrorMessage(err);
                     })
             ),
-            vscode.commands.registerCommand('qstudio.activateVisualizations', () =>
+            vscode.commands.registerCommand('qiskit-vscode.activateVisualizations', () =>
                 ActivationUtils.setVisualizationFlag(true)
                     .then(result => {
                         vscode.window.showInformationMessage(result);
@@ -435,7 +435,7 @@ export namespace ActivationUtils {
                         vscode.window.showErrorMessage(err);
                     })
             ),
-            vscode.commands.registerCommand('qstudio.deactivateVisualizations', () =>
+            vscode.commands.registerCommand('qiskit-vscode.deactivateVisualizations', () =>
                 ActivationUtils.setVisualizationFlag(false)
                     .then(result => {
                         vscode.window.showInformationMessage(result);
@@ -445,7 +445,7 @@ export namespace ActivationUtils {
                         vscode.window.showErrorMessage(err);
                     })
             ),
-            vscode.commands.registerCommand('qstudio.enableBootInfo', () =>
+            vscode.commands.registerCommand('qiskit-vscode.enableBootInfo', () =>
                 ActivationUtils.setBootInfoFlag(true)
                     .then(result => {
                         vscode.window.showInformationMessage(result);
@@ -455,7 +455,7 @@ export namespace ActivationUtils {
                         vscode.window.showErrorMessage(err);
                     })
             ),
-            vscode.commands.registerCommand('qstudio.disableBootInfo', () =>
+            vscode.commands.registerCommand('qiskit-vscode.disableBootInfo', () =>
                 ActivationUtils.setBootInfoFlag(false)
                     .then(result => {
                         vscode.window.showInformationMessage(result);

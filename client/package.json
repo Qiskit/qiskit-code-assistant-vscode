@@ -26,16 +26,16 @@
 	"activationEvents": [
 		"onLanguage:qasm-lang",
 		"onLanguage:python",
-		"onCommand:qstudio.runQiskitCode",
-		"onCommand:qstudio.runQASMCode",
-		"onCommand:qstudio.checkDependencies",
-		"onCommand:qstudio.initQConfig",
-		"onCommand:qstudio.discoverLocalBackends",
-		"onCommand:qstudio.discoverRemoteBackends",
-		"onCommand:qstudio.getDevicesStatus",
-		"onCommand:qstudio.listPendingJobs",
-		"onCommand:qstudio.getQueueStatus",
-		"onCommand:qstudio.getUserCredits"
+		"onCommand:qiskit-vscode.runQiskitCode",
+		"onCommand:qiskit-vscode.runQASMCode",
+		"onCommand:qiskit-vscode.checkDependencies",
+		"onCommand:qiskit-vscode.initQConfig",
+		"onCommand:qiskit-vscode.discoverLocalBackends",
+		"onCommand:qiskit-vscode.discoverRemoteBackends",
+		"onCommand:qiskit-vscode.getDevicesStatus",
+		"onCommand:qiskit-vscode.listPendingJobs",
+		"onCommand:qiskit-vscode.getQueueStatus",
+		"onCommand:qiskit-vscode.getUserCredits"
 	],
 	"main": "./out/src/extension",
 	"contributes": {
@@ -163,90 +163,90 @@
 		],
 		"commands": [
 			{
-				"command": "qstudio.checkDependencies",
+				"command": "qiskit-vscode.checkDependencies",
 				"title": "Check Qiskit VSCode Extension dependencies",
-				"category": "qstudio"
+				"category": "qiskit-vscode"
 			},
 			{
-				"command": "qstudio.runQiskitCode",
+				"command": "qiskit-vscode.runQiskitCode",
 				"title": "▶ Run this Python",
-				"category": "qstudio"
+				"category": "qiskit-vscode"
 			},
 			{
-				"command": "qstudio.runQASMCode",
+				"command": "qiskit-vscode.runQASMCode",
 				"title": "▶ Run this QASM",
-				"category": "qstudio"
+				"category": "qiskit-vscode"
 			},
 			{
-				"command": "qstudio.initQConfig",
+				"command": "qiskit-vscode.initQConfig",
 				"title": "Enter your QConfig (token, etc.)",
-				"category": "qstudio"
+				"category": "qiskit-vscode"
 			},
 			{
-				"command": "qstudio.discoverLocalBackends",
+				"command": "qiskit-vscode.discoverLocalBackends",
 				"title": "Discover local backends available",
-				"category": "qstudio"
+				"category": "qiskit-vscode"
 			},
 			{
-				"command": "qstudio.discoverRemoteBackends",
+				"command": "qiskit-vscode.discoverRemoteBackends",
 				"title": "Discover remote backends available",
-				"category": "qstudio"
+				"category": "qiskit-vscode"
 			},
 			{
-				"command": "qstudio.getDevicesStatus",
+				"command": "qiskit-vscode.getDevicesStatus",
 				"title": "⚙ IBMQ devices status",
-				"category": "qstudio"
+				"category": "qiskit-vscode"
 			},
 			{
-				"command": "qstudio.listPendingJobs",
+				"command": "qiskit-vscode.listPendingJobs",
 				"title": "List the user's pending jobs",
-				"category": "qstudio"
+				"category": "qiskit-vscode"
 			},
 			{
-				"command": "qstudio.listExecutedJobs",
+				"command": "qiskit-vscode.listExecutedJobs",
 				"title": "List the user's executed jobs",
-				"category": "qstudio"
+				"category": "qiskit-vscode"
 			},
 			{
-				"command": "qstudio.getQueueStatus",
+				"command": "qiskit-vscode.getQueueStatus",
 				"title": "Get the queue status",
-				"category": "qstudio"
+				"category": "qiskit-vscode"
 			},
 			{
-				"command": "qstudio.getUserCredits",
+				"command": "qiskit-vscode.getUserCredits",
 				"title": "Get the user's available credits",
-				"category": "qstudio"
+				"category": "qiskit-vscode"
 			},
 			{
-				"command": "qstudio.activateVisualizations",
+				"command": "qiskit-vscode.activateVisualizations",
 				"title": "Activate the visualizations for the execution of code",
-				"category": "qstudio"
+				"category": "qiskit-vscode"
 			},
 			{
-				"command": "qstudio.deactivateVisualizations",
+				"command": "qiskit-vscode.deactivateVisualizations",
 				"title": "Deactivate the visualizations for the execution of code",
-				"category": "qstudio"
+				"category": "qiskit-vscode"
 			},
 			{
-				"command": "qstudio.enableBootInfo",
+				"command": "qiskit-vscode.enableBootInfo",
 				"title": "Enable the display of information related to the boot of the extension",
-				"category": "qstudio"
+				"category": "qiskit-vscode"
 			},
 			{
-				"command": "qstudio.disableBootInfo",
+				"command": "qiskit-vscode.disableBootInfo",
 				"title": "Disable the display of information related to the boot of the extension",
-				"category": "qstudio"
+				"category": "qiskit-vscode"
 			}
 		],
 		"keybindings": [
 			{
-				"command": "qstudio.runQiskitCode",
+				"command": "qiskit-vscode.runQiskitCode",
 				"key": "shift+enter",
 				"mac": "shift+enter",
 				"when": "editorTextFocus && editorLangId == 'python'"
 			},
 			{
-				"command": "qstudio.runQASMCode",
+				"command": "qiskit-vscode.runQASMCode",
 				"key": "shift+enter",
 				"mac": "shift+enter",
 				"when": "editorTextFocus && editorLangId == 'qasm-lang'"
@@ -256,27 +256,27 @@
 			"commandPalette": [
 				{
 					"when": "editorLangId == 'python'",
-					"command": "qstudio.runQiskitCode"
+					"command": "qiskit-vscode.runQiskitCode"
 				},
 				{
 					"when": "editorLangId == 'qasm-lang'",
-					"command": "qstudio.runQASMCode"
+					"command": "qiskit-vscode.runQASMCode"
 				}
 			],
 			"editor/title": [
 				{
 					"when": "editorTextFocus",
-					"command": "qstudio.getDevicesStatus",
+					"command": "qiskit-vscode.getDevicesStatus",
 					"group": "navigation"
 				},
 				{
 					"when": "editorTextFocus && editorLangId == 'python'",
-					"command": "qstudio.runQiskitCode",
+					"command": "qiskit-vscode.runQiskitCode",
 					"group": "navigation"
 				},
 				{
 					"when": "editorTextFocus && editorLangId == 'qasm-lang'",
-					"command": "qstudio.runQASMCode",
+					"command": "qiskit-vscode.runQASMCode",
 					"group": "navigation"
 				}
 			]
