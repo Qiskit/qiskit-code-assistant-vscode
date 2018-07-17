@@ -1,6 +1,6 @@
 {
 	"name": "qiskit-vscode",
-	"description": "VSCode extension to develop using IBM Q suite",
+	"description": "Simplifying Qiskit to make developing quantum circuits and applications faster",
 	"author": "IBM Research",
 	"license": "Apache-2.0",
 	"licenses": [
