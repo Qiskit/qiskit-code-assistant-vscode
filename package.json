@@ -27,12 +27,13 @@
 		"compile:server": "cd server && npm-run-all -s installServer compile && cd ..",
 		"watch:client": "tsc -w -p client/tsconfig.json",
 		"watch:server": "cd server && npm run installServer && cd .. && tsc -w -p server/tsconfig.json",
-		"test": "cd server && npm test && cd ..",
+		"test": "npm-run-all -s test:server test:client",
+		"test:server": "cd server && npm test && cd ..",
+		"test:client": "cd client && npm test && cd ..",
 		"lint": "cd server && npm run lint && cd ../client && npm run lint && cd ..",
 		"package": "npm run compile && cd client && vsce package && cd .."
 	},
 	"devDependencies": {
-		"@types/mocha": "^2.2.48",
 		"@types/node": "^7.0.61",
 		"typescript": "^2.8.3",
 		"npm-run-all": "^4.1.3"

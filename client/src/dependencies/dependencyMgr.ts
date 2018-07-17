@@ -9,9 +9,9 @@
 
 import * as Q from 'q';
 
-import { IDependency } from './interfaces';
+import { IDependency } from '../interfaces';
 import { Dependency } from './dependency';
-import { Version } from './version';
+import { Version } from '../version';
 import { workspace } from 'vscode';
 
 export class DependencyMgr {

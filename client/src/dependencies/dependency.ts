@@ -8,9 +8,9 @@
  */
 
 import * as Q from 'q';
-import { CommandExecutor } from './commandExecutor';
-import { Version } from './version';
-import { IDependency, IVersion } from './interfaces';
+import { CommandExecutor } from '../commandExecutor';
+import { Version } from '../version';
+import { IDependency, IVersion } from '../interfaces';
 
 export class Dependency implements IDependency {
     name: string;

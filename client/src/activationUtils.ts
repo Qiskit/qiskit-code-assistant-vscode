@@ -9,14 +9,19 @@
 
 import * as vscode from 'vscode';
 import * as Q from 'q';
-import { DependencyMgr } from './dependencyMgr';
-import { PackageMgr } from './packageMgr';
+import { DependencyMgr } from './dependencies/dependencyMgr';
 import { Util } from './utils';
 import { ResultProvider } from './resultProvider';
 import { CommandExecutor } from './commandExecutor';
 import { VizManager } from './visualizations';
 import { QLogger } from './logger';
 import { DeviceStatusVisualization } from './visualizations/deviceStatusVisualization';
+import { PackageManager } from './packages/packageManager';
+import { ChildProcessCommandExecutor } from './pip/pipCommandExecutor';
+import { PipExecutor } from './pip/pipExecutor';
+import { QStudioConfiguration } from './configuration';
+import { PackageInfo } from './interfaces';
+import { PyPiExecutor } from './pip/pypiExecutor';
 
 export namespace ActivationUtils {
     export function checkFirstRun(): Q.Promise<string> {
@@ -91,24 +96,21 @@ export namespace ActivationUtils {
                     QLogger.verbose('Check for required python packages...', this);
                     //vscode.window.showInformationMessage("Checking for required python packages...");
 
-                    let packMgr = new PackageMgr();
-                    return packMgr
-                        .check(verbose)
-                        .then(results => {
-                            QLogger.verbose(`packMgr.check extension.ts ${results}`, this);
-                            showExtensionBootInfo(results, verbose);
-                            return resolve();
-                        })
-                        .catch(err => {
-                            QLogger.error(`packMgr.check error extension.ts ${err}`, this);
-                            return Q.reject(err);
-                        });
+                    let commandExecutor = new ChildProcessCommandExecutor();
+                    let pipExecutor = new PipExecutor(commandExecutor);
+                    let pypiExecutor = new PyPiExecutor();
+                    let packageManager = new PackageManager(pipExecutor, pypiExecutor);
 
-                    // Iterate over the list of packages
+                    let notInstalled = (packageInfo: PackageInfo) =>
+                        QLogger.info(`Go to install ${packageInfo.name}`, this);
+                    let oldVersion = (packageInfo: PackageInfo) =>
+                        QLogger.info(`Go to update ${packageInfo.name}`, this);
+
+                    packageManager.verifyAndApply(QStudioConfiguration.requiredPackages(), notInstalled, oldVersion);
+                    return resolve();
                 })
                 .catch(error => {
                     QLogger.error(`Seems like there was a problem: ${error}`, this);
-                    //vscode.window.showWarningMessage('Seems like there was a problem: ' + error);
                     vscode.window.showErrorMessage(`Seems like there was a problem: ${error}`);
                     return reject(error);
                 });
