@@ -145,7 +145,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Readme file for users and VS Code Marketplace ([#63](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/63) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 - Run Python code using Qiskit and integration of useful commands from Qiskit & API ([#55](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/55) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - Qiskit errors highlight ([#40](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/40) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
-- Managing IBM Q Studio dependencies ([#38](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/38) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
+- Managing Qiskit VSCode Extension dependencies ([#38](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/38) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz))
 - ANTLR v4 grammar adaptation. ([#10](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/10) by [@Yeray-Darias](https://github.ibm.com/Yeray-Darias))
 
 ### 🐛 Fixed

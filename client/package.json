@@ -41,7 +41,7 @@
 	"contributes": {
 		"configuration": {
 			"type": "object",
-			"title": "IBM Q Studio configuration",
+			"title": "Qiskit VSCode Extension configuration",
 			"properties": {
 				"qasmLang.maxNumberOfProblems": {
 					"scope": "resource",
@@ -164,7 +164,7 @@
 		"commands": [
 			{
 				"command": "qstudio.checkDependencies",
-				"title": "Check IBM Q Studio dependencies",
+				"title": "Check Qiskit VSCode Extension dependencies",
 				"category": "qstudio"
 			},
 			{

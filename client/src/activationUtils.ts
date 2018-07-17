@@ -89,7 +89,7 @@ export namespace ActivationUtils {
                         QLogger.verbose(`Package: ${dep.name} Version: ${dep.installedVersion}`, this);
                         depsList += `👌 ${dep.name} v ${dep.installedVersion}\n`;
                     });
-                    showExtensionBootInfo(`IBM Q Studio dependencies found! ${depsList}`, verbose);
+                    showExtensionBootInfo(`Qiskit VSCode Extension dependencies found! ${depsList}`, verbose);
                     // Check for pyhton packages!
                 })
                 .then(() => {

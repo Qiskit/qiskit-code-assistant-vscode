@@ -1,21 +1,21 @@
-# IBM Q Studio
+# Qiskit VSCode Extension 
 
-> IBM Q Studio is a tool that makes simple working with Open QASM files and Qiskit SDK.
+> Simplifying Qiskit to make developing quantum circuits and applications faster
 
 [![Build Status](https://travis.ibm.com/IBMQuantum/qiskit-studio.svg?token=xyzxnZp9ALxp71M92JLp&branch=master)](https://travis.ibm.com/IBMQuantum/qiskit-studio)
 
 A Visual Studio Code extension with support for Qiskit and the Open QASM language. It provides some useful commands to make easier launching jobs and visualizing results among others.
 
-![alt text](./docs/images/execute-sample.gif "Example of running Q Studio")
+![Qiskit VSCode Extension](./docs/images/execute-sample.gif "Example of running Qiskit VSCode Extension")
 
 ## Quick start
 
 1. Open the Extensions sidebar panel in VS Code. `Ctrl + Shift + X` on Windows or `⇧ + ⌘ + X` on Mac.
-2. Search for Q Studio.
+2. Search for qiskit-extension.
 3. Click Install.
 4. Click Reload.
 
-Now the Q Studio extension will be available in Open QASM and Python(Qiskit) files.
+Now the Qiskit VSCode Extension will be available when coding using Open QASM and Python(Qiskit) files.
 
 ### To install the extension from a local file
 
@@ -42,7 +42,7 @@ The commands below are supported at the Command Palette (Command+Shift+P on macO
 
 Command | Description
 --- | ---
-```qiskit-vscode: Check IBM Q Studio dependencies``` | Check that the required dependencies are properly installed.
+```qiskit-vscode: Check Qiskit VSCode Extension dependencies``` | Check that the required dependencies are properly installed.
 ```qiskit-vscode: Enter your QConfig``` | Allow the user to configure her Qiskit credentials. Please, note that you will need to run this command prior to use `Get the status of IBM Q devices`, `qiskit-vscode: Discover remote backends available`, `qiskit-vscode: List the user's pending jobs`, `qiskit-vscode: List the user's executed jobs`, `qiskit-vscode: Get the queue status` and `qiskit-vscode: Get the user's available credits` or they will fail.
 ```qiskit-vscode: Run this Q code``` | Executes the code at the current editor tab (Qiskit or Open QASM).
 ```qiskit-vscode: Discover local backends available``` | The local backend available will be presented in a new tab.
@@ -72,7 +72,7 @@ Other variables are contributed, but it is not recommended to change them.
 
 ## Authors (alphabetical)
 
-IBM Q Studio was originally authored by Juan Cruz-Benito, Yeray Darias, Ismael Faro, Juan Gómez and Paco Martín.
+Qiskit VSCode Extension was originally authored by Juan Cruz-Benito, Yeray Darias, Ismael Faro, Juan Gómez and Paco Martín.
 
 And continues to grow with the help and work of [many people](https://github.ibm.com/IBMQuantum/qiskit-studio/graphs/contributors) who contribute to the project at different levels.
 
