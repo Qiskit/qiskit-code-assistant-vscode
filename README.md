@@ -61,10 +61,10 @@ Command | Description
 
 This extension contributes the following variables to the settings:
 
-  * `qiskit-vscode.qiskit.token`: Qiskit & Q Experience API Token.
-  * `qiskit-vscode.qiskit.hub`: User's Qiskit & Q Experience hub.
-  * `qiskit-vscode.qiskit.group`: User's Qiskit & Q Experience group.
-  * `qiskit-vscode.qiskit.project`: User's Qiskit & Q Experience project.
+  * `qiskit-vscode.ibmq.token`: Qiskit & Q Experience API Token.
+  * `qiskit-vscode.ibmq.hub`: User's Qiskit & Q Experience hub.
+  * `qiskit-vscode.ibmq.group`: User's Qiskit & Q Experience group.
+  * `qiskit-vscode.ibmq.project`: User's Qiskit & Q Experience project.
   * `qiskit-vscode.config.visualizationsFlag`: Flag to control if visualizations are displayed or not for code executions.
   * `qiskit-vscode.config.displayBootInfo`: Display info about the extension boot process.
 

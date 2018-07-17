@@ -215,15 +215,15 @@ export namespace ActivationUtils {
             vscode.commands.registerCommand('qiskit-vscode.discoverRemoteBackends', () =>
                 CommandExecutor.execPythonFile(remoteBackendsScript, [
                     '--apiToken',
-                    config.get('qiskit.token'),
+                    config.get('ibmq.token'),
                     '--url',
-                    config.get('qiskit.url'),
+                    config.get('ibmq.url'),
                     '--hub',
-                    config.get('qiskit.hub'),
+                    config.get('ibmq.hub'),
                     '--group',
-                    config.get('qiskit.group'),
+                    config.get('ibmq.group'),
                     '--project',
-                    config.get('qiskit.project')
+                    config.get('ibmq.project')
                 ]).then(remoteBackends => {
                     let resultProvider = new ResultProvider();
                     vscode.workspace.registerTextDocumentContentProvider(
@@ -254,15 +254,15 @@ export namespace ActivationUtils {
             vscode.commands.registerCommand('qiskit-vscode.getDevicesStatus', () =>
                 CommandExecutor.execPythonFile(remoteBackendsScript, [
                     '--apiToken',
-                    config.get('qiskit.token'),
+                    config.get('ibmq.token'),
                     '--url',
-                    config.get('qiskit.url'),
+                    config.get('ibmq.url'),
                     '--hub',
-                    config.get('qiskit.hub'),
+                    config.get('ibmq.hub'),
                     '--group',
-                    config.get('qiskit.group'),
+                    config.get('ibmq.group'),
                     '--project',
-                    config.get('qiskit.project'),
+                    config.get('ibmq.project'),
                     '--status',
                     'True'
                 ]).then(remoteDevicesStatus => {
@@ -292,15 +292,15 @@ export namespace ActivationUtils {
             vscode.commands.registerCommand('qiskit-vscode.listPendingJobs', () =>
                 CommandExecutor.execPythonFile(pendingJobsScript, [
                     '--apiToken',
-                    config.get('qiskit.token'),
+                    config.get('ibmq.token'),
                     '--url',
-                    config.get('qiskit.url'),
+                    config.get('ibmq.url'),
                     '--hub',
-                    config.get('qiskit.hub'),
+                    config.get('ibmq.hub'),
                     '--group',
-                    config.get('qiskit.group'),
+                    config.get('ibmq.group'),
                     '--project',
-                    config.get('qiskit.project')
+                    config.get('ibmq.project')
                 ]).then(pendingJobs => {
                     let resultProvider = new ResultProvider();
                     vscode.workspace.registerTextDocumentContentProvider('qiskit-pendingJobs-result', resultProvider);
@@ -324,15 +324,15 @@ export namespace ActivationUtils {
             vscode.commands.registerCommand('qiskit-vscode.listExecutedJobs', () =>
                 CommandExecutor.execPythonFile(executedJobsScript, [
                     '--apiToken',
-                    config.get('qiskit.token'),
+                    config.get('ibmq.token'),
                     '--url',
-                    config.get('qiskit.url'),
+                    config.get('ibmq.url'),
                     '--hub',
-                    config.get('qiskit.hub'),
+                    config.get('ibmq.hub'),
                     '--group',
-                    config.get('qiskit.group'),
+                    config.get('ibmq.group'),
                     '--project',
-                    config.get('qiskit.project')
+                    config.get('ibmq.project')
                 ]).then(executedJobs => {
                     let resultProvider = new ResultProvider();
                     vscode.workspace.registerTextDocumentContentProvider('qiskit-executedJobs-result', resultProvider);
@@ -356,15 +356,15 @@ export namespace ActivationUtils {
             vscode.commands.registerCommand('qiskit-vscode.getQueueStatus', () =>
                 CommandExecutor.execPythonFile(getQueueStatusScript, [
                     '--apiToken',
-                    config.get('qiskit.token'),
+                    config.get('ibmq.token'),
                     '--url',
-                    config.get('qiskit.url'),
+                    config.get('ibmq.url'),
                     '--hub',
-                    config.get('qiskit.hub'),
+                    config.get('ibmq.hub'),
                     '--group',
-                    config.get('qiskit.group'),
+                    config.get('ibmq.group'),
                     '--project',
-                    config.get('qiskit.project')
+                    config.get('ibmq.project')
                 ]).then(queueStatus => {
                     let resultProvider = new ResultProvider();
                     vscode.workspace.registerTextDocumentContentProvider('qiskit-queueStatus-result', resultProvider);
@@ -388,15 +388,15 @@ export namespace ActivationUtils {
             vscode.commands.registerCommand('qiskit-vscode.getUserCredits', () =>
                 CommandExecutor.execPythonFile(getUserCreditsScript, [
                     '--apiToken',
-                    config.get('qiskit.token'),
+                    config.get('ibmq.token'),
                     '--url',
-                    config.get('qiskit.url'),
+                    config.get('ibmq.url'),
                     '--hub',
-                    config.get('qiskit.hub'),
+                    config.get('ibmq.hub'),
                     '--group',
-                    config.get('qiskit.group'),
+                    config.get('ibmq.group'),
                     '--project',
-                    config.get('qiskit.project')
+                    config.get('ibmq.project')
                 ]).then(userCredits => {
                     let resultProvider = new ResultProvider();
                     vscode.workspace.registerTextDocumentContentProvider('qiskit-userCredits-result', resultProvider);
@@ -574,47 +574,47 @@ export namespace ActivationUtils {
                 const config = vscode.workspace.getConfiguration('qiskit-vscode');
                 try {
                     config
-                        .update('qiskit.token', apiToken, vscode.ConfigurationTarget.Global)
+                        .update('ibmq.token', apiToken, vscode.ConfigurationTarget.Global)
                         .then(() => {
                             if (hub !== undefined || hub !== '') {
-                                config.update('qiskit.hub', hub, vscode.ConfigurationTarget.Global).then(() => {
+                                config.update('ibmq.hub', hub, vscode.ConfigurationTarget.Global).then(() => {
                                     return null;
                                 });
                             } else {
-                                config.update('qiskit.hub', '', vscode.ConfigurationTarget.Global).then(() => {
+                                config.update('ibmq.hub', '', vscode.ConfigurationTarget.Global).then(() => {
                                     return null;
                                 });
                             }
                         })
                         .then(() => {
                             if (url !== undefined || url !== '') {
-                                config.update('qiskit.url', url, vscode.ConfigurationTarget.Global).then(() => {
+                                config.update('ibmq.url', url, vscode.ConfigurationTarget.Global).then(() => {
                                     return null;
                                 });
                             } else {
-                                config.update('qiskit.url', '', vscode.ConfigurationTarget.Global).then(() => {
+                                config.update('ibmq.url', '', vscode.ConfigurationTarget.Global).then(() => {
                                     return null;
                                 });
                             }
                         })
                         .then(() => {
                             if (group !== undefined || group !== '') {
-                                config.update('qiskit.group', group, vscode.ConfigurationTarget.Global).then(() => {
+                                config.update('ibmq.group', group, vscode.ConfigurationTarget.Global).then(() => {
                                     return null;
                                 });
                             } else {
-                                config.update('qiskit.group', '', vscode.ConfigurationTarget.Global).then(() => {
+                                config.update('ibmq.group', '', vscode.ConfigurationTarget.Global).then(() => {
                                     return null;
                                 });
                             }
                         })
                         .then(() => {
                             if (project !== undefined || project !== '') {
-                                config.update('qiskit.project', project, vscode.ConfigurationTarget.Global).then(() => {
+                                config.update('ibmq.project', project, vscode.ConfigurationTarget.Global).then(() => {
                                     return null;
                                 });
                             } else {
-                                config.update('qiskit.project', '', vscode.ConfigurationTarget.Global).then(() => {
+                                config.update('ibmq.project', '', vscode.ConfigurationTarget.Global).then(() => {
                                     return null;
                                 });
                             }

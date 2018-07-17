@@ -94,27 +94,27 @@
 					},
 					"description": "Qiskit and libraries related to run code"
 				},
-				"qiskit-vscode.qiskit.token": {
+				"qiskit-vscode.ibmq.token": {
 					"type": "string",
 					"default": null,
 					"description": "Qiskit & Q Experience API Token"
 				},
-				"qiskit-vscode.qiskit.url": {
+				"qiskit-vscode.ibmq.url": {
 					"type": "string",
 					"default": "https://quantumexperience.ng.bluemix.net/api",
 					"description": "IBM Q Experience URL"
 				},
-				"qiskit-vscode.qiskit.hub": {
+				"qiskit-vscode.ibmq.hub": {
 					"type": "string",
 					"default": null,
 					"description": "User's Qiskit & Q Experience hub"
 				},
-				"qiskit-vscode.qiskit.group": {
+				"qiskit-vscode.ibmq.group": {
 					"type": "string",
 					"default": null,
 					"description": "User's Qiskit & Q Experience group"
 				},
-				"qiskit-vscode.qiskit.project": {
+				"qiskit-vscode.ibmq.project": {
 					"type": "string",
 					"default": null,
 					"description": "User's Qiskit & Q Experience project"
