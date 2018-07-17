@@ -33,7 +33,7 @@ export namespace RenderBuilder {
     }
 
     function currentVisualizationFlag() {
-        let config = vscode.workspace.getConfiguration('ibm-q-studio');
+        let config = vscode.workspace.getConfiguration('qiskit-vscode');
 
         return config.get('config.visualizationsFlag');
     }

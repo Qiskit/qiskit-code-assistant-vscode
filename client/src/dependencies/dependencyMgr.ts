@@ -17,7 +17,7 @@ import { workspace } from 'vscode';
 export class DependencyMgr {
     static _dependencies: Q.Promise<IDependency[]> = [];
     constructor() {
-        const config = workspace.getConfiguration('ibm-q-studio');
+        const config = workspace.getConfiguration('qiskit-vscode');
         const dependList = config.get('python.dependencies');
 
         Object.keys(dependList).forEach(key => {

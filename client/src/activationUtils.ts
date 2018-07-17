@@ -27,12 +27,12 @@ export namespace ActivationUtils {
     export function checkFirstRun(): Q.Promise<string> {
         return Q.Promise((resolve, reject) => {
             try {
-                let config = vscode.workspace.getConfiguration('ibm-q-studio');
+                let config = vscode.workspace.getConfiguration('qiskit-vscode');
                 let firstRun = config.get('config.firstRun');
 
                 if (firstRun === true) {
                     vscode.workspace
-                        .getConfiguration('ibm-q-studio')
+                        .getConfiguration('qiskit-vscode')
                         .update('config.firstRun', false, vscode.ConfigurationTarget.Global)
                         .then(() => {
                             return resolve(true);
@@ -52,7 +52,7 @@ export namespace ActivationUtils {
                 return resolve(true);
             } else {
                 try {
-                    let config = vscode.workspace.getConfiguration('ibm-q-studio');
+                    let config = vscode.workspace.getConfiguration('qiskit-vscode');
                     let displayBubbles = config.get('config.displayBootInfo');
                     if (verbose === true || displayBubbles === true) {
                         return resolve(true);
@@ -118,7 +118,7 @@ export namespace ActivationUtils {
     }
 
     export function registerCommands(context: vscode.ExtensionContext): Q.Promise<string> {
-        const config = vscode.workspace.getConfiguration('ibm-q-studio');
+        const config = vscode.workspace.getConfiguration('qiskit-vscode');
         const executeQASMScript = Util.getOSDependentPath('../../resources/qiskitScripts/executeQASM.py');
         const localBackendsScript = Util.getOSDependentPath('../../resources/qiskitScripts/listLocalBackends.py');
         const remoteBackendsScript = Util.getOSDependentPath('../../resources/qiskitScripts/listRemoteBackends.py');
@@ -567,7 +567,7 @@ export namespace ActivationUtils {
 
         return Q.Promise((resolve, reject) => {
             try {
-                const config = vscode.workspace.getConfiguration('ibm-q-studio');
+                const config = vscode.workspace.getConfiguration('qiskit-vscode');
                 try {
                     config
                         .update('qiskit.token', apiToken, vscode.ConfigurationTarget.Global)
@@ -632,7 +632,7 @@ export namespace ActivationUtils {
         return Q.Promise((resolve, reject) => {
             try {
                 vscode.workspace
-                    .getConfiguration('ibm-q-studio')
+                    .getConfiguration('qiskit-vscode')
                     .update('config.visualizationsFlag', flag, vscode.ConfigurationTarget.Global)
                     .then(() => {
                         if (flag === true) {
@@ -651,7 +651,7 @@ export namespace ActivationUtils {
         return Q.Promise((resolve, reject) => {
             try {
                 vscode.workspace
-                    .getConfiguration('ibm-q-studio')
+                    .getConfiguration('qiskit-vscode')
                     .update('config.displayBootInfo', flag, vscode.ConfigurationTarget.Global)
                     .then(() => {
                         if (flag === true) {

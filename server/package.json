@@ -1,5 +1,5 @@
 {
-	"name": "ibm-q-studio",
+	"name": "qiskit-vscode",
 	"description": "VSCode extension to develop using IBM Q suite",
 	"author": "IBM Research",
 	"license": "Apache-2.0",

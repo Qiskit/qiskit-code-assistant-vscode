@@ -61,12 +61,12 @@ Command | Description
 
 This extension contributes the following variables to the settings:
 
-  * `ibm-q-studio.qiskit.token`: Qiskit & Q Experience API Token.
-  * `ibm-q-studio.qiskit.hub`: User's Qiskit & Q Experience hub.
-  * `ibm-q-studio.qiskit.group`: User's Qiskit & Q Experience group.
-  * `ibm-q-studio.qiskit.project`: User's Qiskit & Q Experience project.
-  * `ibm-q-studio.config.visualizationsFlag`: Flag to control if visualizations are displayed or not for code executions.
-  * `ibm-q-studio.config.displayBootInfo`: Display info about the extension boot process.
+  * `qiskit-vscode.qiskit.token`: Qiskit & Q Experience API Token.
+  * `qiskit-vscode.qiskit.hub`: User's Qiskit & Q Experience hub.
+  * `qiskit-vscode.qiskit.group`: User's Qiskit & Q Experience group.
+  * `qiskit-vscode.qiskit.project`: User's Qiskit & Q Experience project.
+  * `qiskit-vscode.config.visualizationsFlag`: Flag to control if visualizations are displayed or not for code executions.
+  * `qiskit-vscode.config.displayBootInfo`: Display info about the extension boot process.
 
 Other variables are contributed, but it is not recommended to change them.
 

@@ -13,7 +13,7 @@ import { PackageInfo } from './interfaces';
 
 export namespace QStudioConfiguration {
     export function requiredPackages(): PackageInfo[] {
-        let config = workspace.getConfiguration('ibm-q-studio');
+        let config = workspace.getConfiguration('qiskit-vscode');
         let qiskitPackages = config.get('qiskit.packages');
 
         return Object.keys(qiskitPackages).map(key => ({
