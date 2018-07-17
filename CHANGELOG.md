@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### 🎉 Added
+- Better management of QConfig to improve users' experience ([#183](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/183) by [@Juan-Cruz]
 
 ### 🐛 Fixed
 - Now can be installed & updated several qiskit-related dependencies simultaneously ([#178](https://github.ibm.com/IBMQuantum/qiskit-studio/pull/178) by [@Juan-Cruz]
