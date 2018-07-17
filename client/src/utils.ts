@@ -22,9 +22,9 @@ export namespace Util {
     export function isQConfigConfigured(): Q.Promise<boolean> {
         return Q.Promise((resolve, reject) => {
             try {
-                let config = vscode.workspace.getConfiguration('ibm-q-studio');
+                let config = vscode.workspace.getConfiguration('qiskit-vscode');
                 let tokenSetup = config.get('ibmq.token');
-                if (tokenSetup !== '' && tokenSetup !== null) {
+                if (tokenSetup !== '' && tokenSetup !== null && tokenSetup !== undefined) {
                     return resolve(true);
                 } else {
                     return resolve(false);
