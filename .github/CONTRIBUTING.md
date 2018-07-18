@@ -10,7 +10,7 @@ You can contribute in many ways to this project.
 ### Issue reporting
 
 This is a good point to start when you find a problem, please add
-it to the `issue tracker <https://github.ibm.com/IBMQuantum/qiskit-studio/issues>`_.
+it to the `issue tracker <https://github.ibm.com/IBMQuantum/qiskit-vscode/issues>`_.
 The ideal report should include the steps to reproduce it.
 
 ### Doubts solving
@@ -82,12 +82,12 @@ We use the [Github Flow model](https://guides.github.com/introduction/flow/), so
   - Will be merged in the `master` branch through a PR and removed after merging the branch.
 
 
-To get (most possible) stable versions of this extensions, retrieve that from the [releases](https://github.ibm.com/IBMQuantum/qiskit-studio/releases)
+To get (most possible) stable versions of this extensions, retrieve that from the [releases](https://github.ibm.com/IBMQuantum/qiskit-vscode/releases)
 
 
 ### Release cycle
 
-From time to time, we will release brand new versions of the Qiskit Studio. These are well-tested versions of the software.
+From time to time, we will release brand new versions of the Qiskit VSCode Extension. These are well-tested versions of the software.
 
 When it is necessary to release a new version, we follow the Semantic Versioning and this process:
 
@@ -112,9 +112,9 @@ Master, always master to begin the development.
 
 ## Documentation
 
-For the moment, the documentation is compiled in the `README.md`, in this `CONTRIBUTING.md` and the [Wiki](https://github.ibm.com/IBMQuantum/qiskit-studio/wiki).
+For the moment, the documentation is compiled in the `README.md`, in this `CONTRIBUTING.md` and the [Wiki](https://github.ibm.com/IBMQuantum/qiskit-vscode/wiki).
 
-## Developing code for Qiskit Studio
+## Developing code for Qiskit VSCode Extension
 
 This section includes some tips that will help you to develop code for this extension.
 
@@ -133,9 +133,9 @@ npm run compile
 
 Open the project with Visual Studio Code and follow the instructions below.
 
-[[https://github.ibm.com/IBMQuantum/qiskit-studio/blob/master/docs/images/qiskit-studio_1.png|alt=step1]]
-[[https://github.ibm.com/IBMQuantum/qiskit-studio/blob/master/docs/images/qiskit-studio_2.png|alt=step1]]
-[[https://github.ibm.com/IBMQuantum/qiskit-studio/blob/master/docs/images/qiskit-studio_3.png|alt=step1]]
+[[https://github.ibm.com/IBMQuantum/qiskit-vscode/blob/master/docs/images/qiskit-vscode_1.png|alt=step1]]
+[[https://github.ibm.com/IBMQuantum/qiskit-vscode/blob/master/docs/images/qiskit-vscode_2.png|alt=step1]]
+[[https://github.ibm.com/IBMQuantum/qiskit-vscode/blob/master/docs/images/qiskit-vscode_3.png|alt=step1]]
 
 ### Development setup
 
@@ -177,7 +177,7 @@ In Visual Studio Code, a language support extension is a little bit different fr
 
 The server side of the extension is divided into various components to being able to evolve it more easily.
 
-[[https://github.ibm.com/IBMQuantum/qiskit-studio/blob/master/docs/diagrams/ParserStructure.png|alt=Parser code structure]]
+[[https://github.ibm.com/IBMQuantum/qiskit-vscode/blob/master/docs/diagrams/ParserStructure.png|alt=Parser code structure]]
 
 ### Configuring Python >3.5
 
@@ -204,7 +204,7 @@ Some additional information can be found in this [link](https://www.digitalocean
 
 ### Dependency Management
 
-IBM Q Studio includes features to manage the related dependencies. IBM Q Studio will not work without `python` (>=3.5) and `pip` (>=9.0.0) installed in your system (or virtualenv). Apart from python and pip, this extension requires the `qiskit` SDK (>=0.5) and its related dependencies to run executions and to use other core-features.
+Qiskit VSCode Extension includes features to manage the related dependencies. Qiskit VSCode Extension will not work without `python` (>=3.5) and `pip` (>=9.0.0) installed in your system (or virtualenv). Apart from python and pip, this extension requires the `qiskit` SDK (>=0.5.4) and its related dependencies to run executions and to use other core-features.
 
 To assure the proper work of this extension, it checks your environment to verify it includes the different dependencies, also allowing to update or install them if it is needed.
 
@@ -212,4 +212,4 @@ To assure the proper work of this extension, it checks your environment to verif
 ### Work with different _virtualenvs_
 In the Python ecosystem is common to use different _virtualenvs_ to manage the execution environment. In our case, we allow users to change their python virtualenvs using the VSCode utilities as documented in  https://code.visualstudio.com/docs/python/environments
 
-If you change your Python _virtualenv_ after beginning your use of VSCode, please check the IBM Q Studio-related dependencies again using the command `qstudio.checkDependencies` to assure the proper running of this extension.
+If you change your Python _virtualenv_ after beginning your use of VSCode, please check the Qiskit VSCode Extension-related dependencies again using the command `qiskit-vscode.checkDependencies` to assure the proper running of this extension.

@@ -18,7 +18,7 @@ export namespace QLogger {
     const logFormat = printf(event => `${event.level} - ${event.label}: ${event.message}`);
 
     const fileTransport = new winston.transports.File({
-        filename: 'qstudio-log.out',
+        filename: 'qiskit-vscode-log.out',
         maxsize: 1000000,
         maxFiles: 1,
         tailable: true

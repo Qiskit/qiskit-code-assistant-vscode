@@ -6,13 +6,13 @@
 <!-- ⚠️ Before writing your issue make sure you are using: -->
 <!-- VSCode 1.23.x -->
 <!-- qiskit-core ^0.5.x -->
-<!-- The latest version of Qiskit Studio -->
+<!-- The latest version of Qiskit VSCode Extension -->
 
 ### Informations
 
 - **VSCode version**:
 - **Qiskit (Python SDK) version**:
-- **Qiskit Studio version**:
+- **Qiskit VSCode Extension version**:
 - **Operating system**:
 
 ### What is the current behavior?

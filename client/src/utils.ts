@@ -22,9 +22,9 @@ export namespace Util {
     export function isQConfigConfigured(): Q.Promise<boolean> {
         return Q.Promise((resolve, reject) => {
             try {
-                let config = vscode.workspace.getConfiguration('ibm-q-studio');
-                let tokenSetup = config.get('qiskit.token');
-                if (tokenSetup !== '' && tokenSetup !== null) {
+                let config = vscode.workspace.getConfiguration('qiskit-vscode');
+                let tokenSetup = config.get('ibmq.token');
+                if (tokenSetup !== '' && tokenSetup !== null && tokenSetup !== undefined) {
                     return resolve(true);
                 } else {
                     return resolve(false);
@@ -46,14 +46,14 @@ export namespace Util {
                     .then(selection => {
                         if (selection === 'Ok, configure QConfig') {
                             QLogger.verbose(`Clicked on OK!`, this);
-                            vscode.commands.executeCommand('qstudio.initQConfig');
+                            vscode.commands.executeCommand('qiskit-vscode.initQConfig');
                             return resolve(true);
                         } else if (selection === 'Dismiss') {
                             QLogger.verbose(`Clicked on Dismiss!`, this);
                             return resolve(false);
                         } else {
                             QLogger.verbose(`Clicked on other element! Redirecting to configuration anyway`, this);
-                            vscode.commands.executeCommand('qstudio.initQConfig');
+                            vscode.commands.executeCommand('qiskit-vscode.initQConfig');
                             return resolve(true);
                         }
                     });

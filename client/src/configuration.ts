@@ -11,9 +11,9 @@ import { workspace } from 'vscode';
 import { Version } from './version';
 import { PackageInfo } from './interfaces';
 
-export namespace QStudioConfiguration {
+export namespace QiskitVSCodeConfiguration {
     export function requiredPackages(): PackageInfo[] {
-        let config = workspace.getConfiguration('ibm-q-studio');
+        let config = workspace.getConfiguration('qiskit-vscode');
         let qiskitPackages = config.get('qiskit.packages');
 
         return Object.keys(qiskitPackages).map(key => ({

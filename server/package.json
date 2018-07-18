@@ -1,6 +1,6 @@
 {
-	"name": "ibm-q-studio",
-	"description": "VSCode extension to develop using IBM Q suite",
+	"name": "qiskit-vscode",
+	"description": "Simplifying Qiskit to make developing quantum circuits and applications faster",
 	"author": "IBM Research",
 	"license": "Apache-2.0",
 	"licenses": [
@@ -16,7 +16,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.ibm.com/IBMQuantum/qiskit-studio"
+		"url": "https://github.ibm.com/IBMQuantum/qiskit-vscode"
 	},
 	"dependencies": {
 		"vscode-languageserver": "^3.5.0",
