@@ -2,7 +2,7 @@
 
 > Simplifying Qiskit to make developing quantum circuits and applications faster
 
-[![Build Status](https://travis.com/Qiskit/qiskit-vscode.svg?token=xyzxnZp9ALxp71M92JLp&branch=master)](https://travis.com/Qiskit/qiskit-vscode)
+[![Build Status](https://travis.com/Qiskit/qiskit-vscode.svg?branch=master)](https://travis.com/Qiskit/qiskit-vscode)
 
 A Visual Studio Code extension with support for Qiskit and the Open QASM language. It provides some useful commands to make easier launching jobs and visualizing results among others.
 
