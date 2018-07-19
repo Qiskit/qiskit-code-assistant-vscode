@@ -74,7 +74,7 @@ Other variables are contributed, but it is not recommended to change them.
 
 Qiskit VSCode Extension was originally authored by Juan Cruz-Benito, Yeray Darias, Ismael Faro, Juan Gómez and Paco Martín.
 
-And continues to grow with the help and work of [many people](https://github.ibm.com/IBMQuantum/qiskit-vscode/graphs/contributors) who contribute to the project at different levels.
+And continues to grow with the help and work of [many people](https://github.com/Qiskit/qiskit-vscode/graphs/contributors) who contribute to the project at different levels.
 
 ## License
 This project uses the [Apache License Version 2.0 software license](https://www.apache.org/licenses/LICENSE-2.0).
