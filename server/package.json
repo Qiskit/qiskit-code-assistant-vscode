@@ -16,7 +16,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.ibm.com/IBMQuantum/qiskit-vscode"
+		"url": "https://github.com/Qiskit/qiskit-vscode"
 	},
 	"dependencies": {
 		"vscode-languageserver": "^3.5.0",

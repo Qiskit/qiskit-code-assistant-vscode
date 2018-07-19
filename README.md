@@ -2,7 +2,7 @@
 
 > Simplifying Qiskit to make developing quantum circuits and applications faster
 
-[![Build Status](https://travis.ibm.com/IBMQuantum/qiskit-vscode.svg?token=xyzxnZp9ALxp71M92JLp&branch=master)](https://travis.ibm.com/IBMQuantum/qiskit-vscode)
+[![Build Status](https://travis.com/Qiskit/qiskit-vscode.svg?branch=master)](https://travis.com/Qiskit/qiskit-vscode)
 
 A Visual Studio Code extension with support for Qiskit and the Open QASM language. It provides some useful commands to make easier launching jobs and visualizing results among others.
 
@@ -19,7 +19,7 @@ Now the Qiskit VSCode Extension will be available when coding using Open QASM an
 
 ### To install the extension from a local file
 
-Download the [latest release](https://github.ibm.com/IBMQuantum/qiskit-vscode/releases) of the extension from and follow the [instructions to install it](https://code.visualstudio.com/docs/editor/extension-gallery#_install-from-a-vsix)
+Download the [latest release](https://github.com/Qiskit/qiskit-vscode/releases) of the extension from and follow the [instructions to install it](https://code.visualstudio.com/docs/editor/extension-gallery#_install-from-a-vsix)
 
 ### Your first program using Qiskit
 We encourage you to visit [https://qiskit.org/](https://qiskit.org/) to explore the different examples, documentation and tutorials.
@@ -74,4 +74,4 @@ Other variables are contributed, but it is not recommended to change them.
 
 Qiskit VSCode Extension was originally authored by Juan Cruz-Benito, Yeray Darias, Ismael Faro, Juan Gómez and Paco Martín.
 
-And continues to grow with the help and work of [many people](https://github.ibm.com/IBMQuantum/qiskit-vscode/graphs/contributors) who contribute to the project at different levels.
+And continues to grow with the help and work of [many people](https://github.com/Qiskit/qiskit-vscode/graphs/contributors) who contribute to the project at different levels.
