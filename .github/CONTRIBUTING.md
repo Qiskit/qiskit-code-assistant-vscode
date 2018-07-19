@@ -10,7 +10,7 @@ You can contribute in many ways to this project.
 ### Issue reporting
 
 This is a good point to start when you find a problem, please add
-it to the `issue tracker <https://github.ibm.com/IBMQuantum/qiskit-vscode/issues>`_.
+it to the `issue tracker <https://github.com/Qiskit/qiskit-vscode/issues>`_.
 The ideal report should include the steps to reproduce it.
 
 ### Doubts solving
@@ -82,7 +82,7 @@ We use the [Github Flow model](https://guides.github.com/introduction/flow/), so
   - Will be merged in the `master` branch through a PR and removed after merging the branch.
 
 
-To get (most possible) stable versions of this extensions, retrieve that from the [releases](https://github.ibm.com/IBMQuantum/qiskit-vscode/releases)
+To get (most possible) stable versions of this extensions, retrieve that from the [releases](https://github.com/Qiskit/qiskit-vscode/releases)
 
 
 ### Release cycle
@@ -112,7 +112,7 @@ Master, always master to begin the development.
 
 ## Documentation
 
-For the moment, the documentation is compiled in the `README.md`, in this `CONTRIBUTING.md` and the [Wiki](https://github.ibm.com/IBMQuantum/qiskit-vscode/wiki).
+For the moment, the documentation is compiled in the `README.md`, in this `CONTRIBUTING.md` and the [Wiki](https://github.com/Qiskit/qiskit-vscode/wiki).
 
 ## Developing code for Qiskit VSCode Extension
 
@@ -133,9 +133,9 @@ npm run compile
 
 Open the project with Visual Studio Code and follow the instructions below.
 
-[[https://github.ibm.com/IBMQuantum/qiskit-vscode/blob/master/docs/images/qiskit-vscode_1.png|alt=step1]]
-[[https://github.ibm.com/IBMQuantum/qiskit-vscode/blob/master/docs/images/qiskit-vscode_2.png|alt=step1]]
-[[https://github.ibm.com/IBMQuantum/qiskit-vscode/blob/master/docs/images/qiskit-vscode_3.png|alt=step1]]
+[[https://github.com/Qiskit/qiskit-vscode/blob/master/docs/images/qiskit-vscode_1.png|alt=step1]]
+[[https://github.com/Qiskit/qiskit-vscode/blob/master/docs/images/qiskit-vscode_2.png|alt=step1]]
+[[https://github.com/Qiskit/qiskit-vscode/blob/master/docs/images/qiskit-vscode_3.png|alt=step1]]
 
 ### Development setup
 
@@ -177,7 +177,7 @@ In Visual Studio Code, a language support extension is a little bit different fr
 
 The server side of the extension is divided into various components to being able to evolve it more easily.
 
-[[https://github.ibm.com/IBMQuantum/qiskit-vscode/blob/master/docs/diagrams/ParserStructure.png|alt=Parser code structure]]
+[[https://github.com/Qiskit/qiskit-vscode/blob/master/docs/diagrams/ParserStructure.png|alt=Parser code structure]]
 
 ### Configuring Python >3.5
 

@@ -13,7 +13,7 @@
 	"version": "0.2.2",
 	"repository": {
 		"type": "git",
-		"url": "https://github.ibm.com/IBMQuantum/qiskit-vscode"
+		"url": "https://github.com/Qiskit/qiskit-vscode"
 	},
 	"icon": "icon.png",
 	"engines": {
