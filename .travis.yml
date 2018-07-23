@@ -4,20 +4,14 @@ sudo: false
 node_js:
   - "9.5.0"
 
-before_install:
-  - npm install -g vsce
-
-install:
-  - npm install
-
 jobs: 
   include:
+    - stage: install
+      script: npm install
     - stage: compile
       script: npm run compile
     - stage: test
       script: npm test
-    - stage: lint
-      script: npm run lint
 
 notifications:
   email:

@@ -30,7 +30,6 @@
 		"test": "npm-run-all -s test:server test:client",
 		"test:server": "cd server && npm test && cd ..",
 		"test:client": "cd client && npm test && cd ..",
-		"lint": "cd server && npm run lint && cd ../client && npm run lint && cd ..",
 		"package": "npm run compile && cd client && vsce package && cd .."
 	},
 	"devDependencies": {
