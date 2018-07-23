@@ -22,7 +22,8 @@ deploy:
     skip_cleanup: true
     script: vsce publish -p $VSC_KEY --packagePath client/*.vsix
     on:
-      branch: travis-deploy
+      branch: master
+      tags: true
 
 notifications:
   email:
