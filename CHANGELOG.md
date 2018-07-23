@@ -17,14 +17,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### 🎉 Added
-- Better management of QConfig to improve users' experience ([#183](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/183) by [@Juan-Cruz]
+- Better management of QConfig to improve users' experience ([#183](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/183) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz)
 
 ### 🐛 Fixed
-- Now can be installed & updated several qiskit-related dependencies simultaneously ([#178](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/178) by [@Juan-Cruz]
+- Now can be installed & updated several qiskit-related dependencies simultaneously ([#178](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/178) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz)
 
 ### ✏️ Changed
-- Update publisher & author in package.json files ([#4](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/4) by [@cbjuan]
-- Renaming the repo, extension & texts descriptions to qiskit-vscode ([#184](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/184) by [@Juan-Cruz]
+- Update publisher & author in package.json files ([#4](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/4) by [@cbjuan](https://github.com/cbjuan)
+- Renaming the repo, extension & texts descriptions to qiskit-vscode ([#184](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/184) by [@Juan-Cruz](https://github.ibm.com/Juan-Cruz)
 - Refactoring the management of dependencies ([#178](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/178) by [@Juan-Cruz]
 
 ### 👾 Security
