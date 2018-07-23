@@ -17,6 +17,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### 🎉 Added
+
+
+### 🐛 Fixed
+
+
+### ✏️ Changed
+
+
+### 👾 Security
+
+
+## [v0.3.0] - 2018-07-23
+
+### 🎉 Added
 - Better management of QConfig to improve users' experience ([#183](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/183) by [@cbjuan](https://github.com/cbjuan)
 
 ### 🐛 Fixed
@@ -172,11 +186,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Re-styling charts ([#97](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/97) by [@cbjuan](https://github.com/cbjuan))
 - Extension size reduction ([#76](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/76) by [@ydarias](https://github.com/ydarias))
 
-[Unreleased]: https://github.ibm.com/IBMQuantum/qiskit-vscode/compare/v0.2.2...HEAD
-[v0.2.2]: https://github.ibm.com/IBMQuantum/qiskit-vscode/compare/v0.2.1...v0.2.2
-[v0.2.1]: https://github.ibm.com/IBMQuantum/qiskit-vscode/compare/v0.2.0...v0.2.1
-[v0.2.0]: https://github.ibm.com/IBMQuantum/qiskit-vscode/compare/v0.1.1...v0.2.0
-[v0.1.1]: https://github.ibm.com/IBMQuantum/qiskit-vscode/compare/v0.1.0...v0.1.1
-[v0.1.0]: https://github.ibm.com/IBMQuantum/qiskit-vscode/compare/v0.0.2...v0.1.0
-[v0.0.2]: https://github.ibm.com/IBMQuantum/qiskit-vscode/compare/v0.0.1...v0.0.2
-[v0.0.1]: https://github.ibm.com/IBMQuantum/qiskit-vscode/compare/d35decaf632f7b197c9df496a624baf2f46400d7...v0.0.1
+[Unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.2.2...HEAD
+[v0.3.0]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.0...HEAD
+[v0.2.2]: https://github.com/Qiskit/qiskit-vscode/compare/v0.2.1...v0.2.2
+[v0.2.1]: https://github.com/Qiskit/qiskit-vscode/compare/v0.2.0...v0.2.1
+[v0.2.0]: https://github.com/Qiskit/qiskit-vscode/compare/v0.1.1...v0.2.0
+[v0.1.1]: https://github.com/Qiskit/qiskit-vscode/compare/v0.1.0...v0.1.1
+[v0.1.0]: https://github.com/Qiskit/qiskit-vscode/compare/v0.0.2...v0.1.0
+[v0.0.2]: https://github.com/Qiskit/qiskit-vscode/compare/v0.0.1...v0.0.2
+[v0.0.1]: https://github.com/Qiskit/qiskit-vscode/compare/d35decaf632f7b197c9df496a624baf2f46400d7...v0.0.1
