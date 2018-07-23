@@ -23,7 +23,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Now can be installed & updated several qiskit-related dependencies simultaneously ([#178](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/178) by [@cbjuan](https://github.com/cbjuan)
 
 ### ✏️ Changed
-- Update publisher & author in package.json files ([#4](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/4) by [@cbjuan](https://github.com/cbjuan)
+- Update logo to the Qiskit one ([#7](https://github.com/Qiskit/qiskit-vscode/pull/7) by [@cbjuan](https://github.com/cbjuan)
+- Update publisher & author in package.json files ([#4](https://github.com/Qiskit/qiskit-vscode/pull/4) by [@cbjuan](https://github.com/cbjuan)
 - Renaming the repo, extension & texts descriptions to qiskit-vscode ([#184](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/184) by [@cbjuan](https://github.com/cbjuan)
 - Refactoring the management of dependencies ([#178](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/178) by [@cbjuan](https://github.com/cbjuan)
 
