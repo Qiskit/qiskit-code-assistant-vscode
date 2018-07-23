@@ -6,7 +6,7 @@
 
 A Visual Studio Code extension with support for Qiskit and the Open QASM language. It provides some useful commands to make easier launching jobs and visualizing results among others.
 
-![Qiskit VSCode Extension](./docs/images/execute-sample.gif "Example of running Qiskit VSCode Extension")
+![Qiskit VSCode Extension](https://raw.githubusercontent.com/Qiskit/qiskit-vscode/master/docs/images/execute-sample.gif "Example of running Qiskit VSCode Extension")
 
 ## Quick start
 
