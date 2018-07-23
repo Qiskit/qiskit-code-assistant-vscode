@@ -172,8 +172,8 @@ export class PackageManager {
                 `Installing ${packageName}... (this may take some time, be patient 🙏)`
             );
 
-            const updated = await this.pipExecutor.install(packageName);
-            if (updated) {
+            const installed = await this.pipExecutor.install(packageName);
+            if (installed) {
                 return true;
             } else {
                 return false;

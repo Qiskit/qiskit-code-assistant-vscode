@@ -50,8 +50,10 @@ def main():
     backs = available_backends({'local': False})
 
     if str(args['status']) == "True":
-        with Pool(3) as p:
-            statusDevices = list(p.map(createDeviceStatus, backs))
+        statusDevices = []
+        for back in backs:
+            fullInfoBack = createDeviceStatus(back)
+            statusDevices.append(fullInfoBack)
         print(json.dumps(statusDevices, indent=2, sort_keys=True))
     else:
         print(json.dumps(backs, indent=2, sort_keys=True))
