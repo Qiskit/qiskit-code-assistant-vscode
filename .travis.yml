@@ -5,8 +5,7 @@ node_js:
   - "9.5.0"
 
 install:
-  - npm i -g npm@6.1.0
-  - npm ci
+  - npm install
 
 script:
   - npm run compile
@@ -19,7 +18,10 @@ after_success:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: vsce publish -p $VSC_KEY --packagePath client/*.vsix
+    script: 
+      - cd client
+      - vsce publish -p $VSC_KEY
+      - cd ..
     on:
       branch: travis-deploy
 
@@ -28,5 +30,5 @@ notifications:
     recipients:
       - juan.cruz@ibm.com
       - yeray.darias@ibm.com
-    on_success: change
+    on_success: never
     on_failure: always
