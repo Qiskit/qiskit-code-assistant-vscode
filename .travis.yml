@@ -6,9 +6,7 @@ node_js:
   - "9.5.0"
 
 os:
-  - linux
-
-dist: trusty
+  - osx
 
 install:
   - npm install -g vsce
