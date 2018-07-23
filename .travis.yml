@@ -20,10 +20,7 @@ script:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: 
-      - cd client
-      - vsce publish -p $VSC_KEY
-      - cd ..
+    script: vsce publish -p $VSC_KEY --packagePath client/*.vsix
     on:
       branch: travis-deploy
 
