@@ -4,10 +4,11 @@ sudo: false
 node_js:
   - "9.5.0"
 
+install:
+  - npm ci
+
 jobs: 
   include:
-    - stage: install
-      script: npm install
     - stage: compile
       script: npm run compile
     - stage: test
