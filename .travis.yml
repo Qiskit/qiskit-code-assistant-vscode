@@ -4,6 +4,9 @@ sudo: false
 node_js:
   - "node"
 
+before_install:
+  - npm install -g vsce
+
 install:
   - npm ci
 
@@ -13,6 +16,9 @@ jobs:
       script: npm run compile
     - stage: test
       script: npm test
+    - stage: deploy
+      if: branch = travis-deploy AND tag =~ ^v\d\.\d\.\d$
+      script: vsce publish -p $VSC_KEY
 
 notifications:
   email:
