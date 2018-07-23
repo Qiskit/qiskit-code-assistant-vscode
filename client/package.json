@@ -1,7 +1,7 @@
 {
 	"name": "qiskit-vscode",
 	"description": "Simplifying Qiskit to make developing quantum circuits and applications faster",
-	"author": "IBM Research",
+	"author": "Qiskit",
 	"license": "Apache-2.0",
 	"licenses": [
 		{
@@ -9,7 +9,7 @@
 			"url": "http://www.apache.org/licenses/LICENSE-2.0"
 		}
 	],
-	"publisher": "ibm-research",
+	"publisher": "qiskit",
 	"version": "0.2.2",
 	"repository": {
 		"type": "git",
