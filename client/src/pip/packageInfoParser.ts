@@ -9,22 +9,22 @@
 
 export namespace PackageInfoParser {
     export function parseName(input: string): string {
-        return /Name:\s*(.+)\n/g.exec(input)[1].trim();
+        return /Name:\s*(.+)/g.exec(input)[1].trim();
     }
 
     export function parseVersion(input: string): string {
-        return /Version:\s*(.+)\n/g.exec(input)[1].trim();
+        return /Version:\s*(.+)/g.exec(input)[1].trim();
     }
 
     export function parseSummary(input: string): string {
-        return /Summary:\s*(.+)\n/g.exec(input)[1].trim();
+        return /Summary:\s*(.+)/g.exec(input)[1].trim();
     }
 
     export function parseLocation(input: string): string {
-        return /Location:\s*(.+)\n/g.exec(input)[1].trim();
+        return /Location:\s*(.+)/g.exec(input)[1].trim();
     }
 
     export function parseDependencies(input: string): string {
-        return /Requires:\s*(.+)\n/g.exec(input)[1].trim();
+        return /Requires:\s*(.+)/g.exec(input)[1].trim();
     }
 }
