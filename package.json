@@ -30,7 +30,7 @@
 		"test": "npm-run-all -s test:server test:client",
 		"test:server": "cd server && npm test && cd ..",
 		"test:client": "cd client && npm test && cd ..",
-		"package": "npm run compile && cd client && vsce package && cd .."
+		"package": "cd client && vsce package && cd .."
 	},
 	"devDependencies": {
 		"@types/node": "^7.0.61",

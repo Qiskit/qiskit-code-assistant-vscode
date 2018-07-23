@@ -2,9 +2,10 @@ language: node_js
 sudo: false
 
 node_js:
-  - "node"
+  - "9.5.0"
 
 install:
+  - npm i -g npm@6.1.0
   - npm ci
 
 script:
