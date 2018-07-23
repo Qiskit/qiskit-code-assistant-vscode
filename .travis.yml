@@ -4,13 +4,18 @@ sudo: false
 node_js:
   - "9.5.0"
 
+before_install:
+  - npm install -g npm@6.1.0
+
 install:
-  - npm install -g vsce
   - npm install
 
 script:
   - npm run compile
   - npm test
+
+before_deploy: 
+  - npm install -g vsce
   - npm run package
 
 deploy:
