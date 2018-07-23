@@ -20,7 +20,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Better management of QConfig to improve users' experience ([#183](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/183) by [@Juan-Cruz]
 
 ### 🐛 Fixed
+- RegEx expressions fixed when getting pip show output in Windows([#6](https://github.com/Qiskit/qiskit-vscode/pull/6) by [@cbjuan](http://github.com/cbjuan)
+- Replacing pool.map method by a for loop to avoid errors when getting the IBMQ devices' status in Windows ([#6](https://github.com/Qiskit/qiskit-vscode/pull/6) by [@cbjuan](http://github.com/cbjuan)
 - Now can be installed & updated several qiskit-related dependencies simultaneously ([#178](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/178) by [@Juan-Cruz]
+
 
 ### ✏️ Changed
 - Update publisher & author in package.json files ([#4](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/4) by [@cbjuan]
