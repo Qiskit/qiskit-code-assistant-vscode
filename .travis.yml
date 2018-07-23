@@ -13,7 +13,6 @@ script:
 
 after_success:
   - npm install -g vsce
-  - npm run package
 
 deploy:
   - provider: script
