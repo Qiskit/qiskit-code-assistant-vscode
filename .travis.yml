@@ -7,12 +7,9 @@ node_js:
 install:
   - npm ci
 
-jobs: 
-  include:
-    - stage: compile
-      script: npm run compile
-    - stage: test
-      script: npm test
+script:
+  - npm run compile
+  - npm test
 
 after_success:
   - npm install -g vsce
@@ -24,7 +21,6 @@ deploy:
     script: vsce publish -p $VSC_KEY --packagePath client/*.vsix
     on:
       branch: travis-deploy
-      tags: true
 
 notifications:
   email:
