@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Modifying the background of extension's icon ([#13](https://github.com/Qiskit/qiskit-vscode/pull/13) by [@cbjuan](https://github.com/cbjuan))
 
 ### 👾 Security
-
+- Updating dependencies ([#16](https://github.com/Qiskit/qiskit-vscode/pull/16) by [@cbjuan](https://github.com/cbjuan))
 
 ## [v0.3.0] - 2018-07-23
 
