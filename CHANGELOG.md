@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 
 ### 🐛 Fixed
-- RAW file path fixed at the marketplace readme file
+- Fixed client readme file external references ([#15](https://github.com/Qiskit/qiskit-vscode/pull/15) by [@ydarias](https://github.com/ydarias))
 
 
 ### ✏️ Changed
