@@ -18,10 +18,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### 🎉 Added
 
+### 🐛 Fixed
+
+### ✏️ Changed
+
+### 👾 Security
+
+## [v0.3.1] - 2018-07-24
+
+### 🎉 Added
 
 ### 🐛 Fixed
 - Fixed client readme file external references ([#15](https://github.com/Qiskit/qiskit-vscode/pull/15) by [@ydarias](https://github.com/ydarias))
-
 
 ### ✏️ Changed
 - Modifying the background of extension's icon ([#13](https://github.com/Qiskit/qiskit-vscode/pull/13) by [@cbjuan](https://github.com/cbjuan))
@@ -187,8 +195,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Re-styling charts ([#97](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/97) by [@cbjuan](https://github.com/cbjuan))
 - Extension size reduction ([#76](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/76) by [@ydarias](https://github.com/ydarias))
 
-[Unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.2.2...HEAD
-[v0.3.0]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.1...HEAD
+[v0.3.1]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.0...v0.3.1
+[v0.3.0]: https://github.com/Qiskit/qiskit-vscode/compare/v0.2.2...v0.3.0
 [v0.2.2]: https://github.com/Qiskit/qiskit-vscode/compare/v0.2.1...v0.2.2
 [v0.2.1]: https://github.com/Qiskit/qiskit-vscode/compare/v0.2.0...v0.2.1
 [v0.2.0]: https://github.com/Qiskit/qiskit-vscode/compare/v0.1.1...v0.2.0
