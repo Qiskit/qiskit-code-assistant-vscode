@@ -15,9 +15,12 @@
 		"type": "git",
 		"url": "https://github.com/Qiskit/qiskit-vscode"
 	},
+	"bugs": {
+		"url": "https://github.com/Qiskit/qiskit-vscode/issues"
+	},
 	"icon": "icon.png",
 	"engines": {
-		"vscode": "^1.23.0"
+		"vscode": "^1.25.0"
 	},
 	"categories": [
 		"Programming Languages",
@@ -284,8 +287,8 @@
 	},
 	"scripts": {
 		"test": "jest --coverage",
-		"vscode:prepublish": "tsc -p ./",
-		"compile": "tsc -p ./",
+		"compile": "npm-run-all -s lint compile:client",
+		"compile:client": "tsc -p ./",
 		"watch": "tsc -w -p ./",
 		"update-vscode": "node ./node_modules/vscode/bin/install",
 		"postinstall": "node ./node_modules/vscode/bin/install",

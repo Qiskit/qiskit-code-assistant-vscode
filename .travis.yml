@@ -1,21 +1,34 @@
 language: node_js
-sudo: false
+
+sudo: required
 
 node_js:
   - "9.5.0"
 
+os:
+  - osx
+
 install:
+  - npm install -g vsce
   - npm install
 
 script:
   - npm run compile
   - npm test
-  - npm run lint
+  - npm run package
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: vsce publish -p $VSC_KEY --packagePath client/*.vsix
+    on:
+      branch: master
+      tags: true
 
 notifications:
   email:
     recipients:
       - juan.cruz@ibm.com
       - yeray.darias@ibm.com
-    on_success: change
+    on_success: never
     on_failure: always

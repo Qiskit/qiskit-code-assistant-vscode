@@ -44,7 +44,8 @@
 	},
 	"scripts": {
 		"installServer": "npm run compile:parser && installServerIntoExtension ../client ./package.json ./tsconfig.json && npm run installQuantumLibraries && npm run installQiskitLibraries",
-		"compile": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
+		"compile": "npm-run-all -s lint compile:server",
+		"compile:server": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
 		"watch": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -w -p .",
 		"compile:parser": "npm-run-all -s compile:qasmParser compile:qiskitParser",
 		"compile:qasmParser": "cd src/qasm/antlr && antlr4ts -visitor QasmLexer.g4 QasmParser.g4 && cd ../../..",
