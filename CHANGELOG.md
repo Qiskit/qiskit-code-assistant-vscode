@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 
 ### ✏️ Changed
-
+- Modifying the background of extension's icon ([#13](https://github.com/Qiskit/qiskit-vscode/pull/13) by [@cbjuan](https://github.com/cbjuan))
 
 ### 👾 Security
 
@@ -31,19 +31,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v0.3.0] - 2018-07-23
 
 ### 🎉 Added
-- Better management of QConfig to improve users' experience ([#183](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/183) by [@cbjuan](https://github.com/cbjuan)
+- Better management of QConfig to improve users' experience ([#183](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/183) by [@cbjuan](https://github.com/cbjuan))
 
 ### 🐛 Fixed
-- RegEx expressions fixed when getting pip show output in Windows([#6](https://github.com/Qiskit/qiskit-vscode/pull/6) by [@cbjuan](http://github.com/cbjuan)
-- Replacing pool.map method by a for loop to avoid errors when getting the IBMQ devices' status in Windows ([#6](https://github.com/Qiskit/qiskit-vscode/pull/6) by [@cbjuan](http://github.com/cbjuan)
-- Now can be installed & updated several qiskit-related dependencies simultaneously ([#178](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/178) by [@cbjuan](https://github.com/cbjuan)
+- RegEx expressions fixed when getting pip show output in Windows([#6](https://github.com/Qiskit/qiskit-vscode/pull/6) by [@cbjuan](http://github.com/cbjuan))
+- Replacing pool.map method by a for loop to avoid errors when getting the IBMQ devices' status in Windows ([#6](https://github.com/Qiskit/qiskit-vscode/pull/6) by [@cbjuan](http://github.com/cbjuan))
+- Now can be installed & updated several qiskit-related dependencies simultaneously ([#178](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/178) by [@cbjuan](https://github.com/cbjuan))
 
 
 ### ✏️ Changed
-- Update logo to the Qiskit one ([#7](https://github.com/Qiskit/qiskit-vscode/pull/7) by [@cbjuan](https://github.com/cbjuan)
-- Update publisher & author in package.json files ([#4](https://github.com/Qiskit/qiskit-vscode/pull/4) by [@cbjuan](https://github.com/cbjuan)
-- Renaming the repo, extension & texts descriptions to qiskit-vscode ([#184](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/184) by [@cbjuan](https://github.com/cbjuan)
-- Refactoring the management of dependencies ([#178](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/178) by [@cbjuan](https://github.com/cbjuan)
+- Update logo to the Qiskit one ([#7](https://github.com/Qiskit/qiskit-vscode/pull/7) by [@cbjuan](https://github.com/cbjuan))
+- Update publisher & author in package.json files ([#4](https://github.com/Qiskit/qiskit-vscode/pull/4) by [@cbjuan](https://github.com/cbjuan))
+- Renaming the repo, extension & texts descriptions to qiskit-vscode ([#184](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/184) by [@cbjuan](https://github.com/cbjuan))
+- Refactoring the management of dependencies ([#178](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/178) by [@cbjuan](https://github.com/cbjuan))
 
 ### 👾 Security
 
