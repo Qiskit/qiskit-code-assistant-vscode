@@ -26,15 +26,15 @@ deploy:
     skip_cleanup: true
     on:
       repo: Qiskit/qiskit-vscode
-      branch: automatic-release
+      branch: master
       tags: true
-  # - provider: script
-  #   skip_cleanup: true
-  #   script: vsce publish -p $VSC_KEY --packagePath client/*.vsix
-  #   on:
-  #     repo: Qiskit/qiskit-vscode
-  #     branch: master
-  #     tags: true
+  - provider: script
+    skip_cleanup: true
+    script: vsce publish -p $VSC_KEY --packagePath client/*.vsix
+    on:
+      repo: Qiskit/qiskit-vscode
+      branch: master
+      tags: true
 
 notifications:
   email:
