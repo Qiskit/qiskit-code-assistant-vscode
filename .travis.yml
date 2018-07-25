@@ -18,10 +18,20 @@ script:
   - npm run package
 
 deploy:
+  - provider: releases
+    api_key:
+      secure: qu57iTHaLHx63g8WMoG3nT5GpBnuSWQu8t2XhAJ7iB0xr5VRB47a891ZQBz96/MI9qwCYwb3HCBw6ghjEc66Eeul1/nB7v80RziYXKJDl97W3J41Rer4g+Onh6B8qjyzKDtw/puNJ8LgopjNrP+lYubi3SELt59EMVCXVwWmtcQ9oMak56gYjBBHU+sXXn9GO1bJ4eqYUSLvyPZgmwPW4ilonFv/eSdaeHBVpejXLlsBU4nBFscM0oKam/6ECiM0eyaBv4CI7ySbSJvcJn66HKFFYeY571ZDN2xPB6eJXrPIlQ+VVt7pS99YwWOK4nxMWjWfMcR7IaFkpabF06/y98tpTn+wGedLguwXCTFCRBzn0MA/AHgHIe1U/F3rdVHxoHEf1CWkxialZukfFhKsggNNW8SYCtk8ALXzPS/BzIl5N7LlU031oHhwf6KUnPkZQsZtbIl7YTyGotrpjDP3klKbiqQGlqLJXT/gIMCf3q1Yxff4c9duWx1nIMhrtblI6uLaIkB3ot41V70sR1G4rzfJ9omiiRShlBZja2PbGygyW1248Dt7dL37/N0sUwag5Obi6voeTcPmoMnz6sAzimB5N/QBcQbnNrDTV2ZiC2ij7uL6qkFIfL03B87s4MT/BCFiCnOJYXBnvrXyq4o+QIRmKrYQfvwcleBo8soOtqA=
+    file: client/*.vsix
+    skip_cleanup: true
+    on:
+      repo: Qiskit/qiskit-vscode
+      branch: automatic-release
+      tags: true
   - provider: script
     skip_cleanup: true
     script: vsce publish -p $VSC_KEY --packagePath client/*.vsix
     on:
+      repo: Qiskit/qiskit-vscode
       branch: master
       tags: true
 
