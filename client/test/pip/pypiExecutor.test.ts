@@ -9,7 +9,7 @@
 import { PyPiExecutor } from '../../src/pip/pypiExecutor';
 
 describe('A PipyExecutor', () => {
-    describe('testing pypi commands using qiskit package', () => {
+    describe('testing pypi commands using the qiskit package', () => {
         let pypiExecutor = new PyPiExecutor();
 
         it('should get info about the package', async () => {
@@ -19,7 +19,6 @@ describe('A PipyExecutor', () => {
             expect(result.location).toBe('https://pypi.org/project/qiskit/');
             expect(result.name).toBe('qiskit');
             expect(result.summary).toBeDefined();
-            console.log(result.version.toString());
             expect(result.version.toString()).toMatch(/.*\..*\..*/g);
         });
     });
