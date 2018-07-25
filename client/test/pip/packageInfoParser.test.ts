@@ -19,7 +19,7 @@ describe('A PackageInfoParser', () => {
         Author: Qiskit Development Team
         Author-email: qiskit@us.ibm.com
         License: Apache 2.0
-        Location: /Users/tutu/Documents/workspace/qiskit-vscode/pyenv/lib/python3.6/site-packages
+        Location: /Users/qiskitter/Documents/workspace/qiskit-vscode/pyenv/lib/python3.6/site-packages
         Requires: IBMQuantumExperience, sympy, networkx, numpy, matplotlib, pillow, scipy, ply
         Required-by: qiskit-acqua, qiskit-acqua-chemistry
         `;
@@ -40,7 +40,7 @@ describe('A PackageInfoParser', () => {
 
         it('should detect the package location', () => {
             expect(PackageInfoParser.parseLocation(packageInfo)).toBe(
-                '/Users/tutu/Documents/workspace/qiskit-vscode/pyenv/lib/python3.6/site-packages'
+                '/Users/qiskitter/Documents/workspace/qiskit-vscode/pyenv/lib/python3.6/site-packages'
             );
         });
 

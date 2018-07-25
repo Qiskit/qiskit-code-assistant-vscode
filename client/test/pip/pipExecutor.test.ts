@@ -20,7 +20,7 @@ Home-page: https://github.com/QISKit/qiskit-core
 Author: QISKit Development Team
 Author-email: qiskit@us.ibm.com
 License: Apache 2.0
-Location: /Users/yeraydarias/Documents/workspace/qiskit-vscode/pyenv/lib/python3.6/site-packages
+Location: /Users/qiskitter/Documents/workspace/qiskit-vscode/pyenv/lib/python3.6/site-packages
 Requires: IBMQuantumExperience, sympy, networkx, numpy, matplotlib, pillow, scipy, ply
 Required-by: qiskit-acqua, qiskit-acqua-chemistry`;
 
@@ -38,7 +38,7 @@ Required-by: qiskit-acqua, qiskit-acqua-chemistry`;
             expect(result.version).toEqual(Version.fromString('0.5.5'));
             expect(result.summary).toBe('Software for developing quantum computing programs');
             expect(result.location).toBe(
-                '/Users/yeraydarias/Documents/workspace/qiskit-vscode/pyenv/lib/python3.6/site-packages'
+                '/Users/qiskitter/Documents/workspace/qiskit-vscode/pyenv/lib/python3.6/site-packages'
             );
             expect(result.dependencies).toBe(
                 'IBMQuantumExperience, sympy, networkx, numpy, matplotlib, pillow, scipy, ply'
