@@ -18,11 +18,26 @@ describe('Version', () => {
         expect(version).toEqual(expectedVersion);
     });
 
+    it('should not format a version given a string', () => {
+        // tslint:disable-next-line
+        let expectedVersion = new Version(NaN, NaN, NaN);
+        let version = Version.fromString('0:5:5');
+
+        expect(version).toEqual(expectedVersion);
+    });
+
     it('should format a string given a version', () => {
         // tslint:disable-next-line
         let version = Version.fromString('0.5.5');
 
         expect(version.toString()).toBe('0.5.5');
+    });
+
+    it('should fail when formatting a string given a version', () => {
+        // tslint:disable-next-line
+        let version = Version.fromString('-1.-1.-1');
+
+        expect(version.toString()).toBe('Invalid version');
     });
 
     it('should format a string given a version', () => {
