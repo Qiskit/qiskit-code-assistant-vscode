@@ -56,10 +56,18 @@ describe('Version', () => {
         expect(v1.isGreater(v2)).toBe(true);
     });
 
-    it('should not be greater than other', () => {
+    it('should not be greater than other (is lesser)', () => {
         // tslint:disable-next-line
         let v1 = Version.fromString('0.5.5');
         let v2 = Version.fromString('0.5.4');
+
+        expect(v2.isGreater(v1)).toBe(false);
+    });
+
+    it('should not be greater than other (is equal)', () => {
+        // tslint:disable-next-line
+        let v1 = Version.fromString('0.5.5');
+        let v2 = Version.fromString('0.5.5');
 
         expect(v2.isGreater(v1)).toBe(false);
     });
@@ -72,10 +80,18 @@ describe('Version', () => {
         expect(v2.isLesser(v1)).toBe(true);
     });
 
-    it('should not be lesser than other', () => {
+    it('should not be lesser than other (is greater)', () => {
         // tslint:disable-next-line
         let v1 = Version.fromString('0.5.5');
         let v2 = Version.fromString('0.5.4');
+
+        expect(v1.isLesser(v2)).toBe(false);
+    });
+
+    it('should not be lesser than other (is equal)', () => {
+        // tslint:disable-next-line
+        let v1 = Version.fromString('0.5.5');
+        let v2 = Version.fromString('0.5.5');
 
         expect(v1.isLesser(v2)).toBe(false);
     });
