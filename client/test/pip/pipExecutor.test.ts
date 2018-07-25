@@ -29,8 +29,8 @@ Required-by: qiskit-acqua, qiskit-acqua-chemistry`;
         let pipExecutor = new PipExecutor(commandExecutor);
 
         it('should get info about the package', async () => {
-            let maxAssertionsGPI = 5;
-            expect.assertions(maxAssertionsGPI);
+            // tslint:disable-next-line
+            expect.assertions(5);
 
             const result = await pipExecutor.getPackageInfo(packageInfo);
             expect(result.name).toBe('qiskit');
