@@ -56,8 +56,8 @@ export class Version implements IVersion {
 
     isEqual(version: IVersion): boolean {
         if (
-            version.info.major === this.info.major ||
-            version.info.minor === this.info.minor ||
+            version.info.major === this.info.major &&
+            version.info.minor === this.info.minor &&
             version.info.maintenance === this.info.maintenance
         ) {
             return true;
