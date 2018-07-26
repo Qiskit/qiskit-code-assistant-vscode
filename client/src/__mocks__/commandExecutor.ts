@@ -25,4 +25,22 @@ export namespace CommandExecutor {
 
         return Q(`Python 3.6.3 :: Anaconda custom (64-bit)`);
     }
+
+    export function execPythonActiveEditor(): Q.Promise<string> {
+        return Q.Promise(resolve => {
+            return resolve(`Python active editor executed!`);
+        });
+    }
+
+    export function execQasmActiveEditor(scriptPath: string): Q.Promise<string> {
+        return Q.Promise(resolve => {
+            return resolve(`OpenQASM executed! ${scriptPath}`);
+        });
+    }
+
+    export function execPythonFile(scriptPath: string, options: string[]): Q.Promise<string> {
+        return Q.Promise(resolve => {
+            return resolve(`Python file executed! ${scriptPath}  ${options}`);
+        });
+    }
 }
