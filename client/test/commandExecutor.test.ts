@@ -10,7 +10,7 @@
 import { CommandExecutor } from '../src/commandExecutor';
 jest.mock('../src/commandExecutor');
 
-describe('activation utils', () => {
+describe('command executor mock', () => {
     it('execute a python file', () => {
         let scriptPath = '/src/file';
         let options = [];
