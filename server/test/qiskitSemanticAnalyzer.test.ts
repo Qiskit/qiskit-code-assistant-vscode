@@ -12,7 +12,7 @@
 import { TreeFolder } from '../src/qiskit/ast/treeFolder';
 import { SymbolTableGenerator } from '../src/qiskit/ast/symbolTableGenerator';
 import { SemanticAnalyzer } from '../src/qiskit/ast/semanticAnalyzer';
-import { Parser } from './tools';
+import { Parser } from './tools/tools';
 
 let validSource = `
 from qiskit import ClassicalRegister, QuantumRegister

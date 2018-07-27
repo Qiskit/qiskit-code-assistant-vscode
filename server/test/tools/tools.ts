@@ -10,8 +10,8 @@
 'use strict';
 
 import { ParserRuleContext, ANTLRInputStream, CommonTokenStream } from 'antlr4ts';
-import { Python3Lexer } from '../src/qiskit/antlr/Python3Lexer';
-import { Python3Parser } from '../src/qiskit/antlr/Python3Parser';
+import { Python3Lexer } from '../../src/qiskit/antlr/Python3Lexer';
+import { Python3Parser } from '../../src/qiskit/antlr/Python3Parser';
 
 export namespace Parser {
     export function parse(validSource: string): ParserRuleContext {
