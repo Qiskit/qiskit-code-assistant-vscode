@@ -39,15 +39,15 @@
 		"typescript": "^2.6.1"
 	},
 	"scripts": {
-		"installServer": "npm run compile:parser && installServerIntoExtension ../client ./package.json ./tsconfig.json && npm run installQuantumLibraries && npm run installQiskitLibraries",
+		"installServer": "npm run compile:parser && installServerIntoExtension ../client ./package.json ./tsconfig.json && npm-run-all -s installQuantumLibraries installQiskitLibraries",
 		"compile": "npm-run-all -s lint compile:server",
 		"compile:server": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -p .",
 		"watch": "installServerIntoExtension ../client ./package.json ./tsconfig.json && tsc -w -p .",
 		"compile:parser": "npm-run-all -s compile:qasmParser compile:qiskitParser",
 		"compile:qasmParser": "cd src/qasm/antlr && antlr4ts -visitor QasmLexer.g4 QasmParser.g4 && cd ../../..",
 		"compile:qiskitParser": "cd src/qiskit/antlr && antlr4ts -visitor Python3.g4 && cd ../../..",
-		"installQuantumLibraries": "mkdir -p ../client/server/qasm/libs && cp -Rv src/qasm/libs ../client/server/qasm/",
-		"installQiskitLibraries": "mkdir -p ../client/server/qiskit/libs && cp -Rv src/qiskit/libs ../client/server/qiskit/",
+		"installQuantumLibraries": "mkdir -p ../client/server/src/qasm/libs && cp -Rv src/qasm/libs ../client/server/src/qasm/",
+		"installQiskitLibraries": "mkdir -p ../client/server/src/qiskit/libs && cp -Rv src/qiskit/libs ../client/server/src/qiskit/",
 		"compile:tests": "tsc test/*.test.ts --outDir out --module commonjs --target ES6 --experimentalDecorators",
 		"link:qasmLibs": "cp -Rv src/qasm/libs out/src/qasm/",
 		"link:qiskitLibs": "cp -Rv src/qiskit/libs out/src/qiskit/",
