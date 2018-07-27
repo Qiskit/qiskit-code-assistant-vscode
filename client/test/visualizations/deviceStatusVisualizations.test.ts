@@ -21,9 +21,9 @@ describe('DeviceStatusVisualization', () => {
                 "available": true,
                 "name": "ibmq_qasm_simulator",
                 "pending_jobs": 0
+                }
             }
-        }
-    ]`;
+        ]`;
         expect(DeviceStatusVisualization.render(JSON.parse(deviceObj))).toBe(`<pre>${JSON.parse(deviceObj)}</pre>`);
     });
 
