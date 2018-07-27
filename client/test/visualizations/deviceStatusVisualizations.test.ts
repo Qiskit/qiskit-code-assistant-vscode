@@ -40,13 +40,13 @@ describe('DeviceStatusVisualization', () => {
                 }
             }
         ];
-        expect(DeviceStatusVisualization.render(deviceObj)).toEqual(`<pre>${deviceObj}</pre>`);
+        expect(DeviceStatusVisualization.render(deviceObj)).toBe(`<pre>${deviceObj}</pre>`);
     });
 
     it('render backends', () => {
         // tslint:disable-next-line
         expect.assertions(1);
         let deviceObj = ['ibmq_qasm_simulator', 'ibmqx2', 'ibmqx4', 'ibmqx5'];
-        expect(DeviceStatusVisualization.render(deviceObj)).toEqual(`<pre>${deviceObj}</pre>`);
+        expect(DeviceStatusVisualization.render(deviceObj)).toBe(`<pre>${deviceObj}</pre>`);
     });
 });
