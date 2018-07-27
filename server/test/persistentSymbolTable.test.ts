@@ -9,7 +9,6 @@
 
 'use strict';
 
-import { expect } from 'chai';
 import { QiskitSymbolTableBuilder } from '../src/qiskit/compiler/qiskitSymbolTableBuilder';
 import { SymbolTable } from '../src/compiler/types';
 import { VariableSymbol, QiskitSymbols } from '../src/qiskit/compiler/symbols';
@@ -33,7 +32,7 @@ describe('A persistent symbol table', () => {
         it('is able to recover the original declaration of b as a number', () => {
             let result = symbolTable.lookup('b');
 
-            expect(result.type).to.be.eq(symbolTable.lookup(QiskitSymbols.number));
+            expect(result.type).toEqual(symbolTable.lookup(QiskitSymbols.number));
         });
 
         it('is able to recover the last redefinition of b as a string', () => {
@@ -42,7 +41,7 @@ describe('A persistent symbol table', () => {
 
             let result = symbolTable.lookup('b');
 
-            expect(result.type).to.be.eq(stringB.type);
+            expect(result.type).toEqual(stringB.type);
         });
 
         it('is able to recover a previous definition of b as a number', () => {
@@ -51,7 +50,7 @@ describe('A persistent symbol table', () => {
 
             let result = symbolTable.lookup('b', thirdLine);
 
-            expect(result.type).to.be.eq(symbolTable.lookup(QiskitSymbols.number));
+            expect(result.type).toEqual(symbolTable.lookup(QiskitSymbols.number));
         });
     });
 
@@ -67,13 +66,13 @@ describe('A persistent symbol table', () => {
         it('is not able to recover the definition of c at the global scope', () => {
             let result = symbolTable.lookup('c');
 
-            expect(result).to.be.null;
+            expect(result).toBeNull();
         });
 
         it('is able to recover the definition of c even with the scope closed', () => {
             let result = symbolTable.lookup('c', sixthLine);
 
-            expect(result.type).to.be.eq(stringC.type);
+            expect(result.type).toEqual(stringC.type);
         });
     });
 
@@ -86,7 +85,7 @@ describe('A persistent symbol table', () => {
         it('should recover parent scope symbols', () => {
             let result = symbolTable.lookup('b');
 
-            expect(result.type).to.be.eq(numberB.type);
+            expect(result.type).toEqual(numberB.type);
         });
     });
 });
