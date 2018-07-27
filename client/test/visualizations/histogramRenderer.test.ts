@@ -9,18 +9,19 @@
 
 import { HistogramRenderer } from '../../src/visualizations/histogramRenderer';
 jest.mock('fs');
+jest.mock('nunjucks');
 jest.mock('../../src/utils');
 
 describe('HistogramRenderer', () => {
     it('get text render basic histogram', () => {
         // tslint:disable-next-line
         expect.assertions(1);
-        let deviceObj = { '00': 514, '11': 510 };
+        let inputObj = { '00': 514, '11': 510 };
 
-        let deviceStr = JSON.parse(`{"result": { "00": 514, "11": 510 }}`);
+        let outputPar = JSON.parse(`{"result": { "00": 514, "11": 510 }}`);
 
-        let histRend = new HistogramRenderer(deviceObj);
+        let histRend = new HistogramRenderer(inputObj);
 
-        expect(histRend).toEqual(deviceStr);
+        expect(histRend).toEqual(outputPar);
     });
 });
