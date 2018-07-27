@@ -9,11 +9,9 @@
 
 'use strict';
 
-import { ANTLRInputStream, CommonTokenStream, ParserRuleContext } from 'antlr4ts';
-import { Python3Lexer } from '../src/qiskit/antlr/Python3Lexer';
-import { Python3Parser } from '../src/qiskit/antlr/Python3Parser';
 import { TreeFolder } from '../src/qiskit/ast/treeFolder';
 import { SymbolTableGenerator } from '../src/qiskit/ast/symbolTableGenerator';
+import { Parser } from './tools';
 
 let validSource = `
 from qiskit import ClassicalRegister, QuantumRegister, QuantumProgram
@@ -27,7 +25,7 @@ qr = qp.create_quantum_register("qr", 2)
 
 describe('From a parsed and folded Qiskit code of a valid source', () => {
     let folder = new TreeFolder();
-    let tree = parse(validSource);
+    let tree = Parser.parse(validSource);
     let statements = folder.visit(tree);
 
     describe('when a symbol table is generated', () => {
@@ -61,7 +59,7 @@ qr = qp.
 
 describe('From a parser and folded Qiskit code of a wrong source', () => {
     let folder = new TreeFolder();
-    let tree = parse(wrongSource);
+    let tree = Parser.parse(wrongSource);
     let statements = folder.visit(tree);
 
     describe('when a symbol table is generated', () => {
@@ -75,12 +73,3 @@ describe('From a parser and folded Qiskit code of a wrong source', () => {
         });
     });
 });
-
-function parse(validSource: string): ParserRuleContext {
-    let inputStream = new ANTLRInputStream(validSource);
-    let lexer = new Python3Lexer(inputStream);
-    let tokenStream = new CommonTokenStream(lexer);
-    let parser = new Python3Parser(tokenStream);
-
-    return parser.program();
-}

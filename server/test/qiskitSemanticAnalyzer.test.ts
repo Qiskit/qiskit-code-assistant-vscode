@@ -9,13 +9,10 @@
 
 'use strict';
 
-import { expect } from 'chai';
-import { ANTLRInputStream, CommonTokenStream, ParserRuleContext } from 'antlr4ts';
-import { Python3Lexer } from '../src/qiskit/antlr/Python3Lexer';
-import { Python3Parser } from '../src/qiskit/antlr/Python3Parser';
 import { TreeFolder } from '../src/qiskit/ast/treeFolder';
 import { SymbolTableGenerator } from '../src/qiskit/ast/symbolTableGenerator';
 import { SemanticAnalyzer } from '../src/qiskit/ast/semanticAnalyzer';
+import { Parser } from './tools';
 
 let validSource = `
 from qiskit import ClassicalRegister, QuantumRegister
@@ -33,7 +30,7 @@ sim_result = job_sim.result()
 
 describe('From a parsed and folded Qiskit code of a valid source', () => {
     let folder = new TreeFolder();
-    let tree = parse(validSource);
+    let tree = Parser.parse(validSource);
     let statements = folder.visit(tree);
     let symbolTable = SymbolTableGenerator.symbolTableFor(statements);
 
@@ -41,7 +38,7 @@ describe('From a parsed and folded Qiskit code of a valid source', () => {
         let errors = SemanticAnalyzer.analyze(statements, symbolTable);
 
         it('does no contain errors', () => {
-            expect(errors).to.be.empty;
+            expect(errors).toHaveLength(0);
         });
     });
 });
@@ -62,24 +59,16 @@ sim_result = job_sim.result()
 
 describe('From a parsed and folded Qiskit code of a wrong source', () => {
     let folder = new TreeFolder();
-    let tree = parse(wrongSource);
+    let tree = Parser.parse(wrongSource);
     let statements = folder.visit(tree);
     let symbolTable = SymbolTableGenerator.symbolTableFor(statements);
 
     describe('when a semantic analysis is executed', () => {
+        const expectedErrors = 3;
         let errors = SemanticAnalyzer.analyze(statements, symbolTable);
 
         it('does contain 3 errors', () => {
-            expect(errors).to.be.length(3);
+            expect(errors).toHaveLength(expectedErrors);
         });
     });
 });
-
-function parse(validSource: string): ParserRuleContext {
-    let inputStream = new ANTLRInputStream(validSource);
-    let lexer = new Python3Lexer(inputStream);
-    let tokenStream = new CommonTokenStream(lexer);
-    let parser = new Python3Parser(tokenStream);
-
-    return parser.program();
-}
