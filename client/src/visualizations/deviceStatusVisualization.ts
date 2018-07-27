@@ -27,7 +27,11 @@ export namespace DeviceStatusVisualization {
 
     function asDevices(result: object): Device[] {
         let resultString = result.toString().replace(/'/g, '"');
-        return JSON.parse(String(resultString));
+        try {
+            return JSON.parse(String(resultString));
+        } catch {
+            return JSON.parse(JSON.stringify(resultString));
+        }
     }
 
     function renderDeviceStatus(devices: Device[], templatePath: string): string {
