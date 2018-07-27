@@ -7,7 +7,8 @@
  * the LICENSE.txt file in the root directory of this source tree.
  */
 
-import { Util } from '../src/__mocks__/utils';
+import { Util } from '../src/utils';
+jest.mock('../src/utils');
 //import * as vscode from 'vscode';
 //jest.mock('vscode');
 
