@@ -18,7 +18,7 @@ export class LanguagesActivation {
     constructor(private context: ExtensionContext) {}
 
     qasmLanguageClient(): LanguageClient {
-        let serverModule = this.context.asAbsolutePath(path.join('server', 'serverQasm.js'));
+        let serverModule = this.context.asAbsolutePath(path.join('server', 'src', 'serverQasm.js'));
 
         let debugOptions = {
             execArgv: ['--nolazy', '--inspect=6009']
@@ -32,7 +32,7 @@ export class LanguagesActivation {
     }
 
     qiskitLanguageClient(): LanguageClient {
-        let serverModule = this.context.asAbsolutePath(path.join('server', 'serverQiskit.js'));
+        let serverModule = this.context.asAbsolutePath(path.join('server', 'src', 'serverQiskit.js'));
 
         let debugOptions = {
             execArgv: ['--nolazy', '--inspect=6010']

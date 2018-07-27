@@ -9,7 +9,6 @@
 
 'use strict';
 
-import { expect } from 'chai';
 import { SymbolTableBuilder, VariableSymbol, RegisterSymbol } from '../src/qasm/compiler/symbolTable';
 import { SymbolTable } from '../src/compiler/types';
 
@@ -22,16 +21,16 @@ describe('A symbol table', () => {
 
     describe('after construction', () => {
         it('contains the built in types', () => {
-            expect(symbolTable.lookup('Creg').name).to.be.equals('Creg');
-            expect(symbolTable.lookup('Qreg').name).to.be.equals('Qreg');
-            expect(symbolTable.lookup('Int').name).to.be.equals('Int');
-            expect(symbolTable.lookup('Real').name).to.be.equals('Real');
-            expect(symbolTable.lookup('Gate').name).to.be.equals('Gate');
-            expect(symbolTable.lookup('Opaque').name).to.be.equals('Opaque');
+            expect(symbolTable.lookup('Creg').name).toEqual('Creg');
+            expect(symbolTable.lookup('Qreg').name).toEqual('Qreg');
+            expect(symbolTable.lookup('Int').name).toEqual('Int');
+            expect(symbolTable.lookup('Real').name).toEqual('Real');
+            expect(symbolTable.lookup('Gate').name).toEqual('Gate');
+            expect(symbolTable.lookup('Opaque').name).toEqual('Opaque');
         });
 
         it('returns null if a symbol is not defined', () => {
-            expect(symbolTable.lookup('a')).to.be.null;
+            expect(symbolTable.lookup('a')).toBeNull();
         });
     });
 
@@ -40,18 +39,18 @@ describe('A symbol table', () => {
             let qregSymbol = symbolTable.lookup('Qreg');
             symbolTable.define(new VariableSymbol('q', qregSymbol.type), 0);
 
-            expect(symbolTable.lookup('q').type).to.be.equals(qregSymbol.type);
+            expect(symbolTable.lookup('q').type).toEqual(qregSymbol.type);
         });
 
         it('of quantum register type', () => {
+            const registerSize = 4;
+
             let qregSymbol = symbolTable.lookup('Qreg');
-            symbolTable.define(new RegisterSymbol('q', qregSymbol.type, 4), 0);
+            symbolTable.define(new RegisterSymbol('q', qregSymbol.type, registerSize), 0);
 
             let result = symbolTable.lookup('q') as RegisterSymbol;
 
-            expect(result)
-                .to.have.property('size')
-                .to.be.equals(4);
+            expect(result).toHaveProperty('size', registerSize);
         });
 
         it('in a child scope', () => {
@@ -59,20 +58,22 @@ describe('A symbol table', () => {
             let qregSymbol = symbolTable.lookup('Qreg');
             symbolTable.define(new VariableSymbol('q', qregSymbol.type), 0);
 
-            expect(symbolTable.lookup('q').type).to.be.equals(qregSymbol.type);
+            expect(symbolTable.lookup('q').type).toEqual(qregSymbol.type);
         });
     });
 
     describe('when discards a scope', () => {
         it('can no longer access to previous scope variables', () => {
+            const lastLine = 1000;
+
             let gateSymbol = symbolTable.lookup('Gate');
             symbolTable.define(new VariableSymbol('foo', gateSymbol.type), 0);
             symbolTable.push('foo', 0);
             let qregSymbol = symbolTable.lookup('Qreg');
             symbolTable.define(new VariableSymbol('q', qregSymbol.type), 0);
-            symbolTable.pop(1000);
+            symbolTable.pop(lastLine);
 
-            expect(symbolTable.lookup('q')).to.be.null;
+            expect(symbolTable.lookup('q')).toBeNull();
         });
     });
 
@@ -84,22 +85,23 @@ describe('A symbol table', () => {
             let qregSymbol = symbolTable.lookup('Qreg');
             symbolTable.define(new VariableSymbol('myReg', cregSymbol.type), 0);
 
-            expect(symbolTable.lookup('myReg').type).to.be.equals(qregSymbol.type);
+            expect(symbolTable.lookup('myReg').type).toEqual(qregSymbol.type);
         });
     });
 
     describe('when returns the defined symbols', () => {
         it('does not return the built in type symbols', () => {
+            const expectedSymbols = 2;
+
             let gateSymbol = symbolTable.lookup('Gate');
             symbolTable.define(new VariableSymbol('foo', gateSymbol.type), 0);
             symbolTable.push('foo', 0);
             let qregSymbol = symbolTable.lookup('Qreg');
             symbolTable.define(new VariableSymbol('q', qregSymbol.type), 0);
 
-            expect(symbolTable.currentSymbols()).to.be.length(2);
-            expect(symbolTable.currentSymbols().map(symbol => symbol.name))
-                .to.include('q')
-                .to.include('foo');
+            expect(symbolTable.currentSymbols()).toHaveLength(expectedSymbols);
+            expect(symbolTable.currentSymbols().map(symbol => symbol.name)).toContain('q');
+            expect(symbolTable.currentSymbols().map(symbol => symbol.name)).toContain('foo');
         });
     });
 });

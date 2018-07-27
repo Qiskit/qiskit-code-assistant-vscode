@@ -9,7 +9,6 @@
 
 'use strict';
 
-import { expect } from 'chai';
 import { QASMParser } from '../src/qasm/parser';
 import { Parser, ParseErrorLevel, ParserError } from '../src/types';
 import { ErrorMessages } from '../src/qasm/compiler/tools/errorMessages';
@@ -20,14 +19,14 @@ describe('A QASM parser', () => {
     describe('with an empty input', () => {
         it('will end without errors', () => {
             let result = parser.parse('');
-            expect(result.errors.length).to.be.eq(0);
+            expect(result.errors.length).toEqual(0);
         });
     });
 
     describe('with an input with only clean', () => {
         it('will end without errors', () => {
             let result = parser.parse('clean');
-            expect(result.errors.length).to.be.eq(0);
+            expect(result.errors.length).toEqual(0);
         });
     });
 
@@ -36,7 +35,7 @@ describe('A QASM parser', () => {
             let input = 'OPENQASM 2.0;';
 
             let result = parser.parse(input);
-            expect(result.errors.length).to.be.eq(0);
+            expect(result.errors.length).toEqual(0);
         });
 
         it('including a functions library will end without errors', () => {
@@ -46,7 +45,7 @@ describe('A QASM parser', () => {
         `;
 
             let result = parser.parse(input);
-            expect(result.errors.length).to.be.eq(0);
+            expect(result.errors.length).toEqual(0);
         });
     });
 
@@ -58,7 +57,7 @@ describe('A QASM parser', () => {
         `;
 
             let result = parser.parse(input);
-            expect(result.errors.length).to.be.eq(0);
+            expect(result.errors.length).toEqual(0);
         });
 
         it('will accept gates definition', () => {
@@ -69,7 +68,7 @@ describe('A QASM parser', () => {
         `;
 
             let result = parser.parse(input);
-            expect(result.errors.length).to.be.eq(0);
+            expect(result.errors.length).toEqual(0);
         });
 
         it('will not accept gates definition with a barrier', () => {
@@ -80,10 +79,12 @@ describe('A QASM parser', () => {
         }
         `;
 
+            const errorLine = 3;
+
             let result = parser.parse(input);
             // TODO this expectation should be much better > Expect.oneErrorLike
-            expect(result.errors.length).to.be.eq(1);
-            expect(result.errors[0].line).to.be.eq(3);
+            expect(result.errors.length).toEqual(1);
+            expect(result.errors[0].line).toEqual(errorLine);
         });
 
         it('will accept a barrier outside a gate definition', () => {
@@ -93,14 +94,14 @@ describe('A QASM parser', () => {
         barrier q[1];`;
 
             let result = parser.parse(input);
-            expect(result.errors.length).to.be.eq(0);
+            expect(result.errors.length).toEqual(0);
         });
 
         it('will accept opaque definition', () => {
             let input = 'opaque foo(a, b, c) q;';
 
             let result = parser.parse(input);
-            expect(result.errors.length).to.be.eq(0);
+            expect(result.errors.length).toEqual(0);
         });
 
         it('will accept expressions', () => {
@@ -116,7 +117,7 @@ describe('A QASM parser', () => {
         reset q;`;
 
             let result = parser.parse(input);
-            expect(result.errors.length).to.be.eq(0);
+            expect(result.errors.length).toEqual(0);
         });
 
         it('will accept conditional expressions', () => {
@@ -128,7 +129,7 @@ describe('A QASM parser', () => {
         `;
 
             let result = parser.parse(input);
-            expect(result.errors.length).to.be.eq(0);
+            expect(result.errors.length).toEqual(0);
         });
     });
 
@@ -148,7 +149,7 @@ describe('A QASM parser', () => {
         measure q[1] -> c[1];`;
 
             let result = parser.parse(input);
-            expect(result.errors.length).to.be.eq(0);
+            expect(result.errors.length).toEqual(0);
         });
     });
 
@@ -160,10 +161,12 @@ describe('A QASM parser', () => {
 
         qreg q;`;
 
+            const errorLine = 4;
+
             let result = parser.parse(input);
             // TODO this expectation should be much better > Expect.oneErrorLike
-            expect(result.errors.length).to.be.eq(1);
-            expect(result.errors[0].line).to.be.eq(4);
+            expect(result.errors.length).toEqual(1);
+            expect(result.errors[0].line).toEqual(errorLine);
         });
     });
 
@@ -235,12 +238,14 @@ describe('A QASM parser', () => {
 
     describe('throws a semantic error', () => {
         it('if one register is used beyond its size', () => {
+            const registerSize = 5;
+
             let input = `qreg foo[5];creg bar[5];measure foo[6] -> bar[4];`;
 
             let result = parser.parse(input);
 
             Expect.oneErrorLike({
-                message: ErrorMessages.indexOutOfBound('foo', 5),
+                message: ErrorMessages.indexOutOfBound('foo', registerSize),
                 start: 32,
                 end: 35
             }).at(result.errors);
@@ -410,10 +415,8 @@ class OneErrorLike {
     }
 
     public at(errors: ParserError[]): void {
-        expect(errors)
-            .to.be.an('array')
-            .with.length(1);
-        expect(errors[0]).to.deep.equal({
+        expect(errors).toHaveLength(1);
+        expect(errors[0]).toEqual({
             message: this.expectedError.message,
             line: this.expectedError.line || 0,
             start: this.expectedError.start,
@@ -431,10 +434,8 @@ class OneWarningLike {
     }
 
     public at(errors: ParserError[]): void {
-        expect(errors)
-            .to.be.an('array')
-            .with.length(1);
-        expect(errors[0]).to.deep.equal({
+        expect(errors).toHaveLength(1);
+        expect(errors[0]).toEqual({
             message: this.expectedError.message,
             line: this.expectedError.line || 0,
             start: this.expectedError.start,

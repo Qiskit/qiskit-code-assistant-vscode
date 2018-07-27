@@ -295,6 +295,7 @@
 		"clean": "npm-run-all -p clean:**",
 		"clean:deps": "rm -rf node_modules",
 		"clean:generated": "rm -rf out",
+		"clean:server": "rm -rf server",
 		"lint": "lint-staged && tslint -c tslint.json 'src/**/*.ts' && tslint -c tslint.test.json 'test/**/*.ts'"
 	},
 	"lint-staged": {
