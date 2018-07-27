@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v0.3.1] - 2018-07-24
 
 ### 🎉 Added
+- Added tests for the client ([#22](https://github.com/Qiskit/qiskit-vscode/pull/22) by [@cbjuan](https://github.com/cbjuan))
 
 ### 🐛 Fixed
 - Fixed client readme file external references ([#15](https://github.com/Qiskit/qiskit-vscode/pull/15) by [@ydarias](https://github.com/ydarias))
