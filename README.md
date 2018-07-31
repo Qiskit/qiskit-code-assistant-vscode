@@ -8,19 +8,14 @@ A Visual Studio Code extension with support for Qiskit and the OpenQASM language
 
 ## Quick start
 
-1. Open the Extensions sidebar panel in VS Code. `Ctrl + Shift + X` on Windows or `⇧ + ⌘ + X` on Mac.
-2. Search for qiskit-extension.
+1. Open the Extensions sidebar panel in VS Code. <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>X</kbd> on Windows or <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>X</kbd> on Mac (see [Install an extension](https://code.visualstudio.com/docs/editor/extension-gallery#_install-an-extension) for more details).
+2. Search for `qiskit-extension`.
 3. Click Install.
 4. Click Reload.
 
-Now the Qiskit VSCode Extension will be available when coding using OpenQASM and Python(Qiskit) files.
+Now the Qiskit VSCode Extension will be available when coding using OpenQASM and Python (Qiskit) files.
 
-### To install the extension
-
-#### From VSCode IDE (recommended)
-Search for `qiskit-vscode` extension and click `Install`. See [Install an extension](https://code.visualstudio.com/docs/editor/extension-gallery#_install-an-extension) for more details.
-
-#### From a local file
+### To install the extension from a local file
 
 Download the [latest release](https://github.com/Qiskit/qiskit-vscode/releases) of the extension from and follow the [instructions to install it](https://code.visualstudio.com/docs/editor/extension-gallery#_install-from-a-vsix)
 
