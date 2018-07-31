@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### 🎉 Added
+- Instructions to install the extension from VSCode IDE ([#24](https://github.com/Qiskit/qiskit-vscode/pull/24) by [@cbjuan](https://github.com/cbjuan))
 
 ### 🐛 Fixed
 
