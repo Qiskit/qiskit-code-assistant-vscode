@@ -9,8 +9,6 @@
 
 import { DeviceStatusVisualization } from '../../src/visualizations/deviceStatusVisualization';
 jest.mock('fs');
-//jest.mock('../../src/utils');
-jest.mock('vscode');
 
 describe('DeviceStatusVisualization', () => {
     it('render devices string', () => {

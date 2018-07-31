@@ -8,7 +8,6 @@
  */
 
 import { Util } from '../src/utils';
-jest.mock('vscode');
 
 describe('utils', () => {
     it('getOSDependent path', () => {

@@ -10,7 +10,6 @@
 import { HistogramRenderer } from '../../src/visualizations/histogramRenderer';
 jest.mock('fs');
 jest.mock('nunjucks');
-jest.mock('vscode');
 
 describe('HistogramRenderer', () => {
     it('get text render basic histogram', () => {
