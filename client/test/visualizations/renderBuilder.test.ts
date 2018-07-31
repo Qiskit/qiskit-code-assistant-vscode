@@ -10,7 +10,8 @@
 import { RenderBuilder } from '../../src/visualizations/renderBuilder';
 jest.mock('../../src/visualizations/renderBuilder');
 jest.mock('fs');
-jest.mock('../../src/utils');
+//jest.mock('../../src/utils');
+jest.mock('vscode');
 
 describe('PreformattedRenderer', () => {
     it('get input preformatted', () => {
