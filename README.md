@@ -8,7 +8,7 @@ A Visual Studio Code extension with support for Qiskit and the OpenQASM language
 
 ## Quick start
 
-1. Open the Extensions sidebar panel in VS Code. <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>X</kbd> on Windows or <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>X</kbd> on Mac (see [Install an extension](https://code.visualstudio.com/docs/editor/extension-gallery#_install-an-extension) for more details).
+1. Open the Extensions sidebar panel in VS Code. <kbd>Ctrl</kbd> + <kbd>Shift (⇧)</kbd> + <kbd>X</kbd> on Windows or <kbd>Command (⌘)</kbd> + <kbd>Shift (⇧)</kbd> + <kbd>X</kbd> on Mac (see [Install an extension](https://code.visualstudio.com/docs/editor/extension-gallery#_install-an-extension) for more details).
 2. Search for `qiskit-extension`.
 3. Click Install.
 4. Click Reload.
@@ -36,7 +36,7 @@ We encourage you to visit [https://qiskit.org/](https://qiskit.org/) to explore 
 
 ## Useful commands
 
-The commands below are supported at the Command Palette (Command+Shift+P on macOS and Ctrl+Shift+P on Windows/Linux).
+The commands below are supported at the Command Palette (<kbd>Command (⌘)</kbd> + <kbd>Shift (⇧)</kbd> + <kbd>P</kbd> on macOS and <kbd>Ctrl</kbd> + <kbd>Shift (⇧)</kbd> + <kbd>P</kbd> on Windows/Linux).
 
 Command | Description
 --- | ---

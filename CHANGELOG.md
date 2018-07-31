@@ -17,6 +17,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### 🎉 Added
+
+### 🐛 Fixed
+
+### ✏️ Changed
+
+### 👾 Security
+
+## [v0.3.2] - 2018-07-31
+
+### 🎉 Added
 - Instructions to install the extension from VSCode IDE ([#24](https://github.com/Qiskit/qiskit-vscode/pull/24) by [@cbjuan](https://github.com/cbjuan))
 
 ### 🐛 Fixed
@@ -26,6 +36,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Server tests use Jest as the client ([#21](https://github.com/Qiskit/qiskit-vscode/pull/21) by [@ydarias](https://github.com/ydarias))
 
 ### 👾 Security
+- Updating dependencies
 
 ## [v0.3.1] - 2018-07-24
 
@@ -199,7 +210,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Re-styling charts ([#97](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/97) by [@cbjuan](https://github.com/cbjuan))
 - Extension size reduction ([#76](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/76) by [@ydarias](https://github.com/ydarias))
 
-[Unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.2...HEAD
+[v0.3.2]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.1...v0.3.2
 [v0.3.1]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.0...v0.3.1
 [v0.3.0]: https://github.com/Qiskit/qiskit-vscode/compare/v0.2.2...v0.3.0
 [v0.2.2]: https://github.com/Qiskit/qiskit-vscode/compare/v0.2.1...v0.2.2
