@@ -8,6 +8,10 @@
  */
 
 /**
+ * Code adapted from https://github.com/Unibeautify/vscode/pull/19/files#diff-3090e25fed17a6bd57433c6bbadc451a
+ */
+
+/**
  * Exposes the Visual Studio Code extension API to the Jest testing environment.
  *
  * Tests would otherwise not have access because they are sandboxed.

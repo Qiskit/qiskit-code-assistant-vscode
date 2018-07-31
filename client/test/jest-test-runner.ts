@@ -8,6 +8,10 @@
  */
 
 /**
+ * Code adapted from https://github.com/Unibeautify/vscode/pull/19/files#diff-3090e25fed17a6bd57433c6bbadc451a
+ */
+
+/**
  * Wires in Jest as the test runner in place of the default Mocha.
  */
 import { ResultsObject, runCLI } from 'jest';
@@ -15,14 +19,7 @@ import * as path from 'path';
 import * as sourceMapSupport from 'source-map-support';
 const testDirectory = path.resolve(__dirname, '../../test');
 const jestConfig = {
-    // rootDir: srcRootDir,
-    // transform: JSON.stringify({ "^.+\\.ts$": "ts-jest" }),
     runInBand: true // Required due to the way the "vscode" module is injected.
-    // testRegex: "\\.spec\\.ts$",
-    // testEnvironment: fromConfigDir("jest-vscode-environment.js"),
-    // setupTestFrameworkScriptFile: fromConfigDir("jest-vscode-framework-setup.js"),
-    // moduleFileExtensions: ["ts", "js", "json"],
-    // globals: JSON.stringify({ "ts-jest": { tsConfigFile: "../tsconfig.json" } }),
 };
 export async function run(_testRoot: string, callback: TestRunnerCallback) {
     // Enable source map support. This is done in the original Mocha test runner,

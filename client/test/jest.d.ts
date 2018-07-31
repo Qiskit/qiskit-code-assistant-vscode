@@ -7,6 +7,10 @@
  * the LICENSE.txt file in the root directory of this source tree.
  */
 
+/**
+ * Code adapted from https://github.com/Unibeautify/vscode/pull/19/files#diff-3090e25fed17a6bd57433c6bbadc451a
+ */
+
 declare module 'jest' {
     /**
      * Execute Jest and return a promise with the results.
