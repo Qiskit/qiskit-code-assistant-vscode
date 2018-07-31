@@ -14,7 +14,6 @@ import { ResultsObject, runCLI } from 'jest';
 import * as path from 'path';
 import * as sourceMapSupport from 'source-map-support';
 const testDirectory = path.resolve(__dirname, '../../test');
-const fromConfigDir = (filename: string) => path.resolve(__dirname, filename);
 const jestConfig = {
     // rootDir: srcRootDir,
     // transform: JSON.stringify({ "^.+\\.ts$": "ts-jest" }),
