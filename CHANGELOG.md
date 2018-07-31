@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### 🐛 Fixed
 
 ### ✏️ Changed
+- Updating the icon to the last version of qiskit's logo ([#23](https://github.com/Qiskit/qiskit-vscode/pull/23) by [@cbjuan](https://github.com/cbjuan))
 - Server tests use Jest as the client ([#21](https://github.com/Qiskit/qiskit-vscode/pull/21) by [@ydarias](https://github.com/ydarias))
 
 ### 👾 Security
