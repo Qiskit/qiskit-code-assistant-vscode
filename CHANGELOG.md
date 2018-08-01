@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### 🐛 Fixed
 
 ### ✏️ Changed
+- Improving the tests for the client (mocking vscode) ([#26](https://github.com/Qiskit/qiskit-vscode/pull/26) by [@cbjuan](https://github.com/cbjuan))
 
 ### 👾 Security
 
