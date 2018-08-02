@@ -320,7 +320,7 @@
 		"prettier": "^1.12.1",
 		"tslint": "^5.8.0",
 		"ts-jest": "^23.0.0",
-		"typescript": "^2.6.1",
+		"typescript": "^3.0.0",
 		"vscode": "^1.1.18"
 	},
 	"extensionDependencies": [
