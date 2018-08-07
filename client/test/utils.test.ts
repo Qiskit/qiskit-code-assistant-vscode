@@ -8,9 +8,6 @@
  */
 
 import { Util } from '../src/utils';
-jest.mock('../src/utils');
-//import * as vscode from 'vscode';
-//jest.mock('vscode');
 
 describe('utils', () => {
     it('getOSDependent path', () => {

@@ -9,7 +9,6 @@
 
 import { PreformattedRenderer } from '../../src/visualizations/preformattedRenderer';
 jest.mock('fs');
-jest.mock('../../src/utils');
 
 describe('PreformattedRenderer', () => {
     it('get input preformatted', () => {
