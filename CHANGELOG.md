@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Improving the tests for the client (mocking vscode) ([#26](https://github.com/Qiskit/qiskit-vscode/pull/26) by [@cbjuan](https://github.com/cbjuan))
 
 ### 👾 Security
+- Solving CVE-2018-3774 and updating other dependencies ([#30](https://github.com/Qiskit/qiskit-vscode/pull/30) by [@cbjuan](https://github.com/cbjuan))
 
 ## [v0.3.2] - 2018-07-31
 
