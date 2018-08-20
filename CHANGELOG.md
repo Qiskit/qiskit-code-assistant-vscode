@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### 🐛 Fixed
 
 ### ✏️ Changed
+- Rename qiskit-aqua(.*)-related code -> from qiskit-acqua & qiskit-acqua-chemistry to qiskit-aqua and qiskit-aqua-chemistry ([#28](https://github.com/Qiskit/qiskit-vscode/pull/28) by [@cbjuan](https://github.com/cbjuan))
 - Improving the tests for the client (mocking vscode) ([#26](https://github.com/Qiskit/qiskit-vscode/pull/26) by [@cbjuan](https://github.com/cbjuan))
 
 ### 👾 Security
@@ -110,7 +111,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### 🎉 Added
 - Added snippets for some of the Aqua optimization algorithms ([#152](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/152) by [@ydarias](https://github.com/ydarias))
 - Imports validation for Qiskit files ([#150](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/150) by [@ydarias](https://github.com/ydarias))
-- qiskit-acqua and qiskit-acqua-chemistry added to dependencies ([#143](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/143) by [@cbjuan](https://github.com/cbjuan))
+- qiskit-aqua and qiskit-aqua-chemistry added to dependencies ([#143](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/143) by [@cbjuan](https://github.com/cbjuan))
 - Added IBM Q 20 Tokyo backend ([#141](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/141) by [@cbjuan](https://github.com/cbjuan))
 - Added readme file to the client folder ([#134](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/134) by [@ydarias](https://github.com/ydarias))
 

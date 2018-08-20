@@ -22,6 +22,6 @@ Author-email: qiskit@us.ibm.com
 License: Apache 2.0
 Location: /Users/qiskitter/Documents/workspace/qiskit-vscode/pyenv/lib/python3.6/site-packages
 Requires: IBMQuantumExperience, sympy, networkx, numpy, matplotlib, pillow, scipy, ply
-Required-by: qiskit-acqua, qiskit-acqua-chemistry`);
+Required-by: qiskit-aqua, qiskit-aqua-chemistry`);
     }
 }

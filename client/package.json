@@ -92,8 +92,8 @@
 					"type": "object",
 					"default": {
 						"qiskit": "0.5.4",
-						"qiskit-acqua": "0.1.1",
-						"qiskit-acqua-chemistry": "0.1.0"
+						"qiskit-aqua": "0.2.0",
+						"qiskit-aqua-chemistry": "0.2.0"
 					},
 					"description": "Qiskit and libraries related to run code"
 				},
@@ -142,7 +142,7 @@
 		"snippets": [
 			{
 				"language": "python",
-				"path": "./snippets/acqua.json"
+				"path": "./snippets/aqua.json"
 			}
 		],
 		"languages": [
