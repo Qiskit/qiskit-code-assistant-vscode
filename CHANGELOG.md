@@ -21,6 +21,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### 🐛 Fixed
 
 ### ✏️ Changed
+
+### 👾 Security
+
+## [v0.3.3] - 2018-08-21
+
+### 🎉 Added
+
+### 🐛 Fixed
+
+### ✏️ Changed
 - Rename qiskit-aqua(.*)-related code -> from qiskit-acqua & qiskit-acqua-chemistry to qiskit-aqua and qiskit-aqua-chemistry ([#28](https://github.com/Qiskit/qiskit-vscode/pull/28) by [@cbjuan](https://github.com/cbjuan))
 - Improving the tests for the client (mocking vscode) ([#26](https://github.com/Qiskit/qiskit-vscode/pull/26) by [@cbjuan](https://github.com/cbjuan))
 
@@ -213,7 +223,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Re-styling charts ([#97](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/97) by [@cbjuan](https://github.com/cbjuan))
 - Extension size reduction ([#76](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/76) by [@ydarias](https://github.com/ydarias))
 
-[Unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.2...HEAD
+[Unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.3...HEAD
+[v0.3.3]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.2...v0.3.3
 [v0.3.2]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.1...v0.3.2
 [v0.3.1]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.0...v0.3.1
 [v0.3.0]: https://github.com/Qiskit/qiskit-vscode/compare/v0.2.2...v0.3.0
