@@ -13,6 +13,7 @@ from multiprocessing import Pool
 PUBLIC_NAMES = {
     'ibmq_20_tokyo': 'IBM Q 20 Tokyo',
     'QS1_1': 'IBM Q 20 Austin',
+    'ibmq_16_melbourne': 'IBM Q 16 Melbourne',
     'ibmqx5': 'IBM Q 16 Rueschlikon',
     'ibmq_16_rueschlikon': 'IBM Q 16 Rueschlikon',
     'ibmqx4': 'IBM Q 5 Tenerife',
