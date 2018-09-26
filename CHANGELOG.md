@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### 🎉 Added
+- Adding new device ibmq_16_melbourne to the list of devices ([#34](https://github.com/Qiskit/qiskit-vscode/pull/34) by [@cbjuan](https://github.com/cbjuan))
 
 ### 🐛 Fixed
 
