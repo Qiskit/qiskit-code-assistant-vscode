@@ -17,13 +17,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### 🎉 Added
-- Adding new device ibmq_16_melbourne to the list of devices ([#34](https://github.com/Qiskit/qiskit-vscode/pull/34) by [@cbjuan](https://github.com/cbjuan))
 
 ### 🐛 Fixed
 
 ### ✏️ Changed
 
 ### 👾 Security
+
+## [v0.3.4] - 2018-09-27
+
+### 🎉 Added
+- Adding new device ibmq_16_melbourne to the list of devices ([#34](https://github.com/Qiskit/qiskit-vscode/pull/34) by [@cbjuan](https://github.com/cbjuan))
+
 
 ## [v0.3.3] - 2018-08-21
 
@@ -224,7 +229,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Re-styling charts ([#97](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/97) by [@cbjuan](https://github.com/cbjuan))
 - Extension size reduction ([#76](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/76) by [@ydarias](https://github.com/ydarias))
 
-[Unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.3...HEAD
+[Unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.4...HEAD
+[v0.3.4]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.3...v0.3.4
 [v0.3.3]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.2...v0.3.3
 [v0.3.2]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.1...v0.3.2
 [v0.3.1]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.0...v0.3.1
