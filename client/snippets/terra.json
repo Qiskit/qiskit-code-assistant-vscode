@@ -1,0 +1,33 @@
+{
+	"qbase": {
+		"prefix": "qbasic",
+		"body": "\r\nfrom qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister\r\nfrom qiskit import execute, register\r\n\r\n# register if you have a token\r\nAPI_TOKEN = ''\r\nif(API_TOKEN != ''):\r\n\tregister(API_TOKEN)\r\n\r\n# declaration\r\nQR = QuantumRegister(${1:2}, 'q')\r\nCR = ClassicalRegister(${2:2}, 'c')\r\nQC = QuantumCircuit(QR, CR, name='${3:circuit_name}')\r\n\r\n\r\n# Build our Circuit\r\n$0QC.h(QR[0])\r\nQC.cx(QR[0], QR[1])\r\nQC.measure(QR[0], CR[0])\r\nQC.measure(QR[1], CR[1])\r\n\r\n# execute it\r\nif __name__ == '__main__':\r\n    execution_job = execute(QC, 'local_qasm_simulator')\r\n    result = execution_job.result()\r\n    print(result.get_counts())\r\n",
+		"description": "a basic quantum program snippet",
+		"scope": "source.python"
+	},
+	"qbasic-imports": {
+		"prefix": "qbasic-imports",
+		"body": [
+			"from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister",
+			"from qiskit import execute, register"
+		],
+		"description": "basic imports to get started with qiskit",
+		"scope": "source.python"
+	},
+	"qviz-imports": {
+		"prefix": "qviz-imports",
+		"body": [
+			"from qiskit.tools.visualization import plot_histogram, plot_circuit"
+		],
+		"description": "basic visualization imports to get started with qiskit",
+		"scope": "source.python"
+	},
+	"qviz-histplot": {
+		"prefix": "qviz-histplot",
+		"body": [
+			"plot_histogram(${1:result}.get_counts())"
+		],
+		"description": "basic visualization imports to get started with qiskit",
+		"scope": "source.python"
+	}
+}
