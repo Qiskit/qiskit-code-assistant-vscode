@@ -5,8 +5,8 @@
 		"description": "initial code for qiskit",
 		"scope": "source.python"
 	},
-	"qbasic-imports": {
-		"prefix": "qbasic-imports",
+	"qbasic_imports": {
+		"prefix": "qbasic_imports",
 		"body": [
 			"from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister",
 			"from qiskit import execute, register"
@@ -14,16 +14,16 @@
 		"description": "basic imports to get started with qiskit",
 		"scope": "source.python"
 	},
-	"qviz-imports": {
-		"prefix": "qviz-imports",
+	"qviz_imports": {
+		"prefix": "qviz_imports",
 		"body": [
 			"from qiskit.tools.visualization import plot_histogram, plot_circuit"
 		],
 		"description": "basic visualization imports to get started with qiskit",
 		"scope": "source.python"
 	},
-	"qviz-histplot": {
-		"prefix": "qviz-histplot",
+	"qviz_histplot": {
+		"prefix": "qviz_histplot",
 		"body": [
 			"plot_histogram(${1:result}.get_counts())"
 		],
