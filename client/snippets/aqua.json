@@ -1,6 +1,6 @@
 {
-    "import": {
-        "prefix": "import",
+    "aqua_imports": {
+        "prefix": "aqua_imports",
         "body": [ 
             "from qiskit_acqua import run_algorithm",
             "from qiskit_acqua.input import get_input_instance",
