@@ -1,38 +1,7 @@
 {
 	"qbasic": {
 		"prefix": "qbasic",
-		"body": "from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
-		from qiskit import execute, register
-		from qiskit import IBMQ, Aer
-		
-		# register if you have a token
-		API_TOKEN = '${1}'
-		if(API_TOKEN != ''):
-			IBMQ.enable_account(API_TOKEN, \"https://quantumexperience.ng.bluemix.net/api\")
-		
-		# declaration
-		QR = QuantumRegister(2, 'q')
-		CR = ClassicalRegister(2, 'c')
-		QC = QuantumCircuit(QR, CR, name='Bell state')
-		
-		# Build your Circuit
-		QC.h(QR[0])
-		QC.cx(QR[0], QR[1])
-		QC.measure(QR[0], CR[0])
-		QC.measure(QR[1], CR[1])
-		
-		# chceck for avaialbale backends
-		PREFERRED_BACKEND = '${2}'
-		if PREFERRED_BACKEND != '':
-			backend_object = Aer.get_backend(PREFERRED_BACKEND)
-		else:
-			backend_object = Aer.get_backend('qasm_simulator')
-		
-		# execute it
-		if __name__ == '__main__':
-			execution_job = execute(QC, backend_object)
-			result = execution_job.result()
-			print(result.get_counts())",
+		"body": "\r\nfrom qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister\r\nfrom qiskit import execute, register\r\nfrom qiskit import IBMQ, Aer\r\n\r\n# register if you have a token\r\nAPI_TOKEN = '${1}'\r\nif(API_TOKEN != ''):\r\n\tIBMQ.enable_account(API_TOKEN, \"https://quantumexperience.ng.bluemix.net/api\")\r\n\r\n# declaration\r\nQR =QuantumRegister(2, 'q')\r\nCR = ClassicalRegister(2, 'c')\r\nQC = QuantumCircuit(QR, CR, name='Bell state')\r\n# Build your Circuit\r\nQC.h(QR[0])\r\nQC.cx(QR[0], QR[1])\r\nQC.measure(QR[0], CR[0])\r\nQC.measure(QR[1], CR[1])\r\n# chceck for avaialbale backends\r\nPREFERRED_BACKEND = '${2}'\r\nif PREFERRED_BACKEND != '':\r\n\tbackend_object = Aer.get_backend(PREFERRED_BACKEND)\r\n else:\r\n\tbackend_object = Aer.get_backend('qasm_simulator')\r\n# execute it\r\nif __name__ == '__main__':\r\n\texecution_job = execute(QC, backend_object)\r\n\tresult = execution_job.result()\r\n\tprint(result.get_counts())",
 		"description": "initial code for qiskit",
 		"scope": "source.python"
 	},
