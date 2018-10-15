@@ -15,7 +15,6 @@
 		CR = ClassicalRegister(2, 'c')
 		QC = QuantumCircuit(QR, CR, name='Bell state')
 		
-		
 		# Build your Circuit
 		QC.h(QR[0])
 		QC.cx(QR[0], QR[1])
