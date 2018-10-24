@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### 🎉 Added
 
 ### 🐛 Fixed
+- Changing install packages modal behavior: they must be only installed if the user clicks OK explicitly ([#42](https://github.com/Qiskit/qiskit-vscode/pull/42) by [@cbjuan](https://github.com/cbjuan))
 
 ### ✏️ Changed
 
