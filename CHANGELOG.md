@@ -19,6 +19,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### 🎉 Added
 
 ### 🐛 Fixed
+
+### ✏️ Changed
+
+### 👾 Security
+
+## [v0.3.5] - 2018-10-24
+
+### 🎉 Added
+
+### 🐛 Fixed
 - Changing install packages modal behavior: they must be only installed if the user clicks OK explicitly ([#42](https://github.com/Qiskit/qiskit-vscode/pull/42) by [@cbjuan](https://github.com/cbjuan))
 
 ### ✏️ Changed
@@ -230,7 +240,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Re-styling charts ([#97](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/97) by [@cbjuan](https://github.com/cbjuan))
 - Extension size reduction ([#76](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/76) by [@ydarias](https://github.com/ydarias))
 
-[Unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.4...HEAD
+[Unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.5...HEAD
+[v0.3.5]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.4...v0.3.5
 [v0.3.4]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.3...v0.3.4
 [v0.3.3]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.2...v0.3.3
 [v0.3.2]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.1...v0.3.2
