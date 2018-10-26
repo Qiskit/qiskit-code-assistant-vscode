@@ -7,3 +7,4 @@ client/server
 pyenv/
 coverage/
 *.out
+*.pyc
