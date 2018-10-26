@@ -7,9 +7,11 @@ from qiskit import available_backends, register
 from IBMQuantumExperience import IBMQuantumExperience
 import argparse
 import json
+import warnings
 
 
 def main():
+    warnings.simplefilter('ignore')
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--apiToken')

@@ -5,9 +5,11 @@
 
 from qiskit import available_backends
 import json
+import warnings
 
 
 def main():
+    warnings.simplefilter('ignore')
     print(json.dumps(available_backends(
         {'local': True}), indent=2, sort_keys=True))
 
