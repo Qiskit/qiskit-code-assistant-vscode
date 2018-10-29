@@ -126,8 +126,8 @@ export class PackageManager {
             QLogger.verbose(`Clicked on Dismiss!`, this);
             return false;
         } else {
-            QLogger.verbose(`Clicked on other element! Updating anyway...`, this);
-            return true;
+            QLogger.verbose(`Clicked on another element! Cancelling update`, this);
+            return false;
         }
     }
 
@@ -161,8 +161,8 @@ export class PackageManager {
             QLogger.verbose(`Clicked on Dismiss!`, this);
             return false;
         } else {
-            QLogger.verbose(`Clicked on other element! Updating anyway`, this);
-            return true;
+            QLogger.verbose(`Clicked on another element! Cancelling install`, this);
+            return false;
         }
     }
 
