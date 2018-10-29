@@ -17,10 +17,12 @@ if (version.parse(__version__) > version.parse("0.6")):
 
 def main():
     warnings.simplefilter('ignore')
+
     if (version.parse(__version__) > version.parse("0.5")
             and version.parse(__version__) < version.parse("0.6")):
         print(json.dumps(available_backends(
             {'local': True}), indent=2, sort_keys=True))
+
     if (version.parse(__version__) > version.parse("0.6")):
         print(json.dumps([backend.name()
                           for backend in Aer.backends()],
