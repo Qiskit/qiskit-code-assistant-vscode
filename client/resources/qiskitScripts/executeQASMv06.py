@@ -8,6 +8,7 @@ from qiskit import execute, Aer
 import argparse
 import json
 
+
 def process(filename):
     qc = load_qasm_file(filename)
 

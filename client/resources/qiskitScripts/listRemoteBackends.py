@@ -25,12 +25,13 @@ PUBLIC_NAMES = {
     'ibmq_qasm_simulator': 'IBM Q QASM Simulator'
 }
 
-if (version.parse(__version__) > version.parse("0.5") and 
-    version.parse(__version__) < version.parse("0.6")):
+if (version.parse(__version__) > version.parse("0.5") and
+        version.parse(__version__) < version.parse("0.6")):
     from qiskit import register, available_backends, get_backend
 
 if (version.parse(__version__) > version.parse("0.6")):
     from qiskit import IBMQ
+
 
 def main():
     warnings.simplefilter('ignore')
@@ -50,28 +51,27 @@ def main():
     if (args['url'] is None):
         args['url'] = 'https://quantumexperience.ng.bluemix.net/api'
 
-    if (version.parse(__version__) > version.parse("0.5") and 
-        version.parse(__version__) < version.parse("0.6")):
+    if (version.parse(__version__) > version.parse("0.5") and
+            version.parse(__version__) < version.parse("0.6")):
 
-        if (args['hub'] is None or args['group'] is None 
-            or args['project'] is None):
+        if (args['hub'] is None or args['group'] is None
+                or args['project'] is None):
             register(args['apiToken'], args['url'])
         else:
             register(args['apiToken'], url=args['url'],
-                     hub=args['hub'], group=args['group'], 
+                     hub=args['hub'], group=args['group'],
                      project=args['project'])
 
         backs = available_backends({'local': False})
 
-
     if (version.parse(__version__) > version.parse("0.6")):
 
-        if (args['hub'] is None or args['group'] is None 
-            or args['project'] is None):
+        if (args['hub'] is None or args['group'] is None
+                or args['project'] is None):
             IBMQ.enable_account(args['apiToken'], args['url'])
         else:
-            IBMQ.enable_account(args['apiToken'], url=args['url'], 
-                                hub=args['hub'], group=args['group'], 
+            IBMQ.enable_account(args['apiToken'], url=args['url'],
+                                hub=args['hub'], group=args['group'],
                                 project=args['project'])
 
         backs = [backend.name() for backend in IBMQ.backends()]
@@ -87,8 +87,8 @@ def main():
 
 
 def createDeviceStatus(back):
-    if (version.parse(__version__) > version.parse("0.5") and 
-        version.parse(__version__) < version.parse("0.6")):
+    if (version.parse(__version__) > version.parse("0.5") and
+            version.parse(__version__) < version.parse("0.6")):
         return {
             'name': PUBLIC_NAMES[back],
             'status': parseBackendStatus(get_backend(back).status)
@@ -114,6 +114,7 @@ def parseAvailability(backendStatus):
         return backendStatus['available']
     except KeyError:
         return backendStatus['operational']
+
 
 if __name__ == '__main__':
     main()

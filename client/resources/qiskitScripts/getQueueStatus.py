@@ -26,17 +26,17 @@ def main():
     if (args['url'] is None):
         args['url'] = 'https://quantumexperience.ng.bluemix.net/api'
 
-    if ((args['hub'] is None) 
-        or (args['group'] is None) 
-        or (args['project'] is None)):
+    if ((args['hub'] is None)
+        or (args['group'] is None)
+            or (args['project'] is None)):
         api = IBMQuantumExperience(args['apiToken'], {'url': args['url']})
         register(args['apiToken'], args['url'])
     else:
-        api = IBMQuantumExperience(args['apiToken'], 
-                                   {'url': args['url'], 
-                                   'hub': args['hub'], 
-                                   'group': args['group'], 
-                                   'project': args['project']})
+        api = IBMQuantumExperience(args['apiToken'],
+                                   {'url': args['url'],
+                                    'hub': args['hub'],
+                                    'group': args['group'],
+                                    'project': args['project']})
         register(args['apiToken'], args['url'], args['hub'],
                  args['group'], args['project'])
 
