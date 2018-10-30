@@ -2,14 +2,18 @@
 #
 # This source code is licensed under the Apache License, Version 2.0 found in
 # the LICENSE.txt file in the root directory of this source tree.
-
-from qiskit import available_backends
+import warnings
 import json
+from qiskit import __version__
+from packaging import version
+from qiskitTools import QiskitTools
 
 
 def main():
-    print(json.dumps(available_backends(
-        {'local': True}), indent=2, sort_keys=True))
+    warnings.simplefilter('ignore')
+
+    backs = QiskitTools().listLocalBackends()
+    print(json.dumps(backs, indent=2, sort_keys=True))
 
 
 if __name__ == '__main__':
