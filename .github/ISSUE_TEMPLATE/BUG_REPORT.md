@@ -8,28 +8,20 @@ about: Create a report to help us improve 🤔.
 
 <!-- ⚠️ Before writing your issue make sure you are using: -->
 <!-- VSCode 1.23.x -->
-<!-- qiskit-core ^0.5.x -->
+<!-- qiskit-terra ^0.5.x -->
 <!-- The latest version of Qiskit VSCode Extension -->
 
 ### Informations
 
-- **VSCode version**:
-- **Qiskit (Python SDK) version**:
-- **Qiskit VSCode Extension version**:
-- **Operating system**:
+-   **VSCode version**:
+-   **Qiskit [Terra / Aqua / other] version**:
+-   **Qiskit VSCode Extension version**:
+-   **Operating system**:
 
 ### What is the current behavior?
 
-
-
 ### Steps to reproduce the problem
-
-
 
 ### What is the expected behavior?
 
-
-
 ### Suggested solutions
-
-
