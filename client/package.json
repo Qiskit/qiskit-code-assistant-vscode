@@ -92,8 +92,8 @@
 					"type": "object",
 					"default": {
 						"qiskit": "0.5.4",
-						"qiskit-aqua": "0.2.0",
-						"qiskit-aqua-chemistry": "0.2.0"
+						"qiskit-aqua": "0.3.0",
+						"qiskit-aqua-chemistry": "0.3.0"
 					},
 					"description": "Qiskit and libraries related to run code"
 				},
