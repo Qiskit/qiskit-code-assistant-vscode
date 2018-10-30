@@ -29,6 +29,20 @@ class QiskitTools(object):
     Utilities for CLI
     """
 
+    def __init__(self):
+        self.PUBLIC_NAMES = {
+            'ibmq_20_tokyo': 'IBM Q 20 Tokyo',
+            'QS1_1': 'IBM Q 20 Austin',
+            'ibmq_16_melbourne': 'IBM Q 16 Melbourne',
+            'ibmqx5': 'IBM Q 16 Rueschlikon',
+            'ibmq_16_rueschlikon': 'IBM Q 16 Rueschlikon',
+            'ibmqx4': 'IBM Q 5 Tenerife',
+            'ibmq_5_tenerife': 'IBM Q 5 Tenerife',
+            'ibmqx2': 'IBM Q 5 Yorktown',
+            'ibmq_5_yorktown': 'IBM Q 5 Yorktown',
+            'ibmq_qasm_simulator': 'IBM Q QASM Simulator'
+        }
+
     def executeQASM(self, filename):
 
         if (version.parse(__version__) > version.parse("0.5") and
@@ -103,6 +117,20 @@ class QiskitTools(object):
                                     project=project)
 
             return self.parseBackendStatus(IBMQ.get_backend(back).status())
+
+    def createDeviceStatus(self, back):
+        if (version.parse(__version__) > version.parse("0.5") and
+                version.parse(__version__) < version.parse("0.6")):
+            return {
+                'name': self.PUBLIC_NAMES[back],
+                'status': self.parseBackendStatus(get_backend(back).status)
+            }
+
+        if (version.parse(__version__) > version.parse("0.6")):
+            return {
+                'name': self.PUBLIC_NAMES[back],
+                'status': self.parseBackendStatus(IBMQ.get_backend(back).status())
+            }
 
     def parseBackendStatus(self, backendStatus):
         return {
