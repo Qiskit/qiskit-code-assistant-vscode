@@ -26,7 +26,7 @@ class QiskitUnsupportedVersion(Exception):
 
 class QiskitTools(object):
     """
-    Utilities for CLI
+    Utilities for the Qiskit-terra-related scripts
     """
 
     def __init__(self):
@@ -109,7 +109,8 @@ class QiskitTools(object):
 
         return backs
 
-    def getBackendStatus(self, back, apiToken, url, hub=None, group=None, project=None):
+    def getBackendStatus(self, back, apiToken, url,
+                         hub=None, group=None, project=None):
         if (version.parse(__version__) > version.parse("0.5") and
                 version.parse(__version__) < version.parse("0.6")):
 
@@ -152,7 +153,9 @@ class QiskitTools(object):
         elif (version.parse(__version__) > version.parse("0.6")):
             return {
                 'name': self.PUBLIC_NAMES[back],
-                'status': self.parseBackendStatus(IBMQ.get_backend(back).status())
+                'status': self.parseBackendStatus(
+                    IBMQ.get_backend(back).status()
+                )
             }
 
         else:
