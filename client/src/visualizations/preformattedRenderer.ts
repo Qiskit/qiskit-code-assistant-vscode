@@ -15,6 +15,18 @@ export class PreformattedRenderer implements RenderStrategy {
     constructor(private result: object) {}
 
     render(): string {
-        return `<pre>${this.result}</pre>`;
+        let sResult = this.escapeHTML(String(this.result));
+        if (String(this.result) === sResult) {
+            return `<pre>${this.result}</pre>`;
+        } else {
+            return `<pre>${sResult}</pre>`;
+        }
+    }
+
+    escapeHTML(result: string): string {
+        return result
+            .replace(/>/g, '&gt;')
+            .replace(/</g, '&lt;')
+            .replace(/"/g, '&quot;');
     }
 }

@@ -3,13 +3,16 @@
 # This source code is licensed under the Apache License, Version 2.0 found in
 # the LICENSE.txt file in the root directory of this source tree.
 
-from qiskit import available_backends, register
-from IBMQuantumExperience import IBMQuantumExperience
-import argparse
+import warnings
 import json
+import argparse
+from packaging import version
+from qiskitTools import QiskitTools
 
 
 def main():
+    warnings.simplefilter('ignore')
+
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--apiToken')
@@ -24,23 +27,20 @@ def main():
     if (args['url'] is None):
         args['url'] = 'https://quantumexperience.ng.bluemix.net/api'
 
-    if (args['hub'] is None) or (args['group'] is None) or (args['project'] is None):
-        api = IBMQuantumExperience(args['apiToken'], {'url': args['url']})
-        register(args['apiToken'], args['url'])
-    else:
-        api = IBMQuantumExperience(args['apiToken'], {
-                                   'url': args['url'], 'hub': args['hub'], 'group': args['group'], 'project': args['project']})
-        register(args['apiToken'], args['url'], args['hub'],
-                 args['group'], args['project'])
-
-    backs = available_backends()
+    backs = QiskitTools().listRemoteBackends(args['apiToken'],
+                                             args['url'],
+                                             args['hub'],
+                                             args['group'],
+                                             args['project'])
 
     for back in backs:
-        try:
-            back_status = api.backend_status(back)
-            print(json.dumps(back_status, indent=2, sort_keys=True))
-        except:
-            pass
+        status = QiskitTools().getBackendStatus(back,
+                                                args['apiToken'],
+                                                args['url'],
+                                                args['hub'],
+                                                args['group'],
+                                                args['project'])
+        print(json.dumps(status, indent=2, sort_keys=True))
 
 
 if __name__ == '__main__':

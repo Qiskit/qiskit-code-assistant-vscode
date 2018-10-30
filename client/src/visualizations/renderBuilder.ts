@@ -65,21 +65,12 @@ export namespace RenderBuilder {
                 } else if (new RegExp(/^ *print\(.*\.get_counts\(.*\)\)/g).test(codeFileArrayRev[i]) === true) {
                     // If the result is printed using the get_counts, the proper viz to show is the histogram
                     return true;
-                } else if (new RegExp(/^ *print\(.*\._result.*\)\)/g).test(codeFileArrayRev[i]) === true) {
+                } else if (new RegExp(/^ *print\(.*_result_qasm.*\)\)/g).test(codeFileArrayRev[i]) === true) {
                     // If the result is printed using the _result (probably using QASM), the proper viz to show is the histogram
                     return true;
                 }
-                // else {
-                //     // If we don't find the proper viz method, continue seeking for that.
-                //     // If the array ends without a proper result, we will render it as text.
-                // }
             }
-            // return new PreformattedRenderer(result);
         }
-        // else {
-        //     return new PreformattedRenderer(result);
-        // }
-
         return false;
     }
 }
