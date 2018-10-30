@@ -4,7 +4,7 @@
         "body": [ 
             "from qiskit_aqua import run_algorithm",
             "from qiskit_aqua.input import get_input_instance",
-            "from qiskit_aqua.ising import partition" 
+            "from qiskit_aqua.translators.ising import partition" 
         ],
         "description": "Code snippet for the basic imports in Qiskit Aqua"
     },
@@ -49,7 +49,7 @@
     "print_eigensolver_result": {
         "prefix": "print_eigensolver_result",
         "body": [
-            "x = partition.sample_most_likely(len(number_list), ${1:result}['eigvecs'][0])",
+            "x = partition.sample_most_likely(${1:result}['eigvecs'][0])",
             "print('energy:', ${1:result}['energy'])",
             "print('time:', ${1:result}['eval_time'])",
             "print('partition objective:', ${1:result}['energy'] + offset)",
