@@ -90,6 +90,17 @@ class QiskitTools(object):
 
         return backs
 
+    def listLocalBackends(self):
+
+        if (version.parse(__version__) > version.parse("0.5")
+                and version.parse(__version__) < version.parse("0.6")):
+            backs = available_backends({'local': True})
+
+        if (version.parse(__version__) > version.parse("0.6")):
+            backs = [backend.name() for backend in Aer.backends()]
+
+        return backs
+
     def getBackendStatus(self, back, apiToken, url, hub=None, group=None, project=None):
         if (version.parse(__version__) > version.parse("0.5") and
                 version.parse(__version__) < version.parse("0.6")):
