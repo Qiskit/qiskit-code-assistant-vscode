@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### ✏️ Changed
 
+-   Updating the support of snippets related to Qiskit Aqua to version v0.3 ([#49](https://github.com/Qiskit/qiskit-vscode/pull/49) by [@cbjuan](https://github.com/cbjuan))
+
 ### 👾 Security
 
 ## [v0.3.6] - 2018-10-25
