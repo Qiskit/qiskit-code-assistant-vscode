@@ -2,11 +2,11 @@
     "import": {
         "prefix": "import",
         "body": [ 
-            "from qiskit_acqua import run_algorithm",
-            "from qiskit_acqua.input import get_input_instance",
-            "from qiskit_acqua.ising import partition" 
+            "from qiskit_aqua import run_algorithm",
+            "from qiskit_aqua.input import get_input_instance",
+            "from qiskit_aqua.ising import partition" 
         ],
-        "description": "Code snippet for the basic Acqua imports"
+        "description": "Code snippet for the basic imports in Qiskit Aqua"
     },
     "input_partition": {
         "prefix": "input_partition",
@@ -15,7 +15,7 @@
             "${2:input} = get_input_instance('EnergyInput')",
             "${2:input}.qubit_op = qubitOp"
         ],
-        "description": "Code snippet for a partition problem input"
+        "description": "Code snippet for a partition problem input using Qiskit Aqua"
     },
     "grover": {
         "prefix": "grover",
@@ -29,7 +29,7 @@
             "",
             "${4:result} = run_algorithm(${1:params})"
         ],
-        "description": "Code snippet for the Grover algorithm"
+        "description": "Code snippet for the Grover algorithm using Qiskit Aqua"
     },
     "vqe": {
         "prefix": "vqe",
@@ -44,7 +44,7 @@
             "",
             "${3:result} = run_algorithm(${1:params}, ${4:input})"
         ],
-        "description": "Code snippet for the Grover algorithm"
+        "description": "Code snippet for the Grover algorithm using Qiskit Aqua"
     },
     "print_eigensolver_result": {
         "prefix": "print_eigensolver_result",
@@ -56,6 +56,6 @@
             "print('solution:', x)",
             "print('solution objective:', partition.partition_value(x, number_list))"
         ],
-        "description": "Code snippet to print an Eigensolver solution"
+        "description": "Code snippet to print an Eigensolver solution using Qiskit Aqua"
     }
 }
