@@ -28,7 +28,7 @@
 		"body": [
 			"plot_histogram(${1:result}.get_counts())"
 		],
-		"description": "histogram plots",
+		"description": "Histogram plots to use with Qiskit Terra",
 		"scope": "source.python"
 	}
 }
