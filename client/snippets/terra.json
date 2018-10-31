@@ -12,7 +12,7 @@
 			"from qiskit import execute, register",
 			"from qiskit import IBMQ, Aer"
 		],
-		"description": "basic imports to get started with qiskit",
+		"description": "Basic imports to get started with Qiskit Terra",
 		"scope": "source.python"
 	},
 	"qviz_imports": {
