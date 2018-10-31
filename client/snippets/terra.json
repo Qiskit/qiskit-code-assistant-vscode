@@ -20,7 +20,7 @@
 		"body": [
 			"from qiskit.tools.visualization import plot_histogram, plot_circuit"
 		],
-		"description": "basic visualization imports to get started with qiskit",
+		"description": "Basic visualization imports to get started with Qiskit Terra",
 		"scope": "source.python"
 	},
 	"qviz_histplot": {
