@@ -142,6 +142,10 @@
 		"snippets": [
 			{
 				"language": "python",
+				"path": "./snippets/terra.json"
+			},
+			{
+				"language": "python",
 				"path": "./snippets/aqua.json"
 			}
 		],
