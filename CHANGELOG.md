@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### 🎉 Added
 
+-   Adding snippets for Qiskit Terra ([#39](https://github.com/Qiskit/qiskit-vscode/pull/39) by [@AkashGutha](https://github.com/AkashGutha))
+
 ### 🐛 Fixed
 
 ### ✏️ Changed
