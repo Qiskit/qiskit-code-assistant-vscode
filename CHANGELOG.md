@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### 👾 Security
 
+-   Fixing CVE-2018-16469 and updating other dependencies ([#52](https://github.com/Qiskit/qiskit-vscode/pull/52) by [@cbjuan](https://github.com/cbjuan))
+
 ## [v0.4.0] - 2018-10-30
 
 ### 🎉 Added
