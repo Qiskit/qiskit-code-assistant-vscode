@@ -37,7 +37,7 @@ We encourage you to visit [https://qiskit.org/](https://qiskit.org/) to explore 
 -   OpenQASM error detection.
 -   OpenQASM autocompletion.
 -   Qiskit static analysis.
--   Provide pre-defined code snippets for Qiskit Aqua
+-   Provide pre-defined code snippets for code using Qiskit Terra and Qiskit Aqua
 
 ## Useful commands
 

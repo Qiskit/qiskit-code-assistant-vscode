@@ -24,6 +24,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### 👾 Security
 
+## [v0.4.1] - 2018-11-05
+
+### 🎉 Added
+
+-   Adding snippets for Qiskit Terra ([#39](https://github.com/Qiskit/qiskit-vscode/pull/39) by [@AkashGutha](https://github.com/AkashGutha))
+
+### 👾 Security
+
 -   Fixing CVE-2018-16469 and updating other dependencies ([#52](https://github.com/Qiskit/qiskit-vscode/pull/52) by [@cbjuan](https://github.com/cbjuan))
 
 ## [v0.4.0] - 2018-10-30
@@ -276,7 +284,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   Re-styling charts ([#97](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/97) by [@cbjuan](https://github.com/cbjuan))
 -   Extension size reduction ([#76](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/76) by [@ydarias](https://github.com/ydarias))
 
-[unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.4.0...HEAD
+[unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.4.1...HEAD
+[v0.4.0]: https://github.com/Qiskit/qiskit-vscode/compare/v0.4.0...v0.4.1
 [v0.4.0]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.6...v0.4.0
 [v0.3.6]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.5...v0.3.6
 [v0.3.5]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.4...v0.3.5
