@@ -11,7 +11,7 @@ tags:
 authors:
     - name: Juan Cruz-Benito
       orcid: 000-0003-2045-8329
-      affiliation: "1"
+      affiliation: 1
     - name: Yeray Darias
       affiliation: 1
     - name: Ismael Faro
