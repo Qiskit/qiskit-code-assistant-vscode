@@ -10,7 +10,7 @@ tags:
     - Open Source
 authors:
     - name: Juan Cruz-Benito
-      orcid: 000-0003-2045-8329
+      orcid: 0000-0003-2045-8329
       affiliation: 1
     - name: Yeray Darias
       affiliation: 1
