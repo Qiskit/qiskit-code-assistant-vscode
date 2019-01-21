@@ -27,7 +27,7 @@ We encourage you to visit [https://qiskit.org/](https://qiskit.org/) to explore 
 
 ## Feature details
 
--   Support [Qiskit Terra](https://github.com/Qiskit/qiskit-terra/) versions v0.5.X and v0.6.X.
+-   Support [Qiskit Terra](https://github.com/Qiskit/qiskit-terra/) version v0.6.X.
 -   Check necessary dependencies to execute OpenQASM or Qiskit files.
 -   Run Qiskit source code in a backend.
 -   Run OpenQASM source code in a local backend.

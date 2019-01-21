@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### 👾 Security
 
+### ❌ Removed
+
+-   Removing the support for Qiskit Terra v0.5.X
+
 ## [v0.4.1] - 2018-11-05
 
 ### 🎉 Added
