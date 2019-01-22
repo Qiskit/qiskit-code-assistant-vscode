@@ -1,19 +1,16 @@
-from qiskit import QuantumCircuit
 import json
 from qiskit import __version__
 from IBMQuantumExperience import IBMQuantumExperience
 from packaging import version
 import argparse
 import warnings
+from qiskit import QuantumCircuit
 from qiskit.wrapper import load_qasm_file
 from qiskit import execute
 
 if (version.parse(__version__) >= version.parse("0.6")):
     from qiskit import IBMQ
     from qiskit import Aer
-
-if (version.parse(__version__) >= version.parse("0.7")):
-    from qiskit import QuantumCircuit
 
 
 class QiskitUnsupportedVersion(Exception):
