@@ -4,14 +4,8 @@
 # the LICENSE.txt file in the root directory of this source tree.
 
 import warnings
-
-def showwarning(message, category, filename, lineno, file, line):
-    # print(message)
-    # print(filename)
-    pass
-
-warnings.showwarning = showwarning
-warnings.resetwarnings()  # allow all warnings
+from marshmallow.warnings import ChangedInMarshmallow3Warning
+warnings.simplefilter('ignore', category=ChangedInMarshmallow3Warning)
 
 from qiskitTools import QiskitTools
 import os
