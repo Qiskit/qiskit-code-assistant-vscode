@@ -1,3 +1,4 @@
+from qiskit import QuantumCircuit
 import json
 from qiskit import __version__
 from IBMQuantumExperience import IBMQuantumExperience
@@ -10,6 +11,9 @@ from qiskit import execute
 if (version.parse(__version__) >= version.parse("0.6")):
     from qiskit import IBMQ
     from qiskit import Aer
+
+if (version.parse(__version__) >= version.parse("0.7")):
+    from qiskit import QuantumCircuit
 
 
 class QiskitUnsupportedVersion(Exception):
@@ -48,9 +52,15 @@ class QiskitTools(object):
             result = job_sim.result()
             return result.get_counts()
 
+        elif (version.parse(__version__) >= version.parse("0.7")):
+            qc = QuantumCircuit.from_qasm_file(filename)
+            job_sim = execute(qc, Aer.get_backend("qasm_simulator"))
+            result = job_sim.result()
+            return result.get_counts()
+
         else:
             raise QiskitUnsupportedVersion(
-                'Qiskit-terra version must be v0.6')
+                'Qiskit-terra version must be v0.6 or v0.7')
 
     def listRemoteBackends(self, apiToken, url,
                            hub=None, group=None, project=None):
