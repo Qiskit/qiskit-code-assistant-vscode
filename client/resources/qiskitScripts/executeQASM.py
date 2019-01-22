@@ -3,12 +3,22 @@
 # This source code is licensed under the Apache License, Version 2.0 found in
 # the LICENSE.txt file in the root directory of this source tree.
 
-from packaging import version
-import argparse
-import json
-import subprocess
-import os
+import warnings
+
+def showwarning(message, category, filename, lineno, file, line):
+    # print(message)
+    # print(filename)
+    pass
+
+warnings.showwarning = showwarning
+warnings.resetwarnings()  # allow all warnings
+
 from qiskitTools import QiskitTools
+import os
+import subprocess
+import json
+import argparse
+from packaging import version
 
 
 def main():
