@@ -80,6 +80,9 @@ export namespace CommandExecutor {
                 //console.log(document);
                 //console.log("python", [document.fileName.toString(), '--file', codeFile.fileName.toString()]);
 
+                // Working filters to ignore the warnings:
+                // - python -W ignore -> Filter all the warnings raised during the execution of the file
+                // - python -W ignore::::364 -> Filter the warnings raised by the line 364 of any module
                 CommandExecutor.exec('python', [document.fileName.toString(), '--file', codeFile.fileName.toString()])
                     .then(stdout => {
                         //console.log(stdout);
