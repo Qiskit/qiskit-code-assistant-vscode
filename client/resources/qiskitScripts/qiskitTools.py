@@ -7,7 +7,7 @@ import warnings
 from qiskit.wrapper import load_qasm_file
 from qiskit import execute
 
-if (version.parse(__version__) > version.parse("0.6")):
+if (version.parse(__version__) >= version.parse("0.6")):
     from qiskit import IBMQ
     from qiskit import Aer
 
@@ -40,8 +40,8 @@ class QiskitTools(object):
         }
 
     def executeQASM(self, filename):
-
-        if (version.parse(__version__) > version.parse("0.6")):
+        if (version.parse(__version__) >= version.parse("0.6") and
+                (version.parse(__version__) < version.parse("0.7"))):
 
             qc = load_qasm_file(filename)
             job_sim = execute(qc, Aer.get_backend("qasm_simulator"))
@@ -55,7 +55,8 @@ class QiskitTools(object):
     def listRemoteBackends(self, apiToken, url,
                            hub=None, group=None, project=None):
 
-        if (version.parse(__version__) > version.parse("0.6")):
+        if (version.parse(__version__) >= version.parse("0.6") and
+                (version.parse(__version__) < version.parse("0.7"))):
 
             if (hub is None or group is None or project is None):
                 IBMQ.enable_account(apiToken, url)
@@ -74,7 +75,8 @@ class QiskitTools(object):
 
     def listLocalBackends(self):
 
-        if (version.parse(__version__) > version.parse("0.6")):
+        if (version.parse(__version__) >= version.parse("0.6") and
+                (version.parse(__version__) < version.parse("0.7"))):
             backs = [backend.name() for backend in Aer.backends()]
 
         else:
@@ -85,7 +87,8 @@ class QiskitTools(object):
 
     def getBackendStatus(self, back, apiToken, url,
                          hub=None, group=None, project=None):
-        if (version.parse(__version__) > version.parse("0.6")):
+        if (version.parse(__version__) >= version.parse("0.6") and
+                (version.parse(__version__) < version.parse("0.7"))):
 
             if (hub is None or group is None or project is None):
                 IBMQ.enable_account(apiToken, url)
@@ -101,7 +104,8 @@ class QiskitTools(object):
                 'Qiskit-terra version must be v0.6')
 
     def createDeviceStatus(self, back):
-        if (version.parse(__version__) > version.parse("0.6")):
+        if (version.parse(__version__) >= version.parse("0.6") and
+                (version.parse(__version__) < version.parse("0.7"))):
             return {
                 'name': self.PUBLIC_NAMES[back],
                 'status': self.parseBackendStatus(
