@@ -73,19 +73,13 @@ export namespace CommandExecutor {
             const codeFile = vscode.window.activeTextEditor.document;
             codeFile.save();
 
-            //console.log("Let's go to execute that QASM")
-            //console.log(execPath);
-
             vscode.workspace.openTextDocument(execPath).then(document => {
-                //console.log(document);
-                //console.log("python", [document.fileName.toString(), '--file', codeFile.fileName.toString()]);
-
                 // Working filters to ignore the warnings:
                 // - python -W ignore -> Filter all the warnings raised during the execution of the file
                 // - python -W ignore::::364 -> Filter the warnings raised by the line 364 of any module
                 CommandExecutor.exec('python', [document.fileName.toString(), '--file', codeFile.fileName.toString()])
                     .then(stdout => {
-                        //console.log(stdout);
+                        //vscode.window.showInformationMessage(stdout);
                         return resolve(stdout);
                     })
                     .catch(err => {
@@ -106,7 +100,6 @@ export namespace CommandExecutor {
             vscode.workspace.openTextDocument(execPath).then(document => {
                 CommandExecutor.exec('python', [document.fileName.toString()].concat(options))
                     .then(stdout => {
-                        // console.log(stdout);
                         //vscode.window.showInformationMessage("Execution result:",stdout);
                         return resolve(stdout);
                     })
