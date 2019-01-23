@@ -116,14 +116,12 @@ class QiskitTools(object):
                 'Qiskit-terra version must be v0.6 or v0.7')
 
     def createDeviceStatus(self, back):
-        if (version.parse(__version__) >= version.parse("0.6") and
-                (version.parse(__version__) < version.parse("0.7"))):
-            return {
-                'name': self.PUBLIC_NAMES[back],
-                'status': self.parseBackendStatus(
-                    IBMQ.get_backend(back).status()
-                )
-            }
+        return {
+            'name': self.PUBLIC_NAMES[back],
+            'status': self.parseBackendStatus(
+                IBMQ.get_backend(back).status()
+            )
+        }
 
     def parseBackendStatus(self, backendStatus):
         if (version.parse(__version__) >= version.parse("0.6") and
