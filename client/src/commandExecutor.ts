@@ -53,7 +53,25 @@ export namespace CommandExecutor {
             vscode.window.showInformationMessage('⚡ Running... ⚡');
             const codeFile = vscode.window.activeTextEditor.document;
             codeFile.save();
-            CommandExecutor.exec('python', [codeFile.fileName.toString()])
+            /* The following workaround is intended to omit the warning "ChangedInMarshmallow3Warning" raised by marshmallow module when using Qiskit 0.7
+            The full warning raised by the module is something like:
+            
+            /path/site-packages/marshmallow/schema.py:364: ChangedInMarshmallow3Warning: strict=False is not recommended. In marshmallow 3.0, schemas will always be strict. See https://marshmallow.readthedocs.io/en/latest/upgrading.html#schemas-are-always-strict
+  ChangedInMarshmallow3Warning
+            
+            So, to omit it, we launch the python execution filtering all the warnings which begins with the message "strict=False is not recommended. In marshmallow 3.0""
+            We tried, but didn't succeed, to filter by module .*marshmallow.* and by category "ChangedInMarshmallow3Warning" (not possible due it is not a direct subclass of Python Warnings)
+            
+            Qiskit v0.8 should omit this warning by itself. Then, we should remove the current workaround.
+            More info: 
+              - https://github.com/Qiskit/qiskit-terra/commit/11b69e4e620d02994b95a5fad925833011202342#diff-1cbb089c669bc3c7d5b9189badd019f8R56
+              - https://github.com/Qiskit/qiskit-terra/pull/1695
+              - https://github.com/marshmallow-code/marshmallow/blob/2.x-line/marshmallow/schema.py#L364
+            */
+
+            CommandExecutor.exec('python -W ignore:"strict=False is not recommended. In marshmallow 3.0"', [
+                codeFile.fileName.toString()
+            ])
                 .then(stdout => {
                     return resolve(stdout);
                 })
