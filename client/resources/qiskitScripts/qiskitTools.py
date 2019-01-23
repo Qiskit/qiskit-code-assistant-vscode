@@ -125,16 +125,26 @@ class QiskitTools(object):
                 )
             }
 
+    def parseBackendStatus(self, backendStatus):
+        if (version.parse(__version__) >= version.parse("0.6") and
+                (version.parse(__version__) < version.parse("0.7"))):
+            return {
+                'name': backendStatus['name'],
+                'pending_jobs': backendStatus['pending_jobs'],
+                'available': self.parseAvailability(backendStatus)
+            }
+        elif (version.parse(__version__) >= version.parse("0.7")):
+            # The type(backendStatus) is now <class 'qiskit.providers.models.backendstatus.BackendStatus'>
+            # previously was <class 'qiskit._util.AvailableToOperationalDict'>
+            return {
+                'name': backendStatus.backend_name,
+                'pending_jobs': backendStatus.pending_jobs,
+                'available': backendStatus.operational
+            }
+
         else:
             raise QiskitUnsupportedVersion(
-                'Qiskit-terra version must be v0.6')
-
-    def parseBackendStatus(self, backendStatus):
-        return {
-            'name': backendStatus['name'],
-            'pending_jobs': backendStatus['pending_jobs'],
-            'available': self.parseAvailability(backendStatus)
-        }
+                'Qiskit-terra version must be v0.6 or v0.7')
 
     def parseAvailability(self, backendStatus):
         try:
