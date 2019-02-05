@@ -73,9 +73,9 @@ This extension contributes the following variables to the settings:
 
 Other variables are contributed, but it is not recommended to change them.
 
-## Authors (alphabetical)
+## Authors and citation
 
-Qiskit VSCode Extension was initially authored by Juan Cruz-Benito, Yeray Darias, Ismael Faro, Juan Gómez, and Paco Martín. It continues growing with the help and work of [many people](https://github.com/Qiskit/qiskit-vscode/graphs/contributors) who contribute to the project at different levels.
+Qiskit VSCode Extension was initially authored (alphabetically) by Juan Cruz-Benito, Yeray Darias, Ismael Faro, Juan Gómez, and Paco Martín. It continues growing with the help and work of [many people](https://github.com/Qiskit/qiskit-vscode/graphs/contributors) who contribute to the project at different levels.
 
 If you use Qiskit, please cite as per the included [BibTeX file](https://github.com/Qiskit/qiskit/blob/master/Qiskit.bib).
 
