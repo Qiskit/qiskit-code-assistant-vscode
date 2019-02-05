@@ -3,12 +3,16 @@
 # This source code is licensed under the Apache License, Version 2.0 found in
 # the LICENSE.txt file in the root directory of this source tree.
 
-from packaging import version
-import argparse
-import json
-import subprocess
-import os
+import warnings  # noqa
+from marshmallow.warnings import ChangedInMarshmallow3Warning  # noqa
+warnings.simplefilter('ignore', category=ChangedInMarshmallow3Warning)  # noqa
+
 from qiskitTools import QiskitTools
+import os
+import subprocess
+import json
+import argparse
+from packaging import version
 
 
 def main():

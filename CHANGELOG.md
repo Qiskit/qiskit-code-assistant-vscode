@@ -18,11 +18,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### 🎉 Added
 
+-   Adding support for Qiskit Terra v0.7.X ([#61](https://github.com/Qiskit/qiskit-vscode/pull/61) by [@cbjuan](https://github.com/cbjuan))
+
 ### 🐛 Fixed
 
 ### ✏️ Changed
 
 ### 👾 Security
+
+### ❌ Removed
+
+-   Removing support for Qiskit Terra v0.5.X ([#61](https://github.com/Qiskit/qiskit-vscode/pull/61) by [@cbjuan](https://github.com/cbjuan))
 
 ## [v0.4.1] - 2018-11-05
 
@@ -285,7 +291,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   Extension size reduction ([#76](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/76) by [@ydarias](https://github.com/ydarias))
 
 [unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.4.1...HEAD
-[v0.4.0]: https://github.com/Qiskit/qiskit-vscode/compare/v0.4.0...v0.4.1
+[v0.4.1]: https://github.com/Qiskit/qiskit-vscode/compare/v0.4.0...v0.4.1
 [v0.4.0]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.6...v0.4.0
 [v0.3.6]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.5...v0.3.6
 [v0.3.5]: https://github.com/Qiskit/qiskit-vscode/compare/v0.3.4...v0.3.5

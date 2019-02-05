@@ -1,17 +1,19 @@
+# Copyright (c) 2018, IBM.
+#
+# This source code is licensed under the Apache License, Version 2.0 found in
+# the LICENSE.txt file in the root directory of this source tree.
+
 import json
 from qiskit import __version__
 from IBMQuantumExperience import IBMQuantumExperience
 from packaging import version
 import argparse
 import warnings
+from qiskit import QuantumCircuit
 from qiskit.wrapper import load_qasm_file
 from qiskit import execute
 
-if (version.parse(__version__) > version.parse("0.5") and
-        version.parse(__version__) < version.parse("0.6")):
-    from qiskit import register, available_backends, get_backend
-
-if (version.parse(__version__) > version.parse("0.6")):
+if (version.parse(__version__) >= version.parse("0.6")):
     from qiskit import IBMQ
     from qiskit import Aer
 
@@ -44,40 +46,29 @@ class QiskitTools(object):
         }
 
     def executeQASM(self, filename):
-
-        if (version.parse(__version__) > version.parse("0.5") and
-                version.parse(__version__) < version.parse("0.6")):
-
-            qc = load_qasm_file(filename)
-            job_sim = execute(qc, "local_qasm_simulator")
-            result = job_sim.result()
-            return result._result
-
-        elif (version.parse(__version__) > version.parse("0.6")):
+        if (version.parse(__version__) >= version.parse("0.6") and
+                (version.parse(__version__) < version.parse("0.7"))):
 
             qc = load_qasm_file(filename)
             job_sim = execute(qc, Aer.get_backend("qasm_simulator"))
             result = job_sim.result()
             return result.get_counts()
 
+        elif (version.parse(__version__) >= version.parse("0.7")):
+            qc = QuantumCircuit.from_qasm_file(filename)
+            job_sim = execute(qc, Aer.get_backend("qasm_simulator"))
+            result = job_sim.result()
+            return result.get_counts()
+
         else:
             raise QiskitUnsupportedVersion(
-                'Qiskit-terra version must be v0.5 or v0.6')
+                'Qiskit-terra version must be v0.6 or v0.7')
 
     def listRemoteBackends(self, apiToken, url,
                            hub=None, group=None, project=None):
 
-        if (version.parse(__version__) > version.parse("0.5") and
-                version.parse(__version__) < version.parse("0.6")):
-
-            if (hub is None or group is None or project is None):
-                register(apiToken, url)
-            else:
-                register(apiToken, url, hub, group, project)
-
-            backs = available_backends({'local': False})
-
-        elif (version.parse(__version__) > version.parse("0.6")):
+        if (version.parse(__version__) >= version.parse("0.6") and
+                (version.parse(__version__) <= version.parse("0.7"))):
 
             if (hub is None or group is None or project is None):
                 IBMQ.enable_account(apiToken, url)
@@ -90,44 +81,26 @@ class QiskitTools(object):
 
         else:
             raise QiskitUnsupportedVersion(
-                'Qiskit-terra version must be v0.5 or v0.6')
+                'Qiskit-terra version must be v0.6 or v0.7')
 
         return backs
 
     def listLocalBackends(self):
 
-        if (version.parse(__version__) > version.parse("0.5")
-                and version.parse(__version__) < version.parse("0.6")):
-            backs = available_backends({'local': True})
-
-        elif (version.parse(__version__) > version.parse("0.6")):
+        if (version.parse(__version__) >= version.parse("0.6") and
+                (version.parse(__version__) <= version.parse("0.7"))):
             backs = [backend.name() for backend in Aer.backends()]
 
         else:
             raise QiskitUnsupportedVersion(
-                'Qiskit-terra version must be v0.5 or v0.6')
+                'Qiskit-terra version must be v0.6 or v0.7')
 
         return backs
 
     def getBackendStatus(self, back, apiToken, url,
                          hub=None, group=None, project=None):
-        if (version.parse(__version__) > version.parse("0.5") and
-                version.parse(__version__) < version.parse("0.6")):
-
-            if (hub is None or group is None
-                    or project is None):
-                api = IBMQuantumExperience(
-                    apiToken, {'url': url})
-            else:
-                api = IBMQuantumExperience(apiToken,
-                                           {'url': url,
-                                            'hub': hub,
-                                            'group': group,
-                                            'project': project})
-
-            return api.backend_status(back)
-
-        elif (version.parse(__version__) > version.parse("0.6")):
+        if (version.parse(__version__) >= version.parse("0.6") and
+                (version.parse(__version__) <= version.parse("0.7"))):
 
             if (hub is None or group is None or project is None):
                 IBMQ.enable_account(apiToken, url)
@@ -140,34 +113,36 @@ class QiskitTools(object):
 
         else:
             raise QiskitUnsupportedVersion(
-                'Qiskit-terra version must be v0.5 or v0.6')
+                'Qiskit-terra version must be v0.6 or v0.7')
 
     def createDeviceStatus(self, back):
-        if (version.parse(__version__) > version.parse("0.5") and
-                version.parse(__version__) < version.parse("0.6")):
-            return {
-                'name': self.PUBLIC_NAMES[back],
-                'status': self.parseBackendStatus(get_backend(back).status)
-            }
+        return {
+            'name': self.PUBLIC_NAMES[back],
+            'status': self.parseBackendStatus(
+                IBMQ.get_backend(back).status()
+            )
+        }
 
-        elif (version.parse(__version__) > version.parse("0.6")):
+    def parseBackendStatus(self, backendStatus):
+        if (version.parse(__version__) >= version.parse("0.6") and
+                (version.parse(__version__) < version.parse("0.7"))):
             return {
-                'name': self.PUBLIC_NAMES[back],
-                'status': self.parseBackendStatus(
-                    IBMQ.get_backend(back).status()
-                )
+                'name': backendStatus['name'],
+                'pending_jobs': backendStatus['pending_jobs'],
+                'available': self.parseAvailability(backendStatus)
+            }
+        elif (version.parse(__version__) >= version.parse("0.7")):
+            # The type(backendStatus) is now <class 'qiskit.providers.models.backendstatus.BackendStatus'>
+            # previously was <class 'qiskit._util.AvailableToOperationalDict'>
+            return {
+                'name': backendStatus.backend_name,
+                'pending_jobs': backendStatus.pending_jobs,
+                'available': backendStatus.operational
             }
 
         else:
             raise QiskitUnsupportedVersion(
-                'Qiskit-terra version must be v0.5 or v0.6')
-
-    def parseBackendStatus(self, backendStatus):
-        return {
-            'name': backendStatus['name'],
-            'pending_jobs': backendStatus['pending_jobs'],
-            'available': self.parseAvailability(backendStatus)
-        }
+                'Qiskit-terra version must be v0.6 or v0.7')
 
     def parseAvailability(self, backendStatus):
         try:
