@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### 🎉 Added
 
 -   Adding support for Qiskit Terra v0.7.X ([#61](https://github.com/Qiskit/qiskit-vscode/pull/61) by [@cbjuan](https://github.com/cbjuan))
+-   Adding Qiskit citation to the README ([#63](https://github.com/Qiskit/qiskit-vscode/pull/63) by [@cbjuan](https://github.com/cbjuan))
 
 ### 🐛 Fixed
 
