@@ -29,7 +29,7 @@ bibliography: paper.bib
 
 # Summary
 
-Qiskit VSCode is an extension developed for Visual Studio Code [@vscode2018] that aims to enhance the researchers, developers and newcomers' experience [@barabasistudent2018] when programming quantum computing code using the language OpenQASM [@cross2017open] or the Qiskit libraries [@qiskit2018][@cross2018ibm].
+Qiskit VSCode is an extension developed for Visual Studio Code [@vscode2018] that aims to enhance the researchers, developers and newcomers' experience [@barabasistudent2018] when programming quantum computing code using the language OpenQASM [@cross2017open] or the Qiskit libraries [@qiskit][@cross2018ibm].
 Visual Studio Code (VSCode) is a popular code editor that embraces the open source philosophy and encourages collaboration. It allows the Open Source community to develop and add extensions that bring new functionality to its users. Similarly, a central goal of Qiskit is to build a software stack that makes it easy for anyone to use quantum computers. Following these ideas, this extension helps users keep Qiskit libraries (Terra, Aqua, etc.) up to date, detect code errors, autocomplete code and offer programming aids like the visualization of code executions or the integration with online quantum computers. These features aim to help beginners learn the right syntax for Qiskit or OpenQASM, and support advanced users and researchers find errors faster and remember parameters for various Qiskit functions. By leveraging this functionality, users can spend more time running Quantum Computing experiments instead of troubleshooting errors.
 
 Some of the new features that our Qiskit VSCode extension add to VSCode IDE include:
