@@ -20,7 +20,7 @@
 	},
 	"icon": "icon.png",
 	"engines": {
-		"vscode": "^1.25.0"
+		"vscode": "^1.31.1"
 	},
 	"categories": [
 		"Programming Languages",
