@@ -5,8 +5,8 @@ module.exports = {
     setupTestFrameworkScriptFile: '<rootDir>/out/test/jest-vscode-framework-setup.js',
     globals: {
         'ts-jest': {
-            tsConfigFile: 'tsconfig.json',
-            enableTsDiagnostics: true
+            tsConfig: 'tsconfig.json',
+            diagnostics: true
         }
     },
     moduleFileExtensions: ['ts', 'js'],
