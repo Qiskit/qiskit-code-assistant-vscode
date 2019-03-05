@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### 🐛 Fixed
 
+-   Improving checks for Qiskit versions ([#74](https://github.com/Qiskit/qiskit-vscode/pull/74) by [@cbjuan](https://github.com/cbjuan))
+
 ### ✏️ Changed
 
 ### 👾 Security
