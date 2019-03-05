@@ -1,28 +1,24 @@
 // Generated from Python3.g4 by ANTLR 4.6-SNAPSHOT
 
-
-import { ATN } from 'antlr4ts/atn/ATN';
-import { ATNDeserializer } from 'antlr4ts/atn/ATNDeserializer';
-import { FailedPredicateException } from 'antlr4ts/FailedPredicateException';
-import { NotNull } from 'antlr4ts/Decorators';
-import { NoViableAltException } from 'antlr4ts/NoViableAltException';
-import { Override } from 'antlr4ts/Decorators';
-import { Parser } from 'antlr4ts/Parser';
-import { ParserRuleContext } from 'antlr4ts/ParserRuleContext';
-import { ParserATNSimulator } from 'antlr4ts/atn/ParserATNSimulator';
-import { ParseTreeListener } from 'antlr4ts/tree/ParseTreeListener';
-import { ParseTreeVisitor } from 'antlr4ts/tree/ParseTreeVisitor';
-import { RecognitionException } from 'antlr4ts/RecognitionException';
-import { RuleContext } from 'antlr4ts/RuleContext';
-import { RuleVersion } from 'antlr4ts/RuleVersion';
-import { TerminalNode } from 'antlr4ts/tree/TerminalNode';
-import { Token } from 'antlr4ts/Token';
-import { TokenStream } from 'antlr4ts/TokenStream';
-import { Vocabulary } from 'antlr4ts/Vocabulary';
-import { VocabularyImpl } from 'antlr4ts/VocabularyImpl';
-
-import * as Utils from 'antlr4ts/misc/Utils';
-
+import { 
+	ATN,
+    ATNDeserializer,
+    FailedPredicateException,
+    NoViableAltException,
+    Parser,
+    ParserRuleContext,
+    ParserATNSimulator,
+    ParseTreeListener,
+    ParseTreeVisitor,
+    RecognitionException,
+    RuleContext,
+    RuleVersion,
+    TerminalNode,
+    Token,
+    TokenStream,
+    Vocabulary,
+    VocabularyImpl
+} from 'antlr4ts';
 import { Python3Listener } from './Python3Listener';
 import { Python3Visitor } from './Python3Visitor';
 
@@ -253,26 +249,26 @@ export class Python3Parser extends Parser {
 	];
 	public static readonly VOCABULARY: Vocabulary = new VocabularyImpl(Python3Parser._LITERAL_NAMES, Python3Parser._SYMBOLIC_NAMES, []);
 
-	@Override
-	@NotNull
+	/// @Override
+	/// @NotNull
 	public get vocabulary(): Vocabulary {
 		return Python3Parser.VOCABULARY;
 	}
 
-	@Override
+	/// @Override
 	public get grammarFileName(): string { return "Python3.g4"; }
 
-	@Override
+	/// @Override
 	public get ruleNames(): string[] { return Python3Parser.ruleNames; }
 
-	@Override
+	/// @Override
 	public get serializedATN(): string { return Python3Parser._serializedATN; }
 
 	constructor(input: TokenStream) {
 		super(input);
 		this._interp = new ParserATNSimulator(Python3Parser._ATN, this);
 	}
-	@RuleVersion(0)
+	@RuleVersion<ProgramContext>(0)
 	public program(): ProgramContext {
 		let _localctx: ProgramContext = new ProgramContext(this._ctx, this.state);
 		this.enterRule(_localctx, 0, Python3Parser.RULE_program);
@@ -367,7 +363,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<DecoratorContext>(0)
 	public decorator(): DecoratorContext {
 		let _localctx: DecoratorContext = new DecoratorContext(this._ctx, this.state);
 		this.enterRule(_localctx, 2, Python3Parser.RULE_decorator);
@@ -419,7 +415,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<DecoratorsContext>(0)
 	public decorators(): DecoratorsContext {
 		let _localctx: DecoratorsContext = new DecoratorsContext(this._ctx, this.state);
 		this.enterRule(_localctx, 4, Python3Parser.RULE_decorators);
@@ -457,7 +453,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<DecoratedContext>(0)
 	public decorated(): DecoratedContext {
 		let _localctx: DecoratedContext = new DecoratedContext(this._ctx, this.state);
 		this.enterRule(_localctx, 6, Python3Parser.RULE_decorated);
@@ -500,7 +496,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<FuncdefContext>(0)
 	public funcdef(): FuncdefContext {
 		let _localctx: FuncdefContext = new FuncdefContext(this._ctx, this.state);
 		this.enterRule(_localctx, 8, Python3Parser.RULE_funcdef);
@@ -546,7 +542,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<ParametersContext>(0)
 	public parameters(): ParametersContext {
 		let _localctx: ParametersContext = new ParametersContext(this._ctx, this.state);
 		this.enterRule(_localctx, 10, Python3Parser.RULE_parameters);
@@ -584,7 +580,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<TypedargslistContext>(0)
 	public typedargslist(): TypedargslistContext {
 		let _localctx: TypedargslistContext = new TypedargslistContext(this._ctx, this.state);
 		this.enterRule(_localctx, 12, Python3Parser.RULE_typedargslist);
@@ -817,7 +813,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<TfpdefContext>(0)
 	public tfpdef(): TfpdefContext {
 		let _localctx: TfpdefContext = new TfpdefContext(this._ctx, this.state);
 		this.enterRule(_localctx, 14, Python3Parser.RULE_tfpdef);
@@ -855,7 +851,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<VarargslistContext>(0)
 	public varargslist(): VarargslistContext {
 		let _localctx: VarargslistContext = new VarargslistContext(this._ctx, this.state);
 		this.enterRule(_localctx, 16, Python3Parser.RULE_varargslist);
@@ -1088,7 +1084,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<VfpdefContext>(0)
 	public vfpdef(): VfpdefContext {
 		let _localctx: VfpdefContext = new VfpdefContext(this._ctx, this.state);
 		this.enterRule(_localctx, 18, Python3Parser.RULE_vfpdef);
@@ -1113,7 +1109,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<StmtContext>(0)
 	public stmt(): StmtContext {
 		let _localctx: StmtContext = new StmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 20, Python3Parser.RULE_stmt);
@@ -1193,7 +1189,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Simple_stmtContext>(0)
 	public simple_stmt(): Simple_stmtContext {
 		let _localctx: Simple_stmtContext = new Simple_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 22, Python3Parser.RULE_simple_stmt);
@@ -1250,7 +1246,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Small_stmtContext>(0)
 	public small_stmt(): Small_stmtContext {
 		let _localctx: Small_stmtContext = new Small_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 24, Python3Parser.RULE_small_stmt);
@@ -1358,7 +1354,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Expr_stmtContext>(0)
 	public expr_stmt(): Expr_stmtContext {
 		let _localctx: Expr_stmtContext = new Expr_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 26, Python3Parser.RULE_expr_stmt);
@@ -1506,7 +1502,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Testlist_star_exprContext>(0)
 	public testlist_star_expr(): Testlist_star_exprContext {
 		let _localctx: Testlist_star_exprContext = new Testlist_star_exprContext(this._ctx, this.state);
 		this.enterRule(_localctx, 28, Python3Parser.RULE_testlist_star_expr);
@@ -1591,7 +1587,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<AugassignContext>(0)
 	public augassign(): AugassignContext {
 		let _localctx: AugassignContext = new AugassignContext(this._ctx, this.state);
 		this.enterRule(_localctx, 30, Python3Parser.RULE_augassign);
@@ -1627,7 +1623,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Del_stmtContext>(0)
 	public del_stmt(): Del_stmtContext {
 		let _localctx: Del_stmtContext = new Del_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 32, Python3Parser.RULE_del_stmt);
@@ -1654,7 +1650,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Pass_stmtContext>(0)
 	public pass_stmt(): Pass_stmtContext {
 		let _localctx: Pass_stmtContext = new Pass_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 34, Python3Parser.RULE_pass_stmt);
@@ -1679,7 +1675,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Flow_stmtContext>(0)
 	public flow_stmt(): Flow_stmtContext {
 		let _localctx: Flow_stmtContext = new Flow_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 36, Python3Parser.RULE_flow_stmt);
@@ -1740,7 +1736,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Break_stmtContext>(0)
 	public break_stmt(): Break_stmtContext {
 		let _localctx: Break_stmtContext = new Break_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 38, Python3Parser.RULE_break_stmt);
@@ -1765,7 +1761,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Continue_stmtContext>(0)
 	public continue_stmt(): Continue_stmtContext {
 		let _localctx: Continue_stmtContext = new Continue_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 40, Python3Parser.RULE_continue_stmt);
@@ -1790,7 +1786,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Return_stmtContext>(0)
 	public return_stmt(): Return_stmtContext {
 		let _localctx: Return_stmtContext = new Return_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 42, Python3Parser.RULE_return_stmt);
@@ -1826,7 +1822,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Yield_stmtContext>(0)
 	public yield_stmt(): Yield_stmtContext {
 		let _localctx: Yield_stmtContext = new Yield_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 44, Python3Parser.RULE_yield_stmt);
@@ -1851,7 +1847,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Raise_stmtContext>(0)
 	public raise_stmt(): Raise_stmtContext {
 		let _localctx: Raise_stmtContext = new Raise_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 46, Python3Parser.RULE_raise_stmt);
@@ -1899,7 +1895,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Import_stmtContext>(0)
 	public import_stmt(): Import_stmtContext {
 		let _localctx: Import_stmtContext = new Import_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 48, Python3Parser.RULE_import_stmt);
@@ -1939,7 +1935,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Import_nameContext>(0)
 	public import_name(): Import_nameContext {
 		let _localctx: Import_nameContext = new Import_nameContext(this._ctx, this.state);
 		this.enterRule(_localctx, 50, Python3Parser.RULE_import_name);
@@ -1966,7 +1962,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Import_fromContext>(0)
 	public import_from(): Import_fromContext {
 		let _localctx: Import_fromContext = new Import_fromContext(this._ctx, this.state);
 		this.enterRule(_localctx, 52, Python3Parser.RULE_import_from);
@@ -2085,7 +2081,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Import_as_nameContext>(0)
 	public import_as_name(): Import_as_nameContext {
 		let _localctx: Import_as_nameContext = new Import_as_nameContext(this._ctx, this.state);
 		this.enterRule(_localctx, 54, Python3Parser.RULE_import_as_name);
@@ -2123,7 +2119,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Dotted_as_nameContext>(0)
 	public dotted_as_name(): Dotted_as_nameContext {
 		let _localctx: Dotted_as_nameContext = new Dotted_as_nameContext(this._ctx, this.state);
 		this.enterRule(_localctx, 56, Python3Parser.RULE_dotted_as_name);
@@ -2161,7 +2157,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Import_as_namesContext>(0)
 	public import_as_names(): Import_as_namesContext {
 		let _localctx: Import_as_namesContext = new Import_as_namesContext(this._ctx, this.state);
 		this.enterRule(_localctx, 58, Python3Parser.RULE_import_as_names);
@@ -2216,7 +2212,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Dotted_as_namesContext>(0)
 	public dotted_as_names(): Dotted_as_namesContext {
 		let _localctx: Dotted_as_namesContext = new Dotted_as_namesContext(this._ctx, this.state);
 		this.enterRule(_localctx, 60, Python3Parser.RULE_dotted_as_names);
@@ -2258,7 +2254,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Dotted_nameContext>(0)
 	public dotted_name(): Dotted_nameContext {
 		let _localctx: Dotted_nameContext = new Dotted_nameContext(this._ctx, this.state);
 		this.enterRule(_localctx, 62, Python3Parser.RULE_dotted_name);
@@ -2300,7 +2296,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Global_stmtContext>(0)
 	public global_stmt(): Global_stmtContext {
 		let _localctx: Global_stmtContext = new Global_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 64, Python3Parser.RULE_global_stmt);
@@ -2344,7 +2340,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Nonlocal_stmtContext>(0)
 	public nonlocal_stmt(): Nonlocal_stmtContext {
 		let _localctx: Nonlocal_stmtContext = new Nonlocal_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 66, Python3Parser.RULE_nonlocal_stmt);
@@ -2388,7 +2384,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Assert_stmtContext>(0)
 	public assert_stmt(): Assert_stmtContext {
 		let _localctx: Assert_stmtContext = new Assert_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 68, Python3Parser.RULE_assert_stmt);
@@ -2428,7 +2424,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Compound_stmtContext>(0)
 	public compound_stmt(): Compound_stmtContext {
 		let _localctx: Compound_stmtContext = new Compound_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 70, Python3Parser.RULE_compound_stmt);
@@ -2510,7 +2506,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<If_stmtContext>(0)
 	public if_stmt(): If_stmtContext {
 		let _localctx: If_stmtContext = new If_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 72, Python3Parser.RULE_if_stmt);
@@ -2576,7 +2572,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<While_stmtContext>(0)
 	public while_stmt(): While_stmtContext {
 		let _localctx: While_stmtContext = new While_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 74, Python3Parser.RULE_while_stmt);
@@ -2622,7 +2618,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<For_stmtContext>(0)
 	public for_stmt(): For_stmtContext {
 		let _localctx: For_stmtContext = new For_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 76, Python3Parser.RULE_for_stmt);
@@ -2672,7 +2668,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Try_stmtContext>(0)
 	public try_stmt(): Try_stmtContext {
 		let _localctx: Try_stmtContext = new Try_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 78, Python3Parser.RULE_try_stmt);
@@ -2768,7 +2764,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<With_stmtContext>(0)
 	public with_stmt(): With_stmtContext {
 		let _localctx: With_stmtContext = new With_stmtContext(this._ctx, this.state);
 		this.enterRule(_localctx, 80, Python3Parser.RULE_with_stmt);
@@ -2816,7 +2812,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<With_itemContext>(0)
 	public with_item(): With_itemContext {
 		let _localctx: With_itemContext = new With_itemContext(this._ctx, this.state);
 		this.enterRule(_localctx, 82, Python3Parser.RULE_with_item);
@@ -2854,7 +2850,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Except_clauseContext>(0)
 	public except_clause(): Except_clauseContext {
 		let _localctx: Except_clauseContext = new Except_clauseContext(this._ctx, this.state);
 		this.enterRule(_localctx, 84, Python3Parser.RULE_except_clause);
@@ -2902,7 +2898,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<SuiteContext>(0)
 	public suite(): SuiteContext {
 		let _localctx: SuiteContext = new SuiteContext(this._ctx, this.state);
 		this.enterRule(_localctx, 86, Python3Parser.RULE_suite);
@@ -2994,7 +2990,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<TestContext>(0)
 	public test(): TestContext {
 		let _localctx: TestContext = new TestContext(this._ctx, this.state);
 		this.enterRule(_localctx, 88, Python3Parser.RULE_test);
@@ -3071,7 +3067,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Test_nocondContext>(0)
 	public test_nocond(): Test_nocondContext {
 		let _localctx: Test_nocondContext = new Test_nocondContext(this._ctx, this.state);
 		this.enterRule(_localctx, 90, Python3Parser.RULE_test_nocond);
@@ -3131,7 +3127,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<LambdefContext>(0)
 	public lambdef(): LambdefContext {
 		let _localctx: LambdefContext = new LambdefContext(this._ctx, this.state);
 		this.enterRule(_localctx, 92, Python3Parser.RULE_lambdef);
@@ -3171,7 +3167,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Lambdef_nocondContext>(0)
 	public lambdef_nocond(): Lambdef_nocondContext {
 		let _localctx: Lambdef_nocondContext = new Lambdef_nocondContext(this._ctx, this.state);
 		this.enterRule(_localctx, 94, Python3Parser.RULE_lambdef_nocond);
@@ -3211,7 +3207,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Or_testContext>(0)
 	public or_test(): Or_testContext {
 		let _localctx: Or_testContext = new Or_testContext(this._ctx, this.state);
 		this.enterRule(_localctx, 96, Python3Parser.RULE_or_test);
@@ -3253,7 +3249,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<And_testContext>(0)
 	public and_test(): And_testContext {
 		let _localctx: And_testContext = new And_testContext(this._ctx, this.state);
 		this.enterRule(_localctx, 98, Python3Parser.RULE_and_test);
@@ -3295,7 +3291,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Not_testContext>(0)
 	public not_test(): Not_testContext {
 		let _localctx: Not_testContext = new Not_testContext(this._ctx, this.state);
 		this.enterRule(_localctx, 100, Python3Parser.RULE_not_test);
@@ -3356,7 +3352,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<ComparisonContext>(0)
 	public comparison(): ComparisonContext {
 		let _localctx: ComparisonContext = new ComparisonContext(this._ctx, this.state);
 		this.enterRule(_localctx, 102, Python3Parser.RULE_comparison);
@@ -3398,7 +3394,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Comp_opContext>(0)
 	public comp_op(): Comp_opContext {
 		let _localctx: Comp_opContext = new Comp_opContext(this._ctx, this.state);
 		this.enterRule(_localctx, 104, Python3Parser.RULE_comp_op);
@@ -3513,7 +3509,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Star_exprContext>(0)
 	public star_expr(): Star_exprContext {
 		let _localctx: Star_exprContext = new Star_exprContext(this._ctx, this.state);
 		this.enterRule(_localctx, 106, Python3Parser.RULE_star_expr);
@@ -3549,7 +3545,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<ExprContext>(0)
 	public expr(): ExprContext {
 		let _localctx: ExprContext = new ExprContext(this._ctx, this.state);
 		this.enterRule(_localctx, 108, Python3Parser.RULE_expr);
@@ -3591,7 +3587,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Xor_exprContext>(0)
 	public xor_expr(): Xor_exprContext {
 		let _localctx: Xor_exprContext = new Xor_exprContext(this._ctx, this.state);
 		this.enterRule(_localctx, 110, Python3Parser.RULE_xor_expr);
@@ -3633,7 +3629,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<And_exprContext>(0)
 	public and_expr(): And_exprContext {
 		let _localctx: And_exprContext = new And_exprContext(this._ctx, this.state);
 		this.enterRule(_localctx, 112, Python3Parser.RULE_and_expr);
@@ -3675,7 +3671,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Shift_exprContext>(0)
 	public shift_expr(): Shift_exprContext {
 		let _localctx: Shift_exprContext = new Shift_exprContext(this._ctx, this.state);
 		this.enterRule(_localctx, 114, Python3Parser.RULE_shift_expr);
@@ -3733,7 +3729,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Arith_exprContext>(0)
 	public arith_expr(): Arith_exprContext {
 		let _localctx: Arith_exprContext = new Arith_exprContext(this._ctx, this.state);
 		this.enterRule(_localctx, 116, Python3Parser.RULE_arith_expr);
@@ -3791,7 +3787,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<TermContext>(0)
 	public term(): TermContext {
 		let _localctx: TermContext = new TermContext(this._ctx, this.state);
 		this.enterRule(_localctx, 118, Python3Parser.RULE_term);
@@ -3873,7 +3869,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<FactorContext>(0)
 	public factor(): FactorContext {
 		let _localctx: FactorContext = new FactorContext(this._ctx, this.state);
 		this.enterRule(_localctx, 120, Python3Parser.RULE_factor);
@@ -3948,7 +3944,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<PowerContext>(0)
 	public power(): PowerContext {
 		let _localctx: PowerContext = new PowerContext(this._ctx, this.state);
 		this.enterRule(_localctx, 122, Python3Parser.RULE_power);
@@ -4000,7 +3996,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<AtomContext>(0)
 	public atom(): AtomContext {
 		let _localctx: AtomContext = new AtomContext(this._ctx, this.state);
 		this.enterRule(_localctx, 124, Python3Parser.RULE_atom);
@@ -4182,7 +4178,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Testlist_compContext>(0)
 	public testlist_comp(): Testlist_compContext {
 		let _localctx: Testlist_compContext = new Testlist_compContext(this._ctx, this.state);
 		this.enterRule(_localctx, 126, Python3Parser.RULE_testlist_comp);
@@ -4255,7 +4251,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<TrailerContext>(0)
 	public trailer(): TrailerContext {
 		let _localctx: TrailerContext = new TrailerContext(this._ctx, this.state);
 		this.enterRule(_localctx, 128, Python3Parser.RULE_trailer);
@@ -4321,7 +4317,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<SubscriptlistContext>(0)
 	public subscriptlist(): SubscriptlistContext {
 		let _localctx: SubscriptlistContext = new SubscriptlistContext(this._ctx, this.state);
 		this.enterRule(_localctx, 130, Python3Parser.RULE_subscriptlist);
@@ -4376,7 +4372,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<SubscriptContext>(0)
 	public subscript(): SubscriptContext {
 		let _localctx: SubscriptContext = new SubscriptContext(this._ctx, this.state);
 		this.enterRule(_localctx, 132, Python3Parser.RULE_subscript);
@@ -4446,7 +4442,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<SliceopContext>(0)
 	public sliceop(): SliceopContext {
 		let _localctx: SliceopContext = new SliceopContext(this._ctx, this.state);
 		this.enterRule(_localctx, 134, Python3Parser.RULE_sliceop);
@@ -4482,7 +4478,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<ExprlistContext>(0)
 	public exprlist(): ExprlistContext {
 		let _localctx: ExprlistContext = new ExprlistContext(this._ctx, this.state);
 		this.enterRule(_localctx, 136, Python3Parser.RULE_exprlist);
@@ -4537,7 +4533,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<TestlistContext>(0)
 	public testlist(): TestlistContext {
 		let _localctx: TestlistContext = new TestlistContext(this._ctx, this.state);
 		this.enterRule(_localctx, 138, Python3Parser.RULE_testlist);
@@ -4592,7 +4588,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<DictorsetmakerContext>(0)
 	public dictorsetmaker(): DictorsetmakerContext {
 		let _localctx: DictorsetmakerContext = new DictorsetmakerContext(this._ctx, this.state);
 		this.enterRule(_localctx, 140, Python3Parser.RULE_dictorsetmaker);
@@ -4731,7 +4727,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<ClassdefContext>(0)
 	public classdef(): ClassdefContext {
 		let _localctx: ClassdefContext = new ClassdefContext(this._ctx, this.state);
 		this.enterRule(_localctx, 142, Python3Parser.RULE_classdef);
@@ -4785,7 +4781,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<ArglistContext>(0)
 	public arglist(): ArglistContext {
 		let _localctx: ArglistContext = new ArglistContext(this._ctx, this.state);
 		this.enterRule(_localctx, 144, Python3Parser.RULE_arglist);
@@ -4898,7 +4894,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<ArgumentContext>(0)
 	public argument(): ArgumentContext {
 		let _localctx: ArgumentContext = new ArgumentContext(this._ctx, this.state);
 		this.enterRule(_localctx, 146, Python3Parser.RULE_argument);
@@ -4952,7 +4948,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Comp_iterContext>(0)
 	public comp_iter(): Comp_iterContext {
 		let _localctx: Comp_iterContext = new Comp_iterContext(this._ctx, this.state);
 		this.enterRule(_localctx, 148, Python3Parser.RULE_comp_iter);
@@ -4992,7 +4988,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Comp_forContext>(0)
 	public comp_for(): Comp_forContext {
 		let _localctx: Comp_forContext = new Comp_forContext(this._ctx, this.state);
 		this.enterRule(_localctx, 150, Python3Parser.RULE_comp_for);
@@ -5034,7 +5030,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Comp_ifContext>(0)
 	public comp_if(): Comp_ifContext {
 		let _localctx: Comp_ifContext = new Comp_ifContext(this._ctx, this.state);
 		this.enterRule(_localctx, 152, Python3Parser.RULE_comp_if);
@@ -5072,7 +5068,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Yield_exprContext>(0)
 	public yield_expr(): Yield_exprContext {
 		let _localctx: Yield_exprContext = new Yield_exprContext(this._ctx, this.state);
 		this.enterRule(_localctx, 154, Python3Parser.RULE_yield_expr);
@@ -5108,7 +5104,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<Yield_argContext>(0)
 	public yield_arg(): Yield_argContext {
 		let _localctx: Yield_argContext = new Yield_argContext(this._ctx, this.state);
 		this.enterRule(_localctx, 156, Python3Parser.RULE_yield_arg);
@@ -5171,7 +5167,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<StrContext>(0)
 	public str(): StrContext {
 		let _localctx: StrContext = new StrContext(this._ctx, this.state);
 		this.enterRule(_localctx, 158, Python3Parser.RULE_str);
@@ -5207,7 +5203,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<NumberContext>(0)
 	public number(): NumberContext {
 		let _localctx: NumberContext = new NumberContext(this._ctx, this.state);
 		this.enterRule(_localctx, 160, Python3Parser.RULE_number);
@@ -5257,7 +5253,7 @@ export class Python3Parser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<IntegerContext>(0)
 	public integer(): IntegerContext {
 		let _localctx: IntegerContext = new IntegerContext(this._ctx, this.state);
 		this.enterRule(_localctx, 162, Python3Parser.RULE_integer);
@@ -5828,17 +5824,14 @@ export class Python3Parser extends Parser {
 		"\u036B\u036F\u0373\u0376\u0378\u037C\u0383\u0387\u038E\u0392\u039F\u03A3"+
 		"\u03A5\u03AD\u03B1\u03B3\u03B5\u03BB\u03BE\u03C8\u03CD\u03D5\u03DB\u03DF"+
 		"\u03E3\u03E9\u03ED\u03F4\u03F9\u03FD\u0402\u0409";
-	public static readonly _serializedATN: string = Utils.join(
-		[
+	public static readonly _serializedATN: string = [
 			Python3Parser._serializedATNSegment0,
 			Python3Parser._serializedATNSegment1
-		],
-		""
-	);
+		].join("");
 	public static __ATN: ATN;
 	public static get _ATN(): ATN {
 		if (!Python3Parser.__ATN) {
-			Python3Parser.__ATN = new ATNDeserializer().deserialize(Utils.toCharArray(Python3Parser._serializedATN));
+			Python3Parser.__ATN = new ATNDeserializer().deserialize(Python3Parser._serializedATN);
 		}
 
 		return Python3Parser.__ATN;
@@ -5871,16 +5864,17 @@ export class ProgramContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_program; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_program; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterProgram) listener.enterProgram(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitProgram) listener.exitProgram(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitProgram) return visitor.visitProgram(this);
 		else return visitor.visitChildren(this);
@@ -5901,16 +5895,17 @@ export class DecoratorContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_decorator; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_decorator; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterDecorator) listener.enterDecorator(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitDecorator) listener.exitDecorator(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitDecorator) return visitor.visitDecorator(this);
 		else return visitor.visitChildren(this);
@@ -5933,16 +5928,17 @@ export class DecoratorsContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_decorators; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_decorators; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterDecorators) listener.enterDecorators(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitDecorators) listener.exitDecorators(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitDecorators) return visitor.visitDecorators(this);
 		else return visitor.visitChildren(this);
@@ -5965,16 +5961,17 @@ export class DecoratedContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_decorated; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_decorated; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterDecorated) listener.enterDecorated(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitDecorated) listener.exitDecorated(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitDecorated) return visitor.visitDecorated(this);
 		else return visitor.visitChildren(this);
@@ -5999,16 +5996,17 @@ export class FuncdefContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_funcdef; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_funcdef; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterFuncdef) listener.enterFuncdef(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitFuncdef) listener.exitFuncdef(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitFuncdef) return visitor.visitFuncdef(this);
 		else return visitor.visitChildren(this);
@@ -6025,16 +6023,17 @@ export class ParametersContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_parameters; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_parameters; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterParameters) listener.enterParameters(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitParameters) listener.exitParameters(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitParameters) return visitor.visitParameters(this);
 		else return visitor.visitChildren(this);
@@ -6066,16 +6065,17 @@ export class TypedargslistContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_typedargslist; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_typedargslist; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterTypedargslist) listener.enterTypedargslist(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitTypedargslist) listener.exitTypedargslist(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitTypedargslist) return visitor.visitTypedargslist(this);
 		else return visitor.visitChildren(this);
@@ -6093,16 +6093,17 @@ export class TfpdefContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_tfpdef; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_tfpdef; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterTfpdef) listener.enterTfpdef(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitTfpdef) listener.exitTfpdef(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitTfpdef) return visitor.visitTfpdef(this);
 		else return visitor.visitChildren(this);
@@ -6134,16 +6135,17 @@ export class VarargslistContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_varargslist; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_varargslist; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterVarargslist) listener.enterVarargslist(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitVarargslist) listener.exitVarargslist(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitVarargslist) return visitor.visitVarargslist(this);
 		else return visitor.visitChildren(this);
@@ -6158,16 +6160,17 @@ export class VfpdefContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_vfpdef; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_vfpdef; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterVfpdef) listener.enterVfpdef(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitVfpdef) listener.exitVfpdef(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitVfpdef) return visitor.visitVfpdef(this);
 		else return visitor.visitChildren(this);
@@ -6187,16 +6190,17 @@ export class StmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterStmt) listener.enterStmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitStmt) listener.exitStmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitStmt) return visitor.visitStmt(this);
 		else return visitor.visitChildren(this);
@@ -6220,16 +6224,17 @@ export class Simple_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_simple_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_simple_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterSimple_stmt) listener.enterSimple_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitSimple_stmt) listener.exitSimple_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitSimple_stmt) return visitor.visitSimple_stmt(this);
 		else return visitor.visitChildren(this);
@@ -6267,16 +6272,17 @@ export class Small_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_small_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_small_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterSmall_stmt) listener.enterSmall_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitSmall_stmt) listener.exitSmall_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitSmall_stmt) return visitor.visitSmall_stmt(this);
 		else return visitor.visitChildren(this);
@@ -6315,16 +6321,17 @@ export class Expr_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_expr_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_expr_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterExpr_stmt) listener.enterExpr_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitExpr_stmt) listener.exitExpr_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitExpr_stmt) return visitor.visitExpr_stmt(this);
 		else return visitor.visitChildren(this);
@@ -6356,16 +6363,17 @@ export class Testlist_star_exprContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_testlist_star_expr; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_testlist_star_expr; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterTestlist_star_expr) listener.enterTestlist_star_expr(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitTestlist_star_expr) listener.exitTestlist_star_expr(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitTestlist_star_expr) return visitor.visitTestlist_star_expr(this);
 		else return visitor.visitChildren(this);
@@ -6379,16 +6387,17 @@ export class AugassignContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_augassign; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_augassign; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterAugassign) listener.enterAugassign(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitAugassign) listener.exitAugassign(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitAugassign) return visitor.visitAugassign(this);
 		else return visitor.visitChildren(this);
@@ -6406,16 +6415,17 @@ export class Del_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_del_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_del_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterDel_stmt) listener.enterDel_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitDel_stmt) listener.exitDel_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitDel_stmt) return visitor.visitDel_stmt(this);
 		else return visitor.visitChildren(this);
@@ -6430,16 +6440,17 @@ export class Pass_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_pass_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_pass_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterPass_stmt) listener.enterPass_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitPass_stmt) listener.exitPass_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitPass_stmt) return visitor.visitPass_stmt(this);
 		else return visitor.visitChildren(this);
@@ -6468,16 +6479,17 @@ export class Flow_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_flow_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_flow_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterFlow_stmt) listener.enterFlow_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitFlow_stmt) listener.exitFlow_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitFlow_stmt) return visitor.visitFlow_stmt(this);
 		else return visitor.visitChildren(this);
@@ -6492,16 +6504,17 @@ export class Break_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_break_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_break_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterBreak_stmt) listener.enterBreak_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitBreak_stmt) listener.exitBreak_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitBreak_stmt) return visitor.visitBreak_stmt(this);
 		else return visitor.visitChildren(this);
@@ -6516,16 +6529,17 @@ export class Continue_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_continue_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_continue_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterContinue_stmt) listener.enterContinue_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitContinue_stmt) listener.exitContinue_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitContinue_stmt) return visitor.visitContinue_stmt(this);
 		else return visitor.visitChildren(this);
@@ -6543,16 +6557,17 @@ export class Return_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_return_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_return_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterReturn_stmt) listener.enterReturn_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitReturn_stmt) listener.exitReturn_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitReturn_stmt) return visitor.visitReturn_stmt(this);
 		else return visitor.visitChildren(this);
@@ -6569,16 +6584,17 @@ export class Yield_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_yield_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_yield_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterYield_stmt) listener.enterYield_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitYield_stmt) listener.exitYield_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitYield_stmt) return visitor.visitYield_stmt(this);
 		else return visitor.visitChildren(this);
@@ -6603,16 +6619,17 @@ export class Raise_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_raise_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_raise_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterRaise_stmt) listener.enterRaise_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitRaise_stmt) listener.exitRaise_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitRaise_stmt) return visitor.visitRaise_stmt(this);
 		else return visitor.visitChildren(this);
@@ -6632,16 +6649,17 @@ export class Import_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_import_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_import_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterImport_stmt) listener.enterImport_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitImport_stmt) listener.exitImport_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitImport_stmt) return visitor.visitImport_stmt(this);
 		else return visitor.visitChildren(this);
@@ -6659,16 +6677,17 @@ export class Import_nameContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_import_name; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_import_name; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterImport_name) listener.enterImport_name(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitImport_name) listener.exitImport_name(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitImport_name) return visitor.visitImport_name(this);
 		else return visitor.visitChildren(this);
@@ -6690,16 +6709,17 @@ export class Import_fromContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_import_from; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_import_from; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterImport_from) listener.enterImport_from(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitImport_from) listener.exitImport_from(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitImport_from) return visitor.visitImport_from(this);
 		else return visitor.visitChildren(this);
@@ -6723,16 +6743,17 @@ export class Import_as_nameContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_import_as_name; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_import_as_name; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterImport_as_name) listener.enterImport_as_name(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitImport_as_name) listener.exitImport_as_name(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitImport_as_name) return visitor.visitImport_as_name(this);
 		else return visitor.visitChildren(this);
@@ -6751,16 +6772,17 @@ export class Dotted_as_nameContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_dotted_as_name; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_dotted_as_name; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterDotted_as_name) listener.enterDotted_as_name(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitDotted_as_name) listener.exitDotted_as_name(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitDotted_as_name) return visitor.visitDotted_as_name(this);
 		else return visitor.visitChildren(this);
@@ -6783,16 +6805,17 @@ export class Import_as_namesContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_import_as_names; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_import_as_names; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterImport_as_names) listener.enterImport_as_names(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitImport_as_names) listener.exitImport_as_names(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitImport_as_names) return visitor.visitImport_as_names(this);
 		else return visitor.visitChildren(this);
@@ -6815,16 +6838,17 @@ export class Dotted_as_namesContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_dotted_as_names; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_dotted_as_names; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterDotted_as_names) listener.enterDotted_as_names(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitDotted_as_names) listener.exitDotted_as_names(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitDotted_as_names) return visitor.visitDotted_as_names(this);
 		else return visitor.visitChildren(this);
@@ -6847,16 +6871,17 @@ export class Dotted_nameContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_dotted_name; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_dotted_name; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterDotted_name) listener.enterDotted_name(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitDotted_name) listener.exitDotted_name(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitDotted_name) return visitor.visitDotted_name(this);
 		else return visitor.visitChildren(this);
@@ -6880,16 +6905,17 @@ export class Global_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_global_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_global_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterGlobal_stmt) listener.enterGlobal_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitGlobal_stmt) listener.exitGlobal_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitGlobal_stmt) return visitor.visitGlobal_stmt(this);
 		else return visitor.visitChildren(this);
@@ -6913,16 +6939,17 @@ export class Nonlocal_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_nonlocal_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_nonlocal_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterNonlocal_stmt) listener.enterNonlocal_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitNonlocal_stmt) listener.exitNonlocal_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitNonlocal_stmt) return visitor.visitNonlocal_stmt(this);
 		else return visitor.visitChildren(this);
@@ -6946,16 +6973,17 @@ export class Assert_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_assert_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_assert_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterAssert_stmt) listener.enterAssert_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitAssert_stmt) listener.exitAssert_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitAssert_stmt) return visitor.visitAssert_stmt(this);
 		else return visitor.visitChildren(this);
@@ -6993,16 +7021,17 @@ export class Compound_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_compound_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_compound_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterCompound_stmt) listener.enterCompound_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitCompound_stmt) listener.exitCompound_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitCompound_stmt) return visitor.visitCompound_stmt(this);
 		else return visitor.visitChildren(this);
@@ -7045,16 +7074,17 @@ export class If_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_if_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_if_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterIf_stmt) listener.enterIf_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitIf_stmt) listener.exitIf_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitIf_stmt) return visitor.visitIf_stmt(this);
 		else return visitor.visitChildren(this);
@@ -7082,16 +7112,17 @@ export class While_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_while_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_while_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterWhile_stmt) listener.enterWhile_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitWhile_stmt) listener.exitWhile_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitWhile_stmt) return visitor.visitWhile_stmt(this);
 		else return visitor.visitChildren(this);
@@ -7123,16 +7154,17 @@ export class For_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_for_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_for_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterFor_stmt) listener.enterFor_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitFor_stmt) listener.exitFor_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitFor_stmt) return visitor.visitFor_stmt(this);
 		else return visitor.visitChildren(this);
@@ -7167,16 +7199,17 @@ export class Try_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_try_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_try_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterTry_stmt) listener.enterTry_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitTry_stmt) listener.exitTry_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitTry_stmt) return visitor.visitTry_stmt(this);
 		else return visitor.visitChildren(this);
@@ -7203,16 +7236,17 @@ export class With_stmtContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_with_stmt; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_with_stmt; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterWith_stmt) listener.enterWith_stmt(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitWith_stmt) listener.exitWith_stmt(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitWith_stmt) return visitor.visitWith_stmt(this);
 		else return visitor.visitChildren(this);
@@ -7233,16 +7267,17 @@ export class With_itemContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_with_item; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_with_item; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterWith_item) listener.enterWith_item(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitWith_item) listener.exitWith_item(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitWith_item) return visitor.visitWith_item(this);
 		else return visitor.visitChildren(this);
@@ -7262,16 +7297,17 @@ export class Except_clauseContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_except_clause; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_except_clause; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterExcept_clause) listener.enterExcept_clause(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitExcept_clause) listener.exitExcept_clause(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitExcept_clause) return visitor.visitExcept_clause(this);
 		else return visitor.visitChildren(this);
@@ -7300,16 +7336,17 @@ export class SuiteContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_suite; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_suite; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterSuite) listener.enterSuite(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitSuite) listener.exitSuite(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitSuite) return visitor.visitSuite(this);
 		else return visitor.visitChildren(this);
@@ -7340,16 +7377,17 @@ export class TestContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_test; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_test; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterTest) listener.enterTest(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitTest) listener.exitTest(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitTest) return visitor.visitTest(this);
 		else return visitor.visitChildren(this);
@@ -7369,16 +7407,17 @@ export class Test_nocondContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_test_nocond; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_test_nocond; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterTest_nocond) listener.enterTest_nocond(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitTest_nocond) listener.exitTest_nocond(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitTest_nocond) return visitor.visitTest_nocond(this);
 		else return visitor.visitChildren(this);
@@ -7399,16 +7438,17 @@ export class LambdefContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_lambdef; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_lambdef; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterLambdef) listener.enterLambdef(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitLambdef) listener.exitLambdef(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitLambdef) return visitor.visitLambdef(this);
 		else return visitor.visitChildren(this);
@@ -7429,16 +7469,17 @@ export class Lambdef_nocondContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_lambdef_nocond; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_lambdef_nocond; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterLambdef_nocond) listener.enterLambdef_nocond(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitLambdef_nocond) listener.exitLambdef_nocond(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitLambdef_nocond) return visitor.visitLambdef_nocond(this);
 		else return visitor.visitChildren(this);
@@ -7470,16 +7511,17 @@ export class Or_testContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_or_test; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_or_test; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterOr_test) listener.enterOr_test(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitOr_test) listener.exitOr_test(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitOr_test) return visitor.visitOr_test(this);
 		else return visitor.visitChildren(this);
@@ -7511,16 +7553,17 @@ export class And_testContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_and_test; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_and_test; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterAnd_test) listener.enterAnd_test(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitAnd_test) listener.exitAnd_test(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitAnd_test) return visitor.visitAnd_test(this);
 		else return visitor.visitChildren(this);
@@ -7541,16 +7584,17 @@ export class Not_testContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_not_test; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_not_test; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterNot_test) listener.enterNot_test(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitNot_test) listener.exitNot_test(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitNot_test) return visitor.visitNot_test(this);
 		else return visitor.visitChildren(this);
@@ -7582,16 +7626,17 @@ export class ComparisonContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_comparison; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_comparison; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterComparison) listener.enterComparison(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitComparison) listener.exitComparison(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitComparison) return visitor.visitComparison(this);
 		else return visitor.visitChildren(this);
@@ -7608,16 +7653,17 @@ export class Comp_opContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_comp_op; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_comp_op; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterComp_op) listener.enterComp_op(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitComp_op) listener.exitComp_op(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitComp_op) return visitor.visitComp_op(this);
 		else return visitor.visitChildren(this);
@@ -7634,16 +7680,17 @@ export class Star_exprContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_star_expr; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_star_expr; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterStar_expr) listener.enterStar_expr(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitStar_expr) listener.exitStar_expr(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitStar_expr) return visitor.visitStar_expr(this);
 		else return visitor.visitChildren(this);
@@ -7666,16 +7713,17 @@ export class ExprContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_expr; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_expr; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterExpr) listener.enterExpr(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitExpr) listener.exitExpr(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitExpr) return visitor.visitExpr(this);
 		else return visitor.visitChildren(this);
@@ -7698,16 +7746,17 @@ export class Xor_exprContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_xor_expr; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_xor_expr; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterXor_expr) listener.enterXor_expr(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitXor_expr) listener.exitXor_expr(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitXor_expr) return visitor.visitXor_expr(this);
 		else return visitor.visitChildren(this);
@@ -7730,16 +7779,17 @@ export class And_exprContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_and_expr; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_and_expr; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterAnd_expr) listener.enterAnd_expr(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitAnd_expr) listener.exitAnd_expr(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitAnd_expr) return visitor.visitAnd_expr(this);
 		else return visitor.visitChildren(this);
@@ -7762,16 +7812,17 @@ export class Shift_exprContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_shift_expr; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_shift_expr; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterShift_expr) listener.enterShift_expr(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitShift_expr) listener.exitShift_expr(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitShift_expr) return visitor.visitShift_expr(this);
 		else return visitor.visitChildren(this);
@@ -7794,16 +7845,17 @@ export class Arith_exprContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_arith_expr; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_arith_expr; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterArith_expr) listener.enterArith_expr(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitArith_expr) listener.exitArith_expr(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitArith_expr) return visitor.visitArith_expr(this);
 		else return visitor.visitChildren(this);
@@ -7826,16 +7878,17 @@ export class TermContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_term; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_term; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterTerm) listener.enterTerm(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitTerm) listener.exitTerm(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitTerm) return visitor.visitTerm(this);
 		else return visitor.visitChildren(this);
@@ -7855,16 +7908,17 @@ export class FactorContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_factor; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_factor; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterFactor) listener.enterFactor(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitFactor) listener.exitFactor(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitFactor) return visitor.visitFactor(this);
 		else return visitor.visitChildren(this);
@@ -7893,16 +7947,17 @@ export class PowerContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_power; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_power; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterPower) listener.enterPower(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitPower) listener.exitPower(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitPower) return visitor.visitPower(this);
 		else return visitor.visitChildren(this);
@@ -7941,16 +7996,17 @@ export class AtomContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_atom; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_atom; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterAtom) listener.enterAtom(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitAtom) listener.exitAtom(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitAtom) return visitor.visitAtom(this);
 		else return visitor.visitChildren(this);
@@ -7976,16 +8032,17 @@ export class Testlist_compContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_testlist_comp; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_testlist_comp; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterTestlist_comp) listener.enterTestlist_comp(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitTestlist_comp) listener.exitTestlist_comp(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitTestlist_comp) return visitor.visitTestlist_comp(this);
 		else return visitor.visitChildren(this);
@@ -8006,16 +8063,17 @@ export class TrailerContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_trailer; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_trailer; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterTrailer) listener.enterTrailer(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitTrailer) listener.exitTrailer(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitTrailer) return visitor.visitTrailer(this);
 		else return visitor.visitChildren(this);
@@ -8038,16 +8096,17 @@ export class SubscriptlistContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_subscriptlist; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_subscriptlist; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterSubscriptlist) listener.enterSubscriptlist(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitSubscriptlist) listener.exitSubscriptlist(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitSubscriptlist) return visitor.visitSubscriptlist(this);
 		else return visitor.visitChildren(this);
@@ -8073,16 +8132,17 @@ export class SubscriptContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_subscript; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_subscript; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterSubscript) listener.enterSubscript(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitSubscript) listener.exitSubscript(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitSubscript) return visitor.visitSubscript(this);
 		else return visitor.visitChildren(this);
@@ -8099,16 +8159,17 @@ export class SliceopContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_sliceop; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_sliceop; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterSliceop) listener.enterSliceop(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitSliceop) listener.exitSliceop(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitSliceop) return visitor.visitSliceop(this);
 		else return visitor.visitChildren(this);
@@ -8131,16 +8192,17 @@ export class ExprlistContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_exprlist; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_exprlist; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterExprlist) listener.enterExprlist(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitExprlist) listener.exitExprlist(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitExprlist) return visitor.visitExprlist(this);
 		else return visitor.visitChildren(this);
@@ -8163,16 +8225,17 @@ export class TestlistContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_testlist; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_testlist; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterTestlist) listener.enterTestlist(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitTestlist) listener.exitTestlist(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitTestlist) return visitor.visitTestlist(this);
 		else return visitor.visitChildren(this);
@@ -8198,16 +8261,17 @@ export class DictorsetmakerContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_dictorsetmaker; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_dictorsetmaker; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterDictorsetmaker) listener.enterDictorsetmaker(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitDictorsetmaker) listener.exitDictorsetmaker(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitDictorsetmaker) return visitor.visitDictorsetmaker(this);
 		else return visitor.visitChildren(this);
@@ -8229,16 +8293,17 @@ export class ClassdefContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_classdef; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_classdef; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterClassdef) listener.enterClassdef(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitClassdef) listener.exitClassdef(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitClassdef) return visitor.visitClassdef(this);
 		else return visitor.visitChildren(this);
@@ -8270,16 +8335,17 @@ export class ArglistContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_arglist; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_arglist; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterArglist) listener.enterArglist(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitArglist) listener.exitArglist(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitArglist) return visitor.visitArglist(this);
 		else return visitor.visitChildren(this);
@@ -8305,16 +8371,17 @@ export class ArgumentContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_argument; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_argument; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterArgument) listener.enterArgument(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitArgument) listener.exitArgument(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitArgument) return visitor.visitArgument(this);
 		else return visitor.visitChildren(this);
@@ -8334,16 +8401,17 @@ export class Comp_iterContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_comp_iter; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_comp_iter; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterComp_iter) listener.enterComp_iter(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitComp_iter) listener.exitComp_iter(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitComp_iter) return visitor.visitComp_iter(this);
 		else return visitor.visitChildren(this);
@@ -8368,16 +8436,17 @@ export class Comp_forContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_comp_for; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_comp_for; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterComp_for) listener.enterComp_for(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitComp_for) listener.exitComp_for(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitComp_for) return visitor.visitComp_for(this);
 		else return visitor.visitChildren(this);
@@ -8398,16 +8467,17 @@ export class Comp_ifContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_comp_if; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_comp_if; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterComp_if) listener.enterComp_if(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitComp_if) listener.exitComp_if(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitComp_if) return visitor.visitComp_if(this);
 		else return visitor.visitChildren(this);
@@ -8425,16 +8495,17 @@ export class Yield_exprContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_yield_expr; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_yield_expr; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterYield_expr) listener.enterYield_expr(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitYield_expr) listener.exitYield_expr(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitYield_expr) return visitor.visitYield_expr(this);
 		else return visitor.visitChildren(this);
@@ -8455,16 +8526,17 @@ export class Yield_argContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_yield_arg; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_yield_arg; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterYield_arg) listener.enterYield_arg(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitYield_arg) listener.exitYield_arg(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitYield_arg) return visitor.visitYield_arg(this);
 		else return visitor.visitChildren(this);
@@ -8480,16 +8552,17 @@ export class StrContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_str; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_str; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterStr) listener.enterStr(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitStr) listener.exitStr(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitStr) return visitor.visitStr(this);
 		else return visitor.visitChildren(this);
@@ -8508,16 +8581,17 @@ export class NumberContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_number; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_number; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterNumber) listener.enterNumber(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitNumber) listener.exitNumber(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitNumber) return visitor.visitNumber(this);
 		else return visitor.visitChildren(this);
@@ -8535,16 +8609,17 @@ export class IntegerContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return Python3Parser.RULE_integer; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return Python3Parser.RULE_integer; }
+	/// @Override
 	public enterRule(listener: Python3Listener): void {
 		if (listener.enterInteger) listener.enterInteger(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: Python3Listener): void {
 		if (listener.exitInteger) listener.exitInteger(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: Python3Visitor<Result>): Result {
 		if (visitor.visitInteger) return visitor.visitInteger(this);
 		else return visitor.visitChildren(this);

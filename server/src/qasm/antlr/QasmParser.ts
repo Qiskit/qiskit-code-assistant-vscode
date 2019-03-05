@@ -1,28 +1,24 @@
 // Generated from QasmParser.g4 by ANTLR 4.6-SNAPSHOT
 
-
-import { ATN } from 'antlr4ts/atn/ATN';
-import { ATNDeserializer } from 'antlr4ts/atn/ATNDeserializer';
-import { FailedPredicateException } from 'antlr4ts/FailedPredicateException';
-import { NotNull } from 'antlr4ts/Decorators';
-import { NoViableAltException } from 'antlr4ts/NoViableAltException';
-import { Override } from 'antlr4ts/Decorators';
-import { Parser } from 'antlr4ts/Parser';
-import { ParserRuleContext } from 'antlr4ts/ParserRuleContext';
-import { ParserATNSimulator } from 'antlr4ts/atn/ParserATNSimulator';
-import { ParseTreeListener } from 'antlr4ts/tree/ParseTreeListener';
-import { ParseTreeVisitor } from 'antlr4ts/tree/ParseTreeVisitor';
-import { RecognitionException } from 'antlr4ts/RecognitionException';
-import { RuleContext } from 'antlr4ts/RuleContext';
-import { RuleVersion } from 'antlr4ts/RuleVersion';
-import { TerminalNode } from 'antlr4ts/tree/TerminalNode';
-import { Token } from 'antlr4ts/Token';
-import { TokenStream } from 'antlr4ts/TokenStream';
-import { Vocabulary } from 'antlr4ts/Vocabulary';
-import { VocabularyImpl } from 'antlr4ts/VocabularyImpl';
-
-import * as Utils from 'antlr4ts/misc/Utils';
-
+import { 
+	ATN,
+    ATNDeserializer,
+    FailedPredicateException,
+    NoViableAltException,
+    Parser,
+    ParserRuleContext,
+    ParserATNSimulator,
+    ParseTreeListener,
+    ParseTreeVisitor,
+    RecognitionException,
+    RuleContext,
+    RuleVersion,
+    TerminalNode,
+    Token,
+    TokenStream,
+    Vocabulary,
+    VocabularyImpl
+} from 'antlr4ts';
 import { QasmParserListener } from './QasmParserListener';
 import { QasmParserVisitor } from './QasmParserVisitor';
 
@@ -131,26 +127,26 @@ export class QasmParser extends Parser {
 	];
 	public static readonly VOCABULARY: Vocabulary = new VocabularyImpl(QasmParser._LITERAL_NAMES, QasmParser._SYMBOLIC_NAMES, []);
 
-	@Override
-	@NotNull
+	/// @Override
+	/// @NotNull
 	public get vocabulary(): Vocabulary {
 		return QasmParser.VOCABULARY;
 	}
 
-	@Override
+	/// @Override
 	public get grammarFileName(): string { return "QasmParser.g4"; }
 
-	@Override
+	/// @Override
 	public get ruleNames(): string[] { return QasmParser.ruleNames; }
 
-	@Override
+	/// @Override
 	public get serializedATN(): string { return QasmParser._serializedATN; }
 
 	constructor(input: TokenStream) {
 		super(input);
 		this._interp = new ParserATNSimulator(QasmParser._ATN, this);
 	}
-	@RuleVersion(0)
+	@RuleVersion<CodeContext>(0)
 	public code(): CodeContext {
 		let _localctx: CodeContext = new CodeContext(this._ctx, this.state);
 		this.enterRule(_localctx, 0, QasmParser.RULE_code);
@@ -210,7 +206,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<HeadersContext>(0)
 	public headers(): HeadersContext {
 		let _localctx: HeadersContext = new HeadersContext(this._ctx, this.state);
 		this.enterRule(_localctx, 2, QasmParser.RULE_headers);
@@ -259,7 +255,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<IncludeLibraryContext>(0)
 	public includeLibrary(): IncludeLibraryContext {
 		let _localctx: IncludeLibraryContext = new IncludeLibraryContext(this._ctx, this.state);
 		this.enterRule(_localctx, 4, QasmParser.RULE_includeLibrary);
@@ -288,7 +284,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<SentencesContext>(0)
 	public sentences(): SentencesContext {
 		let _localctx: SentencesContext = new SentencesContext(this._ctx, this.state);
 		this.enterRule(_localctx, 6, QasmParser.RULE_sentences);
@@ -329,7 +325,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<CleanContext>(0)
 	public clean(): CleanContext {
 		let _localctx: CleanContext = new CleanContext(this._ctx, this.state);
 		this.enterRule(_localctx, 8, QasmParser.RULE_clean);
@@ -356,7 +352,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<SentenceContext>(0)
 	public sentence(): SentenceContext {
 		let _localctx: SentenceContext = new SentenceContext(this._ctx, this.state);
 		this.enterRule(_localctx, 10, QasmParser.RULE_sentence);
@@ -419,7 +415,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<DefinitionContext>(0)
 	public definition(): DefinitionContext {
 		let _localctx: DefinitionContext = new DefinitionContext(this._ctx, this.state);
 		this.enterRule(_localctx, 12, QasmParser.RULE_definition);
@@ -475,7 +471,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<ExpressionContext>(0)
 	public expression(): ExpressionContext {
 		let _localctx: ExpressionContext = new ExpressionContext(this._ctx, this.state);
 		this.enterRule(_localctx, 14, QasmParser.RULE_expression);
@@ -546,7 +542,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<ConditionalContext>(0)
 	public conditional(): ConditionalContext {
 		let _localctx: ConditionalContext = new ConditionalContext(this._ctx, this.state);
 		this.enterRule(_localctx, 16, QasmParser.RULE_conditional);
@@ -581,7 +577,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<QregDefinitionContext>(0)
 	public qregDefinition(): QregDefinitionContext {
 		let _localctx: QregDefinitionContext = new QregDefinitionContext(this._ctx, this.state);
 		this.enterRule(_localctx, 18, QasmParser.RULE_qregDefinition);
@@ -616,7 +612,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<CregDefinitionContext>(0)
 	public cregDefinition(): CregDefinitionContext {
 		let _localctx: CregDefinitionContext = new CregDefinitionContext(this._ctx, this.state);
 		this.enterRule(_localctx, 20, QasmParser.RULE_cregDefinition);
@@ -651,7 +647,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<DimensionContext>(0)
 	public dimension(): DimensionContext {
 		let _localctx: DimensionContext = new DimensionContext(this._ctx, this.state);
 		this.enterRule(_localctx, 22, QasmParser.RULE_dimension);
@@ -676,7 +672,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<GateDefinitionContext>(0)
 	public gateDefinition(): GateDefinitionContext {
 		let _localctx: GateDefinitionContext = new GateDefinitionContext(this._ctx, this.state);
 		this.enterRule(_localctx, 24, QasmParser.RULE_gateDefinition);
@@ -705,7 +701,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<OpaqueDefinitionContext>(0)
 	public opaqueDefinition(): OpaqueDefinitionContext {
 		let _localctx: OpaqueDefinitionContext = new OpaqueDefinitionContext(this._ctx, this.state);
 		this.enterRule(_localctx, 26, QasmParser.RULE_opaqueDefinition);
@@ -734,7 +730,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<GateDefinitionArgumentsContext>(0)
 	public gateDefinitionArguments(): GateDefinitionArgumentsContext {
 		let _localctx: GateDefinitionArgumentsContext = new GateDefinitionArgumentsContext(this._ctx, this.state);
 		this.enterRule(_localctx, 28, QasmParser.RULE_gateDefinitionArguments);
@@ -855,7 +851,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<OpaqueDefinitionArgumentsContext>(0)
 	public opaqueDefinitionArguments(): OpaqueDefinitionArgumentsContext {
 		let _localctx: OpaqueDefinitionArgumentsContext = new OpaqueDefinitionArgumentsContext(this._ctx, this.state);
 		this.enterRule(_localctx, 30, QasmParser.RULE_opaqueDefinitionArguments);
@@ -901,7 +897,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<ParamsListContext>(0)
 	public paramsList(): ParamsListContext {
 		let _localctx: ParamsListContext = new ParamsListContext(this._ctx, this.state);
 		this.enterRule(_localctx, 32, QasmParser.RULE_paramsList);
@@ -944,7 +940,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<BodyContext>(0)
 	public body(): BodyContext {
 		let _localctx: BodyContext = new BodyContext(this._ctx, this.state);
 		this.enterRule(_localctx, 34, QasmParser.RULE_body);
@@ -985,7 +981,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<BodyExpressionContext>(0)
 	public bodyExpression(): BodyExpressionContext {
 		let _localctx: BodyExpressionContext = new BodyExpressionContext(this._ctx, this.state);
 		this.enterRule(_localctx, 36, QasmParser.RULE_bodyExpression);
@@ -1315,7 +1311,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<UnaryOpContext>(0)
 	public unaryOp(): UnaryOpContext {
 		let _localctx: UnaryOpContext = new UnaryOpContext(this._ctx, this.state);
 		this.enterRule(_localctx, 42, QasmParser.RULE_unaryOp);
@@ -1351,7 +1347,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<MeasureContext>(0)
 	public measure(): MeasureContext {
 		let _localctx: MeasureContext = new MeasureContext(this._ctx, this.state);
 		this.enterRule(_localctx, 44, QasmParser.RULE_measure);
@@ -1402,7 +1398,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<QubitContext>(0)
 	public qubit(): QubitContext {
 		let _localctx: QubitContext = new QubitContext(this._ctx, this.state);
 		this.enterRule(_localctx, 46, QasmParser.RULE_qubit);
@@ -1433,7 +1429,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<CbitContext>(0)
 	public cbit(): CbitContext {
 		let _localctx: CbitContext = new CbitContext(this._ctx, this.state);
 		this.enterRule(_localctx, 48, QasmParser.RULE_cbit);
@@ -1464,7 +1460,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<CustomArglistContext>(0)
 	public customArglist(): CustomArglistContext {
 		let _localctx: CustomArglistContext = new CustomArglistContext(this._ctx, this.state);
 		this.enterRule(_localctx, 50, QasmParser.RULE_customArglist);
@@ -1577,7 +1573,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<QubitAndQregListContext>(0)
 	public qubitAndQregList(): QubitAndQregListContext {
 		let _localctx: QubitAndQregListContext = new QubitAndQregListContext(this._ctx, this.state);
 		this.enterRule(_localctx, 54, QasmParser.RULE_qubitAndQregList);
@@ -1620,7 +1616,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<QbitOrQregContext>(0)
 	public qbitOrQreg(): QbitOrQregContext {
 		let _localctx: QbitOrQregContext = new QbitOrQregContext(this._ctx, this.state);
 		this.enterRule(_localctx, 56, QasmParser.RULE_qbitOrQreg);
@@ -1665,7 +1661,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<CxGateContext>(0)
 	public cxGate(): CxGateContext {
 		let _localctx: CxGateContext = new CxGateContext(this._ctx, this.state);
 		this.enterRule(_localctx, 58, QasmParser.RULE_cxGate);
@@ -1692,7 +1688,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<BarrierGateContext>(0)
 	public barrierGate(): BarrierGateContext {
 		let _localctx: BarrierGateContext = new BarrierGateContext(this._ctx, this.state);
 		this.enterRule(_localctx, 60, QasmParser.RULE_barrierGate);
@@ -1735,7 +1731,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<QubitListContext>(0)
 	public qubitList(): QubitListContext {
 		let _localctx: QubitListContext = new QubitListContext(this._ctx, this.state);
 		this.enterRule(_localctx, 62, QasmParser.RULE_qubitList);
@@ -1778,7 +1774,7 @@ export class QasmParser extends Parser {
 		}
 		return _localctx;
 	}
-	@RuleVersion(0)
+	@RuleVersion<ResetGateContext>(0)
 	public resetGate(): ResetGateContext {
 		let _localctx: ResetGateContext = new ResetGateContext(this._ctx, this.state);
 		this.enterRule(_localctx, 64, QasmParser.RULE_resetGate);
@@ -1853,8 +1849,8 @@ export class QasmParser extends Parser {
 		return true;
 	}
 
-	public static readonly _serializedATN: string =
-		"\x03\uAF6F\u8320\u479D\uB75C\u4880\u1605\u191C\uAB37\x03,\u0170\x04\x02"+
+	public static readonly _serializedATN: string = 
+	  "\x03\uAF6F\u8320\u479D\uB75C\u4880\u1605\u191C\uAB37\x03,\u0170\x04\x02"+
 		"\t\x02\x04\x03\t\x03\x04\x04\t\x04\x04\x05\t\x05\x04\x06\t\x06\x04\x07"+
 		"\t\x07\x04\b\t\b\x04\t\t\t\x04\n\t\n\x04\v\t\v\x04\f\t\f\x04\r\t\r\x04"+
 		"\x0E\t\x0E\x04\x0F\t\x0F\x04\x10\t\x10\x04\x11\t\x11\x04\x12\t\x12\x04"+
@@ -2019,11 +2015,12 @@ export class QasmParser extends Parser {
 		"\u0169\u016B\x03\x02\x02\x02\u016A\u0165\x03\x02\x02\x02\u016A\u0166\x03"+
 		"\x02\x02\x02\u016BA\x03\x02\x02\x02\u016C\u016D\x07\x17\x02\x02\u016D"+
 		"\u016E\x05:\x1E\x02\u016EC\x03\x02\x02\x02\x18IOYdl}\xC3\xCB\xD1\xD7\xEF"+
-		"\xF9\u010C\u011D\u011F\u012D\u0141\u014B\u0153\u015A\u0163\u016A";
+		"\xF9\u010C\u011D\u011F\u012D\u0141\u014B\u0153\u015A\u0163\u016A"; 
+
 	public static __ATN: ATN;
 	public static get _ATN(): ATN {
 		if (!QasmParser.__ATN) {
-			QasmParser.__ATN = new ATNDeserializer().deserialize(Utils.toCharArray(QasmParser._serializedATN));
+			QasmParser.__ATN = new ATNDeserializer().deserialize(QasmParser._serializedATN);
 		}
 
 		return QasmParser.__ATN;
@@ -2046,16 +2043,17 @@ export class CodeContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_code; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_code; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterCode) listener.enterCode(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitCode) listener.exitCode(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitCode) return visitor.visitCode(this);
 		else return visitor.visitChildren(this);
@@ -2073,16 +2071,17 @@ export class HeadersContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_headers; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_headers; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterHeaders) listener.enterHeaders(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitHeaders) listener.exitHeaders(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitHeaders) return visitor.visitHeaders(this);
 		else return visitor.visitChildren(this);
@@ -2099,16 +2098,17 @@ export class IncludeLibraryContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_includeLibrary; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_includeLibrary; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterIncludeLibrary) listener.enterIncludeLibrary(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitIncludeLibrary) listener.exitIncludeLibrary(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitIncludeLibrary) return visitor.visitIncludeLibrary(this);
 		else return visitor.visitChildren(this);
@@ -2128,16 +2128,17 @@ export class SentencesContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_sentences; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_sentences; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterSentences) listener.enterSentences(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitSentences) listener.exitSentences(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitSentences) return visitor.visitSentences(this);
 		else return visitor.visitChildren(this);
@@ -2153,16 +2154,17 @@ export class CleanContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_clean; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_clean; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterClean) listener.enterClean(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitClean) listener.exitClean(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitClean) return visitor.visitClean(this);
 		else return visitor.visitChildren(this);
@@ -2186,16 +2188,17 @@ export class SentenceContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_sentence; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_sentence; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterSentence) listener.enterSentence(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitSentence) listener.exitSentence(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitSentence) return visitor.visitSentence(this);
 		else return visitor.visitChildren(this);
@@ -2222,16 +2225,17 @@ export class DefinitionContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_definition; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_definition; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterDefinition) listener.enterDefinition(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitDefinition) listener.exitDefinition(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitDefinition) return visitor.visitDefinition(this);
 		else return visitor.visitChildren(this);
@@ -2261,16 +2265,17 @@ export class ExpressionContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_expression; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_expression; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterExpression) listener.enterExpression(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitExpression) listener.exitExpression(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitExpression) return visitor.visitExpression(this);
 		else return visitor.visitChildren(this);
@@ -2290,16 +2295,17 @@ export class ConditionalContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_conditional; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_conditional; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterConditional) listener.enterConditional(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitConditional) listener.exitConditional(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitConditional) return visitor.visitConditional(this);
 		else return visitor.visitChildren(this);
@@ -2321,16 +2327,17 @@ export class QregDefinitionContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_qregDefinition; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_qregDefinition; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterQregDefinition) listener.enterQregDefinition(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitQregDefinition) listener.exitQregDefinition(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitQregDefinition) return visitor.visitQregDefinition(this);
 		else return visitor.visitChildren(this);
@@ -2352,16 +2359,17 @@ export class CregDefinitionContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_cregDefinition; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_cregDefinition; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterCregDefinition) listener.enterCregDefinition(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitCregDefinition) listener.exitCregDefinition(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitCregDefinition) return visitor.visitCregDefinition(this);
 		else return visitor.visitChildren(this);
@@ -2376,16 +2384,17 @@ export class DimensionContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_dimension; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_dimension; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterDimension) listener.enterDimension(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitDimension) listener.exitDimension(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitDimension) return visitor.visitDimension(this);
 		else return visitor.visitChildren(this);
@@ -2404,16 +2413,17 @@ export class GateDefinitionContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_gateDefinition; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_gateDefinition; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterGateDefinition) listener.enterGateDefinition(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitGateDefinition) listener.exitGateDefinition(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitGateDefinition) return visitor.visitGateDefinition(this);
 		else return visitor.visitChildren(this);
@@ -2432,16 +2442,17 @@ export class OpaqueDefinitionContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_opaqueDefinition; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_opaqueDefinition; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterOpaqueDefinition) listener.enterOpaqueDefinition(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitOpaqueDefinition) listener.exitOpaqueDefinition(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitOpaqueDefinition) return visitor.visitOpaqueDefinition(this);
 		else return visitor.visitChildren(this);
@@ -2471,16 +2482,17 @@ export class GateDefinitionArgumentsContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_gateDefinitionArguments; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_gateDefinitionArguments; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterGateDefinitionArguments) listener.enterGateDefinitionArguments(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitGateDefinitionArguments) listener.exitGateDefinitionArguments(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitGateDefinitionArguments) return visitor.visitGateDefinitionArguments(this);
 		else return visitor.visitChildren(this);
@@ -2505,16 +2517,17 @@ export class OpaqueDefinitionArgumentsContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_opaqueDefinitionArguments; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_opaqueDefinitionArguments; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterOpaqueDefinitionArguments) listener.enterOpaqueDefinitionArguments(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitOpaqueDefinitionArguments) listener.exitOpaqueDefinitionArguments(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitOpaqueDefinitionArguments) return visitor.visitOpaqueDefinitionArguments(this);
 		else return visitor.visitChildren(this);
@@ -2533,16 +2546,17 @@ export class ParamsListContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_paramsList; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_paramsList; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterParamsList) listener.enterParamsList(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitParamsList) listener.exitParamsList(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitParamsList) return visitor.visitParamsList(this);
 		else return visitor.visitChildren(this);
@@ -2562,16 +2576,17 @@ export class BodyContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_body; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_body; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterBody) listener.enterBody(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitBody) listener.exitBody(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitBody) return visitor.visitBody(this);
 		else return visitor.visitChildren(this);
@@ -2597,16 +2612,17 @@ export class BodyExpressionContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_bodyExpression; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_bodyExpression; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterBodyExpression) listener.enterBodyExpression(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitBodyExpression) listener.exitBodyExpression(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitBodyExpression) return visitor.visitBodyExpression(this);
 		else return visitor.visitChildren(this);
@@ -2627,16 +2643,17 @@ export class ParamsListBodyContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_paramsListBody; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_paramsListBody; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterParamsListBody) listener.enterParamsListBody(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitParamsListBody) listener.exitParamsListBody(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitParamsListBody) return visitor.visitParamsListBody(this);
 		else return visitor.visitChildren(this);
@@ -2668,16 +2685,17 @@ export class ExpContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_exp; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_exp; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterExp) listener.enterExp(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitExp) listener.exitExp(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitExp) return visitor.visitExp(this);
 		else return visitor.visitChildren(this);
@@ -2697,16 +2715,17 @@ export class UnaryOpContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_unaryOp; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_unaryOp; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterUnaryOp) listener.enterUnaryOp(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitUnaryOp) listener.exitUnaryOp(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitUnaryOp) return visitor.visitUnaryOp(this);
 		else return visitor.visitChildren(this);
@@ -2739,16 +2758,17 @@ export class MeasureContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_measure; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_measure; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterMeasure) listener.enterMeasure(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitMeasure) listener.exitMeasure(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitMeasure) return visitor.visitMeasure(this);
 		else return visitor.visitChildren(this);
@@ -2767,16 +2787,17 @@ export class QubitContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_qubit; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_qubit; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterQubit) listener.enterQubit(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitQubit) listener.exitQubit(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitQubit) return visitor.visitQubit(this);
 		else return visitor.visitChildren(this);
@@ -2795,16 +2816,17 @@ export class CbitContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_cbit; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_cbit; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterCbit) listener.enterCbit(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitCbit) listener.exitCbit(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitCbit) return visitor.visitCbit(this);
 		else return visitor.visitChildren(this);
@@ -2828,16 +2850,17 @@ export class CustomArglistContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_customArglist; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_customArglist; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterCustomArglist) listener.enterCustomArglist(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitCustomArglist) listener.exitCustomArglist(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitCustomArglist) return visitor.visitCustomArglist(this);
 		else return visitor.visitChildren(this);
@@ -2858,16 +2881,17 @@ export class ParamsListNumberContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_paramsListNumber; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_paramsListNumber; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterParamsListNumber) listener.enterParamsListNumber(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitParamsListNumber) listener.exitParamsListNumber(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitParamsListNumber) return visitor.visitParamsListNumber(this);
 		else return visitor.visitChildren(this);
@@ -2888,16 +2912,17 @@ export class QubitAndQregListContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_qubitAndQregList; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_qubitAndQregList; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterQubitAndQregList) listener.enterQubitAndQregList(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitQubitAndQregList) listener.exitQubitAndQregList(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitQubitAndQregList) return visitor.visitQubitAndQregList(this);
 		else return visitor.visitChildren(this);
@@ -2916,16 +2941,17 @@ export class QbitOrQregContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_qbitOrQreg; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_qbitOrQreg; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterQbitOrQreg) listener.enterQbitOrQreg(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitQbitOrQreg) listener.exitQbitOrQreg(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitQbitOrQreg) return visitor.visitQbitOrQreg(this);
 		else return visitor.visitChildren(this);
@@ -2943,16 +2969,17 @@ export class CxGateContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_cxGate; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_cxGate; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterCxGate) listener.enterCxGate(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitCxGate) listener.exitCxGate(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitCxGate) return visitor.visitCxGate(this);
 		else return visitor.visitChildren(this);
@@ -2971,16 +2998,17 @@ export class BarrierGateContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_barrierGate; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_barrierGate; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterBarrierGate) listener.enterBarrierGate(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitBarrierGate) listener.exitBarrierGate(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitBarrierGate) return visitor.visitBarrierGate(this);
 		else return visitor.visitChildren(this);
@@ -3001,16 +3029,17 @@ export class QubitListContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_qubitList; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_qubitList; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterQubitList) listener.enterQubitList(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitQubitList) listener.exitQubitList(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitQubitList) return visitor.visitQubitList(this);
 		else return visitor.visitChildren(this);
@@ -3028,16 +3057,17 @@ export class ResetGateContext extends ParserRuleContext {
 		super(parent, invokingState);
 
 	}
-	@Override public get ruleIndex(): number { return QasmParser.RULE_resetGate; }
-	@Override
+	/// @Override 
+	public get ruleIndex(): number { return QasmParser.RULE_resetGate; }
+	/// @Override
 	public enterRule(listener: QasmParserListener): void {
 		if (listener.enterResetGate) listener.enterResetGate(this);
 	}
-	@Override
+	/// @Override
 	public exitRule(listener: QasmParserListener): void {
 		if (listener.exitResetGate) listener.exitResetGate(this);
 	}
-	@Override
+	/// @Override
 	public accept<Result>(visitor: QasmParserVisitor<Result>): Result {
 		if (visitor.visitResetGate) return visitor.visitResetGate(this);
 		else return visitor.visitChildren(this);

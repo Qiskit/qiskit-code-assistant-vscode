@@ -1,18 +1,18 @@
 // Generated from QasmLexer.g4 by ANTLR 4.6-SNAPSHOT
 
 
-import { ATN } from 'antlr4ts/atn/ATN';
-import { ATNDeserializer } from 'antlr4ts/atn/ATNDeserializer';
-import { CharStream } from 'antlr4ts/CharStream';
-import { Lexer } from 'antlr4ts/Lexer';
-import { LexerATNSimulator } from 'antlr4ts/atn/LexerATNSimulator';
-import { NotNull } from 'antlr4ts/Decorators';
-import { Override } from 'antlr4ts/Decorators';
-import { RuleContext } from 'antlr4ts/RuleContext';
-import { Vocabulary } from 'antlr4ts/Vocabulary';
-import { VocabularyImpl } from 'antlr4ts/VocabularyImpl';
+import {
+    ATN,
+    ATNDeserializer,
+    CharStream,
+    Lexer,
+    LexerATNSimulator,
+    RuleContext,
+    Vocabulary,
+    VocabularyImpl
+} from 'antlr4ts';
 
-import * as Utils from 'antlr4ts/misc/Utils';
+import { Utils } from 'antlr4ts';
 
 
 export class QasmLexer extends Lexer {
@@ -89,8 +89,8 @@ export class QasmLexer extends Lexer {
 	];
 	public static readonly VOCABULARY: Vocabulary = new VocabularyImpl(QasmLexer._LITERAL_NAMES, QasmLexer._SYMBOLIC_NAMES, []);
 
-	@Override
-	@NotNull
+	/// @Override
+	/// @NotNull
 	public get vocabulary(): Vocabulary {
 		return QasmLexer.VOCABULARY;
 	}
@@ -101,20 +101,20 @@ export class QasmLexer extends Lexer {
 		this._interp = new LexerATNSimulator(QasmLexer._ATN, this);
 	}
 
-	@Override
+	/// @Override
 	public get grammarFileName(): string { return "QasmLexer.g4"; }
 
-	@Override
+	/// @Override
 	public get ruleNames(): string[] { return QasmLexer.ruleNames; }
 
-	@Override
+	/// @Override
 	public get serializedATN(): string { return QasmLexer._serializedATN; }
 
-	@Override
+	/// @Override
 	public get modeNames(): string[] { return QasmLexer.modeNames; }
 
-	public static readonly _serializedATN: string =
-		"\x03\uAF6F\u8320\u479D\uB75C\u4880\u1605\u191C\uAB37\x02,\u012B\b\x01"+
+	public static readonly _serializedATN: string = 
+	  "\x03\uAF6F\u8320\u479D\uB75C\u4880\u1605\u191C\uAB37\x02,\u012B\b\x01"+
 		"\x04\x02\t\x02\x04\x03\t\x03\x04\x04\t\x04\x04\x05\t\x05\x04\x06\t\x06"+
 		"\x04\x07\t\x07\x04\b\t\b\x04\t\t\t\x04\n\t\n\x04\v\t\v\x04\f\t\f\x04\r"+
 		"\t\r\x04\x0E\t\x0E\x04\x0F\t\x0F\x04\x10\t\x10\x04\x11\t\x11\x04\x12\t"+
@@ -242,11 +242,12 @@ export class QasmLexer extends Lexer {
 		"\x02\u0124\u0128\t\x05\x02\x02\u0125\u0127\t\x06\x02\x02\u0126\u0125\x03"+
 		"\x02\x02\x02\u0127\u012A\x03\x02\x02\x02\u0128\u0126\x03\x02\x02\x02\u0128"+
 		"\u0129\x03\x02\x02\x02\u0129V\x03\x02\x02\x02\u012A\u0128\x03\x02\x02"+
-		"\x02\n\x02]iot\x8F\u011C\u0128\x03\b\x02\x02";
+		"\x02\n\x02]iot\x8F\u011C\u0128\x03\b\x02\x02"; 
+
 	public static __ATN: ATN;
 	public static get _ATN(): ATN {
 		if (!QasmLexer.__ATN) {
-			QasmLexer.__ATN = new ATNDeserializer().deserialize(Utils.toCharArray(QasmLexer._serializedATN));
+			QasmLexer.__ATN = new ATNDeserializer().deserialize(QasmLexer._serializedATN);
 		}
 
 		return QasmLexer.__ATN;

@@ -1,7 +1,7 @@
 // Generated from QasmParser.g4 by ANTLR 4.6-SNAPSHOT
 
 
-import { ParseTreeListener } from 'antlr4ts/tree/ParseTreeListener';
+import { ParseTreeListener } from 'antlr4ts';
 
 import { CodeContext } from './QasmParser';
 import { HeadersContext } from './QasmParser';

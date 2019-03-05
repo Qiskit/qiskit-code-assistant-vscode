@@ -1,7 +1,7 @@
 // Generated from Python3.g4 by ANTLR 4.6-SNAPSHOT
 
 
-import { ParseTreeListener } from 'antlr4ts/tree/ParseTreeListener';
+import { ParseTreeListener } from 'antlr4ts';
 
 import { ProgramContext } from './Python3Parser';
 import { DecoratorContext } from './Python3Parser';

@@ -6,18 +6,18 @@
   import { Python3Parser } from './Python3Parser';
 
 
-import { ATN } from 'antlr4ts/atn/ATN';
-import { ATNDeserializer } from 'antlr4ts/atn/ATNDeserializer';
-import { CharStream } from 'antlr4ts/CharStream';
-import { Lexer } from 'antlr4ts/Lexer';
-import { LexerATNSimulator } from 'antlr4ts/atn/LexerATNSimulator';
-import { NotNull } from 'antlr4ts/Decorators';
-import { Override } from 'antlr4ts/Decorators';
-import { RuleContext } from 'antlr4ts/RuleContext';
-import { Vocabulary } from 'antlr4ts/Vocabulary';
-import { VocabularyImpl } from 'antlr4ts/VocabularyImpl';
+import {
+    ATN,
+    ATNDeserializer,
+    CharStream,
+    Lexer,
+    LexerATNSimulator,
+    RuleContext,
+    Vocabulary,
+    VocabularyImpl
+} from 'antlr4ts';
 
-import * as Utils from 'antlr4ts/misc/Utils';
+import { Utils } from 'antlr4ts';
 
 
 export class Python3Lexer extends Lexer {
@@ -171,8 +171,8 @@ export class Python3Lexer extends Lexer {
 	];
 	public static readonly VOCABULARY: Vocabulary = new VocabularyImpl(Python3Lexer._LITERAL_NAMES, Python3Lexer._SYMBOLIC_NAMES, []);
 
-	@Override
-	@NotNull
+	/// @Override
+	/// @NotNull
 	public get vocabulary(): Vocabulary {
 		return Python3Lexer.VOCABULARY;
 	}
@@ -292,19 +292,19 @@ export class Python3Lexer extends Lexer {
 		this._interp = new LexerATNSimulator(Python3Lexer._ATN, this);
 	}
 
-	@Override
+	/// @Override
 	public get grammarFileName(): string { return "Python3.g4"; }
 
-	@Override
+	/// @Override
 	public get ruleNames(): string[] { return Python3Lexer.ruleNames; }
 
-	@Override
+	/// @Override
 	public get serializedATN(): string { return Python3Lexer._serializedATN; }
 
-	@Override
+	/// @Override
 	public get modeNames(): string[] { return Python3Lexer.modeNames; }
 
-	@Override
+	/// @Override
 	action(_localctx: RuleContext, ruleIndex: number, actionIndex: number): void {
 		switch (ruleIndex) {
 		case 33:
@@ -414,7 +414,7 @@ export class Python3Lexer extends Lexer {
 			break;
 		}
 	}
-	@Override
+	/// @Override
 	public sempred(_localctx: RuleContext, ruleIndex: number, predIndex: number): boolean {
 		switch (ruleIndex) {
 		case 33:
@@ -908,17 +908,14 @@ export class Python3Lexer extends Lexer {
 		"\u0304\u0311\u0317\u031B\u031E\u0321\u0324\u032C\u0332\u0337\u033A\u033E"+
 		"\u0341\u0345\n\x03#\x02\x030\x03\x031\x04\x037\x05\x038\x06\x03D\x07\x03"+
 		"E\b\b\x02\x02";
-	public static readonly _serializedATN: string = Utils.join(
-		[
+	public static readonly _serializedATN: string = [
 			Python3Lexer._serializedATNSegment0,
 			Python3Lexer._serializedATNSegment1
-		],
-		""
-	);
+		].join("");
 	public static __ATN: ATN;
 	public static get _ATN(): ATN {
 		if (!Python3Lexer.__ATN) {
-			Python3Lexer.__ATN = new ATNDeserializer().deserialize(Utils.toCharArray(Python3Lexer._serializedATN));
+			Python3Lexer.__ATN = new ATNDeserializer().deserialize(Python3Lexer._serializedATN);
 		}
 
 		return Python3Lexer.__ATN;
