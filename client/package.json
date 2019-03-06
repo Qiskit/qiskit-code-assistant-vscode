@@ -10,7 +10,7 @@
 		}
 	],
 	"publisher": "qiskit",
-	"version": "0.5.1",
+	"version": "0.5.2",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/Qiskit/qiskit-vscode"
@@ -309,7 +309,7 @@
 		]
 	},
 	"dependencies": {
-		"nunjucks": "^3.1.7",
+		"nunjucks": "^3.2.0",
 		"q": "^1.4.1",
 		"typed-rest-client": "^1.1.2",
 		"vscode-languageclient": "^3.5.1",
