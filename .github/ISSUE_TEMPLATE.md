@@ -4,8 +4,8 @@
 _BUG TEMPLATE_ <!-- Delete this header from your issue -->
 
 <!-- ⚠️ Before writing your issue make sure you are using: -->
-<!-- VSCode 1.23.x -->
-<!-- qiskit-terra ^0.5.x -->
+<!-- VSCode 1.25.x -->
+<!-- qiskit-terra ^0.6.x -->
 <!-- The latest version of Qiskit VSCode Extension -->
 
 ### Informations
