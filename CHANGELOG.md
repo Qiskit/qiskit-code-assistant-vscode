@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### 🐛 Fixed
 
+-   Updating dependencies to fix the error on startup #68 ([#70](https://github.com/Qiskit/qiskit-vscode/pull/70) by [@cbjuan](https://github.com/cbjuan))
+
 ### ✏️ Changed
 
 -   Updating dependencies to meet qiskit-chemistry and current supported versions ([#72](https://github.com/Qiskit/qiskit-vscode/pull/72) by [@cbjuan](https://github.com/cbjuan))

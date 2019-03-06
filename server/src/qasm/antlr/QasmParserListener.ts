@@ -1,41 +1,41 @@
-// Generated from QasmParser.g4 by ANTLR 4.6-SNAPSHOT
+// Generated from QasmParser.g4 by ANTLR 4.7.3-SNAPSHOT
 
 
-import { ParseTreeListener } from 'antlr4ts/tree/ParseTreeListener';
+import { ParseTreeListener } from "antlr4ts/tree/ParseTreeListener";
 
-import { CodeContext } from './QasmParser';
-import { HeadersContext } from './QasmParser';
-import { IncludeLibraryContext } from './QasmParser';
-import { SentencesContext } from './QasmParser';
-import { CleanContext } from './QasmParser';
-import { SentenceContext } from './QasmParser';
-import { DefinitionContext } from './QasmParser';
-import { ExpressionContext } from './QasmParser';
-import { ConditionalContext } from './QasmParser';
-import { QregDefinitionContext } from './QasmParser';
-import { CregDefinitionContext } from './QasmParser';
-import { DimensionContext } from './QasmParser';
-import { GateDefinitionContext } from './QasmParser';
-import { OpaqueDefinitionContext } from './QasmParser';
-import { GateDefinitionArgumentsContext } from './QasmParser';
-import { OpaqueDefinitionArgumentsContext } from './QasmParser';
-import { ParamsListContext } from './QasmParser';
-import { BodyContext } from './QasmParser';
-import { BodyExpressionContext } from './QasmParser';
-import { ParamsListBodyContext } from './QasmParser';
-import { ExpContext } from './QasmParser';
-import { UnaryOpContext } from './QasmParser';
-import { MeasureContext } from './QasmParser';
-import { QubitContext } from './QasmParser';
-import { CbitContext } from './QasmParser';
-import { CustomArglistContext } from './QasmParser';
-import { ParamsListNumberContext } from './QasmParser';
-import { QubitAndQregListContext } from './QasmParser';
-import { QbitOrQregContext } from './QasmParser';
-import { CxGateContext } from './QasmParser';
-import { BarrierGateContext } from './QasmParser';
-import { QubitListContext } from './QasmParser';
-import { ResetGateContext } from './QasmParser';
+import { CodeContext } from "./QasmParser";
+import { HeadersContext } from "./QasmParser";
+import { IncludeLibraryContext } from "./QasmParser";
+import { SentencesContext } from "./QasmParser";
+import { CleanContext } from "./QasmParser";
+import { SentenceContext } from "./QasmParser";
+import { DefinitionContext } from "./QasmParser";
+import { ExpressionContext } from "./QasmParser";
+import { ConditionalContext } from "./QasmParser";
+import { QregDefinitionContext } from "./QasmParser";
+import { CregDefinitionContext } from "./QasmParser";
+import { DimensionContext } from "./QasmParser";
+import { GateDefinitionContext } from "./QasmParser";
+import { OpaqueDefinitionContext } from "./QasmParser";
+import { GateDefinitionArgumentsContext } from "./QasmParser";
+import { OpaqueDefinitionArgumentsContext } from "./QasmParser";
+import { ParamsListContext } from "./QasmParser";
+import { BodyContext } from "./QasmParser";
+import { BodyExpressionContext } from "./QasmParser";
+import { ParamsListBodyContext } from "./QasmParser";
+import { ExpContext } from "./QasmParser";
+import { UnaryOpContext } from "./QasmParser";
+import { MeasureContext } from "./QasmParser";
+import { QubitContext } from "./QasmParser";
+import { CbitContext } from "./QasmParser";
+import { CustomArglistContext } from "./QasmParser";
+import { ParamsListNumberContext } from "./QasmParser";
+import { QubitAndQregListContext } from "./QasmParser";
+import { QbitOrQregContext } from "./QasmParser";
+import { CxGateContext } from "./QasmParser";
+import { BarrierGateContext } from "./QasmParser";
+import { QubitListContext } from "./QasmParser";
+import { ResetGateContext } from "./QasmParser";
 
 
 /**
