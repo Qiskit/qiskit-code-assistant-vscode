@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### ✏️ Changed
 
+-   Update the Jest config to avoid warnings in tests ([#76](https://github.com/Qiskit/qiskit-vscode/pull/76) by [@cbjuan](https://github.com/cbjuan))
 -   Updating dependencies to meet qiskit-chemistry and current supported versions ([#72](https://github.com/Qiskit/qiskit-vscode/pull/72) by [@cbjuan](https://github.com/cbjuan))
 
 ### 👾 Security
