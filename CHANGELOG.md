@@ -20,14 +20,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### 🐛 Fixed
 
--   Issues when displaying histograms (#78) ([#79](https://github.com/Qiskit/qiskit-vscode/pull/79) by [@cbjuan](https://github.com/cbjuan))
--   Use the WebView API for VSCode instead of `vscode.previewHTML` ([#79](https://github.com/Qiskit/qiskit-vscode/pull/79) by [@cbjuan](https://github.com/cbjuan))
-
 ### ✏️ Changed
 
 ### 👾 Security
 
 ### ❌ Removed
+
+## [v0.5.3] - 2019-03-11
+
+### 🐛 Fixed
+
+-   Issues when displaying histograms (#78) ([#79](https://github.com/Qiskit/qiskit-vscode/pull/79) by [@cbjuan](https://github.com/cbjuan))
+-   Use the WebView API for VSCode instead of `vscode.previewHTML` ([#79](https://github.com/Qiskit/qiskit-vscode/pull/79) by [@cbjuan](https://github.com/cbjuan))
 
 ## [v0.5.2] - 2019-03-06
 
@@ -316,7 +320,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   Re-styling charts ([#97](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/97) by [@cbjuan](https://github.com/cbjuan))
 -   Extension size reduction ([#76](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/76) by [@ydarias](https://github.com/ydarias))
 
-[unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.5.2...HEAD
+[unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.5.3...HEAD
+[v0.5.2]: https://github.com/Qiskit/qiskit-vscode/compare/v0.5.2...v0.5.3
 [v0.5.2]: https://github.com/Qiskit/qiskit-vscode/compare/v0.5.1...v0.5.2
 [v0.5.1]: https://github.com/Qiskit/qiskit-vscode/compare/v0.5.0...v0.5.1
 [v0.5.0]: https://github.com/Qiskit/qiskit-vscode/compare/v0.4.1...v0.5.0
