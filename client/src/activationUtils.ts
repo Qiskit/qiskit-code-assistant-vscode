@@ -11,7 +11,6 @@ import * as vscode from 'vscode';
 import * as Q from 'q';
 import { DependencyMgr } from './dependencies/dependencyMgr';
 import { Util } from './utils';
-import { ResultProvider } from './resultProvider';
 import { CommandExecutor } from './commandExecutor';
 import { VizManager } from './visualizations';
 import { QLogger } from './logger';
