@@ -20,6 +20,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### 🐛 Fixed
 
+-   Issues when displaying histograms (#78) ([#79](https://github.com/Qiskit/qiskit-vscode/pull/79) by [@cbjuan](https://github.com/cbjuan))
+-   Use the WebView API for VSCode instead of `vscode.previewHTML` ([#79](https://github.com/Qiskit/qiskit-vscode/pull/79) by [@cbjuan](https://github.com/cbjuan))
+
 ### ✏️ Changed
 
 ### 👾 Security

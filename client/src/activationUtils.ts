@@ -11,7 +11,6 @@ import * as vscode from 'vscode';
 import * as Q from 'q';
 import { DependencyMgr } from './dependencies/dependencyMgr';
 import { Util } from './utils';
-import { ResultProvider } from './resultProvider';
 import { CommandExecutor } from './commandExecutor';
 import { VizManager } from './visualizations';
 import { QLogger } from './logger';
@@ -137,80 +136,51 @@ export namespace ActivationUtils {
             ),
             vscode.commands.registerCommand('qiskit-vscode.runQiskitCode', () =>
                 CommandExecutor.execPythonActiveEditor().then(codeResult => {
-                    let resultProvider = new ResultProvider();
-                    vscode.workspace.registerTextDocumentContentProvider('qiskit-preview-result', resultProvider);
-                    let previewUri = vscode.Uri.parse(`qiskit-preview-result://authority/result-preview`);
-
                     const codeFile = vscode.window.activeTextEditor.document;
                     codeFile.save();
-                    resultProvider.displayContent(
-                        VizManager.createViz(codeFile.fileName.toString(), codeResult),
-                        previewUri
+                    const panel = vscode.window.createWebviewPanel(
+                        'ExecutionResultQiskit', // Identifies the type of the webview. Used internally
+                        'Execution result - Qiskit', // Title of the panel displayed to the user
+                        vscode.ViewColumn.Two, // Editor column to show the new webview panel in.
+                        {
+                            enableScripts: true,
+                            retainContextWhenHidden: true
+                        } // Enable JS & retain context
                     );
-
-                    vscode.commands
-                        .executeCommand(
-                            'vscode.previewHtml',
-                            previewUri,
-                            vscode.ViewColumn.Two,
-                            'Execution result - Qiskit'
-                        )
-                        .then(
-                            _success => {},
-                            reason => {
-                                QLogger.error(`Error: ${reason}`, this);
-                                vscode.window.showErrorMessage(reason);
-                            }
-                        );
+                    // And set its HTML content
+                    panel.webview.html = VizManager.createViz(codeFile.fileName.toString(), codeResult);
                 })
             ),
             vscode.commands.registerCommand('qiskit-vscode.runQASMCode', () =>
                 CommandExecutor.execQasmActiveEditor(executeQASMScript).then(codeResult => {
-                    let resultProvider = new ResultProvider();
-                    vscode.workspace.registerTextDocumentContentProvider('qasm-preview-result', resultProvider);
-                    let previewUri = vscode.Uri.parse(`qasm-preview-result://authority/result-preview`);
                     let execPath = Util.getOSDependentPath(executeQASMScript);
-                    resultProvider.displayContent(VizManager.createViz(execPath, codeResult), previewUri);
-
-                    vscode.commands
-                        .executeCommand(
-                            'vscode.previewHtml',
-                            previewUri,
-                            vscode.ViewColumn.Two,
-                            'Execution result - QASM'
-                        )
-                        .then(
-                            _success => {},
-                            reason => {
-                                QLogger.error(`Error: ${reason}`, this);
-                                vscode.window.showErrorMessage(reason);
-                            }
-                        );
+                    const panel = vscode.window.createWebviewPanel(
+                        'ExecutionResultQASM', // Identifies the type of the webview. Used internally
+                        'Execution result - QASM', // Title of the panel displayed to the user
+                        vscode.ViewColumn.Two, // Editor column to show the new webview panel in.
+                        {
+                            enableScripts: true,
+                            retainContextWhenHidden: true
+                        } // Enable JS & retain context
+                    );
+                    // And set its HTML content
+                    panel.webview.html = VizManager.createViz(execPath, codeResult);
                 })
             ),
             vscode.commands.registerCommand('qiskit-vscode.discoverLocalBackends', () =>
                 CommandExecutor.execPythonFile(localBackendsScript, []).then(localBackends => {
-                    let resultProvider = new ResultProvider();
-                    vscode.workspace.registerTextDocumentContentProvider('qiskit-localBackends-result', resultProvider);
-                    let previewUri = vscode.Uri.parse(`qiskit-localBackends-result://authority/backends-preview`);
-
                     let execPath = Util.getOSDependentPath(localBackendsScript);
-                    resultProvider.displayContent(VizManager.createViz(execPath, localBackends), previewUri);
-
-                    vscode.commands
-                        .executeCommand(
-                            'vscode.previewHtml',
-                            previewUri,
-                            vscode.ViewColumn.Two,
-                            'Local backends available'
-                        )
-                        .then(
-                            _success => {},
-                            reason => {
-                                QLogger.error(`Error: ${reason}`, this);
-                                vscode.window.showErrorMessage(reason);
-                            }
-                        );
+                    const panel = vscode.window.createWebviewPanel(
+                        'LocalBackendsAvailable', // Identifies the type of the webview. Used internally
+                        'Local backends available', // Title of the panel displayed to the user
+                        vscode.ViewColumn.Two, // Editor column to show the new webview panel in.
+                        {
+                            enableScripts: true,
+                            retainContextWhenHidden: true
+                        } // Enable JS & retain context
+                    );
+                    // And set its HTML content
+                    panel.webview.html = VizManager.createViz(execPath, localBackends);
                 })
             ),
 
@@ -230,34 +200,18 @@ export namespace ActivationUtils {
                                 '--project',
                                 config.get('ibmq.project')
                             ]).then(remoteBackends => {
-                                let resultProvider = new ResultProvider();
-                                vscode.workspace.registerTextDocumentContentProvider(
-                                    'qiskit-remoteBackends-result',
-                                    resultProvider
-                                );
-                                let previewUri = vscode.Uri.parse(
-                                    `qiskit-remoteBackends-result://authority/backends-preview`
-                                );
                                 let execPath = Util.getOSDependentPath(remoteBackendsScript);
-                                resultProvider.displayContent(
-                                    VizManager.createViz(execPath, remoteBackends),
-                                    previewUri
+                                const panel = vscode.window.createWebviewPanel(
+                                    'RemoteBackendsAvailable', // Identifies the type of the webview. Used internally
+                                    'Remote backends available', // Title of the panel displayed to the user
+                                    vscode.ViewColumn.Two, // Editor column to show the new webview panel in.
+                                    {
+                                        enableScripts: true,
+                                        retainContextWhenHidden: true
+                                    } // Enable JS & retain context
                                 );
-
-                                vscode.commands
-                                    .executeCommand(
-                                        'vscode.previewHtml',
-                                        previewUri,
-                                        vscode.ViewColumn.Two,
-                                        'Remote backends available'
-                                    )
-                                    .then(
-                                        _success => {},
-                                        reason => {
-                                            QLogger.error(`Error: ${reason}`, this);
-                                            vscode.window.showErrorMessage(reason);
-                                        }
-                                    );
+                                // And set its HTML content
+                                panel.webview.html = VizManager.createViz(execPath, remoteBackends);
                             });
                         } else {
                             QLogger.info(`QConfig is not configured. The command won't be launched`, this);
@@ -302,34 +256,17 @@ export namespace ActivationUtils {
                                 '--status',
                                 'True'
                             ]).then(remoteDevicesStatus => {
-                                let resultProvider = new ResultProvider();
-                                vscode.workspace.registerTextDocumentContentProvider(
-                                    'qiskit-devicesStatus-result',
-                                    resultProvider
+                                const panel = vscode.window.createWebviewPanel(
+                                    'StatusForRemoteDevices', // Identifies the type of the webview. Used internally
+                                    'Status for remote devices', // Title of the panel displayed to the user
+                                    vscode.ViewColumn.Two, // Editor column to show the new webview panel in.
+                                    {
+                                        enableScripts: true,
+                                        retainContextWhenHidden: true
+                                    } // Enable JS & retain context
                                 );
-                                let previewUri = vscode.Uri.parse(
-                                    `qiskit-devicesStatus-result://authority/status-preview`
-                                );
-
-                                resultProvider.displayContent(
-                                    DeviceStatusVisualization.render(remoteDevicesStatus),
-                                    previewUri
-                                );
-
-                                vscode.commands
-                                    .executeCommand(
-                                        'vscode.previewHtml',
-                                        previewUri,
-                                        vscode.ViewColumn.Two,
-                                        'Status for remote devices'
-                                    )
-                                    .then(
-                                        _success => {},
-                                        reason => {
-                                            QLogger.error(`Error: ${reason}`, this);
-                                            vscode.window.showErrorMessage(reason);
-                                        }
-                                    );
+                                // And set its HTML content
+                                panel.webview.html = DeviceStatusVisualization.render(remoteDevicesStatus);
                             });
                         } else {
                             QLogger.info(`QConfig is not configured. The command won't be launched`, this);
@@ -372,30 +309,19 @@ export namespace ActivationUtils {
                                 '--project',
                                 config.get('ibmq.project')
                             ]).then(pendingJobs => {
-                                let resultProvider = new ResultProvider();
-                                vscode.workspace.registerTextDocumentContentProvider(
-                                    'qiskit-pendingJobs-result',
-                                    resultProvider
-                                );
-                                let previewUri = vscode.Uri.parse(`qiskit-pendingJobs-result://authority/list-preview`);
-
                                 let execPath = Util.getOSDependentPath(pendingJobsScript);
-                                resultProvider.displayContent(VizManager.createViz(execPath, pendingJobs), previewUri);
+                                const panel = vscode.window.createWebviewPanel(
+                                    'UserPendingJobs', // Identifies the type of the webview. Used internally
+                                    "User's pending jobs", // Title of the panel displayed to the user
+                                    vscode.ViewColumn.Two, // Editor column to show the new webview panel in.
+                                    {
+                                        enableScripts: true,
+                                        retainContextWhenHidden: true
+                                    } // Enable JS & retain context
+                                );
 
-                                vscode.commands
-                                    .executeCommand(
-                                        'vscode.previewHtml',
-                                        previewUri,
-                                        vscode.ViewColumn.Two,
-                                        "User's pending jobs"
-                                    )
-                                    .then(
-                                        _success => {},
-                                        reason => {
-                                            QLogger.error(`Error: ${reason}`, this);
-                                            vscode.window.showErrorMessage(reason);
-                                        }
-                                    );
+                                // And set its HTML content
+                                panel.webview.html = VizManager.createViz(execPath, pendingJobs);
                             });
                         } else {
                             QLogger.info(`QConfig is not configured. The command won't be launched`, this);
@@ -438,32 +364,19 @@ export namespace ActivationUtils {
                                 '--project',
                                 config.get('ibmq.project')
                             ]).then(executedJobs => {
-                                let resultProvider = new ResultProvider();
-                                vscode.workspace.registerTextDocumentContentProvider(
-                                    'qiskit-executedJobs-result',
-                                    resultProvider
-                                );
-                                let previewUri = vscode.Uri.parse(
-                                    `qiskit-executedJobs-result://authority/list-preview`
-                                );
-
                                 let execPath = Util.getOSDependentPath(executedJobsScript);
-                                resultProvider.displayContent(VizManager.createViz(execPath, executedJobs), previewUri);
+                                const panel = vscode.window.createWebviewPanel(
+                                    'UserExecutedJobs', // Identifies the type of the webview. Used internally
+                                    "User's executed jobs", // Title of the panel displayed to the user
+                                    vscode.ViewColumn.Two, // Editor column to show the new webview panel in.
+                                    {
+                                        enableScripts: true,
+                                        retainContextWhenHidden: true
+                                    } // Enable JS & retain context
+                                );
 
-                                vscode.commands
-                                    .executeCommand(
-                                        'vscode.previewHtml',
-                                        previewUri,
-                                        vscode.ViewColumn.Two,
-                                        "User's executed jobs"
-                                    )
-                                    .then(
-                                        _success => {},
-                                        reason => {
-                                            QLogger.error(`Error: ${reason}`, this);
-                                            vscode.window.showErrorMessage(reason);
-                                        }
-                                    );
+                                // And set its HTML content
+                                panel.webview.html = VizManager.createViz(execPath, executedJobs);
                             });
                         } else {
                             QLogger.info(`QConfig is not configured. The command won't be launched`, this);
@@ -506,32 +419,19 @@ export namespace ActivationUtils {
                                 '--project',
                                 config.get('ibmq.project')
                             ]).then(queueStatus => {
-                                let resultProvider = new ResultProvider();
-                                vscode.workspace.registerTextDocumentContentProvider(
-                                    'qiskit-queueStatus-result',
-                                    resultProvider
-                                );
-                                let previewUri = vscode.Uri.parse(
-                                    `qiskit-queueStatus-result://authority/status-preview`
-                                );
-
                                 let execPath = Util.getOSDependentPath(getQueueStatusScript);
-                                resultProvider.displayContent(VizManager.createViz(execPath, queueStatus), previewUri);
+                                const panel = vscode.window.createWebviewPanel(
+                                    'QueueStatus', // Identifies the type of the webview. Used internally
+                                    'Queue status', // Title of the panel displayed to the user
+                                    vscode.ViewColumn.Two, // Editor column to show the new webview panel in.
+                                    {
+                                        enableScripts: true,
+                                        retainContextWhenHidden: true
+                                    } // Enable JS & retain context
+                                );
 
-                                vscode.commands
-                                    .executeCommand(
-                                        'vscode.previewHtml',
-                                        previewUri,
-                                        vscode.ViewColumn.Two,
-                                        'Queue status'
-                                    )
-                                    .then(
-                                        _success => {},
-                                        reason => {
-                                            QLogger.error(`Error: ${reason}`, this);
-                                            vscode.window.showErrorMessage(reason);
-                                        }
-                                    );
+                                // And set its HTML content
+                                panel.webview.html = VizManager.createViz(execPath, queueStatus);
                             });
                         } else {
                             QLogger.info(`QConfig is not configured. The command won't be launched`, this);
@@ -574,32 +474,19 @@ export namespace ActivationUtils {
                                 '--project',
                                 config.get('ibmq.project')
                             ]).then(userCredits => {
-                                let resultProvider = new ResultProvider();
-                                vscode.workspace.registerTextDocumentContentProvider(
-                                    'qiskit-userCredits-result',
-                                    resultProvider
-                                );
-                                let previewUri = vscode.Uri.parse(
-                                    `qiskit-userCredits-result://authority/credits-preview`
-                                );
-
                                 let execPath = Util.getOSDependentPath(getUserCreditsScript);
-                                resultProvider.displayContent(VizManager.createViz(execPath, userCredits), previewUri);
+                                const panel = vscode.window.createWebviewPanel(
+                                    'UserCredits', // Identifies the type of the webview. Used internally
+                                    "User's credits", // Title of the panel displayed to the user
+                                    vscode.ViewColumn.Two, // Editor column to show the new webview panel in.
+                                    {
+                                        enableScripts: true,
+                                        retainContextWhenHidden: true
+                                    } // Enable JS & retain context
+                                );
 
-                                vscode.commands
-                                    .executeCommand(
-                                        'vscode.previewHtml',
-                                        previewUri,
-                                        vscode.ViewColumn.Two,
-                                        "User's credits"
-                                    )
-                                    .then(
-                                        _success => {},
-                                        reason => {
-                                            QLogger.error(`Error: ${reason}`, this);
-                                            vscode.window.showErrorMessage(reason);
-                                        }
-                                    );
+                                // And set its HTML content
+                                panel.webview.html = VizManager.createViz(execPath, userCredits);
                             });
                         } else {
                             QLogger.info(`QConfig is not configured. The command won't be launched`, this);
