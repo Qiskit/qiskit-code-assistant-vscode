@@ -93,7 +93,8 @@
 					"default": {
 						"qiskit": "0.6.0",
 						"qiskit-aqua": "0.4.0",
-						"qiskit-chemistry": "0.4.2"
+						"qiskit-chemistry": "0.4.2",
+						"IBMQuantumExperience": "2.0.4"
 					},
 					"description": "Qiskit and libraries related to run code"
 				},
