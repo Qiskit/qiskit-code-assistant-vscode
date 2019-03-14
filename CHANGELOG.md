@@ -20,13 +20,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### 🐛 Fixed
 
--   Adding IBMQuantumExperience dependency to solve issue #81 and others alike ([#82](https://github.com/Qiskit/qiskit-vscode/pull/82) by [@cbjuan](https://github.com/cbjuan))
-
 ### ✏️ Changed
 
 ### 👾 Security
 
 ### ❌ Removed
+
+## [v0.5.4] - 2019-03-14
+
+### 🐛 Fixed
+
+-   Adding IBMQuantumExperience dependency to solve issue #81 and others alike ([#82](https://github.com/Qiskit/qiskit-vscode/pull/82) by [@cbjuan](https://github.com/cbjuan))
 
 ## [v0.5.3] - 2019-03-11
 
@@ -322,8 +326,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   Re-styling charts ([#97](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/97) by [@cbjuan](https://github.com/cbjuan))
 -   Extension size reduction ([#76](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/76) by [@ydarias](https://github.com/ydarias))
 
-[unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.5.3...HEAD
-[v0.5.2]: https://github.com/Qiskit/qiskit-vscode/compare/v0.5.2...v0.5.3
+[unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.5.4...HEAD
+[v0.5.4]: https://github.com/Qiskit/qiskit-vscode/compare/v0.5.3...v0.5.4
+[v0.5.3]: https://github.com/Qiskit/qiskit-vscode/compare/v0.5.2...v0.5.3
 [v0.5.2]: https://github.com/Qiskit/qiskit-vscode/compare/v0.5.1...v0.5.2
 [v0.5.1]: https://github.com/Qiskit/qiskit-vscode/compare/v0.5.0...v0.5.1
 [v0.5.0]: https://github.com/Qiskit/qiskit-vscode/compare/v0.4.1...v0.5.0
