@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### 🐛 Fixed
 
+-   Adding IBMQuantumExperience dependency to solve issue #81 and others alike ([#82](https://github.com/Qiskit/qiskit-vscode/pull/82) by [@cbjuan](https://github.com/cbjuan))
+
 ### ✏️ Changed
 
 ### 👾 Security
