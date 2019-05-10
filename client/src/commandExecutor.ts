@@ -71,7 +71,7 @@ export namespace CommandExecutor {
               - https://github.com/marshmallow-code/marshmallow/blob/2.x-line/marshmallow/schema.py#L364
             */
 
-            CommandExecutor.exec(pythonPath + ' -W ignore:"strict=False is not recommended. In marshmallow 3.0"', [
+            CommandExecutor.exec(`${pythonPath} -W ignore:"strict=False is not recommended. In marshmallow 3.0"`, [
                 codeFile.fileName.toString()
             ])
                 .then(stdout => {
