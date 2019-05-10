@@ -23,6 +23,8 @@ interface IExecOptions {
     killSignal?: string;
 }
 
+const pythonPath = vscode.workspace.getConfiguration('python').get<string>('pythonPath') || 'python';
+
 export namespace CommandExecutor {
     export function exec(command: string, args: string[] = [], options: IExecOptions = {}): Q.Promise<string> {
         let outcome = Q.defer<string>();
@@ -69,7 +71,7 @@ export namespace CommandExecutor {
               - https://github.com/marshmallow-code/marshmallow/blob/2.x-line/marshmallow/schema.py#L364
             */
 
-            CommandExecutor.exec('python -W ignore:"strict=False is not recommended. In marshmallow 3.0"', [
+            CommandExecutor.exec(pythonPath + ' -W ignore:"strict=False is not recommended. In marshmallow 3.0"', [
                 codeFile.fileName.toString()
             ])
                 .then(stdout => {
@@ -95,7 +97,7 @@ export namespace CommandExecutor {
                 // Working filters to ignore the warnings:
                 // - python -W ignore -> Filter all the warnings raised during the execution of the file
                 // - python -W ignore::::364 -> Filter the warnings raised by the line 364 of any module
-                CommandExecutor.exec('python', [document.fileName.toString(), '--file', codeFile.fileName.toString()])
+                CommandExecutor.exec(pythonPath, [document.fileName.toString(), '--file', codeFile.fileName.toString()])
                     .then(stdout => {
                         //vscode.window.showInformationMessage(stdout);
                         return resolve(stdout);
@@ -116,7 +118,7 @@ export namespace CommandExecutor {
             const execPath = Util.getOSDependentPath(scriptPath);
 
             vscode.workspace.openTextDocument(execPath).then(document => {
-                CommandExecutor.exec('python', [document.fileName.toString()].concat(options))
+                CommandExecutor.exec(pythonPath, [document.fileName.toString()].concat(options))
                     .then(stdout => {
                         //vscode.window.showInformationMessage("Execution result:",stdout);
                         return resolve(stdout);
