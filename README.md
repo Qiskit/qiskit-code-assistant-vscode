@@ -1,5 +1,7 @@
 # Qiskit VSCode Extension
 
+Testing travis!
+
 [![status](https://joss.theoj.org/papers/7687665c24744f6cc3aa30666a70b219/status.svg)](https://joss.theoj.org/papers/7687665c24744f6cc3aa30666a70b219)
 [![Build Status](https://www.travis-ci.com/Qiskit/qiskit-vscode.svg?branch=master)](https://www.travis-ci.com/Qiskit/qiskit-vscode)
 
