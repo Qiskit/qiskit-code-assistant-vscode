@@ -14,9 +14,9 @@ describe('utils', () => {
         // tslint:disable-next-line
         expect.assertions(1);
         let unixPath = '/src/file';
-        let windowsPath = `\src\file`;
+        let windowsPath = `\\src\\file`;
         if (process.platform === 'win32') {
-            expect(Util.getOSDependentPath(unixPath)).toEqual(`${windowsPath}`);
+            expect(Util.getOSDependentPath(windowsPath).indexOf(`${unixPath}`)).toBeGreaterThanOrEqual(0);
         } else {
             expect(Util.getOSDependentPath(unixPath)).toEqual(`${unixPath}`);
         }
