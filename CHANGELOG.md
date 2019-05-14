@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### 🎉 Added
 
+-   Adding ability to use custom python version and/or environment using `python.pythonPath` is VSCode settings ([#86](https://github.com/Qiskit/qiskit-vscode/pull/86) by [@zpbappi](https://github.com/zpbappi))
+
 ### 🐛 Fixed
 
 ### ✏️ Changed
