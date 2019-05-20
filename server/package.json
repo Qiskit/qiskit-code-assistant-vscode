@@ -19,7 +19,7 @@
 		"url": "https://github.com/Qiskit/qiskit-vscode"
 	},
 	"dependencies": {
-		"antlr4-c3": "^1.1.11",
+		"antlr4-c3": "^1.1.12",
 		"antlr4ts": "^0.5.0-alpha.3",
 		"vscode-languageserver": "^3.5.1",
 		"winston": "^3.2.1"
@@ -28,14 +28,14 @@
 		"@types/jest": "^23.3.14",
 		"antlr4ts-cli": "^0.5.0-alpha.3",
 		"husky": "^0.14.3",
-		"jest": "^24.1.0",
+		"jest": "^24.8.0",
 		"lint-staged": "^7.3.0",
 		"npm-run-all": "^4.1.5",
-		"prettier": "^1.16.4",
-		"ts-jest": "^24.0.0",
+		"prettier": "^1.17.1",
+		"ts-jest": "^24.0.2",
 		"ts-mockito": "^2.3.1",
-		"tslint": "^5.13.1",
-		"typescript": "^3.3.333"
+		"tslint": "^5.16.0",
+		"typescript": "^3.4.5"
 	},
 	"scripts": {
 		"installServer": "npm run compile:parser && installServerIntoExtension ../client ./package.json ./tsconfig.json && npm-run-all -s installQuantumLibraries installQiskitLibraries",
