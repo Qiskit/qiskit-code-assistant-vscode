@@ -18,8 +18,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### 🎉 Added
 
--   Adding ability to use custom python version and/or environment using `python.pythonPath` is VSCode settings ([#86](https://github.com/Qiskit/qiskit-vscode/pull/86) by [@zpbappi](https://github.com/zpbappi))
-
 ### 🐛 Fixed
 
 ### ✏️ Changed
@@ -27,6 +25,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### 👾 Security
 
 ### ❌ Removed
+
+## [v0.5.5] - 2019-05-20
+
+### 🎉 Added
+
+-   Adding ability to use custom python version and/or environment using `python.pythonPath` is VSCode settings ([#86](https://github.com/Qiskit/qiskit-vscode/pull/86) by [@zpbappi](https://github.com/zpbappi))
+
+### 👾 Security
+
+-   Updating dependencies to fix vulnerabilities ([#89](https://github.com/Qiskit/qiskit-vscode/pull/89) by [@cbjuan](https://github.com/cbjuan))
 
 ## [v0.5.4] - 2019-03-14
 
@@ -328,7 +336,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 -   Re-styling charts ([#97](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/97) by [@cbjuan](https://github.com/cbjuan))
 -   Extension size reduction ([#76](https://github.ibm.com/IBMQuantum/qiskit-vscode/pull/76) by [@ydarias](https://github.com/ydarias))
 
-[unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.5.4...HEAD
+[unreleased]: https://github.com/Qiskit/qiskit-vscode/compare/v0.5.5...HEAD
+[v0.5.5]: https://github.com/Qiskit/qiskit-vscode/compare/v0.5.4...v0.5.5
 [v0.5.4]: https://github.com/Qiskit/qiskit-vscode/compare/v0.5.3...v0.5.4
 [v0.5.3]: https://github.com/Qiskit/qiskit-vscode/compare/v0.5.2...v0.5.3
 [v0.5.2]: https://github.com/Qiskit/qiskit-vscode/compare/v0.5.1...v0.5.2
