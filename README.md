@@ -1,85 +1,81 @@
-# Qiskit VSCode Extension
+# Qiskit Code Assistant
 
-[![status](https://joss.theoj.org/papers/7687665c24744f6cc3aa30666a70b219/status.svg)](https://joss.theoj.org/papers/7687665c24744f6cc3aa30666a70b219)
-[![Build Status](https://www.travis-ci.com/Qiskit/qiskit-vscode.svg?branch=master)](https://www.travis-ci.com/Qiskit/qiskit-vscode)
+Write and optimize Qiskit code with a generative AI code assistant powered by IBM **watson<span style="color:blue;">x</span>**.
 
-> Simplifying Qiskit to make developing quantum circuits and applications faster.
+**************
 
-A Visual Studio Code extension with support for Qiskit and the OpenQASM language. It provides some useful commands to make easier launching jobs and visualizing results among others.
+Increase quantum computing developer productivity and learn best practices for Qiskit and IBM Quantum Platform services with Qiskit Code Assistant!
 
-![Qiskit VSCode Extension](https://raw.githubusercontent.com/Qiskit/qiskit-vscode/master/docs/images/execute-sample.gif "Example of running Qiskit VSCode Extension")
+**************
 
-## Quick start
+Make programming quantum computers even easier with Qiskit Code Assistant, a generative AI code assistant powered by IBM **watson<span style="color:blue;">x</span>**. Trained with approximately 370 million text tokens from Qiskit SDK v1.x, years of Qiskit code examples, and IBM Quantum features, Qiskit Code Assistant accelerates your quantum development workflow by offering LLM-generated suggestions based on [IBM Granite 8B Code](https://www.ibm.com/products/watsonx-ai/foundation-models) that incorporate the latest features and functionalities from IBM. And soon, Qiskit Code Assistant will be able to be used alongside Qiskit patterns building blocks for reusable code and workflow simplification.
 
-1. Open the Extensions sidebar panel in VS Code. <kbd>Ctrl</kbd> + <kbd>Shift (⇧)</kbd> + <kbd>X</kbd> on Windows or <kbd>Command (⌘)</kbd> + <kbd>Shift (⇧)</kbd> + <kbd>X</kbd> on Mac (see [Install an extension](https://code.visualstudio.com/docs/editor/extension-gallery#_install-an-extension) for more details).
-2. Search for `qiskit-extension`.
-3. Click Install.
-4. Click Reload.
+Qiskit is the open-source quantum SDK preferred by 69% of respondents to the Unitary Fund's Open Source Software Survey, with nearly 600,000 registered users to date. Now you can get the performance and stability of the Qiskit SDK with the added efficiency of Qiskit Code Assistant to streamline your workflow and optimize your quantum computing programs.
 
-Now the Qiskit VSCode Extension will be available when coding using OpenQASM and Python (Qiskit) files.
+## Features
 
-### To install the extension from a local file
+* Accelerate Qiskit code generation by leveraging generative AI based on the `granite-8b-qiskit` model
+* Use abstract and specific prompts to generate recommendations
+* Manage code changes by reviewing, accepting, and rejecting suggestions
+* Supports Python code files
 
-Download the [latest release](https://github.com/Qiskit/qiskit-vscode/releases) of the extension from and follow the [instructions to install it](https://code.visualstudio.com/docs/editor/extension-gallery#_install-from-a-vsix)
+## Learn the best ways to use Qiskit and IBM Quantum Platform services
 
-### Your first program using Qiskit
+Improve your Qiskit code by reviewing, browsing, and accepting model-generated code suggestions.
 
-We encourage you to visit [https://qiskit.org/](https://qiskit.org/) to explore the different examples, documentation and tutorials.
+### Use abstract prompts to get started
 
-## Feature details
+Provide abstract prompts to Qiskit Code Assistant using `#comments`. Type `Ctrl+.` following a `#comment` to obtain syntactically correct and contextually relevant content (up to 60 tokens) suited to your desired task.
 
--   Support [Qiskit Terra](https://github.com/Qiskit/qiskit-terra/) version v0.6.X and v0.7.X.
--   Check necessary dependencies to execute OpenQASM or Qiskit files.
--   Run Qiskit source code in a backend.
--   Run OpenQASM source code in a local backend.
--   Backends (local and remote ones) discovery.
--   Job's execution management.
--   User's credit management.
--   OpenQASM error detection.
--   OpenQASM autocompletion.
--   Qiskit static analysis.
--   Provide pre-defined code snippets for code using Qiskit Terra and Qiskit Aqua
+![Example prompt to define a bell circuit and run it](docs/gifs/define-bell-circ.gif)
 
-## Useful commands
+### Use specific prompts for streamlined code completion
 
-The commands below are supported at the Command Palette (<kbd>Command (⌘)</kbd> + <kbd>Shift (⇧)</kbd> + <kbd>P</kbd> on macOS and <kbd>Ctrl</kbd> + <kbd>Shift (⇧)</kbd> + <kbd>P</kbd> on Windows/Linux).
+Use `Ctrl+.` with code to obtain specific model-generated suggestions for code completion based on semantic analysis of source code. Review code recommendations before accepting.
 
-| Command                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                                                                |
-| ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `qiskit-vscode: Check Qiskit VSCode Extension dependencies`                                 |  Check that the required dependencies are properly installed.                                                                                                                                                                                                                                                                                                                                                              |
-| `qiskit-vscode: Enter your QConfig`                                                         | Allow the user to configure her Qiskit credentials. Please, note that you will need to run this command prior to use `Get the status of IBM Q devices`, `qiskit-vscode: Discover remote backends available`, `qiskit-vscode: List the user's pending jobs`, `qiskit-vscode: List the user's executed jobs`, `qiskit-vscode: Get the queue status` and `qiskit-vscode: Get the user's available credits` or they will fail. |
-| `qiskit-vscode: Run this Q code`                                                            | Executes the code at the current editor tab (Qiskit or OpenQASM).                                                                                                                                                                                                                                                                                                                                                          |
-| `qiskit-vscode: Discover local backends available`                                          | The local backend available will be presented in a new tab.                                                                                                                                                                                                                                                                                                                                                                |
-| `qiskit-vscode: Get the status of IBM Q devices`                                            | The status for remote IBM Q devices available for the current user will be presented in a new tab. This information mixes also data from `Discover remote backends available` and `qiskit-vscode: Get the queue status`.                                                                                                                                                                                                   |
-| `qiskit-vscode: Discover remote backends available`                                         | The remote backends available for the current user will be presented in a new tab.                                                                                                                                                                                                                                                                                                                                         |
-| `qiskit-vscode: List the user's pending jobs`                                               | A listing of the pending jobs to be executed will be presented in a new tab.                                                                                                                                                                                                                                                                                                                                               |
-| `qiskit-vscode: List the user's executed jobs`                                              | A listing of the previously executed jobs will be presented in a new tab.                                                                                                                                                                                                                                                                                                                                                  |
-| `qiskit-vscode: Get the queue status`                                                       | The current status of the queues will be presented in a new tab.                                                                                                                                                                                                                                                                                                                                                           |
-| `qiskit-vscode: Get the user's available credits`                                           | The current available credits of the user will be presented in a new tab.                                                                                                                                                                                                                                                                                                                                                  |
-| `qiskit-vscode: Activate the visualizations for the execution of code`                      | Activate the automatic visualization of results achieved during the execution of code using the extension.                                                                                                                                                                                                                                                                                                                 |
-| `qiskit-vscode: Deactivate the visualizations for the execution of code`                    | Deactivate the automatic visualization of results achieved during the execution of code using the extension (giving the results in text mode).                                                                                                                                                                                                                                                                             |
-| `qiskit-vscode: Activate the display of information related to the boot of the extension`   | Activate the visualization (bubble messages) of information related to the boot of the extension. This information includes the version of dependencies installed, the different checks performed at the activation of the extension, etc.                                                                                                                                                                                 |
-| `qiskit-vscode: Deactivate the display of information related to the boot of the extension` | Deactivate the visualization (bubble messages) of information related to the boot of the extension. It does not deactivate the display of error messages related to dependencies and other checks performed at the boot of the extension                                                                                                                                                                                   |
+![Example prompt for quasi-dists](docs/gifs/coupling-map-svc.gif)
 
-## Settings Options
+## Get started
 
-This extension contributes the following variables to the settings:
+### Obtain your IBM Quantum Platform API token
 
--   `qiskit-vscode.ibmq.token`: Qiskit & Q Experience API Token.
--   `qiskit-vscode.ibmq.hub`: User's Qiskit & Q Experience hub.
--   `qiskit-vscode.ibmq.group`: User's Qiskit & Q Experience group.
--   `qiskit-vscode.ibmq.project`: User's Qiskit & Q Experience project.
--   `qiskit-vscode.config.visualizationsFlag`: Flag to control if visualizations are displayed or not for code executions.
--   `qiskit-vscode.config.displayBootInfo`: Display info about the extension boot process.
+Open the [IBM Quantum Platform](https://quantum.ibm.com/) in your browser and log in with your IBM Quantum account. After logging in, an IBM Quantum API token is displayed on the upper right side of the web page.
 
-Other variables are contributed, but it is not recommended to change them.
+### Set the API token in VS Code
 
-## Authors and citation
+Press `Cmd/Ctrl+Shift+P` to open the VS Code command palette.
 
-Qiskit VSCode Extension was initially authored (alphabetically) by Juan Cruz-Benito, Yeray Darias, Ismael Faro, Juan Gómez, and Paco Martín. It continues growing with the help and work of [many people](https://github.com/Qiskit/qiskit-vscode/graphs/contributors) who contribute to the project at different levels.
+Type `Qiskit Code Assistant: Set IBM Quantum API token`.
 
-If you use Qiskit, please cite as per the included [BibTeX file](https://github.com/Qiskit/qiskit/blob/master/Qiskit.bib).
+Paste your IBM Quantum API token in the pop-up dialog and press `Enter`.
 
-## License
+### Accept the model disclaimer/EULA
 
-This project uses the [Apache License Version 2.0 software license](https://www.apache.org/licenses/LICENSE-2.0).
+By default, the model you will use is `granite-8b-qiskit`. It will appear in the Model Picker in the bottom of the status bar.
+
+The first time you use the `granite-8b-qiskit` model, a model disclaimer/EULA will appear with information about the model and links to documentation and the model's license. It will also list some restrictions that you should be aware of when using the model, including a restriction against using proprietary code. Clicking `Accept` will enable the new model during code generation.
+
+### Generate code suggestions
+
+Once you've accepted the model disclaimer/EULA, you can open a new file and start typing. If you type `Ctrl+.`, some faded text should appear with model-generated suggestions.
+
+### Review and accept/reject code suggestions
+
+Type `Tab` to accept the model-generated suggestion, or type `Esc` to cancel/reject the model-generated suggestion.
+
+## Keyboard shortcuts
+
+Customize keyboard shortcuts in VS Code using the `Keyboard Shortcuts` editor. To open the editor, visit the menu under **Code** > **Settings** > **Keyboard Shortcuts** or use the **Preferences: Open Keyboard Shortcuts** command (`Cmd+K` + `Cmd+S`). Add or modify keybindings to map keyboard shortcuts to desired Qiskit Code Assistant commands using the suggestions provided below.
+
+| **Command**                | **Keybinding**                    | **Description**           |
+|:---------------------------|:----------------------------------------|:--------------------------|
+| `qiskit-vscode.accept-suggestion` | `Tab` | Accept the model-generated suggestion |
+| `qiskit-vscode.handle-get-completion` | `Ctrl+.`                | Generate suggestions |
+
+## Terms of use
+
+* Terms of use: [https://quantum.ibm.com/terms](https://quantum.ibm.com/terms)
+* Privacy policy: [https://quantum.ibm.com/terms/privacy](https://quantum.ibm.com/terms/privacy)
+* Cloud Services Agreement [https://www.ibm.com/support/customer/csol/terms/?id=Z126-6304&cc=us&lc=en](https://www.ibm.com/support/customer/csol/terms/?id=Z126-6304&cc=us&lc=en)
+* IBM Cloud Service Description [https://www.ibm.com/support/customer/csol/terms/?id=i126-6605&lc=en](https://www.ibm.com/support/customer/csol/terms/?id=i126-6605&lc=en)
+* EULA acceptance required before starting to use the model

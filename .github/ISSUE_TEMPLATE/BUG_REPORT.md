@@ -1,27 +1,31 @@
 ---
-name: 🐛 Bug report
-about: Create a report to help us improve 🤔.
+name: Bug report
+about: Create a report to help us improve
+title: BUG
+labels: bug
+assignees: ''
 ---
 
-<!-- ⚠️ If you do not respect this template, your issue will be closed -->
-<!-- ⚠️ Make sure to browse the opened and closed issues -->
+**Describe the bug**
+A clear and concise description of what the bug is.
 
-<!-- ⚠️ Before writing your issue make sure you are using: -->
-<!-- VSCode 1.25.x -->
-<!-- qiskit-terra ^0.6.x -->
-<!-- The latest version of Qiskit VSCode Extension -->
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to '...'
+2. Click on '...'
+3. Scroll down to '...'
+4. See error
 
-### Informations
+**Expected behavior**
+A clear and concise description of what you expected to happen.
 
--   **VSCode version**:
--   **Qiskit [Terra / Aqua / other] version**:
--   **Qiskit VSCode Extension version**:
--   **Operating system**:
+**Screenshots**
+If applicable, add screenshots to help explain your problem.
 
-### What is the current behavior?
+**Enviroment (please complete the following information):**
+ - OS: [e.g. macOS]
+ - Browser [e.g. Chrome, Safari]
+ - Version [e.g. 22]
 
-### Steps to reproduce the problem
-
-### What is the expected behavior?
-
-### Suggested solutions
+**Additional context**
+Add any other context about the problem here.
