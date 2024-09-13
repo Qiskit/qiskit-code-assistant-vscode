@@ -1,41 +1,113 @@
 {
-    "name": "qiskit-vscode",
-    "description": "Simplifying Qiskit to make developing quantum circuits and applications faster",
-    "author": "Qiskit",
-    "license": "Apache-2.0",
-    "licenses": [
-        {
-            "type": "Apache-2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0"
-        }
-    ],
-    "publisher": "qiskit",
-    "version": "0.5.5",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Qiskit/qiskit-vscode"
-    },
-    "scripts": {
-        "postinstall": "npm-run-all -s install:**",
-        "install:client": "cd client && npm install && cd ..",
-        "install:server": "cd server && npm install && cd ..",
-        "clean": "npm-run-all -p clean:server clean:client",
-        "clean:server": "cd server && npm run clean && cd ..",
-        "clean:client": "cd client && npm run clean && cd ..",
-        "compile": "npm-run-all -s compile:server compile:client",
-        "compile:client": "cd client && npm run compile && cd ..",
-        "compile:server": "cd server && npm-run-all -s installServer compile && cd ..",
-        "watch:client": "tsc -w -p client/tsconfig.json",
-        "watch:server": "cd server && npm run installServer && cd .. && tsc -w -p server/tsconfig.json",
-        "test": "npm-run-all -s test:server test:client",
-        "test:server": "cd server && npm test && cd ..",
-        "test:client": "cd client && npm test && cd ..",
-        "package": "cd client && vsce package && cd .."
-    },
-    "dependencies": {},
-    "devDependencies": {
-        "@types/node": "^7.10.6",
-        "npm-run-all": "^4.1.5",
-        "typescript": "^3.4.5"
+  "publisher": "Qiskit",
+  "name": "qiskit-vscode",
+  "version": "0.6.5",
+  "license": "Apache-2.0",
+  "displayName": "Qiskit Code Assistant",
+  "description": "Write and optimize Qiskit code with a generative AI code assistant powered by IBM watsonx",
+  "author": "Qiskit",
+  "icon": "/assets/qiskit-vscode.png",
+  "galleryBanner": {
+    "color": "#100f11",
+    "theme": "dark"
+  },
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "engines": {
+    "vscode": "^1.88.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets",
+    "Other"
+  ],
+  "keywords": [
+    "python",
+    "qiskit",
+    "keybindings",
+    "snippet"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run clear-out && npm run build-base",
+    "build-base": "esbuild ./src/extension.ts --bundle --outfile=./out/extension.js --external:vscode --format=cjs --platform=node",
+    "build": "npm run build-base -- --sourcemap",
+    "build-watch": "npm run build -- --watch",
+    "vsce:package": "vsce package --no-rewrite-relative-links",
+    "clear-out": "rimraf ./out"
+  },
+  "devDependencies": {
+    "@types/debounce": "^1.2.1",
+    "@types/node": "^20.12.7",
+    "@types/rimraf": "^4.0.5",
+    "@types/semver": "^7.3.4",
+    "@types/tmp": "^0.2.0",
+    "@types/vscode": "^1.88.0",
+    "@vscode/vsce": "^2.25.0",
+    "esbuild": "^0.20.2",
+    "rimraf": "^5.0.5"
+  },
+  "dependencies": {
+    "debounce": "^2.0.0",
+    "semver": "^7.3.2",
+    "tmp": "^0.2.1"
+  },
+  "capabilities": {
+    "virtualWorkspaces": true,
+    "untrustedWorkspaces": {
+      "supported": true
     }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "qiskit-vscode.api-token",
+        "title": "Qiskit Code Assistant: Set IBM Quantum API token"
+      }
+    ],
+    "configuration": {
+      "title": "Qiskit Code Assistant",
+      "properties": {
+        "qiskitCodeAssistant.url": {
+          "type": "string",
+          "default": "https://qiskit-code-assistant.quantum.ibm.com",
+          "format": "url",
+          "description": "URL to the Qiskit Code Assistant Service API"
+        }
+      }
+    },
+    "keybindings": [
+      {
+        "key": "tab",
+        "command": "qiskit-vscode.accept-suggestion",
+        "when": "inlineSuggestionVisible"
+      },
+      {
+        "key": "ctrl+z",
+        "mac": "cmd+z",
+        "command": "qiskit-vscode.escape-inline-suggestion",
+        "when": "qiskit-vscode.snippet-suggestion:enabled && qiskit-vscode.in-inline-suggestions || qiskit-vscode.inline-suggestion:enabled && qiskit-vscode.in-inline-suggestions"
+      },
+      {
+        "key": "alt+]",
+        "command": "qiskit-vscode.next-inline-suggestion",
+        "when": "qiskit-vscode.snippet-suggestion:enabled && qiskit-vscode.in-inline-suggestions || qiskit-vscode.inline-suggestion:enabled && qiskit-vscode.in-inline-suggestions"
+      },
+      {
+        "key": "alt+[",
+        "command": "qiskit-vscode.prev-inline-suggestion",
+        "when": "qiskit-vscode.snippet-suggestion:enabled && qiskit-vscode.in-inline-suggestions || qiskit-vscode.inline-suggestion:enabled && qiskit-vscode.in-inline-suggestions"
+      },
+      {
+        "key": "ctrl+.",
+        "command": "qiskit-vscode.handle-get-completion"
+      }
+    ]
+  }
 }
