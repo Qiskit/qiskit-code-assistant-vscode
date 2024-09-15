@@ -1,6 +1,10 @@
-# Qiskit Code Assistant
+# Qiskit Code Assistant (Beta)
 
 Write and optimize Qiskit code with a generative AI code assistant powered by IBM **watson<span style="color:blue;">x</span>**.
+
+> This experimental feature is only available, as of today, to IBM Quantum premium users.
+  If you are not part IBM Quantum premium plan, you can still install this extension; however you will not be able to use the assistant.
+  The Qiskit Code Assistant is a beta release, subject to change.
 
 **************
 
@@ -74,8 +78,8 @@ Customize keyboard shortcuts in VS Code using the `Keyboard Shortcuts` editor. T
 
 ## Terms of use
 
+* [End User License Agreement (EULA)](https://github.com/Qiskit/qiskit-code-assistant-vscode/blob/main/docs/EULA.md) acceptance required before starting to use the model
 * Terms of use: [https://quantum.ibm.com/terms](https://quantum.ibm.com/terms)
 * Privacy policy: [https://quantum.ibm.com/terms/privacy](https://quantum.ibm.com/terms/privacy)
 * Cloud Services Agreement [https://www.ibm.com/support/customer/csol/terms/?id=Z126-6304&cc=us&lc=en](https://www.ibm.com/support/customer/csol/terms/?id=Z126-6304&cc=us&lc=en)
 * IBM Cloud Service Description [https://www.ibm.com/support/customer/csol/terms/?id=i126-6605&lc=en](https://www.ibm.com/support/customer/csol/terms/?id=i126-6605&lc=en)
-* [End User License Agreement (EULA)](https://github.com/Qiskit/qiskit-code-assistant-vscode/blob/main/docs/EULA.md) acceptance required before starting to use the model
