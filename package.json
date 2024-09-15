@@ -1,9 +1,9 @@
 {
   "publisher": "Qiskit",
   "name": "qiskit-vscode",
-  "version": "0.6.5",
+  "version": "0.6.9",
   "license": "Apache-2.0",
-  "displayName": "Qiskit Code Assistant",
+  "displayName": "Qiskit Code Assistant (Beta)",
   "description": "Write and optimize Qiskit code with a generative AI code assistant powered by IBM watsonx",
   "author": "Qiskit",
   "icon": "/assets/qiskit-vscode.png",
@@ -56,7 +56,8 @@
   "dependencies": {
     "debounce": "^2.0.0",
     "semver": "^7.3.2",
-    "tmp": "^0.2.1"
+    "tmp": "^0.2.1",
+    "vsce": "^2.15.0"
   },
   "capabilities": {
     "virtualWorkspaces": true,
