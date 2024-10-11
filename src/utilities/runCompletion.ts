@@ -8,7 +8,7 @@ import { getExtensionContext } from "../globals/extensionContext";
 import { currentModel } from "../commands/selectModel";
 import { sleep } from "./utils";
 import acceptDisclaimer from "../commands/acceptDisclaimer";
-import { postModelPrompt, postPromptAcceptance } from "../services/common";
+import { getServiceApi } from "../services/common";
 import { requiresToken } from "./guards";
 
 let cancelCompletion: AbortController | null = null;
@@ -77,7 +77,8 @@ export default async function runCompletion(
 
     let responseData = null;
     try {
-      responseData = await postModelPrompt(currentModel._id, inputs);
+      const apiService = await getServiceApi();
+      responseData = await apiService.postModelPrompt(currentModel._id, inputs);
     } catch (err) {
       const msg = (err as Error).message || "Error sending the prompt";
       window.showInformationMessage(msg);
@@ -151,7 +152,8 @@ export async function updateUserAcceptance() {
   }
 
   if (promptId) {
-    await postPromptAcceptance(promptId, true);
+    const apiService = await getServiceApi();
+    await apiService.postPromptAcceptance(promptId, true);
     // reset prompt_id
     promptId = undefined
   }

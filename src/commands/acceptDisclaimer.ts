@@ -1,7 +1,7 @@
 import vscode from "vscode";
 
 import { getExtensionContext } from "../globals/extensionContext";
-import { getModelDisclaimer, postDisclaimerAcceptance } from "../services/common";
+import { getServiceApi } from "../services/common";
 import { setDefaultStatus, setLoadingStatus } from "../statusBar/statusBar";
 import { modelDisclaimerHTML } from "../utilities/disclaimer";
 import { setAsCurrentModel } from "./selectModel";
@@ -34,10 +34,11 @@ async function handler(model: ModelInfo): Promise<void> {
 
   if (!model || model.disclaimer?.accepted) return;
 
+  const apiService = await getServiceApi();
   let disclaimer = null;
   try {
-    setLoadingStatus()
-    disclaimer = await getModelDisclaimer(model._id);
+    setLoadingStatus();
+    disclaimer = await apiService.getModelDisclaimer(model._id);
   } catch (err) {
     vscode.window.showErrorMessage((err as Error).message);
     return;
@@ -56,7 +57,7 @@ async function handler(model: ModelInfo): Promise<void> {
   disclaimerState.panel.webview.onDidReceiveMessage(async (m) => {
     switch (m.command) {
       case "accept":
-        await postDisclaimerAcceptance(model._id, disclaimer._id, true);
+        await apiService.postDisclaimerAcceptance(model._id, disclaimer._id, true);
         disclaimerState.acceptFlag = true;
         model.disclaimer!.accepted = true;
         setAsCurrentModel(model)
