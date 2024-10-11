@@ -14,10 +14,15 @@ export async function getServiceApi(): Promise<ServiceAPI> {
     try {
       const response = await fetch(SERVICE_URL, {"method": "GET"});
 
-      if (response.ok && response.headers.get("content-type") == "application/json") {
+      if (!response.ok) {
+        console.error(`Service API ${SERVICE_URL}: ${response.statusText}`)
+        throw Error("Service API failed. Possible invalid service request or service is currently unavailable.")
+      }
+
+      if (response.headers.get("content-type") == "application/json") {
         const rootResponse = (await response.json()) as ServiceInfo
         const qcaService = new CodeAssistantService();
-        if (rootResponse["name"] == qcaService.name) {
+        if (rootResponse?.name == qcaService.name) {
           activeService = qcaService
         }
       }
@@ -26,8 +31,8 @@ export async function getServiceApi(): Promise<ServiceAPI> {
         activeService = new OpenAIService();
       }
     } catch (err) {
-      console.error(`Fetch failed for ${SERVICE_URL}: ${err}`)
-      throw Error("Fetch failed. Possible invalid service request or service is currently unavailable.")
+      console.error(`Service API ${SERVICE_URL}: ${err}`)
+      throw Error("Service API failed. Possible invalid service request or service is currently unavailable.")
     }
   }
 
