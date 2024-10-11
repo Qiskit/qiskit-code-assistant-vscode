@@ -49,3 +49,10 @@ export function normalizeURL(url: string): string {
   }
   return url;
 }
+
+export function normalizeURLPath(urlPath: string): string {
+  if (urlPath && urlPath.charAt(0) != "/") {
+    return `/${urlPath}`
+  }
+  return urlPath;
+}

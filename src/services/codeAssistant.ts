@@ -20,7 +20,7 @@ export default class CodeAssistantService extends ServiceAPI {
 
   async getModels(): Promise<ModelInfo[]> {
     // GET /models
-    const endpoint = `${this.getServiceBaseUrl()}/models`;
+    const endpoint = "/models";
     const apiToken = await this.getApiToken()
     const options = {
       'method': 'GET',
@@ -28,21 +28,15 @@ export default class CodeAssistantService extends ServiceAPI {
     };
   
     const response = await this.runFetch(endpoint, options);
-  
-    let modelsData = null;
-    if (response.ok) {
-      const resp = (await response.json()) as ModelsList;
-      modelsData = resp['models'];
-    } else {
-      console.error("Error getting models", response.status, response.statusText);
-      throw Error(await this.getErrorMessage(response));
-    }
+    const jsonResponse = (await response.json()) as ModelsList;
+    const modelsData = jsonResponse['models'];
+
     return modelsData;
   }
 
   async getModel(modelId: string): Promise<ModelInfo> {
     // GET /model/{modelId}
-    const endpoint = `${this.getServiceBaseUrl()}/model/${modelId}`;
+    const endpoint = `/model/${modelId}`;
     const apiToken = await this.getApiToken()
     const options = {
       'method': 'GET',
@@ -50,20 +44,14 @@ export default class CodeAssistantService extends ServiceAPI {
     };
   
     const response = await this.runFetch(endpoint, options);
-  
-    let modelData = null;
-    if (response.ok) {
-      modelData = await response.json();
-    } else {
-      console.error("Error getting model", response.status, response.statusText);
-      throw Error(await this.getErrorMessage(response));
-    }
-    return modelData as ModelInfo;
+    const modelData = (await response.json()) as ModelInfo;
+
+    return modelData;
   }
   
   async getModelDisclaimer(modelId: string): Promise<ModelDisclaimer> {
     // GET /model/{modelId}/disclaimer
-    const endpoint = `${this.getServiceBaseUrl()}/model/${modelId}/disclaimer`;
+    const endpoint = `/model/${modelId}/disclaimer`;
     const apiToken = await this.getApiToken()
     const options = {
       'method': 'GET',
@@ -71,14 +59,9 @@ export default class CodeAssistantService extends ServiceAPI {
     };
   
     const response = await this.runFetch(endpoint, options);
-  
-    if (response.ok) {
-      const disclaimerData = await response.json() as ModelDisclaimer;
-      return disclaimerData;
-    } else {
-      console.error("Error getting disclaimer", response.status, response.statusText);
-      throw Error(await this.getErrorMessage(response));
-    }
+    const disclaimerData = (await response.json()) as ModelDisclaimer;
+
+    return disclaimerData;
   }
 
   async postDisclaimerAcceptance(
@@ -87,7 +70,7 @@ export default class CodeAssistantService extends ServiceAPI {
     accepted: boolean
   ): Promise<ResponseMessage> {
     // POST /disclaimer/{disclaimerId}/acceptance
-    const endpoint = `${this.getServiceBaseUrl()}/disclaimer/${disclaimerId}/acceptance`;
+    const endpoint = `/disclaimer/${disclaimerId}/acceptance`;
     const apiToken = await this.getApiToken()
     const options = {
       'method': 'POST',
@@ -99,15 +82,9 @@ export default class CodeAssistantService extends ServiceAPI {
     };
   
     const response = await this.runFetch(endpoint, options);
-  
-    let disclaimerData = null;
-    if (response.ok) {
-      disclaimerData = await response.json();
-    } else {
-      console.error("Error accepting disclaimer", response.status, response.statusText);
-      throw Error(await this.getErrorMessage(response));
-    }
-    return disclaimerData as ResponseMessage;
+    const disclaimerData = (await response.json()) as ResponseMessage;
+
+    return disclaimerData;
   }
 
   async postModelPrompt(
@@ -115,7 +92,7 @@ export default class CodeAssistantService extends ServiceAPI {
     input: string
   ): Promise<ModelPromptResponse> {
     // POST /model/{modelId}/prompt
-    const endpoint = `${this.getServiceBaseUrl()}/model/${modelId}/prompt`;
+    const endpoint = `/model/${modelId}/prompt`;
     const apiToken = await this.getApiToken()
     const options = {
       'method': 'POST',
@@ -126,15 +103,9 @@ export default class CodeAssistantService extends ServiceAPI {
     };
   
     const response = await this.runFetch(endpoint, options);
-  
-    let promptResponse = null;
-    if (response.ok) {
-      promptResponse = await response.json();
-    } else {
-      console.error("Error sending prompt", response.status, response.statusText);
-      throw Error(await this.getErrorMessage(response));
-    }
-    return promptResponse as ModelPromptResponse;
+    const promptResponse = (await response.json()) as ModelPromptResponse;
+
+    return promptResponse;
   }
 
   async postPromptAcceptance(
@@ -142,7 +113,7 @@ export default class CodeAssistantService extends ServiceAPI {
     accepted: boolean
   ): Promise<ResponseMessage> {
     // POST /prompt/{promptId}/acceptance
-    const endpoint = `${this.getServiceBaseUrl()}/prompt/${promptId}/acceptance`;
+    const endpoint = `/prompt/${promptId}/acceptance`;
     const apiToken = await this.getApiToken()
     const options = {
       'method': 'POST',
@@ -153,14 +124,8 @@ export default class CodeAssistantService extends ServiceAPI {
     };
   
     const response = await this.runFetch(endpoint, options);
-  
-    let disclaimerData = null;
-    if (response.ok) {
-      disclaimerData = await response.json();
-    } else {
-      console.error("Error accepting prompt", response.status, response.statusText);
-      throw Error(await this.getErrorMessage(response));
-    }
-    return disclaimerData as ResponseMessage;
+    const disclaimerData = (await response.json()) as ResponseMessage;
+
+    return disclaimerData;
   }
 }

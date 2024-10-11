@@ -1,6 +1,6 @@
 import vscode from "vscode";
 
-import { normalizeURL } from "../utilities/utils";
+import { normalizeURL, normalizeURLPath } from "../utilities/utils";
 
 const config = vscode.workspace.getConfiguration("qiskitCodeAssistant")
 const SERVICE_URL = config.get<string>("url") as string;
@@ -59,14 +59,23 @@ export default class ServiceAPI {
     return headers;
   }
 
-  async runFetch(endpoint: string | URL | Request, options: RequestInit) {
+  async runFetch(urlPath: string, options: RequestInit) {
+    let response: Response;
+
     try {
-      const response = await fetch(endpoint, options);
-      return response;
+      const endpoint = `${this.getServiceBaseUrl()}${normalizeURLPath(urlPath)}`;
+      response = await fetch(endpoint, options);
     } catch (err) {
-      console.error(`Fetch failed for ${endpoint}: ${(err as Error).message}`);
+      console.error(`Fetch failed for ${urlPath}: ${(err as Error).message}`);
       throw Error("Fetch failed. Possible invalid service request or service is currently unavailable.");
     }
+
+    if (!response.ok) {
+      console.error(`Error response for ${urlPath}:`, response.status, response.statusText);
+      throw Error(await this.getErrorMessage(response));
+    }
+
+    return response;
   }
 
   async getModels(): Promise<ModelInfo[]> {
