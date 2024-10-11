@@ -1,7 +1,7 @@
 import vscode from "vscode";
 
 import { getExtensionContext } from "../globals/extensionContext";
-import { getModelDisclaimer, postDisclaimerAcceptance } from "../services/codeAssistant";
+import { getModelDisclaimer, postDisclaimerAcceptance } from "../services/common";
 import { setDefaultStatus, setLoadingStatus } from "../statusBar/statusBar";
 import { modelDisclaimerHTML } from "../utilities/disclaimer";
 import { setAsCurrentModel } from "./selectModel";

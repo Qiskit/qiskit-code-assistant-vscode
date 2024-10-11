@@ -1,7 +1,7 @@
 import vscode, { ExtensionContext } from "vscode";
 
 import { getExtensionContext } from "../globals/extensionContext";
-import { getModel, getModels } from "../services/codeAssistant";
+import { getModel, getModels, isQiskitCodeAssistantService } from "../services/common";
 import { setDefaultStatus, setLoadingStatus } from "../statusBar/statusBar";
 import { requiresToken } from "../utilities/guards";
 
@@ -20,7 +20,9 @@ export function setAsCurrentModel(model: ModelInfo): void {
 export async function initModels(context: ExtensionContext | null): Promise<void> {
   if (!context) return;
 
-  await requiresToken(context)
+  if (await isQiskitCodeAssistantService()) {
+    await requiresToken(context)
+  }
 
   if (!modelsList || modelsList.length == 0) {
     try {
@@ -35,8 +37,7 @@ export async function initModels(context: ExtensionContext | null): Promise<void
   }
 
   if (modelsList?.length == 1) {
-    const model = await getModel(modelsList[0]._id);
-    setAsCurrentModel(model);
+    setAsCurrentModel(modelsList[0]);
   }
 
   setDefaultStatus();

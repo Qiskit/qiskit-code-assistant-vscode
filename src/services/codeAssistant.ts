@@ -7,6 +7,8 @@ const config = vscode.workspace.getConfiguration("qiskitCodeAssistant")
 const SERVICE_URL = config.get<string>("url") as string;
 const AUTH_ERROR_CODES = [401, 403];
 
+export const SERVICE_NAME = "qiskit-code-assistant"
+
 async function getErrorMessage(response: Response) {
   let msg = "An unknown error has occurred";
   if (!response.ok) {

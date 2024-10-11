@@ -5,6 +5,13 @@ interface CommandModule {
   handler: (...args: any[]) => any
 }
 
+interface ServiceInfo {
+  name: string,
+  openapi: string,
+  docs: string,
+  message?: string
+}
+
 interface ModelInfo {
   _id: string,
   delimiting_tokens?: ModelSpecialTokens,

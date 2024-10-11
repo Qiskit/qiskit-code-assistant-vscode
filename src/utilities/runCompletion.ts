@@ -8,7 +8,7 @@ import { getExtensionContext } from "../globals/extensionContext";
 import { currentModel } from "../commands/selectModel";
 import { sleep } from "./utils";
 import acceptDisclaimer from "../commands/acceptDisclaimer";
-import { postModelPrompt, postPromptAcceptance } from "../services/codeAssistant";
+import { postModelPrompt, postPromptAcceptance } from "../services/common";
 import { requiresToken } from "./guards";
 
 let cancelCompletion: AbortController | null = null;
