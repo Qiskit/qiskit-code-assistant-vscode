@@ -1,12 +1,12 @@
-# IBM Qiskit Code Assistant (Beta) Software End User License Agreement
+# Qiskit Code Assistant (Beta) Software End User License Agreement
 
-**PLEASE READ CAREFULLY** This IBM Qiskit Code Assistant (Beta) Software End User License Agreement ("EULA") is between the individual end user receiving and utilizing software and the associated cloud service under this EULA (“You”) and International Business Machines Corporation, a New York Corporation ("IBM"), and consists of (a) the terms of this EULA, and (b) the IBM Privacy Policies (defined below) (collectively, this “Agreement”). You and IBM may be referred to herein individually as a “Party”, or collectively as the “Parties.”
+**PLEASE READ CAREFULLY** This Qiskit Code Assistant (Beta) Software End User License Agreement ("EULA") is between the individual end user receiving and utilizing software and the associated cloud service under this EULA (“You”) and International Business Machines Corporation, a New York Corporation ("IBM"), and consists of (a) the terms of this EULA, and (b) the IBM Privacy Policies (defined below) (collectively, this “Agreement”). You and IBM may be referred to herein individually as a “Party”, or collectively as the “Parties.”
 
 By clicking to accept this Agreement via an IBM webpage or by otherwise accepting this Agreement, You (i) accept the terms of this Agreement, as may be amended from time to time at IBM's sole discretion, and (ii) understand that You are entering a binding legal agreement.
 
 1. General.
 
-    a. This Agreement and Your license (described below) governs Your use of the IBM software program (the "Program") that permits and facilitates delivery and use of associated IBM service, collectively referred to as IBM Qiskit Code Assistant (Beta) (collectively, the “Service”) as further set forth herein.  The Service is  a ”beta” service intended to help users leverage generative AI to write code using Qiskit, is of an experimental/exploratory nature, and is provided solely for research, education, evaluation, testing and feedback purposes (the “Authorized Use”).  IBM will provide You with a copy of the Program in object code format only, and use of the Service including the Program is only for the Authorized Use.
+    a. This Agreement and Your license (described below) governs Your use of the IBM software program (the "Program") that permits and facilitates delivery and use of associated IBM service, collectively referred to as Qiskit Code Assistant (Beta) (collectively, the “Service”) as further set forth herein.  The Service is  a ”beta” service intended to help users leverage generative AI to write code using Qiskit, is of an experimental/exploratory nature, and is provided solely for research, education, evaluation, testing and feedback purposes (the “Authorized Use”).  IBM will provide You with a copy of the Program in object code format only, and use of the Service including the Program is only for the Authorized Use.
 
     b. You may withdraw from this EULA at any time by deleting the Program and ceasing to use the Service.
 
@@ -36,7 +36,7 @@ By clicking to accept this Agreement via an IBM webpage or by otherwise acceptin
 
     k. You may choose to provide feedback to IBM at your option. If you do provide feedback to IBM, you grant to IBM a perpetual, fully paid up, irrevocable, nonexclusive, worldwide license to such feedback to use, execute, display, reproduce, make, perform, disclose, prepare derivative works from, and distribute, sell and transmit (internally and externally) such feedback and derivative works therefrom for any purpose. This includes the right of IBM to sublicense these rights to any third-party without consent or accounting by IBM to You. You represent that any feedback provided to IBM is original and that no part of such feedback violates any intellectual property rights of any third party.
 
-    l. Excluding any IBM logos or trademarks, IBM gives you permission to use (limited to the Authorized Use) results generated through your use of the Service, including those displayed on IBM applications, including by screen capture, provided that You cite the source as “created using IBM Qiskit Code Assistant”.
+    l. Excluding any IBM logos or trademarks, IBM gives you permission to use (limited to the Authorized Use) results generated through your use of the Service, including those displayed on IBM applications, including by screen capture, provided that You cite the source as “created using Qiskit Code Assistant”.
 
     m. You grant the rights and permissions to IBM, its aﬃliates, and contractors of either, to use, provide, store, and otherwise process Content solely for the purpose of providing operation of the Service.
 
@@ -96,9 +96,9 @@ By clicking to accept this Agreement via an IBM webpage or by otherwise acceptin
 
 10. Preview Cloud Service
 
-    IBM Qiskit Code Assistant is provided as a preview service.  The Service may not be at a level of performance or compatibility of generally available services and is not fully tested.  Such services are not designed for any type of Content that contains personal data or for use in a production environment.  You are responsible to remove content You wish to retain prior to expiration or termination of the beta service. IBM provides access to the Service without warranties of any kind and is not liable for any damages arising out of Your use of the Service. IBM may change, discontinue, or suspend access to IBM Qiskit Code Assistant at any time and without notice.
+    Qiskit Code Assistant is provided as a preview service.  The Service may not be at a level of performance or compatibility of generally available services and is not fully tested.  Such services are not designed for any type of Content that contains personal data or for use in a production environment.  You are responsible to remove content You wish to retain prior to expiration or termination of the beta service. IBM provides access to the Service without warranties of any kind and is not liable for any damages arising out of Your use of the Service. IBM may change, discontinue, or suspend access to Qiskit Code Assistant at any time and without notice.
 
-    As a preview service, IBM does not commit to full implementation of the requirements included within the IBM Data Security and Privacy Principles for IBM Qiskit Code Assistant.  All features, functions, and documentation for IBM Qiskit Code Assistant are to be treated “as-is” and secured in a commensurate manner during the preview of the products.  As a preview feature, the use of IBM Qiskit Code Assistant is excluded from any service level agreements.
+    As a preview service, IBM does not commit to full implementation of the requirements included within the IBM Data Security and Privacy Principles for Qiskit Code Assistant.  All features, functions, and documentation for Qiskit Code Assistant are to be treated “as-is” and secured in a commensurate manner during the preview of the products.  As a preview feature, the use of Qiskit Code Assistant is excluded from any service level agreements.
 
 11. Miscellaneous
 
