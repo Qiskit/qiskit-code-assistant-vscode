@@ -1,7 +1,9 @@
 import vscode from "vscode";
 import setApiToken from "../commands/setApiToken";
+import { getExtensionContext } from "../globals/extensionContext";
 
-export async function requiresToken(context: vscode.ExtensionContext): Promise<void> {
+export async function requiresToken(): Promise<void> {
+  const context = getExtensionContext();
   const apiToken = await context?.secrets.get("apiToken");
 
   if (!apiToken) {
