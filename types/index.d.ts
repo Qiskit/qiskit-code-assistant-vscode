@@ -23,8 +23,8 @@ interface ModelInfo {
   model_id: string,
   moderations?: ModelModerations,
   parameters?: ModelParameters,
-  prompt_type: number,
-  token_limit: number,
+  prompt_type?: number,
+  token_limit?: number,
 }
 
 interface ModelsList {

@@ -17,9 +17,8 @@ const SERVICE_NAME = "service-api";
 
 export default class ServiceAPI {
   get name() { return SERVICE_NAME; }
-  get requiresToken() { return false; }
 
-  async getErrorMessage(response: Response) {
+  static async getErrorMessage(response: Response) {
     let msg = "An unknown error has occurred";
     if (!response.ok) {
       try {
@@ -37,7 +36,7 @@ export default class ServiceAPI {
     return msg;
   }
 
-  getServiceBaseUrl() {
+  static getServiceBaseUrl() {
     if (SERVICE_URL) {
       return normalizeURL(SERVICE_URL);
     } else {
@@ -45,7 +44,7 @@ export default class ServiceAPI {
     }
   }
 
-  getHeaders(apiToken: string|undefined = undefined) {
+  static getHeaders(apiToken: string|undefined = undefined) {
     let headers: APIHeader = {
       "Accept": "application/json",
       "Content-Type": "application/json",
@@ -59,7 +58,7 @@ export default class ServiceAPI {
     return headers;
   }
 
-  async runFetch(urlPath: string, options: RequestInit) {
+  static async runFetch(urlPath: string, options: RequestInit) {
     let response: Response;
 
     try {
@@ -76,6 +75,10 @@ export default class ServiceAPI {
     }
 
     return response;
+  }
+
+  async checkForToken(): Promise<void> {
+    return Promise.resolve();
   }
 
   async getModels(): Promise<ModelInfo[]> {

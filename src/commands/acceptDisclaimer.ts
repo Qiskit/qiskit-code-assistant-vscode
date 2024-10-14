@@ -5,7 +5,6 @@ import { getServiceApi } from "../services/common";
 import { setDefaultStatus, setLoadingStatus } from "../statusBar/statusBar";
 import { modelDisclaimerHTML } from "../utilities/disclaimer";
 import { setAsCurrentModel } from "./selectModel";
-import { requiresToken } from "../utilities/guards";
 
 export interface DisclaimerState {
   panel: vscode.WebviewPanel | undefined,
@@ -22,8 +21,6 @@ export const disclaimerState: DisclaimerState = {
 async function handler(model: ModelInfo): Promise<void> {
   const context = getExtensionContext();
   if (!context) return;
-
-  await requiresToken(context);
 
   if (disclaimerState.panel) {
     disclaimerState.panel.dispose();

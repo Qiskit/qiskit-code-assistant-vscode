@@ -26,9 +26,7 @@ function modelTransform (model: OpenAIModelInfo): ModelInfo {
     "display_name": model.id,
     "doc_link": "",
     "license": { name: "", link: "" },
-    "model_id": model.id,
-    "prompt_type": 1,
-    "token_limit": 255
+    "model_id": model.id
   }
 }
 
@@ -40,10 +38,10 @@ export default class OpenAIService extends ServiceAPI {
     const endpoint = `/${OPENAI_API_VERSION}/models`;
     const options = {
       "method": "GET",
-      "headers": this.getHeaders()
+      "headers": ServiceAPI.getHeaders()
     };
   
-    const response = await this.runFetch(endpoint, options);
+    const response = await ServiceAPI.runFetch(endpoint, options);
     const jsonResponse = (await response.json()) as OpenAIModelList;
     const modelsData = jsonResponse["data"];
     const updatedModelsData = modelsData.map(modelTransform);
@@ -56,10 +54,10 @@ export default class OpenAIService extends ServiceAPI {
     const endpoint = `/${OPENAI_API_VERSION}/models/${modelId}`;
     const options = {
       "method": "GET",
-      "headers": this.getHeaders(),
+      "headers": ServiceAPI.getHeaders(),
     };
   
-    const response = await this.runFetch(endpoint, options);
+    const response = await ServiceAPI.runFetch(endpoint, options);
     const modelData = (await response.json()) as ModelInfo;
   
     return modelData;
@@ -73,13 +71,14 @@ export default class OpenAIService extends ServiceAPI {
     const endpoint = `/${OPENAI_API_VERSION}/completions`;
     const options = {
       "method": "POST",
+      "headers": ServiceAPI.getHeaders(),
       "body": JSON.stringify({
         model: modelId,
         prompt: input
       })
     };
   
-    const response = await this.runFetch(endpoint, options);
+    const response = await ServiceAPI.runFetch(endpoint, options);
     const jsonResponse = (await response.json()) as OpenAIPromptResponse;
     const responseText = jsonResponse["choices"].map(c => {
       return  { "generated_text": c.text };

@@ -9,7 +9,6 @@ import { currentModel } from "../commands/selectModel";
 import { sleep } from "./utils";
 import acceptDisclaimer from "../commands/acceptDisclaimer";
 import { getServiceApi } from "../services/common";
-import { requiresToken } from "./guards";
 
 let cancelCompletion: AbortController | null = null;
 let promptId: string | undefined = undefined;
@@ -49,8 +48,7 @@ export default async function runCompletion(
 
     if (!context) return;
 
-    // if user hasn't supplied API Token yet, ask user to supply one
-    await requiresToken(context);
+    const apiService = await getServiceApi();
 
     if (!currentModel.disclaimer?.accepted) {
       acceptDisclaimer.handler(currentModel);
@@ -77,7 +75,6 @@ export default async function runCompletion(
 
     let responseData = null;
     try {
-      const apiService = await getServiceApi();
       responseData = await apiService.postModelPrompt(currentModel._id, inputs);
     } catch (err) {
       const msg = (err as Error).message || "Error sending the prompt";

@@ -1,11 +1,15 @@
 import ServiceAPI from "./serviceApi";
 import { getExtensionContext } from "../globals/extensionContext";
+import { requiresToken } from "../utilities/guards";
 
 const SERVICE_NAME = "qiskit-code-assistant";
 
 export default class CodeAssistantService extends ServiceAPI {
   get name() { return SERVICE_NAME; }
-  get requiresToken() { return true; }
+
+  async checkForToken(): Promise<void> {
+    return await requiresToken();
+  }
 
   async getApiToken() {
     const context = getExtensionContext();
@@ -23,13 +27,13 @@ export default class CodeAssistantService extends ServiceAPI {
     const endpoint = "/models";
     const apiToken = await this.getApiToken()
     const options = {
-      'method': 'GET',
-      'headers': this.getHeaders(apiToken)
+      "method": "GET",
+      "headers": ServiceAPI.getHeaders(apiToken)
     };
   
-    const response = await this.runFetch(endpoint, options);
+    const response = await ServiceAPI.runFetch(endpoint, options);
     const jsonResponse = (await response.json()) as ModelsList;
-    const modelsData = jsonResponse['models'];
+    const modelsData = jsonResponse["models"];
 
     return modelsData;
   }
@@ -39,11 +43,11 @@ export default class CodeAssistantService extends ServiceAPI {
     const endpoint = `/model/${modelId}`;
     const apiToken = await this.getApiToken()
     const options = {
-      'method': 'GET',
-      'headers': this.getHeaders(apiToken)
+      "method": "GET",
+      "headers": ServiceAPI.getHeaders(apiToken)
     };
   
-    const response = await this.runFetch(endpoint, options);
+    const response = await ServiceAPI.runFetch(endpoint, options);
     const modelData = (await response.json()) as ModelInfo;
 
     return modelData;
@@ -54,11 +58,11 @@ export default class CodeAssistantService extends ServiceAPI {
     const endpoint = `/model/${modelId}/disclaimer`;
     const apiToken = await this.getApiToken()
     const options = {
-      'method': 'GET',
-      'headers': this.getHeaders(apiToken)
+      "method": "GET",
+      "headers": ServiceAPI.getHeaders(apiToken)
     };
   
-    const response = await this.runFetch(endpoint, options);
+    const response = await ServiceAPI.runFetch(endpoint, options);
     const disclaimerData = (await response.json()) as ModelDisclaimer;
 
     return disclaimerData;
@@ -73,15 +77,15 @@ export default class CodeAssistantService extends ServiceAPI {
     const endpoint = `/disclaimer/${disclaimerId}/acceptance`;
     const apiToken = await this.getApiToken()
     const options = {
-      'method': 'POST',
-      'headers': this.getHeaders(apiToken),
-      'body': JSON.stringify({
-        'model': modelId,
+      "method": "POST",
+      "headers": ServiceAPI.getHeaders(apiToken),
+      "body": JSON.stringify({
+        "model": modelId,
         accepted
       })
     };
   
-    const response = await this.runFetch(endpoint, options);
+    const response = await ServiceAPI.runFetch(endpoint, options);
     const disclaimerData = (await response.json()) as ResponseMessage;
 
     return disclaimerData;
@@ -95,14 +99,14 @@ export default class CodeAssistantService extends ServiceAPI {
     const endpoint = `/model/${modelId}/prompt`;
     const apiToken = await this.getApiToken()
     const options = {
-      'method': 'POST',
-      'headers': this.getHeaders(apiToken),
-      'body': JSON.stringify({
+      "method": "POST",
+      "headers": ServiceAPI.getHeaders(apiToken),
+      "body": JSON.stringify({
         input
       })
     };
   
-    const response = await this.runFetch(endpoint, options);
+    const response = await ServiceAPI.runFetch(endpoint, options);
     const promptResponse = (await response.json()) as ModelPromptResponse;
 
     return promptResponse;
@@ -116,14 +120,14 @@ export default class CodeAssistantService extends ServiceAPI {
     const endpoint = `/prompt/${promptId}/acceptance`;
     const apiToken = await this.getApiToken()
     const options = {
-      'method': 'POST',
-      'headers': this.getHeaders(apiToken),
-      'body': JSON.stringify({
+      "method": "POST",
+      "headers": ServiceAPI.getHeaders(apiToken),
+      "body": JSON.stringify({
         accepted
       })
     };
   
-    const response = await this.runFetch(endpoint, options);
+    const response = await ServiceAPI.runFetch(endpoint, options);
     const disclaimerData = (await response.json()) as ResponseMessage;
 
     return disclaimerData;

@@ -15,8 +15,3 @@ export enum PromptType {
   FillInMiddle,
   PredictNext,
 }
-
-export enum SuggestionTrigger {
-  DocumentChanged = "DocumentChanged",
-  LookAhead = "LookAhead",
-}

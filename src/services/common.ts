@@ -1,23 +1,13 @@
-import vscode from "vscode";
-
 import CodeAssistantService from "./codeAssistant"
 import OpenAIService from "./openAI"
 import ServiceAPI from "./serviceApi";
-
-const config = vscode.workspace.getConfiguration("qiskitCodeAssistant")
-const SERVICE_URL = config.get<string>("url") as string;
 
 let activeService: ServiceAPI;
 
 export async function getServiceApi(): Promise<ServiceAPI> {
   if (!activeService) {
     try {
-      const response = await fetch(SERVICE_URL, {"method": "GET"});
-
-      if (!response.ok) {
-        console.error(`Service API ${SERVICE_URL}: ${response.statusText}`)
-        throw Error("Service API failed. Possible invalid service request or service is currently unavailable.")
-      }
+      const response = await ServiceAPI.runFetch("/", {"method": "GET"});
 
       if (response.headers.get("content-type") == "application/json") {
         const rootResponse = (await response.json()) as ServiceInfo
@@ -30,8 +20,10 @@ export async function getServiceApi(): Promise<ServiceAPI> {
       if (!activeService) {
         activeService = new OpenAIService();
       }
+
+      activeService.checkForToken();
     } catch (err) {
-      console.error(`Service API ${SERVICE_URL}: ${err}`)
+      console.error(`Get Service API: ${err}`)
       throw Error("Service API failed. Possible invalid service request or service is currently unavailable.")
     }
   }

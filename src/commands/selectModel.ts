@@ -3,7 +3,6 @@ import vscode, { ExtensionContext } from "vscode";
 import { getExtensionContext } from "../globals/extensionContext";
 import { getServiceApi } from "../services/common";
 import { setDefaultStatus, setLoadingStatus } from "../statusBar/statusBar";
-import { requiresToken } from "../utilities/guards";
 
 let modelsList: ModelInfo[] = [];
 
@@ -21,9 +20,6 @@ export async function initModels(context: ExtensionContext | null): Promise<void
   if (!context) return;
 
   const apiService = await getServiceApi();
-  if (apiService.requiresToken) {
-    await requiresToken(context)
-  }
 
   if (!modelsList || modelsList.length == 0) {
     try {
