@@ -1,14 +1,14 @@
-import {
-  Disposable,
-  languages,
-} from "vscode";
+import { Disposable, languages } from "vscode";
+
 import { Capability, isCapabilityEnabled } from "../capabilities/capabilities";
 import enableProposed from "../globals/proposedAPI";
-import { initTracker } from "./documentChangesTracker";
 import {
   isInlineSuggestionProposedApiSupported,
   isInlineSuggestionReleasedApiSupported,
 } from "../globals/versions";
+import { QcaInlineCompletionItemProvider } from "./provideInlineCompletionItems";
+import { FeedbackCodelensProvider } from "../codelens/FeedbackCodelensProvider";
+
 
 async function isDefaultAPIEnabled(): Promise<boolean> {
   return (
@@ -31,18 +31,16 @@ export default async function registerInlineHandlers(
     isInlineSuggestionReleasedApiSupported() ||
     (await isDefaultAPIEnabled())
   ) {
-    const provideInlineCompletionItems = (
-      await import("./provideInlineCompletionItems")
-    ).default;
-    const inlineCompletionsProvider = {
-      provideInlineCompletionItems,
-    };
+    const inlineCompletionsProvider = new QcaInlineCompletionItemProvider()
+    const feedbackCodeLensProvider = new FeedbackCodelensProvider(inlineCompletionsProvider)
+
+    languages.registerCodeLensProvider("*", feedbackCodeLensProvider);
+
     subscriptions.push(
       languages.registerInlineCompletionItemProvider(
         { pattern: "**" },
         inlineCompletionsProvider
-      ),
-      ...initTracker()
+      )
     );
     return subscriptions;
   }

@@ -8,8 +8,8 @@ import { getExtensionContext } from "../globals/extensionContext";
 import { currentModel } from "../commands/selectModel";
 import { sleep } from "./utils";
 import acceptDisclaimer from "../commands/acceptDisclaimer";
-import { postModelPrompt, postPromptAcceptance } from "../services/codeAssistant";
-import { requiresToken } from "./guards";
+import { getServiceApi } from "../services/common";
+import { addPromptFeedbackCodeLens, removePromptFeedbackCodeLens } from "../codelens/FeedbackCodelensProvider";
 
 let cancelCompletion: AbortController | null = null;
 let promptId: string | undefined = undefined;
@@ -49,8 +49,7 @@ export default async function runCompletion(
 
     if (!context) return;
 
-    // if user hasn't supplied API Token yet, ask user to supply one
-    await requiresToken(context);
+    const apiService = await getServiceApi();
 
     if (!currentModel.disclaimer?.accepted) {
       acceptDisclaimer.handler(currentModel);
@@ -77,7 +76,7 @@ export default async function runCompletion(
 
     let responseData = null;
     try {
-      responseData = await postModelPrompt(currentModel._id, inputs);
+      responseData = await apiService.postModelPrompt(currentModel._id, inputs);
     } catch (err) {
       const msg = (err as Error).message || "Error sending the prompt";
       window.showInformationMessage(msg);
@@ -112,6 +111,9 @@ export default async function runCompletion(
     }
 
     if (cancelCompletion.signal.aborted) return null;
+
+    addPromptFeedbackCodeLens(currentModel._id, promptId, position)
+
     return result;
   } finally {
     cancelCompletion = null;
@@ -143,15 +145,18 @@ export function getFileNameWithExtension(document: TextDocument): string {
   return fileName;
 }
 
-export async function updateUserAcceptance() {
+export async function updateUserAcceptance(accepted: boolean) {
   // check for current model
   if (!currentModel) {
     window.showInformationMessage("Please select a model (in the status bar)");
     return;
   }
 
-  if (promptId) {
-    await postPromptAcceptance(promptId, true);
+  if (!accepted) {
+    removePromptFeedbackCodeLens()
+  } else if (promptId) {
+    const apiService = await getServiceApi();
+    await apiService.postPromptAcceptance(promptId, true);
     // reset prompt_id
     promptId = undefined
   }

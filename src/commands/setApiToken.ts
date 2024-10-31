@@ -12,7 +12,7 @@ async function getTokenFromJson(): Promise<string | undefined> {
   try {
     data = await fs.readFile(QISKIT_JSON_FILE_PATH);
   } catch(err) {
-    console.error(err);
+    console.log(`Unable to read saved Qiskit account: ${err}`);
   }
 
   if (data) {
@@ -20,7 +20,7 @@ async function getTokenFromJson(): Promise<string | undefined> {
       const accounts = JSON.parse(data.toString("utf8")) as QiskitAccountJson;
       return accounts["qiskit-code-assistant"]?.token || accounts["default-ibm-quantum"]?.token;
     } catch(err) {
-      console.error(err);
+      console.log(`Unable to parse saved Qiskit account: ${err}`);
     }
   }
   return undefined;
