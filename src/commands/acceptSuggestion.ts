@@ -1,9 +1,11 @@
 import vscode from "vscode";
 
 import { updateUserAcceptance } from "../utilities/runCompletion";
+import { handleClearCodelens } from "./handleFeedback";
 
 async function acceptSuggestionHandler(): Promise<void> {
-  await updateUserAcceptance(true)
+  await updateUserAcceptance(true);
+  // vscode.commands.executeCommand(handleClearCodelens.identifier);
   vscode.commands.executeCommand("editor.action.inlineSuggest.commit");
 };
 
@@ -13,7 +15,8 @@ export const acceptSuggestionCommand: CommandModule = {
 };
 
 async function dismissSuggestionHandler(): Promise<void> {
-  await updateUserAcceptance(false)
+  await updateUserAcceptance(false);
+  vscode.commands.executeCommand(handleClearCodelens.identifier);
   vscode.commands.executeCommand("editor.action.inlineSuggest.hide");
 };
 

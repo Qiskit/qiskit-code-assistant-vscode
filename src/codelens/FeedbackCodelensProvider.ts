@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
 
 import { QcaInlineCompletionItemProvider } from "../inlineSuggestions/provideInlineCompletionItems";
-import provideFeedback from "../commands/provideFeedback";
+import { handleProvideFeedback } from "../commands/handleFeedback";
+import CodeAssistantInlineCompletionItem from "../inlineSuggestions/inlineCompletionItem";
 
 export interface PromptFeedbackCodeLensData {
   modelId: string|undefined;
@@ -26,7 +27,9 @@ export function addPromptFeedbackCodeLens(
   });
 }
 
-export function removePromptFeedbackCodeLens() {
+export async function clearPromptFeedbackCodeLens() {
+  console.log(">>> clearPromptFeedbackCodeLens")
+  await vscode.commands.executeCommand("setContext", "qiskit-vscode.feedback-codelens-visible", false);
   promptFeedbackCodeLensList.length = 0;
   _onDidChangeCodeLenses.fire();
 }
@@ -66,11 +69,18 @@ export class FeedbackCodelensProvider implements vscode.CodeLensProvider {
   private inlineCompletionsProvider: QcaInlineCompletionItemProvider;
 
 	constructor(inlineCompletionsProvider: QcaInlineCompletionItemProvider) {
+    console.log(">>> FeedbackCodelensProvider()")
     this.inlineCompletionsProvider = inlineCompletionsProvider;
 
     // trigger update of codelens on update of completion items
     inlineCompletionsProvider.onDidUpdateCompletionItems((completions: vscode.InlineCompletionList) => {
       if (completions.items.length) {
+        const inlineCompletionItem = completions.items[0] as CodeAssistantInlineCompletionItem;
+        addPromptFeedbackCodeLens(
+          inlineCompletionItem.modelId,
+          inlineCompletionItem.promptId,
+          inlineCompletionItem.range?.start as vscode.Position
+        );
         _onDidChangeCodeLenses.fire();
       }
     });
@@ -80,6 +90,7 @@ export class FeedbackCodelensProvider implements vscode.CodeLensProvider {
     _: vscode.TextDocument,
     _token: vscode.CancellationToken
   ): vscode.CodeLens[] | Thenable<vscode.CodeLens[]> {
+    console.log(">>> provideCodeLenses")
     this.codeLenses = [];
 
     if (this.inlineCompletionsProvider) {
@@ -100,10 +111,11 @@ export class FeedbackCodelensProvider implements vscode.CodeLensProvider {
     return this.codeLenses;
 	}
 
-  public resolveCodeLens(
+  public async resolveCodeLens(
     codeLens: FeedbackCodeLens,
     token: vscode.CancellationToken
-  ): vscode.ProviderResult<vscode.CodeLens> {
+  ): Promise<vscode.CodeLens> {
+    console.log(">>> resolveCodeLens")
     const commandArgs: (string|boolean|(() => void)|undefined)[] = [codeLens.modelId, codeLens.promptId];
 
     switch(codeLens.type) {
@@ -111,16 +123,19 @@ export class FeedbackCodelensProvider implements vscode.CodeLensProvider {
         commandArgs.length = 0
         break;
       case FeedbackCodeLensTypes.POSITIVE:
-        commandArgs.push(...[true, removePromptFeedbackCodeLens])
+        commandArgs.push(...[true, clearPromptFeedbackCodeLens])
         break;
       case FeedbackCodeLensTypes.NEGATIVE:
-        commandArgs.push(...[false, removePromptFeedbackCodeLens])
+        commandArgs.push(...[false, clearPromptFeedbackCodeLens])
         break;
     }
     codeLens.command = {
       title: codeLens.type,
-      command: codeLens.type == FeedbackCodeLensTypes.HELPFUL ? "" : provideFeedback.identifier,
+      command: codeLens.type == FeedbackCodeLensTypes.HELPFUL ? "" : handleProvideFeedback.identifier,
       arguments: commandArgs
+    }
+    if (promptFeedbackCodeLensList.length) {
+      await vscode.commands.executeCommand("setContext", "qiskit-vscode.feedback-codelens-visible", true);
     }
     return codeLens
   }

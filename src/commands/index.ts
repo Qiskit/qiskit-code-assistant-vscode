@@ -3,7 +3,7 @@ import { acceptSuggestionCommand, dismissSuggestionCommand} from "./acceptSugges
 import selectModel from "./selectModel";
 import handleGetCompletion from "./handleGetCompletion";
 import { handleChangeModelStatusBar, handleProvideFeedbackStatusBar } from "./handleStatusBar";
-import provideFeedback from "./provideFeedback";
+import { handleProvideFeedback, handleClearCodelens} from "./handleFeedback";
 import setApiToken from "./setApiToken";
 
 const commands: CommandModule[] = [
@@ -11,9 +11,10 @@ const commands: CommandModule[] = [
   acceptSuggestionCommand,
   dismissSuggestionCommand,
   handleChangeModelStatusBar,
+  handleClearCodelens,
   handleGetCompletion,
   handleProvideFeedbackStatusBar,
-  provideFeedback,
+  handleProvideFeedback,
   selectModel,
   setApiToken,
 ];

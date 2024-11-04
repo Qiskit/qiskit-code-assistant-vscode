@@ -1,6 +1,6 @@
 import { Position, Range, TextDocument, window } from "vscode";
 
-import { AutocompleteResult, ResultEntry } from "../binary/requests/requests";
+import { AutocompleteResult, CompletionMetadata, ResultEntry } from "../binary/requests/requests";
 import { CHAR_LIMIT, PromptType } from "../globals/consts";
 import languages from "../globals/languages";
 import { setDefaultStatus, setLoadingStatus } from "../statusBar/statusBar";
@@ -9,7 +9,6 @@ import { currentModel } from "../commands/selectModel";
 import { sleep } from "./utils";
 import acceptDisclaimer from "../commands/acceptDisclaimer";
 import { getServiceApi } from "../services/common";
-import { addPromptFeedbackCodeLens, removePromptFeedbackCodeLens } from "../codelens/FeedbackCodelensProvider";
 
 let cancelCompletion: AbortController | null = null;
 let promptId: string | undefined = undefined;
@@ -97,10 +96,16 @@ export default async function runCompletion(
       return null;
     }
 
+    const completionMetadata: CompletionMetadata = {
+      model_id: currentModel._id,
+      prompt_id: promptId
+    }
+
     const resultEntry: ResultEntry = {
       new_prefix: generatedText,
       old_suffix: "",
-      new_suffix: ""
+      new_suffix: "",
+      completion_metadata: completionMetadata
     }
 
     const result: AutocompleteResult = {
@@ -111,8 +116,6 @@ export default async function runCompletion(
     }
 
     if (cancelCompletion.signal.aborted) return null;
-
-    addPromptFeedbackCodeLens(currentModel._id, promptId, position)
 
     return result;
   } finally {
@@ -152,11 +155,9 @@ export async function updateUserAcceptance(accepted: boolean) {
     return;
   }
 
-  if (!accepted) {
-    removePromptFeedbackCodeLens()
-  } else if (promptId) {
+  if (promptId) {
     const apiService = await getServiceApi();
-    await apiService.postPromptAcceptance(promptId, true);
+    await apiService.postPromptAcceptance(promptId, accepted);
     // reset prompt_id
     promptId = undefined
   }

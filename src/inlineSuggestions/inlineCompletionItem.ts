@@ -14,11 +14,17 @@ export default class CodeAssistantInlineCompletionItem extends InlineCompletionI
 
   snippetContext?: SnippetContext;
 
+  modelId?: string;
+
+  promptId?: string;
+
   constructor(
     text: string,
     suggestionEntry: ResultEntry,
     range?: Range,
     command?: Command,
+    modelId?: string,
+    promptId?: string,
     completionKind?: CompletionKind,
     isCached?: boolean,
     snippetContext?: SnippetContext
@@ -28,5 +34,7 @@ export default class CodeAssistantInlineCompletionItem extends InlineCompletionI
     this.suggestionEntry = suggestionEntry;
     this.completionKind = completionKind;
     this.snippetContext = snippetContext;
+    this.modelId = modelId;
+    this.promptId = promptId;
   }
 }

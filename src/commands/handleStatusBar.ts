@@ -1,7 +1,7 @@
 import vscode from "vscode";
 
 import selectModel from './selectModel';
-import provideFeedback from "./provideFeedback";
+import { handleProvideFeedback } from "./handleFeedback";
 import acceptDisclaimer from "./acceptDisclaimer";
 
 async function changeModelHandler(): Promise<void> {
@@ -12,7 +12,7 @@ async function changeModelHandler(): Promise<void> {
 }
 
 async function provideFeedbackHandler(model_id: undefined|string = undefined): Promise<void> {
-  await vscode.commands.executeCommand(provideFeedback.identifier, model_id);
+  await vscode.commands.executeCommand(handleProvideFeedback.identifier, model_id);
 }
 
 export const handleChangeModelStatusBar: CommandModule = {

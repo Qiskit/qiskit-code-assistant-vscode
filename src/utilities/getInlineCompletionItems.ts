@@ -26,6 +26,8 @@ export default async function getInlineCompletionItems(
         result,
         calculateRange(position, response, result),
         undefined,
+        result.completion_metadata?.model_id,
+        result.completion_metadata?.prompt_id,
         result.completion_metadata?.completion_kind,
         result.completion_metadata?.is_cached,
         result.completion_metadata?.snippet_context
