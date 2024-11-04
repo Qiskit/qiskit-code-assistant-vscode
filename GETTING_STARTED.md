@@ -95,7 +95,7 @@ If you are not seeing the extension status bar in Visual Studio Code, check the 
 
 If the extension is installed and enabled, but not able to select a model, make sure your current API Token has been added and the `Qiskit Code Assistant: Url` setting is properly configured.
 
-## Feedback
+## Providing Feedback
 
 General feedback can be provided to the Qiskit Code Assistant team by clicking on the `Provide feedback` icon in status bar (left of the Qiskit Code Assistant model info). 
 
