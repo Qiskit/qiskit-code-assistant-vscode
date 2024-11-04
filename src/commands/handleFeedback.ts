@@ -1,6 +1,7 @@
 import vscode from "vscode";
 import { getServiceApi } from "../services/common";
 import { clearPromptFeedbackCodeLens } from "../codelens/FeedbackCodelensProvider";
+import { acceptSuggestionCommand, dismissSuggestionCommand } from "./acceptSuggestion";
 
 const PROMPT_FEEDBACK_MSG = "Please share any detailed feedback you have about the Qiskit Code Assistant. The details of your completions as well as this message will be sent to the Qiskit Code Assistant team in order to improve the service.";
 const DEFAULT_FEEDBACK_MSG = "$(feedback) Provide feedback";
@@ -15,14 +16,21 @@ async function provideFeedbackHandler(
 ): Promise<void> {
   console.log(`providing feedback with ${modelId}, ${promptId}, ${positiveFeedback}`);
 
-  const moreFeedback = await vscode.window.showInformationMessage(
-    FEEDBACK_RESPONSE_MSG,
-    "Provide feedback",
-    "Dismiss"
-  );
+  let moreFeedback;
+  if (positiveFeedback != undefined) {
+    const identifier = (positiveFeedback ? acceptSuggestionCommand : dismissSuggestionCommand).identifier;
+    await vscode.commands.executeCommand(identifier);
+    await clearFeedbackCodelensHandler();
+
+    moreFeedback = await vscode.window.showInformationMessage(
+      FEEDBACK_RESPONSE_MSG,
+      "Provide feedback",
+      "Dismiss"
+    );
+  }
 
   let comment;
-  if (moreFeedback === "Provide feedback") {
+  if (moreFeedback != "Dismiss") {
     comment = await vscode.window.showInputBox({
       prompt: promptId ? PROMPT_FEEDBACK_MSG : DEFAULT_FEEDBACK_MSG
     });
@@ -33,6 +41,10 @@ async function provideFeedbackHandler(
 
   if (response.message && callback) {
     callback();
+  }
+
+  if (comment && positiveFeedback === undefined) {
+    vscode.window.showInformationMessage(FEEDBACK_RESPONSE_MSG)
   }
 }
 
