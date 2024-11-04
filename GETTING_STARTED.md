@@ -91,7 +91,7 @@ If necessary, you can update some settings for the extension.
 
 1. The Telemetry can be disabled by unchecking the `qiskitCodeAssistant.enableTelemetry` setting or turning `off` the `telemetry.telemetryLevel` setting:
 
-   > **NOTE**: Your code and the suggested code completions are not collected. What is collected is whether a code suggestion was accepted or dismissed.
+   > **NOTE**: The telemetry does not collect your code nor the suggested code completions. What is collected is whether a code suggestion was accepted or dismissed.
 
 ## Troubleshooting
 
