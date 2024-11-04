@@ -89,7 +89,9 @@ If necessary, you can update some settings for the extension.
 
 1. Keyboard shortcuts can be changed by searching for `qiskit-vscode` in the Keyboard Shortcuts settings
 
-1. Telemetry can be disabled by unchecking the `qiskitCodeAssistant.enableTelemetry` setting or turning `off` the `telemetry.telemetryLevel` setting
+1. The Telemetry can be disabled by unchecking the `qiskitCodeAssistant.enableTelemetry` setting or turning `off` the `telemetry.telemetryLevel` setting:
+
+   > **NOTE**: Your code and the suggested code completions are not collected. What is collected is whether a code suggestion was accepted or dismissed.
 
 ## Troubleshooting
 
