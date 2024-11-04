@@ -37,7 +37,6 @@ async function provideFeedbackHandler(
 }
 
 async function clearFeedbackCodelensHandler(): Promise<void> {
-  console.log(">>> clearFeedbackCodelensHandler")
   await clearPromptFeedbackCodeLens()
 }
 
