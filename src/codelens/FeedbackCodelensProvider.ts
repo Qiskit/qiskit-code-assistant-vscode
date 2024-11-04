@@ -62,12 +62,11 @@ class FeedbackCodeLens extends vscode.CodeLens {
  * FeedbackCodelensProvider
  */
 export class FeedbackCodelensProvider implements vscode.CodeLensProvider {
-
-	private codeLenses: vscode.CodeLens[] = [];
-	public readonly onDidChangeCodeLenses: vscode.Event<void> = _onDidChangeCodeLenses.event;
+  private codeLenses: vscode.CodeLens[] = [];
+  public readonly onDidChangeCodeLenses: vscode.Event<void> = _onDidChangeCodeLenses.event;
   private inlineCompletionsProvider: QcaInlineCompletionItemProvider;
 
-	constructor(inlineCompletionsProvider: QcaInlineCompletionItemProvider) {
+  constructor(inlineCompletionsProvider: QcaInlineCompletionItemProvider) {
     this.inlineCompletionsProvider = inlineCompletionsProvider;
 
     // trigger update of codelens on update of completion items
