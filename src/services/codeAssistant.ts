@@ -1,7 +1,10 @@
+import vscode from "vscode";
+
 import ServiceAPI from "./serviceApi";
 import { getExtensionContext } from "../globals/extensionContext";
 import { requiresToken } from "../utilities/guards";
 
+const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
 const SERVICE_NAME = "qiskit-code-assistant";
 
 export default class CodeAssistantService extends ServiceAPI {
@@ -118,6 +121,17 @@ export default class CodeAssistantService extends ServiceAPI {
     promptId: string,
     accepted: boolean
   ): Promise<ResponseMessage> {
+    if (!vscode.env.isTelemetryEnabled) {
+      // VSCode telemetry level is set to `off`
+      return { success: false }
+    }
+  
+    const telemetryEnabled = config.get<boolean>("enableTelemetry") as boolean;
+    if (!telemetryEnabled) {
+      // Qiskit Code Assistant telemetry is disabled
+      return { success: false }
+    }
+    
     // POST /prompt/{promptId}/acceptance
     const endpoint = `/prompt/${promptId}/acceptance`;
     const apiToken = await this.getApiToken()
