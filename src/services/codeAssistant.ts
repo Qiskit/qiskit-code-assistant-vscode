@@ -184,7 +184,18 @@ export async function postModelPrompt(
 export async function postPromptAcceptance(
   promptId: string,
   accepted: boolean
-): Promise<ResponseMessage> {
+): Promise<ResponseMessage|void> {
+  if (!vscode.env.isTelemetryEnabled) {
+    // VSCode telemetry level is set to `off`
+    return;
+  }
+
+  const telemetryEnabled = config.get<boolean>("enableTelemetry") as boolean;
+  if (!telemetryEnabled) {
+    // Qiskit Code Assistant telemetry is disabled
+    return;
+  }
+  
   // POST /prompt/{promptId}/acceptance
   const endpoint = `${getServiceBaseUrl()}/prompt/${promptId}/acceptance`;
   const apiToken = await getApiToken()

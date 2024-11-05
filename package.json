@@ -79,7 +79,17 @@
           "type": "string",
           "default": "https://qiskit-code-assistant.quantum.ibm.com",
           "format": "url",
-          "description": "URL to the Qiskit Code Assistant Service API"
+          "description": "URL to the Qiskit Code Assistant Service API",
+          "tags": ["usesOnlineServices"]
+        },
+        "qiskitCodeAssistant.enableTelemetry": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Controls whether telemetry is collected. Setting `telemetry.telemetryLevel` to `off` will take precedence.",
+          "tags": [
+            "telemetry",
+            "usesOnlineServices"
+          ]
         }
       }
     },
