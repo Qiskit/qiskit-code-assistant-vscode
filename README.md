@@ -76,6 +76,12 @@ Customize keyboard shortcuts in VS Code using the `Keyboard Shortcuts` editor. T
 | `qiskit-vscode.accept-suggestion` | `Tab` | Accept the model-generated suggestion |
 | `qiskit-vscode.handle-get-completion` | `Ctrl+.`                | Generate suggestions |
 
+## Telemetry
+
+The Telemetry can be disabled by unchecking the `qiskitCodeAssistant.enableTelemetry` setting or turning `off` the `telemetry.telemetryLevel` setting:
+
+   > **NOTE**: The telemetry does not collect your code nor the suggested code completions. What is collected is whether a code suggestion was accepted or dismissed.
+
 ## Terms of use
 
 * [End User License Agreement (EULA)](https://github.com/Qiskit/qiskit-code-assistant-vscode/blob/main/docs/EULA.md) acceptance required before starting to use the model
