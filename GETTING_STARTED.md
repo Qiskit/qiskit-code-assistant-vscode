@@ -89,6 +89,10 @@ If necessary, you can update some settings for the extension.
 
 1. Keyboard shortcuts can be changed by searching for `qiskit-vscode` in the Keyboard Shortcuts settings
 
+1. The Telemetry can be disabled by unchecking the `qiskitCodeAssistant.enableTelemetry` setting or turning `off` the `telemetry.telemetryLevel` setting:
+
+   > **NOTE**: The telemetry does not collect your code nor the suggested code completions. What is collected is whether a code suggestion was accepted or dismissed.
+
 ## Troubleshooting
 
 If you are not seeing the extension status bar in Visual Studio Code, check the extension is installed and enabled under the Extensions tab.
