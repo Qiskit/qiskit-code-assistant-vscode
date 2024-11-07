@@ -3,7 +3,6 @@ import vscode, { ExtensionContext } from "vscode";
 import { getExtensionContext } from "../globals/extensionContext";
 import { getServiceApi } from "../services/common";
 import { setDefaultStatus, setLoadingStatus } from "../statusBar/statusBar";
-import { requiresToken } from "../utilities/guards";
 
 let modelsList: ModelInfo[] = [];
 
