@@ -18,6 +18,10 @@ export default class CodeAssistantInlineCompletionItem extends InlineCompletionI
 
   promptId?: string;
 
+  input?: string;
+
+  output?: string;
+
   constructor(
     text: string,
     suggestionEntry: ResultEntry,
@@ -25,6 +29,8 @@ export default class CodeAssistantInlineCompletionItem extends InlineCompletionI
     command?: Command,
     modelId?: string,
     promptId?: string,
+    input?: string,
+    output?: string,
     completionKind?: CompletionKind,
     isCached?: boolean,
     snippetContext?: SnippetContext
@@ -36,5 +42,7 @@ export default class CodeAssistantInlineCompletionItem extends InlineCompletionI
     this.snippetContext = snippetContext;
     this.modelId = modelId;
     this.promptId = promptId;
+    this.input = input;
+    this.output = output;
   }
 }

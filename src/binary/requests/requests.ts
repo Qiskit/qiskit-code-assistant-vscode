@@ -42,6 +42,8 @@ export type CompletionMetadata = {
   snippet_context?: SnippetContext;
   model_id?: string;
   prompt_id?: string;
+  input?: string;
+  output?: string;
 };
 
 export type ResultEntry = {

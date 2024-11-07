@@ -8,6 +8,8 @@ export interface PromptFeedbackCodeLensData {
   modelId: string|undefined;
   promptId: string|undefined;
   position: vscode.Position;
+  input: string|undefined;
+  output: string|undefined;
 }
 
 
@@ -17,13 +19,17 @@ const _onDidChangeCodeLenses: vscode.EventEmitter<void> = new vscode.EventEmitte
 export function addPromptFeedbackCodeLens(
   modelId: string|undefined,
   promptId: string|undefined,
-  position: vscode.Position
+  position: vscode.Position,
+  input: string|undefined,
+  output: string|undefined,
 ) {
   promptFeedbackCodeLensList.length = 0
   promptFeedbackCodeLensList.push({
     modelId: modelId,
     promptId: promptId,
-    position
+    position,
+    input: input,
+    output: output
   });
 }
 
@@ -44,17 +50,23 @@ class FeedbackCodeLens extends vscode.CodeLens {
   type: string;
   modelId: string|undefined;
   promptId: string|undefined;
+  input: string|undefined;
+  output: string|undefined;
 
   constructor(
     range: vscode.Range,
     type: string,
     modelId: string|undefined,
-    promptId: string|undefined
+    promptId: string|undefined,
+    input: string|undefined,
+    output: string|undefined
   ) {
     super(range);
     this.type = type;
     this.modelId = modelId;
     this.promptId = promptId;
+    this.input = input;
+    this.output = output;
   }
 }
 
@@ -76,7 +88,9 @@ export class FeedbackCodelensProvider implements vscode.CodeLensProvider {
         addPromptFeedbackCodeLens(
           inlineCompletionItem.modelId,
           inlineCompletionItem.promptId,
-          inlineCompletionItem.range?.start as vscode.Position
+          inlineCompletionItem.range?.start as vscode.Position,
+          inlineCompletionItem.input,
+          inlineCompletionItem.output,
         );
         _onDidChangeCodeLenses.fire();
       }
@@ -97,9 +111,9 @@ export class FeedbackCodelensProvider implements vscode.CodeLensProvider {
         );
 
         this.codeLenses.push(...[
-          new FeedbackCodeLens(range, FeedbackCodeLensTypes.HELPFUL, codeLensData.modelId, codeLensData.promptId),
-          new FeedbackCodeLens(range, FeedbackCodeLensTypes.POSITIVE, codeLensData.modelId, codeLensData.promptId),
-          new FeedbackCodeLens(range, FeedbackCodeLensTypes.NEGATIVE, codeLensData.modelId, codeLensData.promptId),
+          new FeedbackCodeLens(range, FeedbackCodeLensTypes.HELPFUL, codeLensData.modelId, codeLensData.promptId, codeLensData.input, codeLensData.output),
+          new FeedbackCodeLens(range, FeedbackCodeLensTypes.POSITIVE, codeLensData.modelId, codeLensData.promptId, codeLensData.input, codeLensData.output),
+          new FeedbackCodeLens(range, FeedbackCodeLensTypes.NEGATIVE, codeLensData.modelId, codeLensData.promptId, codeLensData.input, codeLensData.output),
         ]);
       });
     }
@@ -111,17 +125,20 @@ export class FeedbackCodelensProvider implements vscode.CodeLensProvider {
     codeLens: FeedbackCodeLens,
     token: vscode.CancellationToken
   ): Promise<vscode.CodeLens> {
-    const commandArgs: (string|boolean|(() => void)|undefined)[] = [codeLens.modelId, codeLens.promptId];
+    const commandArgs: (string|boolean|(() => void)|undefined)[] = [
+      codeLens.modelId,
+      codeLens.promptId
+    ];
 
     switch(codeLens.type) {
       case FeedbackCodeLensTypes.HELPFUL:
         commandArgs.length = 0
         break;
       case FeedbackCodeLensTypes.POSITIVE:
-        commandArgs.push(...[true, clearPromptFeedbackCodeLens])
+        commandArgs.push(...[true, codeLens.input, codeLens.output, clearPromptFeedbackCodeLens])
         break;
       case FeedbackCodeLensTypes.NEGATIVE:
-        commandArgs.push(...[false, clearPromptFeedbackCodeLens])
+        commandArgs.push(...[false, codeLens.input, codeLens.output, clearPromptFeedbackCodeLens])
         break;
     }
     codeLens.command = {

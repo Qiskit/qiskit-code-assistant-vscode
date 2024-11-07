@@ -98,7 +98,9 @@ export default async function runCompletion(
 
     const completionMetadata: CompletionMetadata = {
       model_id: currentModel._id,
-      prompt_id: promptId
+      prompt_id: promptId,
+      input: inputs,
+      output: generatedText
     }
 
     const resultEntry: ResultEntry = {

@@ -28,6 +28,8 @@ export default async function getInlineCompletionItems(
         undefined,
         result.completion_metadata?.model_id,
         result.completion_metadata?.prompt_id,
+        result.completion_metadata?.input,
+        result.completion_metadata?.output,
         result.completion_metadata?.completion_kind,
         result.completion_metadata?.is_cached,
         result.completion_metadata?.snippet_context

@@ -121,10 +121,10 @@ export default class CodeAssistantService extends ServiceAPI {
     promptId: string,
     accepted: boolean
   ): Promise<ResponseMessage> {
-    if (!vscode.env.isTelemetryEnabled) {
-      // VSCode telemetry level is set to `off`
-      return { success: false }
-    }
+    // if (!vscode.env.isTelemetryEnabled) {
+    //   // VSCode telemetry level is set to `off`
+    //   return { success: false }
+    // }
   
     const telemetryEnabled = config.get<boolean>("enableTelemetry") as boolean;
     if (!telemetryEnabled) {
@@ -153,7 +153,9 @@ export default class CodeAssistantService extends ServiceAPI {
     modelId: string,
     promptId: undefined|string,
     positiveFeedback: undefined|boolean,
-    comment: undefined|string
+    comment: undefined|string,
+    input: undefined|string,
+    output: undefined|string
   ): Promise<ResponseMessage> {
     // POST /feedback
     const endpoint = `/feedback`;
@@ -164,6 +166,8 @@ export default class CodeAssistantService extends ServiceAPI {
       "body": JSON.stringify({
         model_id: modelId,
         prompt_id: promptId,
+        input,
+        output,
         positive_feedback: positiveFeedback,
         comment
       })

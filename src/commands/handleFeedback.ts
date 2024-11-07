@@ -12,6 +12,8 @@ async function provideFeedbackHandler(
   modelId: string,
   promptId: undefined|string,
   positiveFeedback: undefined|boolean,
+  input: undefined|string,
+  output: undefined|string,
   callback: (() => void)|undefined,
 ): Promise<void> {
   console.log(`providing feedback with ${modelId}, ${promptId}, ${positiveFeedback}`);
@@ -37,7 +39,14 @@ async function provideFeedbackHandler(
   }
 
   const serviceApi = await getServiceApi();
-  const response = await serviceApi.postFeedback(modelId, promptId, positiveFeedback, comment);
+  const response = await serviceApi.postFeedback(
+    modelId,
+    promptId,
+    positiveFeedback,
+    comment,
+    input,
+    output
+  );
 
   if (response.message && callback) {
     callback();

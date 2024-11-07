@@ -121,7 +121,9 @@ export default class ServiceAPI {
     modelId: string,
     promptId: undefined|string,
     positiveFeedback: undefined|boolean,
-    comment: undefined|string
+    comment: undefined|string,
+    input: undefined|string,
+    output: undefined|string
   ): Promise<ResponseMessage> {
     return { success: true }
   }
