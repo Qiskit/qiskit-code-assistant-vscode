@@ -121,10 +121,10 @@ export default class CodeAssistantService extends ServiceAPI {
     promptId: string,
     accepted: boolean
   ): Promise<ResponseMessage> {
-    // if (!vscode.env.isTelemetryEnabled) {
-    //   // VSCode telemetry level is set to `off`
-    //   return { success: false }
-    // }
+    if (!vscode.env.isTelemetryEnabled) {
+      // VSCode telemetry level is set to `off`
+      return { success: false }
+    }
   
     const telemetryEnabled = config.get<boolean>("enableTelemetry") as boolean;
     if (!telemetryEnabled) {
