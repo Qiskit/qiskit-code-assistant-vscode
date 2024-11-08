@@ -52,7 +52,8 @@ Answer:
 please complete the code below: 
 ${prompt_input}
 
-Answer:`
+Answer:
+${prompt_input}`
   }
   console.log(structured_input)
   return structured_input
