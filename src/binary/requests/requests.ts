@@ -40,6 +40,10 @@ export type CompletionMetadata = {
   completion_kind?: CompletionKind;
   is_cached?: boolean;
   snippet_context?: SnippetContext;
+  model_id?: string;
+  prompt_id?: string;
+  input?: string;
+  output?: string;
 };
 
 export type ResultEntry = {

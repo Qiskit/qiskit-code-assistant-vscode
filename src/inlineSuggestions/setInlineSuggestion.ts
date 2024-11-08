@@ -5,17 +5,12 @@ import {
   TextDocument,
   window,
 } from "vscode";
-import { CompletionKind, ResultEntry } from "../binary/requests/requests";
+import { ResultEntry } from "../binary/requests/requests";
 import {
   clearState,
   getCurrentPrefix,
-  getCurrentSuggestion,
 } from "./inlineSuggestionState";
 import { trimEnd } from "../utilities/utils";
-import {
-  getSnippetDecorations,
-  handleClearSnippetDecoration,
-} from "./snippets/snippetDecoration";
 
 const inlineDecorationType = window.createTextEditorDecorationType({});
 let showingDecoration = false;
@@ -99,12 +94,7 @@ async function showInlineDecoration(
   position: Position,
   suggestion: string
 ): Promise<void> {
-  const currentCompletionKind = getCurrentSuggestion()?.completion_metadata
-    ?.completion_kind;
-  const decorations =
-    currentCompletionKind === CompletionKind.Snippet
-      ? await getSnippetDecorations(position, suggestion)
-      : getOneLineDecorations(suggestion, position);
+  const decorations = getOneLineDecorations(suggestion, position);
 
   window.activeTextEditor?.setDecorations(inlineDecorationType, decorations);
   showingDecoration = true;
@@ -137,7 +127,6 @@ function getOneLineDecorations(
 
 export async function clearInlineDecoration(): Promise<void> {
   window.activeTextEditor?.setDecorations(inlineDecorationType, []);
-  await handleClearSnippetDecoration();
   showingDecoration = false;
 }
 

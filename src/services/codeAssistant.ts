@@ -1,11 +1,16 @@
+import vscode from "vscode";
+
 import ServiceAPI from "./serviceApi";
 import { getExtensionContext } from "../globals/extensionContext";
 import { requiresToken } from "../utilities/guards";
 
+const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
 const SERVICE_NAME = "qiskit-code-assistant";
 
 export default class CodeAssistantService extends ServiceAPI {
   get name() { return SERVICE_NAME; }
+
+  get enableFeedback() { return true; }
 
   async checkForToken(): Promise<void> {
     return await requiresToken();
@@ -116,6 +121,17 @@ export default class CodeAssistantService extends ServiceAPI {
     promptId: string,
     accepted: boolean
   ): Promise<ResponseMessage> {
+    if (!vscode.env.isTelemetryEnabled) {
+      // VSCode telemetry level is set to `off`
+      return { success: false }
+    }
+  
+    const telemetryEnabled = config.get<boolean>("enableTelemetry") as boolean;
+    if (!telemetryEnabled) {
+      // Qiskit Code Assistant telemetry is disabled
+      return { success: false }
+    }
+    
     // POST /prompt/{promptId}/acceptance
     const endpoint = `/prompt/${promptId}/acceptance`;
     const apiToken = await this.getApiToken()
@@ -128,8 +144,38 @@ export default class CodeAssistantService extends ServiceAPI {
     };
   
     const response = await ServiceAPI.runFetch(endpoint, options);
-    const disclaimerData = (await response.json()) as ResponseMessage;
+    const promptData = (await response.json()) as ResponseMessage;
 
-    return disclaimerData;
+    return promptData;
+  }
+
+  async postFeedback(
+    modelId: string,
+    promptId: undefined|string,
+    positiveFeedback: undefined|boolean,
+    comment: undefined|string,
+    input: undefined|string,
+    output: undefined|string
+  ): Promise<ResponseMessage> {
+    // POST /feedback
+    const endpoint = `/feedback`;
+    const apiToken = await this.getApiToken()
+    const options = {
+      "method": "POST",
+      "headers": ServiceAPI.getHeaders(apiToken),
+      "body": JSON.stringify({
+        model_id: modelId,
+        prompt_id: promptId,
+        input,
+        output,
+        positive_feedback: positiveFeedback,
+        comment
+      })
+    };
+  
+    const response = await ServiceAPI.runFetch(endpoint, options);
+    const feedbackResponse = (await response.json()) as ResponseMessage;
+
+    return feedbackResponse;
   }
 }

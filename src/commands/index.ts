@@ -1,15 +1,20 @@
 import acceptDisclaimer from "./acceptDisclaimer";
-import acceptSuggestion from "./acceptSuggestion";
+import { acceptSuggestionCommand, dismissSuggestionCommand} from "./acceptSuggestion";
 import selectModel from "./selectModel";
 import handleGetCompletion from "./handleGetCompletion";
-import handleStatusBar from "./handleStatusBar";
+import { handleChangeModelStatusBar, handleProvideFeedbackStatusBar } from "./handleStatusBar";
+import { handleProvideFeedback, handleClearCodelens} from "./handleFeedback";
 import setApiToken from "./setApiToken";
 
 const commands: CommandModule[] = [
   acceptDisclaimer,
-  acceptSuggestion,
+  acceptSuggestionCommand,
+  dismissSuggestionCommand,
+  handleChangeModelStatusBar,
+  handleClearCodelens,
   handleGetCompletion,
-  handleStatusBar,
+  handleProvideFeedbackStatusBar,
+  handleProvideFeedback,
   selectModel,
   setApiToken,
 ];

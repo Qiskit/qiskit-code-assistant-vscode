@@ -67,7 +67,8 @@ interface ModelPromptResponse {
 }
 
 interface ResponseMessage {
-  success: boolean
+  success?: boolean
+  message?: string
 }
 
 interface ModelEndpoints {

@@ -18,6 +18,8 @@ const SERVICE_NAME = "service-api";
 export default class ServiceAPI {
   get name() { return SERVICE_NAME; }
 
+  get enableFeedback() { return false; }
+
   static async getErrorMessage(response: Response) {
     let msg = "An unknown error has occurred";
     if (!response.ok) {
@@ -111,6 +113,17 @@ export default class ServiceAPI {
   async postPromptAcceptance(
     promptId: string,
     accepted: boolean
+  ): Promise<ResponseMessage> {
+    return { success: true }
+  }
+
+  async postFeedback(
+    modelId: string,
+    promptId: undefined|string,
+    positiveFeedback: undefined|boolean,
+    comment: undefined|string,
+    input: undefined|string,
+    output: undefined|string
   ): Promise<ResponseMessage> {
     return { success: true }
   }
