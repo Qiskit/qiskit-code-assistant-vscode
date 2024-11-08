@@ -1,11 +1,9 @@
 import * as vscode from "vscode";
 import CodeAssistantInlineCompletionItem from "../inlineSuggestions/inlineCompletionItem";
 import runCompletion from "./runCompletion";
-import getAutoImportCommand from "./getAutoImportCommand";
 import { AutocompleteResult, ResultEntry } from "../binary/requests/requests";
 import { isMultiline } from "./utils";
 import { completionItems } from "../inlineSuggestions/inlineSuggestionState";
-import { SuggestionTrigger } from "../globals/consts";
 
 const INLINE_REQUEST_TIMEOUT = 3000;
 
@@ -27,12 +25,11 @@ export default async function getInlineCompletionItems(
         result.new_prefix,
         result,
         calculateRange(position, response, result),
-        getAutoImportCommand(
-          result,
-          response,
-          position,
-          SuggestionTrigger.DocumentChanged
-        ),
+        undefined,
+        result.completion_metadata?.model_id,
+        result.completion_metadata?.prompt_id,
+        result.completion_metadata?.input,
+        result.completion_metadata?.output,
         result.completion_metadata?.completion_kind,
         result.completion_metadata?.is_cached,
         result.completion_metadata?.snippet_context
