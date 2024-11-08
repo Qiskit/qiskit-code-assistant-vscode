@@ -30,6 +30,43 @@ function modelTransform (model: OpenAIModelInfo): ModelInfo {
   }
 }
 
+function has_only_comments(text: string) {
+  return text.split("\n").every((line: string) => {
+    return line.trim().startsWith("#")
+  });
+}
+
+function preprocess_prompt(prompt_input: string) {
+  const only_comments = has_only_comments(prompt_input);
+  let structured_input = prompt_input;
+  if (only_comments) {
+    const _processed_input = prompt_input.replace("#", "").trim();
+    structured_input = `Question: 
+${_processed_input}
+
+Answer:
+\`\`\`python`
+  }
+  else {
+    structured_input = `Question:
+please complete the code below: 
+${prompt_input}
+
+Answer:`
+  }
+  console.log(structured_input)
+  return structured_input
+}
+
+function postprocess_text(generated_text: string) {
+  console.log(generated_text)
+  const idx = generated_text.indexOf("```");
+  if (idx > -1) {
+    return generated_text.substring(0, idx);
+  }
+  return generated_text;
+}
+
 export default class OpenAIService extends ServiceAPI {
   get name() { return SERVICE_NAME; }
 
@@ -74,14 +111,14 @@ export default class OpenAIService extends ServiceAPI {
       "headers": ServiceAPI.getHeaders(),
       "body": JSON.stringify({
         model: modelId,
-        prompt: input
+        prompt: preprocess_prompt(input)
       })
     };
   
     const response = await ServiceAPI.runFetch(endpoint, options);
     const jsonResponse = (await response.json()) as OpenAIPromptResponse;
     const responseText = jsonResponse["choices"].map(c => {
-      return  { "generated_text": c.text };
+      return  { "generated_text": postprocess_text(c.text) };
     });
     const promptResponse: ModelPromptResponse = {
       results: responseText,
