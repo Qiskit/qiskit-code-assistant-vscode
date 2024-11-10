@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import { QcaInlineCompletionItemProvider } from "../inlineSuggestions/provideInlineCompletionItems";
 import { handleProvideFeedback } from "../commands/handleFeedback";
 import CodeAssistantInlineCompletionItem from "../inlineSuggestions/inlineCompletionItem";
+import { getServiceApi } from "../services/common";
 
 export interface PromptFeedbackCodeLensData {
   modelId: string|undefined;
@@ -16,7 +17,7 @@ export interface PromptFeedbackCodeLensData {
 const promptFeedbackCodeLensList: PromptFeedbackCodeLensData[] = [];
 const _onDidChangeCodeLenses: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();
 
-export function addPromptFeedbackCodeLens(
+export async function addPromptFeedbackCodeLens(
   modelId: string|undefined,
   promptId: string|undefined,
   position: vscode.Position,
@@ -24,13 +25,17 @@ export function addPromptFeedbackCodeLens(
   output: string|undefined,
 ) {
   promptFeedbackCodeLensList.length = 0
-  promptFeedbackCodeLensList.push({
-    modelId: modelId,
-    promptId: promptId,
-    position,
-    input: input,
-    output: output
-  });
+
+  const serviceApi = await getServiceApi()
+  if (serviceApi.enableFeedback) {
+    promptFeedbackCodeLensList.push({
+      modelId: modelId,
+      promptId: promptId,
+      position,
+      input: input,
+      output: output
+    });
+  }
 }
 
 export async function clearPromptFeedbackCodeLens() {
