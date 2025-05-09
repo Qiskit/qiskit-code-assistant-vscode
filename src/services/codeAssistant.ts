@@ -117,9 +117,9 @@ export default class CodeAssistantService extends ServiceAPI {
       const response = ServiceAPI.runFetchStreaming(endpoint, options);
   
       for await (let chunk of response) {
-        // transform the streaming data chunk
-        const dataChunk = JSON.parse(chunk.trim().replace("data: {", "{"));
-        yield dataChunk
+        // parse & transform the streaming data chunk
+        const jsonChunk = JSON.parse(chunk.trim().replace("data: {", "{")) as ModelPromptResponse;
+        yield jsonChunk
       }
     } else {
       const response = await ServiceAPI.runFetch(endpoint, options)

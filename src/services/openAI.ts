@@ -1,3 +1,5 @@
+import vscode from "vscode";
+
 import ServiceAPI from "./serviceApi";
 
 type OpenAIModelInfo = {
@@ -16,6 +18,7 @@ type OpenAIPromptResponse = {
   choices: OpenAIChoice[]
 }
 
+const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
 const OPENAI_API_VERSION = "v1";
 const SERVICE_NAME = "open-ai";
 
@@ -28,6 +31,18 @@ function modelTransform (model: OpenAIModelInfo): ModelInfo {
     "license": { name: "", link: "" },
     "model_id": model.id
   }
+}
+
+function toModelPromptResponse(jsonResponse: OpenAIPromptResponse): ModelPromptResponse {
+  const responseText = jsonResponse["choices"].map(c => {
+    return  { "generated_text": c.text };
+  });
+  const promptResponse: ModelPromptResponse = {
+    results: responseText,
+    prompt_id: jsonResponse["id"],
+    created_at: (new Date(jsonResponse["created"])).toISOString()
+  }
+  return promptResponse
 }
 
 export default class OpenAIService extends ServiceAPI {
@@ -63,32 +78,37 @@ export default class OpenAIService extends ServiceAPI {
     return modelData;
   }
 
-  async postModelPrompt(
+  async *postModelPrompt(
     modelId: string,
     input: string
-  ): Promise<ModelPromptResponse> {
+  ): AsyncGenerator<ModelPromptResponse> {
     // POST /v1/completions
     const endpoint = `/${OPENAI_API_VERSION}/completions`;
+    const streamingEnabled = config.get<boolean>("enableStreaming") as boolean;
     const options = {
       "method": "POST",
       "headers": ServiceAPI.getHeaders(),
       "body": JSON.stringify({
         model: modelId,
-        prompt: input
+        prompt: input,
+        stream: streamingEnabled
       })
     };
   
-    const response = await ServiceAPI.runFetch(endpoint, options);
-    const jsonResponse = (await response.json()) as OpenAIPromptResponse;
-    const responseText = jsonResponse["choices"].map(c => {
-      return  { "generated_text": c.text };
-    });
-    const promptResponse: ModelPromptResponse = {
-      results: responseText,
-      prompt_id: jsonResponse["id"],
-      created_at: (new Date(jsonResponse["created"])).toISOString()
+    if (streamingEnabled) {
+      const response = ServiceAPI.runFetchStreaming(endpoint, options);
+  
+      for await (let chunk of response) {
+        // parse & transform the streaming data chunk
+        const openAIChunk = JSON.parse(chunk.trim().replace("data: {", "{")) as OpenAIPromptResponse;
+        const promptResponseChunk = toModelPromptResponse(openAIChunk)
+        yield promptResponseChunk
+      }
+    } else {
+      const response = await ServiceAPI.runFetch(endpoint, options);
+      const jsonResponse = (await response.json()) as OpenAIPromptResponse;
+      const promptResponse = toModelPromptResponse(jsonResponse)
+      yield promptResponse;
     }
-
-    return promptResponse;
   }
 }
