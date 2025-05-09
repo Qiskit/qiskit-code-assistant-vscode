@@ -3,28 +3,68 @@ import CodeAssistantInlineCompletionItem from "../inlineSuggestions/inlineComple
 import runCompletion from "./runCompletion";
 import { AutocompleteResult, ResultEntry } from "../binary/requests/requests";
 import { isMultiline } from "./utils";
-import { completionItems } from "../inlineSuggestions/inlineSuggestionState";
+import handleGetCompletion from "../commands/handleGetCompletion";
 
 const INLINE_REQUEST_TIMEOUT = 3000;
 
+// this will be used to collect the chunks of streaming data for
+// each unique call to get inline completion items
+const callsForCompletions = new Map<string, {
+  completionText: string;
+}>();
+
 export default async function getInlineCompletionItems(
   document: vscode.TextDocument,
-  position: vscode.Position
-): Promise<vscode.InlineCompletionList> {
+  position: vscode.Position,
+  resolver: CallableFunction
+): Promise<void> {
   const isEmptyLine = document.lineAt(position.line).text.trim().length === 0;
 
-  const response = await runCompletion(
-    document,
-    position,
-    isEmptyLine ? INLINE_REQUEST_TIMEOUT : undefined
-  );
+  // unique identifier for this call to getInlineCompletionItems
+  const callerId = `${document.uri.toString()}-${position.line}-${position.character}`;
 
-  const completions = response?.results.map(
-    (result) =>
-      new CodeAssistantInlineCompletionItem(
-        result.new_prefix,
+  let caller = callsForCompletions.get(callerId)
+
+  // already have a streaming request in progress from this caller
+  if (caller && caller.completionText) {
+    const item = new vscode.InlineCompletionItem(
+      caller.completionText,
+      new vscode.Range(position, position)
+    );
+    // send it to be processed
+    const list = new vscode.InlineCompletionList([item])
+    resolver(list);
+    return;
+  }
+
+  try {
+    const completionGenerator = runCompletion(
+      document,
+      position,
+      isEmptyLine ? INLINE_REQUEST_TIMEOUT : undefined
+    );
+
+    for await (let chunk of completionGenerator) {
+      const result = chunk?.results[0]
+      if (!result) return;
+
+      caller = callsForCompletions.get(callerId)
+      if (!caller) {
+        caller = {
+          completionText: result.new_prefix,
+        }
+        // store this caller so we may update it as we loop through the streaming chunks
+        callsForCompletions.set(callerId, caller)
+      } else {
+        // update the stored caller's text
+        caller.completionText += result.new_prefix
+      }
+
+      // process completion item with text up to latest streaming response
+      const item = new CodeAssistantInlineCompletionItem(
+        caller.completionText,
         result,
-        calculateRange(position, response, result),
+        calculateRange(position, chunk, result),
         undefined,
         result.completion_metadata?.model_id,
         result.completion_metadata?.prompt_id,
@@ -34,12 +74,24 @@ export default async function getInlineCompletionItems(
         result.completion_metadata?.is_cached,
         result.completion_metadata?.snippet_context
       )
-  );
 
-  completionItems.push(...completions ?? []);
+      const list = new vscode.InlineCompletionList([item])
+      resolver(list)
 
-  // Put newer items earlier in list
-  return new vscode.InlineCompletionList(completionItems.reverse() || []);
+      // give vscode time to process update to current inline suggestion chunk
+      // then trigger another inline suggestion to capture future chunks
+      setTimeout(handleGetCompletion.handler, 10)
+    }
+  } catch (error) {
+    console.error('Error streaming completions:', error);
+  } finally {
+      // clean up after streaming is done
+      setTimeout(() => {
+        if (callsForCompletions.has(callerId)) {
+          callsForCompletions.delete(callerId);
+        }
+      }, 500);
+  }
 }
 
 function calculateRange(

@@ -13,12 +13,12 @@ import { getServiceApi } from "../services/common";
 let cancelCompletion: AbortController | null = null;
 let promptId: string | undefined = undefined;
 
-export default async function runCompletion(
+export default async function* runCompletion(
   document: TextDocument,
   position: Position,
   timeout?: number,
   currentSuggestionText = ""
-): Promise<AutocompleteResult | null | undefined> {
+): AsyncGenerator<AutocompleteResult | null | undefined> {
   if (!currentModel) {
     window.showInformationMessage("Please select a model (in the status bar) before auto-completing code.");
     return null;
@@ -75,51 +75,53 @@ export default async function runCompletion(
 
     let responseData = null;
     try {
-      responseData = await apiService.postModelPrompt(currentModel._id, inputs);
+      responseData = apiService.postModelPrompt(currentModel._id, inputs);
     } catch (err) {
       const msg = (err as Error).message || "Error sending the prompt";
       window.showInformationMessage(msg);
       return null;
     }
 
-    const generatedTextRaw = getGeneratedText(responseData);
+    for await (let chunk of responseData) {
+      const generatedTextRaw = getGeneratedText(chunk);
 
-    promptId = responseData.prompt_id
+      promptId = chunk.prompt_id
 
-    let generatedText = generatedTextRaw;
-    if (generatedText.slice(0, inputs.length) === inputs) {
-      generatedText = generatedText.slice(inputs.length);
+      let generatedText = generatedTextRaw;
+      if (generatedText.slice(0, inputs.length) === inputs) {
+        generatedText = generatedText.slice(inputs.length);
+      }
+
+      if (generatedText == "") {
+        window.showInformationMessage("The model returned an empty string; please try again. If this happens frequently, let the extension developers know.");
+        return null;
+      }
+
+      const completionMetadata: CompletionMetadata = {
+        model_id: currentModel._id,
+        prompt_id: promptId,
+        input: inputs,
+        output: generatedText
+      }
+
+      const resultEntry: ResultEntry = {
+        new_prefix: generatedText,
+        old_suffix: "",
+        new_suffix: "",
+        completion_metadata: completionMetadata
+      }
+
+      const result: AutocompleteResult = {
+        results: [resultEntry],
+        old_prefix: "",
+        user_message: [],
+        is_locked: false,
+      }
+
+      if (cancelCompletion.signal.aborted) return null;
+
+      yield result;
     }
-
-    if (generatedText == "") {
-      window.showInformationMessage("The model returned an empty string; please try again. If this happens frequently, let the extension developers know.");
-      return null;
-    }
-
-    const completionMetadata: CompletionMetadata = {
-      model_id: currentModel._id,
-      prompt_id: promptId,
-      input: inputs,
-      output: generatedText
-    }
-
-    const resultEntry: ResultEntry = {
-      new_prefix: generatedText,
-      old_suffix: "",
-      new_suffix: "",
-      completion_metadata: completionMetadata
-    }
-
-    const result: AutocompleteResult = {
-      results: [resultEntry],
-      old_prefix: "",
-      user_message: [],
-      is_locked: false,
-    }
-
-    if (cancelCompletion.signal.aborted) return null;
-
-    return result;
   } finally {
     cancelCompletion = null;
     setDefaultStatus();

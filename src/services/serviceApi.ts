@@ -64,7 +64,7 @@ export default class ServiceAPI {
     let response: Response;
 
     try {
-      const endpoint = `${this.getServiceBaseUrl()}${normalizeURLPath(urlPath)}`;
+      const endpoint = `${ServiceAPI.getServiceBaseUrl()}${normalizeURLPath(urlPath)}`;
       response = await fetch(endpoint, options);
     } catch (err) {
       console.error(`Fetch failed for ${urlPath}: ${(err as Error).message}`);
@@ -73,10 +73,29 @@ export default class ServiceAPI {
 
     if (!response.ok) {
       console.error(`Error response for ${urlPath}:`, response.status, response.statusText);
-      throw Error(await this.getErrorMessage(response));
+      throw Error(await ServiceAPI.getErrorMessage(response));
     }
 
     return response;
+  }
+
+  static async *runFetchStreaming(urlPath: string, options: RequestInit) {
+    const response = await ServiceAPI.runFetch(urlPath, options);
+
+    if (!response.body) {
+      throw Error("Fetch failed. No response body returned.");
+    }
+
+    // get body reader
+    const reader = response.body.getReader();
+    while (true) {
+      // wait for next encoded chunk
+      const { done, value } = await reader.read();
+      // check if stream is done
+      if (done) break;
+      // decode chunk and yield it
+      yield (new TextDecoder().decode(value));
+    }
   }
 
   async checkForToken(): Promise<void> {
@@ -103,11 +122,11 @@ export default class ServiceAPI {
     return { success: true }
   }
 
-  async postModelPrompt(
+  async *postModelPrompt(
     modelId: string,
     input: string
-  ): Promise<ModelPromptResponse> {
-    return ({} as ModelPromptResponse)
+  ): AsyncGenerator<ModelPromptResponse> {
+    yield ({} as ModelPromptResponse)
   }
   
   async postPromptAcceptance(

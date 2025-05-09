@@ -18,10 +18,17 @@ export class QcaInlineCompletionItemProvider implements vscode.InlineCompletionI
         return undefined;
       }
 
-      const completions = await getInlineCompletionItems(document, position);
-      // notify any listeners of completions update
-      this._onDidUpdateCompletionItems.fire(completions)
-      return completions;
+      return new Promise(async (resolve) => {
+        const resolver = (completions: vscode.InlineCompletionList | undefined) => {
+          if (completions) {
+            this._onDidUpdateCompletionItems.fire(completions)
+          }
+          resolve(completions)
+        }
+
+        getInlineCompletionItems(document, position, resolver);
+      })
+
     } catch (e) {
       console.error(`Error setting up request: ${e}`);
 
