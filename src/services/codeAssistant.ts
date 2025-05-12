@@ -96,25 +96,36 @@ export default class CodeAssistantService extends ServiceAPI {
     return disclaimerData;
   }
 
-  async postModelPrompt(
+  async *postModelPrompt(
     modelId: string,
     input: string
-  ): Promise<ModelPromptResponse> {
+  ): AsyncGenerator<ModelPromptResponse> {
     // POST /model/{modelId}/prompt
     const endpoint = `/model/${modelId}/prompt`;
     const apiToken = await this.getApiToken()
+    const streamingEnabled = config.get<boolean>("enableStreaming") as boolean;
     const options = {
       "method": "POST",
       "headers": ServiceAPI.getHeaders(apiToken),
       "body": JSON.stringify({
-        input
+        input,
+        stream: streamingEnabled
       })
     };
   
-    const response = await ServiceAPI.runFetch(endpoint, options);
-    const promptResponse = (await response.json()) as ModelPromptResponse;
-
-    return promptResponse;
+    if (streamingEnabled) {
+      const response = ServiceAPI.runFetchStreaming(endpoint, options);
+  
+      for await (let chunk of response) {
+        // parse & transform the streaming data chunk
+        const jsonChunk = JSON.parse(chunk.trim().replace("data: {", "{")) as ModelPromptResponse;
+        yield jsonChunk
+      }
+    } else {
+      const response = await ServiceAPI.runFetch(endpoint, options)
+      const promptResponse = (await response.json()) as ModelPromptResponse;
+      yield promptResponse;
+    }
   }
 
   async postPromptAcceptance(

@@ -90,6 +90,12 @@
             "telemetry",
             "usesOnlineServices"
           ]
+        },
+        "qiskitCodeAssistant.enableStreaming": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Enable streaming of completions data",
+          "tags": ["streaming"]
         }
       }
     },

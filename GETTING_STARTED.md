@@ -93,6 +93,8 @@ If necessary, you can update some settings for the extension.
 
    > **NOTE**: The telemetry does not collect your code nor the suggested code completions. What is collected is whether a code suggestion was accepted or dismissed.
 
+1. Completion data can be streamed by checking the `qiskitCodeAssistant.enableStreaming` setting
+
 ## Troubleshooting
 
 If you are not seeing the extension status bar in Visual Studio Code, check the extension is installed and enabled under the Extensions tab.
