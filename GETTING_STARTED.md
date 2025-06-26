@@ -26,11 +26,11 @@ To remove the extension
 
 ### IBM Quantum API Token
 
-To make calls to the service API the extension requires an IBM Quantum API token.
+To make calls to the service API the extension requires an IBM Quantum Cloud API token.
 
 #### Getting your API token
 
-1. Open the [IBM Quantum website](https://quantum.ibm.com/) in your browser
+1. Open the [IBM Quantum website](https://quantum.cloud.ibm.com/) in your browser
 1. Login with your IBM Quantum account
 1. Copy the API token displayed on the upper right side of the webpage (after logging in)
 
@@ -60,11 +60,11 @@ If the spinning icon disappears and the status bar remains with the "No Model Se
 
 ### Accepting the model disclaimer
 
-By default, the extension will use the `granite-8b-qiskit` model. It will appear in the Model Picker in the bottom status bar.
+By default, the extension will use the `granite-3.3-8b-qiskit` model. It will appear in the Model Picker in the bottom status bar.
 
 ![selected model](docs/images/Selected_Model.png)
 
-The first time you use the `granite-8b-qiskit` model a model info view will open and explain a little about the model with links to documentation and the model's license. It will also list some major restrictions that you should be aware of when using the model. Clicking `Accept` will accept the model disclaimer and enable the model for code generation.
+The first time you use the `granite-3.3-8b-qiskit` model a model info view will open and explain a little about the model with links to documentation and the model's license. It will also list some major restrictions that you should be aware of when using the model. Clicking `Accept` will accept the model disclaimer and enable the model for code generation.
 
 ![model disclaimer](docs/images/Model_Disclaimer.png)
 
