@@ -18,7 +18,7 @@ async function getTokenFromJson(): Promise<string | undefined> {
   if (data) {
     try {
       const accounts = JSON.parse(data.toString("utf8")) as QiskitAccountJson;
-      return accounts["qiskit-code-assistant"]?.token || accounts["default-ibm-quantum"]?.token;
+      return accounts["qiskit-code-assistant"]?.token || accounts["default-ibm-quantum-platform"]?.token || accounts["default-ibm-quantum"]?.token;
     } catch(err) {
       console.log(`Unable to parse saved Qiskit account: ${err}`);
     }
@@ -40,7 +40,7 @@ export async function initApiToken(context: ExtensionContext | null): Promise<st
 async function handler(): Promise<void> {
   const context = getExtensionContext();
   const input = await vscode.window.showInputBox({
-    prompt: "Please enter your API token (find yours at quantum.ibm.com):",
+    prompt: "Please enter your API token (find yours at quantum.cloud.ibm.com):",
     placeHolder: "Your token goes here ..."
   });
   if (input !== undefined) {
