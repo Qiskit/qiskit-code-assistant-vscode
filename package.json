@@ -1,7 +1,7 @@
 {
   "publisher": "Qiskit",
   "name": "qiskit-vscode",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "license": "Apache-2.0",
   "displayName": "Qiskit Code Assistant (Beta)",
   "description": "Write and optimize Qiskit code with a generative AI code assistant powered by IBM watsonx",
@@ -80,7 +80,9 @@
           "default": "https://qiskit-code-assistant.quantum.ibm.com",
           "format": "url",
           "description": "URL to the Qiskit Code Assistant Service API",
-          "tags": ["usesOnlineServices"]
+          "tags": [
+            "usesOnlineServices"
+          ]
         },
         "qiskitCodeAssistant.enableTelemetry": {
           "type": "boolean",
@@ -95,7 +97,9 @@
           "type": "boolean",
           "default": false,
           "markdownDescription": "Enable streaming of completions data",
-          "tags": ["streaming"]
+          "tags": [
+            "streaming"
+          ]
         }
       }
     },
