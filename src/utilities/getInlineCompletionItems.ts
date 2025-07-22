@@ -1,53 +1,49 @@
-import * as vscode from "vscode";
 import CodeAssistantInlineCompletionItem from "../inlineSuggestions/inlineCompletionItem";
-import runCompletion from "./runCompletion";
-import { AutocompleteResult, ResultEntry } from "../binary/requests/requests";
-import { isMultiline } from "./utils";
+import { createDecorationType, extractCompletionParts, toCompletionItem } from "./utils";
 import handleGetCompletion from "../commands/handleGetCompletion";
+import runCompletion from "./runCompletion";
+import * as vscode from "vscode";
+import * as os from 'os';
 
 const INLINE_REQUEST_TIMEOUT = 3000;
 
 // this will be used to collect the chunks of streaming data
 const callsForCompletions = new Map<string, CodeAssistantInlineCompletionItem>();
 
-function toCompletionItem(
-  insertText: string,
-  position: vscode.Position,
-  autoCompleteResult: AutocompleteResult,
-  resultEntry: ResultEntry
-) {
-  return new CodeAssistantInlineCompletionItem(
-    insertText,
-    resultEntry,
-    calculateRange(position, autoCompleteResult, resultEntry),
-    undefined,
-    resultEntry.completion_metadata?.model_id,
-    resultEntry.completion_metadata?.prompt_id,
-    resultEntry.completion_metadata?.input,
-    resultEntry.completion_metadata?.output,
-    resultEntry.completion_metadata?.completion_kind,
-    resultEntry.completion_metadata?.is_cached,
-    resultEntry.completion_metadata?.snippet_context
-  )
-}
-
 export default async function getInlineCompletionItems(
   document: vscode.TextDocument,
   position: vscode.Position,
   resolver: CallableFunction
 ): Promise<void> {
+  const editor = vscode.window.activeTextEditor;
+  if (!editor || editor.document !== document) return;
+
+  // If cursor is on the last line, insert a new blank line so ghostText can render below
+  if (position.line === document.lineCount - 1) {
+    await editor.edit(edit => {
+      edit.insert(new vscode.Position(document.lineCount, 0), "\n");
+    });
+    const lastLine = document.lineAt(document.lineCount - 2);
+    const newPosition = new vscode.Position(document.lineCount - 2, lastLine.text.length);
+    editor.selection = new vscode.Selection(newPosition, newPosition);
+  }
+
+  const ghostDeco = createDecorationType();
+  let accumulated = "\n";
+  let lastResolvedText = "";
+  let cancelled = false;
+
+  const docChangeDisposable = (os.arch() === 'arm64')? 
+    vscode.workspace.onDidChangeTextDocument(e => cancelled=(e.document === document) )
+    :vscode.window.onDidChangeTextEditorSelection(e => cancelled=(e.textEditor.document === document) );
+  
+
   const isEmptyLine = document.lineAt(position.line).text.trim().length === 0;
-
-  // unique identifier for this call
   const completionId = `${document.uri.toString()}-${position.line}-${position.character}`;
+  let completionItem = callsForCompletions.get(completionId);
 
-  let completionItem = callsForCompletions.get(completionId)
-
-  // already have streaming in progress from this completion
   if (completionItem && completionItem.insertText) {
-    // send completion item to be processed
-    const list = new vscode.InlineCompletionList([completionItem])
-    resolver(list);
+    resolver(new vscode.InlineCompletionList([completionItem]));
     return;
   }
 
@@ -61,48 +57,53 @@ export default async function getInlineCompletionItems(
 
     // loop through streaming data
     for await (let chunk of completionGenerator) {
+      if (cancelled) return;
       const result = chunk?.results[0]
       if (!result) return;
+      accumulated += result.new_prefix;
+      
+      const { before, after } = extractCompletionParts(accumulated);
 
-      completionItem = callsForCompletions.get(completionId)
-      if (!completionItem) {
-        completionItem = toCompletionItem(result.new_prefix, position, chunk, result);
-        // store this completion item so we may update it as we loop through the streaming chunks
-        callsForCompletions.set(completionId, completionItem)
-      } else {
-        // update the stored completion item
-        completionItem.insertText += result.new_prefix
+      // Show ghost text on the line below (now guaranteed to exist)
+      const ghostLine = position.line + 1;
+      const ghostCol = document.lineAt(ghostLine).range.end.character;
+      const ghostPos = new vscode.Position(ghostLine, ghostCol);
+      editor.setDecorations(ghostDeco, [
+        {
+          range: new vscode.Range(ghostPos, ghostPos),
+          renderOptions: { after: { contentText: after } },
+        },
+      ]);
+
+      // Only show inline suggestion when we cross a newline boundary
+      if (before && before !== lastResolvedText && before.length > lastResolvedText.length && before.length > 0) {
+        lastResolvedText = before;
+        // Create or update inline completion item
+        if (!completionItem) {
+          // Use `before` (the full chunk up to the newline) as the insertText
+          completionItem = toCompletionItem(before, position, chunk, result);
+          callsForCompletions.set(completionId, completionItem);
+        } else {
+          completionItem.insertText = before;
+        }
+        resolver(new vscode.InlineCompletionList([completionItem]));
+        setTimeout(handleGetCompletion.handler, 10);
       }
-
-      // process completion item with updated text
-      const list = new vscode.InlineCompletionList([completionItem])
-      resolver(list)
-
-      // give vscode time to process update to the current inline suggestion chunk
-      // then trigger another inline suggestion to capture future chunks
-      setTimeout(handleGetCompletion.handler, 10)
     }
   } catch (error) {
     console.error('Error streaming completions:', error);
   } finally {
-      // clean up after streaming is done
-      setTimeout(() => {
-        if (callsForCompletions.has(completionId)) {
-          callsForCompletions.delete(completionId);
-        }
-      }, 500);
+    ghostDeco.dispose();
+    docChangeDisposable.dispose();
+    if (completionItem) {
+      completionItem.insertText = accumulated;
+      resolver(new vscode.InlineCompletionList([completionItem]));
+      setTimeout(handleGetCompletion.handler, 10);
+    }
+    setTimeout(() => {
+      if (callsForCompletions.has(completionId)) {
+        callsForCompletions.delete(completionId);
+      }
+    }, 500);
   }
-}
-
-function calculateRange(
-  position: vscode.Position,
-  response: AutocompleteResult,
-  result: ResultEntry
-): vscode.Range {
-  return new vscode.Range(
-    position.translate(0, -response.old_prefix.length),
-    isMultiline(result.old_suffix)
-      ? position
-      : position.translate(0, result.old_suffix.length)
-  );
 }

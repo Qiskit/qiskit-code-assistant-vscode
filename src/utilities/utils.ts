@@ -1,3 +1,7 @@
+import CodeAssistantInlineCompletionItem from "../inlineSuggestions/inlineCompletionItem";
+import { AutocompleteResult, ResultEntry } from "../binary/requests/requests";
+import * as vscode from "vscode";
+
 export type Iterator = {
   next: () => number;
   prev: () => number;
@@ -55,4 +59,58 @@ export function normalizeURLPath(urlPath: string): string {
     return `/${urlPath}`
   }
   return urlPath;
+}
+
+
+export function createDecorationType(): vscode.TextEditorDecorationType {
+  return vscode.window.createTextEditorDecorationType({
+    after: {
+      margin: "0 0 0 1ch",
+      color: new vscode.ThemeColor("editorGhostText.foreground"),
+    },
+    rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
+  });
+}
+
+export function extractCompletionParts(text: string): { before: string; after: string } {
+  const lastNewline = text.lastIndexOf("\n");
+  if (lastNewline === -1) return { before: "", after: text };
+  return {
+    before: text.slice(0, lastNewline + 1),
+    after: text.slice(lastNewline + 1),
+  };
+}
+
+function calculateRange(
+  position: vscode.Position,
+  response: AutocompleteResult,
+  result: ResultEntry
+): vscode.Range {
+  return new vscode.Range(
+    position.translate(0, -response.old_prefix.length),
+    isMultiline(result.old_suffix)
+      ? position
+      : position.translate(0, result.old_suffix.length)
+  );
+}
+
+export function toCompletionItem(
+  insertText: string,
+  position: vscode.Position,
+  autoCompleteResult: AutocompleteResult,
+  resultEntry: ResultEntry
+) {
+  return new CodeAssistantInlineCompletionItem(
+    insertText,
+    resultEntry,
+    calculateRange(position, autoCompleteResult, resultEntry),
+    undefined,
+    resultEntry.completion_metadata?.model_id,
+    resultEntry.completion_metadata?.prompt_id,
+    resultEntry.completion_metadata?.input,
+    resultEntry.completion_metadata?.output,
+    resultEntry.completion_metadata?.completion_kind,
+    resultEntry.completion_metadata?.is_cached,
+    resultEntry.completion_metadata?.snippet_context
+  )
 }
