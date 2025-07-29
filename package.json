@@ -57,7 +57,7 @@
     "debounce": "^2.0.0",
     "semver": "^7.3.2",
     "tmp": "^0.2.1",
-    "vsce": "^1.97.0"
+    "vsce": "^2.15.0"
   },
   "capabilities": {
     "virtualWorkspaces": true,
