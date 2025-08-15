@@ -93,8 +93,7 @@ export default async function* runCompletion(
       }
 
       if (generatedText == "") {
-        window.showInformationMessage("The model returned an empty string; please try again. If this happens frequently, let the extension developers know.");
-        return null;
+        console.warn("The model returned an empty string")
       }
 
       const completionMetadata: CompletionMetadata = {
