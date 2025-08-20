@@ -99,6 +99,8 @@ export default async function getInlineCompletionItems(
       completionItem.insertText = accumulated;
       resolver(new vscode.InlineCompletionList([completionItem]));
       setTimeout(handleGetCompletion.handler, 10);
+    } else {
+      resolver(new vscode.InlineCompletionList([]));
     }
     setTimeout(() => {
       if (callsForCompletions.has(completionId)) {

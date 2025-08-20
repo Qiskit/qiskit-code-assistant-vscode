@@ -76,50 +76,57 @@ export default async function* runCompletion(
     let responseData = null;
     try {
       responseData = apiService.postModelPrompt(currentModel._id, inputs);
+      for await (let chunk of responseData) {
+        if ((chunk as unknown as {error: string})?.error) {
+          throw Error((chunk as unknown as {error: string})?.error)
+        }
+        const generatedTextRaw = getGeneratedText(chunk);
+
+        promptId = chunk.prompt_id
+
+        let generatedText = generatedTextRaw;
+        if (generatedText.slice(0, inputs.length) === inputs) {
+          generatedText = generatedText.slice(inputs.length);
+        }
+
+        if (generatedText == "") {
+          console.warn("The model returned an empty string")
+        }
+
+        const completionMetadata: CompletionMetadata = {
+          model_id: currentModel._id,
+          prompt_id: promptId,
+          input: inputs,
+          output: generatedText
+        }
+
+        const resultEntry: ResultEntry = {
+          new_prefix: generatedText,
+          old_suffix: "",
+          new_suffix: "",
+          completion_metadata: completionMetadata
+        }
+
+        const result: AutocompleteResult = {
+          results: [resultEntry],
+          old_prefix: "",
+          user_message: [],
+          is_locked: false,
+        }
+
+        if (cancelCompletion.signal.aborted) return null;
+
+        yield result;
+      }
     } catch (err) {
       const msg = (err as Error).message || "Error sending the prompt";
       window.showInformationMessage(msg);
+
+      if (cancelCompletion) {
+        cancelCompletion.abort();
+      }
+
       return null;
-    }
-
-    for await (let chunk of responseData) {
-      const generatedTextRaw = getGeneratedText(chunk);
-
-      promptId = chunk.prompt_id
-
-      let generatedText = generatedTextRaw;
-      if (generatedText.slice(0, inputs.length) === inputs) {
-        generatedText = generatedText.slice(inputs.length);
-      }
-
-      if (generatedText == "") {
-        console.warn("The model returned an empty string")
-      }
-
-      const completionMetadata: CompletionMetadata = {
-        model_id: currentModel._id,
-        prompt_id: promptId,
-        input: inputs,
-        output: generatedText
-      }
-
-      const resultEntry: ResultEntry = {
-        new_prefix: generatedText,
-        old_suffix: "",
-        new_suffix: "",
-        completion_metadata: completionMetadata
-      }
-
-      const result: AutocompleteResult = {
-        results: [resultEntry],
-        old_prefix: "",
-        user_message: [],
-        is_locked: false,
-      }
-
-      if (cancelCompletion.signal.aborted) return null;
-
-      yield result;
     }
   } finally {
     cancelCompletion = null;
