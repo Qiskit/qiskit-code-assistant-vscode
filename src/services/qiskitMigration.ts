@@ -1,6 +1,12 @@
+import vscode from "vscode";
+
 import { getExtensionContext } from "../globals/extensionContext";
 import { currentModel } from "../commands/selectModel";
 import ServiceAPI from "./serviceApi";
+
+const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
+
+const STREAM_DATA_PREFIX = 'data: ';
 
 async function getErrorMessage(response: Response) {
   let msg = "An unknown error has occurred";
@@ -27,12 +33,13 @@ async function getApiToken() {
   return apiToken;
 }
 
-export async function migrateCode(
+export async function *migrateCode(
   code: string,
   fromVersion?: string,
   toVersion?: string
-): Promise<string> {
+): AsyncGenerator<MigrationResponse> {
   // POST /migrate
+  const streamingEnabled = config.get<boolean>("enableStreaming") as boolean;
   const endpoint = `/model/${currentModel?._id}/migrate`;
   const apiToken = await getApiToken()
   const options = {
@@ -42,17 +49,35 @@ export async function migrateCode(
     'body': JSON.stringify({
       code,
       version_from: fromVersion,
-      version_to: toVersion
+      version_to: toVersion,
+      stream: streamingEnabled
     })
   };
 
-  const response = await ServiceAPI.runFetch(endpoint, options);
+  if (streamingEnabled) {
+    const response = ServiceAPI.runFetchStreaming(endpoint, options);
 
-  if (response.ok) {
-    const result = await response.json();
-    return result["migrated_code"]
+    for await(let chunk of response) {
+        // parse & transform the streaming data chunk
+        const lines = chunk.split('\n');
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (line.startsWith(STREAM_DATA_PREFIX)) {
+            try {
+              // remove 'data: ' prefix and parse remaining string
+              const jsonChunk = JSON.parse(line.substring(STREAM_DATA_PREFIX.length)) as MigrationResponse;
+              yield jsonChunk;
+            } catch (error) {
+              // JSON parsing errors
+              console.error(`Error parsing JSON: ${error}`);
+              console.log(line)
+            }
+          }
+        }
+      }
   } else {
-    console.error("Error migrating code", response.status, response.statusText);
-    throw Error(await getErrorMessage(response));
+    const response = await ServiceAPI.runFetch(endpoint, options);
+    const migrationResponse = await response.json() as MigrationResponse;
+    yield migrationResponse;
   }
 }

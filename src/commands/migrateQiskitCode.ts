@@ -51,24 +51,65 @@ async function handler(): Promise<void> {
   }
 
   try {
-    const notificationTitle = `Reviewing and migrating the ${selection.isEmpty ? "document" : "selected"} code. Please wait...` 
-    const migratedText = await vscode.window.withProgress({
+    const notificationTitle = `Migrating the ${selection.isEmpty ? "document" : "selected"} code`;
+
+    let end = lastLine.range.end;
+    let migratedText = await vscode.window.withProgress({
       location: vscode.ProgressLocation.Notification,
       cancellable: false,
       title: notificationTitle
     }, async (progress):Promise<string> => {
       
-      progress.report({  increment: 25 });
+      progress.report({  increment: 10, message: "Please wait..." });
 
-      let t = await migrateCode(text);
+      let t = ""
+      let responseData = migrateCode(text);
+      let step = 0;
+      for await (let chunk of responseData) {
+        if ((chunk as unknown as {error: string})?.error) {
+          throw Error((chunk as unknown as {error: string})?.error)
+        }
 
-      if (text.trim() == t.trim()) {
-        t = ""
+        // update notidication message based on streaming data progress
+        if (chunk.plan_steps && step < 1) {
+          progress.report({  message: "Planning migration...", increment: 25 });
+          step = 1;
+        }
+        if (chunk.final_thoughts && step < 2) {
+          progress.report({  message: "Reviewing migration...", increment: 25 });
+          step = 2;
+        }
+        if (chunk.migrated_code && step < 3) {
+          progress.report({  message: "Returning response...", increment: 25 });
+          step = 3;
+        }
+
+        if (step == 3) {
+          t += chunk.migrated_code
+
+          // calculate the new text range for the additional
+          // streaming data to be inserted into document
+          const migratedLines = t.split("\n");
+          const newLastLine = firstLine.lineNumber + migratedLines.length - 1;
+          const lastChar = migratedLines[migratedLines.length - 1].length + 1;
+          const lastPosition = new vscode.Position(newLastLine, lastChar);
+          const textRange = new vscode.Range(firstLine.range.start, end);
+
+          end = lastPosition;
+
+          editor.edit(editBuilder => {
+            editBuilder.replace(textRange, t);
+          });
+        }
       }
 
       progress.report({ increment: 100 });
       return t;
     });
+
+    if (text.trim() == migratedText.trim()) {
+      migratedText = ""
+    }
 
     const infoMsg = migrationCompletionMsg(migratedText, fullDocMigration)
     if (!migratedText) {
@@ -76,15 +117,7 @@ async function handler(): Promise<void> {
       return;
     }
 
-    editor.edit(editBuilder => {
-      editBuilder.replace(textRange, migratedText);
-    });
-    const migratedLines = migratedText.split("\n");
-    const newLastLine = firstLine.lineNumber + migratedLines.length - 1;
-    const lastChar = migratedLines[migratedLines.length - 1].length + 1;
-    const lastPosition = new vscode.Position(newLastLine, lastChar);
-    
-    editor.selection = new vscode.Selection(firstLine.range.start, lastPosition);
+    editor.selection = new vscode.Selection(firstLine.range.start, end);
     vscode.window.showInformationMessage(infoMsg);
   } catch(error) {
     throw error;
