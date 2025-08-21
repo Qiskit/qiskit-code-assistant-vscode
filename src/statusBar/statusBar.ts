@@ -1,4 +1,6 @@
-import { Command, ExtensionContext, StatusBarAlignment, StatusBarItem, ThemeColor, window } from "vscode";
+import * as vscode from "vscode";
+
+import { ExtensionContext, StatusBarAlignment, StatusBarItem, ThemeColor, window } from "vscode";
 import { STATUS_NAME } from "../globals/consts";
 
 import { handleChangeModelStatusBar, handleProvideFeedbackStatusBar } from "../commands/handleStatusBar";
@@ -50,9 +52,11 @@ export function setDefaultStatus(): void {
         arguments: [currentModel?._id]
       }
     }
+    vscode.commands.executeCommand("setContext", "qiskit-vscode.model-selected", true);
   } else {
     mainStatusBar.text = "Qiskit Code Assistant: No Model Selected";
     mainStatusBar.backgroundColor = new ThemeColor("statusBarItem.warningBackground");
+    vscode.commands.executeCommand("setContext", "qiskit-vscode.model-selected", false);
   }
 }
 

@@ -66,10 +66,25 @@
     }
   },
   "contributes": {
+    "menus": {
+      "editor/title": [
+        {
+          "when": "editorLangId == python",
+          "command": "qiskit-vscode.migrate-code",
+          "group": "navigation"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "qiskit-vscode.api-token",
         "title": "Qiskit Code Assistant: Set IBM Quantum API token"
+      },
+      {
+        "command": "qiskit-vscode.migrate-code",
+        "title": "Qiskit Code Assistant: Migrate code",
+        "icon": "$(sparkle)",
+        "enablement": "qiskit-vscode.model-selected"
       }
     ],
     "configuration": {

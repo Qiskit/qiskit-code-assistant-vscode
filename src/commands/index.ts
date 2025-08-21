@@ -5,6 +5,7 @@ import handleGetCompletion from "./handleGetCompletion";
 import { handleChangeModelStatusBar, handleProvideFeedbackStatusBar } from "./handleStatusBar";
 import { handleProvideFeedback, handleClearCodelens} from "./handleFeedback";
 import setApiToken from "./setApiToken";
+import migrateQiskitCode from "./migrateQiskitCode";
 
 const commands: CommandModule[] = [
   acceptDisclaimer,
@@ -13,6 +14,7 @@ const commands: CommandModule[] = [
   handleChangeModelStatusBar,
   handleClearCodelens,
   handleGetCompletion,
+  migrateQiskitCode,
   handleProvideFeedbackStatusBar,
   handleProvideFeedback,
   selectModel,
