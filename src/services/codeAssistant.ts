@@ -6,6 +6,7 @@ import { requiresToken } from "../utilities/guards";
 
 const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
 const SERVICE_NAME = "qiskit-code-assistant";
+const STREAM_DATA_PREFIX = 'data: ';
 
 export default class CodeAssistantService extends ServiceAPI {
   get name() { return SERVICE_NAME; }
@@ -118,8 +119,21 @@ export default class CodeAssistantService extends ServiceAPI {
   
       for await (let chunk of response) {
         // parse & transform the streaming data chunk
-        const jsonChunk = JSON.parse(chunk.trim().replace("data: {", "{")) as ModelPromptResponse;
-        yield jsonChunk
+        const lines = chunk.split('\n');
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (line.startsWith(STREAM_DATA_PREFIX)) {
+            try {
+              // remove 'data: ' prefix and parse remaining string
+              const jsonChunk = JSON.parse(line.substring(STREAM_DATA_PREFIX.length)) as ModelPromptResponse;
+              yield jsonChunk;
+            } catch (error) {
+              // JSON parsing errors
+              console.error(`Error parsing JSON: ${error}`);
+              console.log(line)
+            }
+          }
+        }
       }
     } else {
       const response = await ServiceAPI.runFetch(endpoint, options)

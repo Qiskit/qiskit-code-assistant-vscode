@@ -26,7 +26,7 @@ export default class ServiceAPI {
       try {
         const jsonMsg = await response.json() as {detail: string};
         msg = jsonMsg?.detail || response.statusText;
-        console.log(response.status)
+        console.log(response.status, msg);
   
         if (AUTH_ERROR_CODES.includes(response.status)) {
           msg = `API Token is not authorized or is incorrect: ${msg}`
