@@ -6,6 +6,7 @@ import { handleChangeModelStatusBar, handleProvideFeedbackStatusBar } from "./ha
 import { handleProvideFeedback, handleClearCodelens} from "./handleFeedback";
 import setApiToken from "./setApiToken";
 import migrateQiskitCode from "./migrateQiskitCode";
+import migrationFeedback from "./migrationFeedback";
 
 const commands: CommandModule[] = [
   acceptDisclaimer,
@@ -15,6 +16,7 @@ const commands: CommandModule[] = [
   handleClearCodelens,
   handleGetCompletion,
   migrateQiskitCode,
+  migrationFeedback,
   handleProvideFeedbackStatusBar,
   handleProvideFeedback,
   selectModel,

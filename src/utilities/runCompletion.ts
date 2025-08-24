@@ -3,7 +3,7 @@ import { Position, Range, TextDocument, window } from "vscode";
 import { AutocompleteResult, CompletionMetadata, ResultEntry } from "../binary/requests/requests";
 import { CHAR_LIMIT, PromptType } from "../globals/consts";
 import languages from "../globals/languages";
-import { setDefaultStatus, setLoadingStatus } from "../statusBar/statusBar";
+import { setDefaultStatus, setLoadingStatus, setErrorStatus } from "../statusBar/statusBar";
 import { getExtensionContext } from "../globals/extensionContext";
 import { currentModel } from "../commands/selectModel";
 import { sleep } from "./utils";
@@ -34,7 +34,7 @@ export default async function* runCompletion(
   await sleep(0);
 
   try {
-    setLoadingStatus();
+    setLoadingStatus('connecting');
     cancelCompletion = new AbortController();
 
     const offset = document.offsetAt(position);
@@ -48,10 +48,12 @@ export default async function* runCompletion(
 
     if (!context) return;
 
+    setLoadingStatus('generating');
     const apiService = await getServiceApi();
 
     if (!currentModel.disclaimer?.accepted) {
       acceptDisclaimer.handler(currentModel);
+      setDefaultStatus();
       return null;
     }
 
@@ -70,13 +72,16 @@ export default async function* runCompletion(
 
     if (inputs == "") {
       window.showInformationMessage("No input available for model to complete.");
+      setDefaultStatus();
       return null;
     }
 
     let responseData = null;
     try {
+      setLoadingStatus('streaming');
       responseData = apiService.postModelPrompt(currentModel._id, inputs);
       for await (let chunk of responseData) {
+        setLoadingStatus('processing');
         if ((chunk as unknown as {error: string})?.error) {
           throw Error((chunk as unknown as {error: string})?.error)
         }
@@ -89,8 +94,9 @@ export default async function* runCompletion(
           generatedText = generatedText.slice(inputs.length);
         }
 
+        // Only log empty completions to console, don't show user notification
         if (generatedText == "") {
-          console.warn("The model returned an empty string")
+          console.warn("The model returned an empty completion");
         }
 
         const completionMetadata: CompletionMetadata = {
@@ -114,18 +120,23 @@ export default async function* runCompletion(
           is_locked: false,
         }
 
-        if (cancelCompletion.signal.aborted) return null;
+        if (cancelCompletion.signal.aborted) {
+          setDefaultStatus();
+          return null;
+        }
 
         yield result;
       }
     } catch (err) {
       const msg = (err as Error).message || "Error sending the prompt";
-      window.showInformationMessage(msg);
-
+      // Only show error messages for actual API errors, not for normal completion flow
+      console.error("API Error:", msg);
+      setErrorStatus("Error: " + msg);
+      
       if (cancelCompletion) {
         cancelCompletion.abort();
       }
-
+      setDefaultStatus();
       return null;
     }
   } finally {

@@ -21,6 +21,7 @@ export async function activate(
 
   if (context.extensionMode !== vscode.ExtensionMode.Test) {
     handlePluginInstalled(context);
+
   }
 
   return Promise.resolve();
@@ -28,14 +29,17 @@ export async function activate(
 
 async function backgroundInit(context: vscode.ExtensionContext) {
 
-  commands.forEach((command) =>
+  commands.forEach((command) => {
     context.subscriptions.push(
       vscode.commands.registerCommand(command.identifier, command.handler)
     )
+  }
   );
 
   await initApiToken(context);
+
   await initModels(context);
+
   await installAutocomplete(context);
 }
 

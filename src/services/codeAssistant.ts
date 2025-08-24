@@ -185,17 +185,44 @@ export default class CodeAssistantService extends ServiceAPI {
     // POST /feedback
     const endpoint = `/feedback`;
     const apiToken = await this.getApiToken()
+    
+    // Validate and sanitize data to prevent server errors
+    const sanitizedInput = input ? input.substring(0, 10000) : undefined; // Limit to 10KB
+    const sanitizedOutput = output ? output.substring(0, 10000) : undefined; // Limit to 10KB
+    const sanitizedComment = comment ? comment.substring(0, 1000) : undefined; // Limit to 1KB
+    
+    const feedbackData = {
+      model_id: modelId,
+      prompt_id: promptId || undefined, // Ensure null becomes undefined
+      input: sanitizedInput,
+      output: sanitizedOutput,
+      positive_feedback: positiveFeedback,
+      comment: sanitizedComment
+    };
+    
+    // Remove undefined values to clean up the payload
+    const cleanedData = Object.fromEntries(
+      Object.entries(feedbackData).filter(([_, value]) => value !== undefined)
+    );
+    
+    // Log the feedback data being sent for debugging
+    console.log("Sending feedback data:", {
+      model_id: modelId,
+      prompt_id: promptId,
+      has_input: !!sanitizedInput,
+      input_length: sanitizedInput?.length,
+      has_output: !!sanitizedOutput,
+      output_length: sanitizedOutput?.length,
+      positive_feedback: positiveFeedback,
+      has_comment: !!sanitizedComment,
+      comment_length: sanitizedComment?.length,
+      cleaned_keys: Object.keys(cleanedData)
+    });
+    
     const options = {
       "method": "POST",
       "headers": ServiceAPI.getHeaders(apiToken),
-      "body": JSON.stringify({
-        model_id: modelId,
-        prompt_id: promptId,
-        input,
-        output,
-        positive_feedback: positiveFeedback,
-        comment
-      })
+      "body": JSON.stringify(cleanedData)
     };
   
     const response = await ServiceAPI.runFetch(endpoint, options);
