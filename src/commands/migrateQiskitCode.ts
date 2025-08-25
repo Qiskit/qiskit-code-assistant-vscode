@@ -190,6 +190,7 @@ async function handler(): Promise<void> {
 
       if (text.trim() === result.migratedCode.trim()) {
         return null; 
+
       }
 
       return result;
@@ -197,9 +198,6 @@ async function handler(): Promise<void> {
 
     const infoMsg = migrationCompletionMsg(migrationResult, fullDocMigration)
     if (!migrationResult || !migrationResult.migratedCode) {
-      vscode.window.showInformationMessage(infoMsg);
-      return;
-    }
 
     editor.edit(editBuilder => {
       editBuilder.replace(textRange, migrationResult.migratedCode);
@@ -210,6 +208,7 @@ async function handler(): Promise<void> {
     const lastPosition = new vscode.Position(newLastLine, lastChar);
     
     editor.selection = new vscode.Selection(firstLine.range.start, lastPosition);
+
     vscode.window.showInformationMessage(infoMsg);
 
     // Show feedback options after successful migration

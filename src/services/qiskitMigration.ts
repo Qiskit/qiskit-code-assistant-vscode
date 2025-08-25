@@ -1,7 +1,13 @@
+import vscode from "vscode";
+
 import { getExtensionContext } from "../globals/extensionContext";
 import { currentModel } from "../commands/selectModel";
 import ServiceAPI from "./serviceApi";
 import { setLoadingStatus } from "../statusBar/statusBar";
+
+const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
+
+const STREAM_DATA_PREFIX = 'data: ';
 
 async function getErrorMessage(response: Response) {
   let msg = "An unknown error has occurred";
@@ -41,6 +47,7 @@ export async function migrateCode(
 ): Promise<MigrationResult> {
   // POST /migrate
   setLoadingStatus('streaming');
+
   const endpoint = `/model/${currentModel?._id}/migrate`;
   const apiToken = await getApiToken()
   const options = {
@@ -50,11 +57,13 @@ export async function migrateCode(
     'body': JSON.stringify({
       code,
       version_from: fromVersion,
-      version_to: toVersion
+      version_to: toVersion,
+      stream: streamingEnabled
     })
   };
 
-  const response = await ServiceAPI.runFetch(endpoint, options);
+  if (streamingEnabled) {
+    const response = ServiceAPI.runFetchStreaming(endpoint, options);
 
   if (response.ok) {
     setLoadingStatus('processing');
@@ -64,8 +73,10 @@ export async function migrateCode(
       migrationId: result.migration_id || result.prompt_id, // fallback to prompt_id if migration_id not available
       originalCode: code
     };
+
   } else {
-    console.error("Error migrating code", response.status, response.statusText);
-    throw Error(await getErrorMessage(response));
+    const response = await ServiceAPI.runFetch(endpoint, options);
+    const migrationResponse = await response.json() as MigrationResponse;
+    yield migrationResponse;
   }
 }
