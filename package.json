@@ -85,6 +85,10 @@
         "title": "Qiskit Code Assistant: Migrate code",
         "icon": "$(sparkle)",
         "enablement": "qiskit-vscode.model-selected"
+      },
+      {
+        "command": "qiskit-vscode.migration-feedback",
+        "title": "Qiskit Code Assistant: Provide migration feedback"
       }
     ],
     "configuration": {

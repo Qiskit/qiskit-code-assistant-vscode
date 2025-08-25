@@ -3,6 +3,7 @@ import vscode from "vscode";
 import { getExtensionContext } from "../globals/extensionContext";
 import { currentModel } from "../commands/selectModel";
 import ServiceAPI from "./serviceApi";
+import { setLoadingStatus } from "../statusBar/statusBar";
 
 const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
 
@@ -33,13 +34,20 @@ async function getApiToken() {
   return apiToken;
 }
 
-export async function *migrateCode(
+export interface MigrationResult {
+  migratedCode: string;
+  migrationId?: string;
+  originalCode: string;
+}
+
+export async function migrateCode(
   code: string,
   fromVersion?: string,
   toVersion?: string
-): AsyncGenerator<MigrationResponse> {
+): Promise<MigrationResult> {
   // POST /migrate
-  const streamingEnabled = config.get<boolean>("enableStreaming") as boolean;
+  setLoadingStatus('streaming');
+
   const endpoint = `/model/${currentModel?._id}/migrate`;
   const apiToken = await getApiToken()
   const options = {
@@ -57,24 +65,15 @@ export async function *migrateCode(
   if (streamingEnabled) {
     const response = ServiceAPI.runFetchStreaming(endpoint, options);
 
-    for await(let chunk of response) {
-        // parse & transform the streaming data chunk
-        const lines = chunk.split('\n');
-        for (let i = 0; i < lines.length; i++) {
-          const line = lines[i].trim();
-          if (line.startsWith(STREAM_DATA_PREFIX)) {
-            try {
-              // remove 'data: ' prefix and parse remaining string
-              const jsonChunk = JSON.parse(line.substring(STREAM_DATA_PREFIX.length)) as MigrationResponse;
-              yield jsonChunk;
-            } catch (error) {
-              // JSON parsing errors
-              console.error(`Error parsing JSON: ${error}`);
-              console.log(line)
-            }
-          }
-        }
-      }
+  if (response.ok) {
+    setLoadingStatus('processing');
+    const result = await response.json() as { migrated_code: string, migration_id?: string, prompt_id?: string };
+    return {
+      migratedCode: result.migrated_code,
+      migrationId: result.migration_id || result.prompt_id, // fallback to prompt_id if migration_id not available
+      originalCode: code
+    };
+
   } else {
     const response = await ServiceAPI.runFetch(endpoint, options);
     const migrationResponse = await response.json() as MigrationResponse;
