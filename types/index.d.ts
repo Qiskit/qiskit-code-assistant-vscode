@@ -66,6 +66,14 @@ interface ModelPromptResponse {
   created_at?: string
 }
 
+interface MigrationResponse {
+  migrated_code: string,
+  plan_steps?: string[],
+  final_thoughts?: string,
+  context?: any,
+  created_at: string
+}
+
 interface ResponseMessage {
   success?: boolean
   message?: string
