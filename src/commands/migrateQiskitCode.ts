@@ -1,6 +1,6 @@
 import vscode from "vscode";
 import { migrateCode, MigrationResult } from "../services/qiskitMigration";
-import { setDefaultStatus, setLoadingStatus, setErrorStatus } from "../statusBar/statusBar";
+import { setDefaultStatus, setLoadingStatus } from "../statusBar/statusBar";
 import { currentModel } from "./selectModel";
 import { getServiceApi } from "../services/common";
 
@@ -198,6 +198,9 @@ async function handler(): Promise<void> {
 
     const infoMsg = migrationCompletionMsg(migrationResult, fullDocMigration)
     if (!migrationResult || !migrationResult.migratedCode) {
+      vscode.window.showInformationMessage(infoMsg);
+      return;
+    }
 
     editor.edit(editBuilder => {
       editBuilder.replace(textRange, migrationResult.migratedCode);
@@ -208,7 +211,6 @@ async function handler(): Promise<void> {
     const lastPosition = new vscode.Position(newLastLine, lastChar);
     
     editor.selection = new vscode.Selection(firstLine.range.start, lastPosition);
-
     vscode.window.showInformationMessage(infoMsg);
 
     // Show feedback options after successful migration
@@ -216,7 +218,7 @@ async function handler(): Promise<void> {
       await showMigrationFeedback(migrationResult);
     } catch (feedbackError) {
       console.error("Error showing migration feedback:", feedbackError);
-      // don't throw the error, just log it so migration success isn't affected
+      // Don't throw the error, just log it so migration success isn't affected
     }
   } catch(error) {
     throw error;
