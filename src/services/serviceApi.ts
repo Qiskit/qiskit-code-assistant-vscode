@@ -24,7 +24,9 @@ export default class ServiceAPI {
     let msg = "An unknown error has occurred";
     if (!response.ok) {
       try {
-        const jsonMsg = await response.json() as {detail: string};
+        // Clone the response to avoid consuming the original body
+        const responseClone = response.clone();
+        const jsonMsg = await responseClone.json() as {detail: string};
         msg = jsonMsg?.detail || response.statusText;
         console.log(response.status, msg);
   
@@ -32,7 +34,13 @@ export default class ServiceAPI {
           msg = `API Token is not authorized or is incorrect: ${msg}`
         }
       } catch (err) {
-        msg = await response.text();
+        try {
+          // If JSON parsing fails, try text - clone again to be safe
+          const responseClone = response.clone();
+          msg = await responseClone.text();
+        } catch (textErr) {
+          msg = response.statusText || "Unknown error";
+        }
       }
     }
     return msg;
@@ -73,7 +81,8 @@ export default class ServiceAPI {
 
     if (!response.ok) {
       console.error(`Error response for ${urlPath}:`, response.status, response.statusText);
-      throw Error(await ServiceAPI.getErrorMessage(response));
+      const errorMessage = await ServiceAPI.getErrorMessage(response);
+      throw Error(errorMessage);
     }
 
     return response;
