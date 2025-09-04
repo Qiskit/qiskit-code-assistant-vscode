@@ -175,12 +175,7 @@ export default class CodeAssistantService extends ServiceAPI {
   }
 
   async postFeedback(
-    modelId: string,
-    promptId: undefined|string,
-    positiveFeedback: undefined|boolean,
-    comment: undefined|string,
-    input: undefined|string,
-    output: undefined|string
+    feedback: any
   ): Promise<ResponseMessage> {
     // POST /feedback
     const endpoint = `/feedback`;
@@ -188,14 +183,7 @@ export default class CodeAssistantService extends ServiceAPI {
     const options = {
       "method": "POST",
       "headers": ServiceAPI.getHeaders(apiToken),
-      "body": JSON.stringify({
-        model_id: modelId,
-        prompt_id: promptId,
-        input,
-        output,
-        positive_feedback: positiveFeedback,
-        comment
-      })
+      "body": JSON.stringify(feedback)
     };
   
     const response = await ServiceAPI.runFetch(endpoint, options);

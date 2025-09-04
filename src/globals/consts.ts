@@ -11,3 +11,7 @@ export enum PromptType {
   FillInMiddle,
   PredictNext,
 }
+
+export const PROVIDE_FEEDBACK = "Provide feedback"
+export const DISMISS = "Dismiss"
+export const FEEDBACK_RESPONSE_MSG = "Thank you for sharing your feedback with the Qiskit Code Assistant team.";

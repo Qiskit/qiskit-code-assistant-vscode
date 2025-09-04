@@ -1,6 +1,10 @@
 import vscode from "vscode";
 import { migrateCode } from "../services/qiskitMigration";
 import { setDefaultStatus, setLoadingStatus } from "../statusBar/statusBar";
+import { getServiceApi } from "../services/common";
+import { DISMISS, FEEDBACK_RESPONSE_MSG, PROVIDE_FEEDBACK } from "../globals/consts";
+
+const MIGRATION_FEEDBACK_MSG = "Please share any detailed feedback you have about the Qiskit Code Assistant Migration. The details of your migration as well as this message will be sent to the Qiskit Code Assistant team in order to improve the service.";
 
 let isRunning = false;
 
@@ -54,20 +58,27 @@ async function handler(): Promise<void> {
     const notificationTitle = `Migrating the ${selection.isEmpty ? "document" : "selected"} code`;
 
     let end = lastLine.range.end;
-    let migratedText = await vscode.window.withProgress({
+    let migrationResult = await vscode.window.withProgress({
       location: vscode.ProgressLocation.Notification,
       cancellable: false,
       title: notificationTitle
-    }, async (progress):Promise<string> => {
+    }, async (progress):Promise<any> => {
       
       progress.report({  increment: 10, message: "Please wait..." });
 
-      let t = ""
+      let t = "", g = "", m = ""
       let responseData = migrateCode(text);
       let step = 0;
       for await (let chunk of responseData) {
         if ((chunk as unknown as {error: string})?.error) {
           throw Error((chunk as unknown as {error: string})?.error)
+        }
+
+        if (!m) {
+          m = chunk.model_id
+        }
+        if (!g) {
+          g = chunk.migration_id
         }
 
         // update notidication message based on streaming data progress
@@ -104,21 +115,42 @@ async function handler(): Promise<void> {
       }
 
       progress.report({ increment: 100 });
-      return t;
+      return {
+        input: text,
+        migrated_code: t,
+        migration_id: g,
+        model_id: m
+      }
     });
 
-    if (text.trim() == migratedText.trim()) {
-      migratedText = ""
+    if (text.trim() == migrationResult.migrated_code.trim()) {
+      migrationResult.migrated_code = ""
+    } else {
+      editor.selection = new vscode.Selection(firstLine.range.start, end);
     }
 
-    const infoMsg = migrationCompletionMsg(migratedText, fullDocMigration)
-    if (!migratedText) {
-      vscode.window.showInformationMessage(infoMsg);
-      return;
-    }
+    const infoMsg = migrationCompletionMsg(migrationResult.migrated_code, fullDocMigration)
+    const hasFeedback = await vscode.window.showInformationMessage(
+      infoMsg,
+      PROVIDE_FEEDBACK,
+      DISMISS
+    );
 
-    editor.selection = new vscode.Selection(firstLine.range.start, end);
-    vscode.window.showInformationMessage(infoMsg);
+    if (hasFeedback != DISMISS) {
+      const comment = await vscode.window.showInputBox({
+        prompt: MIGRATION_FEEDBACK_MSG
+      });
+
+      if (comment) {
+        const serviceApi = await getServiceApi();
+        await serviceApi.postFeedback({
+          ...migrationResult,
+          comment
+        });
+
+        vscode.window.showInformationMessage(FEEDBACK_RESPONSE_MSG)
+      }
+    }
   } catch(error) {
     throw error;
   } finally {

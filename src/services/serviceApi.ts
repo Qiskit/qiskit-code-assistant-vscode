@@ -137,12 +137,7 @@ export default class ServiceAPI {
   }
 
   async postFeedback(
-    modelId: string,
-    promptId: undefined|string,
-    positiveFeedback: undefined|boolean,
-    comment: undefined|string,
-    input: undefined|string,
-    output: undefined|string
+    feedback: any
   ): Promise<ResponseMessage> {
     return { success: true }
   }
