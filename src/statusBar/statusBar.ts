@@ -81,38 +81,41 @@ export function setLoadingStatus(stage: 'connecting' | 'generating' | 'streaming
     : "Qiskit Code Assistant";
 
   let stageText: string;
-  let spinnerFrames: string[];
+  let endIcon: string;
 
   switch (stage) {
     case 'connecting':
       stageText = "Connecting to API";
-      spinnerFrames = ["$(cloud)", "$(cloud~spin)"];
+      endIcon = "$(cloud)";
       break;
     case 'generating':
       stageText = "Generating completion";
-      spinnerFrames = ["$(gear)", "$(gear~spin)"];
+      endIcon = "$(gear)";
       break;
     case 'streaming':
-      stageText = "Receiving results";
-      spinnerFrames = ["$(arrow-down)", "$(arrow-down~spin)"];
+      stageText = "Receiving data";
+      endIcon = "$(arrow-down)";
       break;
     case 'processing':
       stageText = "Processing response";
-      spinnerFrames = ["$(settings-gear)", "$(settings-gear~spin)"];
+      endIcon = "$(settings-gear)";
       break;
     default:
       stageText = "Working";
-      spinnerFrames = ["$(sync)", "$(sync~spin)"];
+      endIcon = "$(sync)";
   }
 
   mainStatusBar.backgroundColor = new ThemeColor("statusBarItem.prominentBackground");
   mainStatusBar.color = new ThemeColor("statusBarItem.prominentForeground");
 
-  let frameIndex = 0;
+  let spinnerFrame = 0;
+  const spinnerFrames = ["$(loading~spin)", "$(sync~spin)"];
+  
   const updateSpinner = () => {
     if (mainStatusBar) {
-      mainStatusBar.text = `${baseText} ${spinnerFrames[frameIndex]} ${stageText}...`;
-      frameIndex = (frameIndex + 1) % spinnerFrames.length;
+      // Show spinner right after model name, then stage text with end icon
+      mainStatusBar.text = `${baseText} ${spinnerFrames[spinnerFrame]} ${stageText}... ${endIcon}`;
+      spinnerFrame = (spinnerFrame + 1) % spinnerFrames.length;
     }
   };
 

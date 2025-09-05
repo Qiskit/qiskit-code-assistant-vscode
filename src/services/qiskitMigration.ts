@@ -35,13 +35,11 @@ export interface MigrationResult {
   originalCode: string;
 }
 
-export async function migrateCode(
+export async function* migrateCodeStream(
   code: string,
   fromVersion?: string,
   toVersion?: string
-): Promise<MigrationResult> {
-  // POST /migrate
-  setLoadingStatus('streaming');
+): AsyncGenerator<{migrated_code?: string, generated_text?: string, delta?: string, migration_id?: string, prompt_id?: string}> {
   const endpoint = `/model/${currentModel?._id}/migrate`;
   const apiToken = await getApiToken();
   
@@ -61,85 +59,99 @@ export async function migrateCode(
   };
 
   if (streamingEnabled) {
-    // Handle streaming response - similar to how completions work
+    console.log("Starting streaming migration for model:", currentModel?._id);
     const response = ServiceAPI.runFetchStreaming(endpoint, options);
-    let migratedCode = '';
-    let migrationId: string | undefined;
-    let promptId: string | undefined;
     const STREAM_DATA_PREFIX = 'data: ';
     
     try {
       for await (let chunk of response) {
-        setLoadingStatus('streaming');
         const lines = chunk.split('\n');
         for (let i = 0; i < lines.length; i++) {
           const line = lines[i].trim();
           if (line.startsWith(STREAM_DATA_PREFIX)) {
             try {
-              // remove 'data: ' prefix and parse remaining string
-              const jsonChunk = JSON.parse(line.substring(STREAM_DATA_PREFIX.length)) as { 
-                migrated_code?: string,
-                generated_text?: string, // Some models might use this field
-                migration_id?: string, 
-                prompt_id?: string,
-                delta?: string, // for incremental streaming chunks
-                results?: Array<{ generated_text?: string }> // Alternative response format
-              };
-              
+              const jsonStr = line.substring(STREAM_DATA_PREFIX.length);
+              const jsonChunk = JSON.parse(jsonStr);
               console.log("Migration stream chunk:", jsonChunk);
-              
-              // Handle different response formats
-              if (jsonChunk.migrated_code) {
-                migratedCode = jsonChunk.migrated_code;
-              } else if (jsonChunk.generated_text) {
-                migratedCode = jsonChunk.generated_text;
-              } else if (jsonChunk.results?.[0]?.generated_text) {
-                migratedCode = jsonChunk.results[0].generated_text;
-              } else if (jsonChunk.delta) {
-                migratedCode += jsonChunk.delta;
-              }
-              
-              if (jsonChunk.migration_id) {
-                migrationId = jsonChunk.migration_id;
-              }
-              if (jsonChunk.prompt_id) {
-                promptId = jsonChunk.prompt_id;
-              }
+              yield jsonChunk;
             } catch (error) {
-              // JSON parsing errors
               console.error(`Error parsing migration stream JSON: ${error}`);
-              console.log("Problematic line:", line);
+              console.log("Problematic migration line:", line);
             }
+          } else if (line.trim() === '') {
+            continue;
+          } else if (line.startsWith('[DONE]') || line === 'data: [DONE]') {
+            console.log("Migration stream finished");
+            break;
+          } else {
+            console.log("Non-data migration line:", line);
           }
         }
       }
-      
-      setLoadingStatus('processing');
-      return {
-        migratedCode: migratedCode || '', // Ensure we don't return undefined
-        migrationId: migrationId || promptId,
-        originalCode: code
-      };
     } catch (streamError) {
       console.error("Migration streaming error:", streamError);
-      // Fall back to non-streaming if streaming fails
-      console.log("Falling back to non-streaming migration...");
+      throw streamError;
+    }
+  } else {
+    console.log("Using non-streaming migration");
+    const response = await ServiceAPI.runFetch(endpoint, options);
+    if (response.ok) {
+      const result = await response.json() as { migrated_code?: string, migration_id?: string, prompt_id?: string };
+      console.log("Non-streaming migration response:", result);
+      yield result;
+    } else {
+      console.error("Error migrating code", response.status, response.statusText);
+      throw Error(await getErrorMessage(response));
     }
   }
-  
-  // Handle regular non-streaming response (either when streaming is disabled or fallback)
-  const response = await ServiceAPI.runFetch(endpoint, options);
+}
 
-  if (response.ok) {
+export async function migrateCode(
+  code: string,
+  fromVersion?: string,
+  toVersion?: string
+): Promise<MigrationResult> {
+  // Set accurate loading status based on streaming setting
+  const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
+  const streamingEnabled = config.get<boolean>("enableStreaming") as boolean;
+  setLoadingStatus(streamingEnabled ? 'streaming' : 'generating');
+
+  let migratedCode = '';
+  let migrationId: string | undefined;
+
+  try {
+    for await (let chunk of migrateCodeStream(code, fromVersion, toVersion)) {
+      setLoadingStatus('processing');
+      
+      // Use the same logic as runCompletion.ts
+      if (chunk.delta) {
+        // Streaming response: accumulate delta chunks
+        migratedCode += chunk.delta;
+      } else {
+        // Non-streaming or complete response: use the complete text
+        if (chunk.migrated_code) {
+          migratedCode = chunk.migrated_code;
+        } else if (chunk.generated_text) {
+          migratedCode = chunk.generated_text;
+        }
+      }
+
+      if (chunk.migration_id) {
+        migrationId = chunk.migration_id;
+      }
+      if (chunk.prompt_id) {
+        migrationId = chunk.prompt_id;
+      }
+    }
+
     setLoadingStatus('processing');
-    const result = await response.json() as { migrated_code: string, migration_id?: string, prompt_id?: string };
     return {
-      migratedCode: result.migrated_code,
-      migrationId: result.migration_id || result.prompt_id, // fallback to prompt_id if migration_id not available
+      migratedCode: migratedCode || '',
+      migrationId: migrationId,
       originalCode: code
     };
-  } else {
-    console.error("Error migrating code", response.status, response.statusText);
-    throw Error(await getErrorMessage(response));
+  } catch (error) {
+    console.error("Migration error:", error);
+    throw error;
   }
 }

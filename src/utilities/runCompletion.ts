@@ -1,4 +1,4 @@
-import { Position, Range, TextDocument, window } from "vscode";
+import { Position, Range, TextDocument, window, workspace } from "vscode";
 
 import { AutocompleteResult, CompletionMetadata, ResultEntry } from "../binary/requests/requests";
 import { CHAR_LIMIT, PromptType } from "../globals/consts";
@@ -78,7 +78,11 @@ export default async function* runCompletion(
 
     let responseData = null;
     try {
-      setLoadingStatus('streaming');
+      // Check if streaming is enabled to show accurate status
+      const config = workspace.getConfiguration("qiskitCodeAssistant");
+      const streamingEnabled = config.get<boolean>("enableStreaming") as boolean;
+      
+      setLoadingStatus(streamingEnabled ? 'streaming' : 'generating');
       console.log("Starting completion for model:", currentModel._id, "with input length:", inputs.length);
       
       responseData = apiService.postModelPrompt(currentModel._id, inputs);
