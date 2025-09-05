@@ -106,3 +106,7 @@ If the extension is installed and enabled, but not able to select a model, make 
 General feedback can be provided to the Qiskit Code Assistant team by clicking on the `Provide feedback` icon in status bar (left of the Qiskit Code Assistant model info). 
 
 Feedback for a specific prompt and generated code suggestion can be provided by clicking on the `thumbs up`/`thumbs down` icons that appear immediately above the suggested code block.
+
+### Code Migration Feedback
+
+After using the code migration feature (sparkle icon ✨), feedback can be provided in the same way as code suggestions - through the `thumbs up`/`thumbs down` icons that appear above the migrated code block.

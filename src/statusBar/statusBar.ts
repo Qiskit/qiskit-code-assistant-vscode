@@ -7,10 +7,9 @@ import { handleChangeModelStatusBar, handleProvideFeedbackStatusBar } from "../c
 import { currentModel } from "../commands/selectModel";
 import { getServiceApi } from "../services/common";
 
-const SPINNER = "$(sync~spin)";
-
 let mainStatusBar: StatusBarItem | undefined;
 let feedbackStatusBar: StatusBarItem | undefined;
+let loadingInterval: NodeJS.Timeout | undefined;
 
 export async function registerStatusBar(context: ExtensionContext): Promise<void> {
   const serviceApi = await getServiceApi();
@@ -41,9 +40,16 @@ export function setDefaultStatus(): void {
     return;
   }
 
+  // Clear any loading intervals
+  if (loadingInterval) {
+    clearInterval(loadingInterval);
+    loadingInterval = undefined;
+  }
+
   if (currentModel) {
     mainStatusBar.text = "Qiskit Code Assistant: " + currentModel.display_name;
     mainStatusBar.backgroundColor = undefined;
+    mainStatusBar.color = undefined;
 
     if (feedbackStatusBar) {
       feedbackStatusBar.command = {
@@ -60,10 +66,84 @@ export function setDefaultStatus(): void {
   }
 }
 
-export function setLoadingStatus(): void {
+export function setLoadingStatus(stage: 'connecting' | 'generating' | 'streaming' | 'processing' = 'generating'): void {
   if (!mainStatusBar) {
     return;
   }
 
-  mainStatusBar.text = mainStatusBar.text + " " + SPINNER;
+  // Clear any existing interval
+  if (loadingInterval) {
+    clearInterval(loadingInterval);
+  }
+
+  const baseText = currentModel 
+    ? `Qiskit Code Assistant: ${currentModel.display_name}` 
+    : "Qiskit Code Assistant";
+
+  let stageText: string;
+  let spinnerFrames: string[];
+
+  switch (stage) {
+    case 'connecting':
+      stageText = "Connecting to API";
+      spinnerFrames = ["$(cloud)", "$(cloud~spin)"];
+      break;
+    case 'generating':
+      stageText = "Generating completion";
+      spinnerFrames = ["$(gear)", "$(gear~spin)"];
+      break;
+    case 'streaming':
+      stageText = "Receiving results";
+      spinnerFrames = ["$(arrow-down)", "$(arrow-down~spin)"];
+      break;
+    case 'processing':
+      stageText = "Processing response";
+      spinnerFrames = ["$(settings-gear)", "$(settings-gear~spin)"];
+      break;
+    default:
+      stageText = "Working";
+      spinnerFrames = ["$(sync)", "$(sync~spin)"];
+  }
+
+  mainStatusBar.backgroundColor = new ThemeColor("statusBarItem.prominentBackground");
+  mainStatusBar.color = new ThemeColor("statusBarItem.prominentForeground");
+
+  let frameIndex = 0;
+  const updateSpinner = () => {
+    if (mainStatusBar) {
+      mainStatusBar.text = `${baseText} ${spinnerFrames[frameIndex]} ${stageText}...`;
+      frameIndex = (frameIndex + 1) % spinnerFrames.length;
+    }
+  };
+
+  // Initial update
+  updateSpinner();
+
+  // Update every 500ms for smooth animation
+  loadingInterval = setInterval(updateSpinner, 500);
+}
+
+export function setErrorStatus(message: string): void {
+  if (!mainStatusBar) {
+    return;
+  }
+
+  // Clear any loading intervals
+  if (loadingInterval) {
+    clearInterval(loadingInterval);
+    loadingInterval = undefined;
+  }
+
+  const baseText = currentModel 
+    ? `Qiskit Code Assistant: ${currentModel.display_name}` 
+    : "Qiskit Code Assistant";
+
+  mainStatusBar.text = `${baseText} $(warning) ${message}`;
+  mainStatusBar.backgroundColor = new ThemeColor("statusBarItem.errorBackground");
+  mainStatusBar.color = new ThemeColor("statusBarItem.errorForeground");
+
+  // Auto-reset to default after 5 seconds
+  setTimeout(() => {
+    setDefaultStatus();
+  }, 5000);
 }

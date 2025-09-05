@@ -1,12 +1,52 @@
 import vscode from "vscode";
-import { migrateCode } from "../services/qiskitMigration";
+import { migrateCode, MigrationResult } from "../services/qiskitMigration";
 import { setDefaultStatus, setLoadingStatus } from "../statusBar/statusBar";
+import { currentModel } from "./selectModel";
+import { getServiceApi } from "../services/common";
+import { addPromptFeedbackCodeLens } from "../codelens/FeedbackCodelensProvider";
 
 let isRunning = false;
 
-function migrationCompletionMsg(outputText: string, isFullDoc: boolean) {
-  if (!outputText) {
-    return isFullDoc ? "No code was found in the document that needed to be migrated" : "No code was found in the selected lines that needed to be migrataed"
+async function showMigrationFeedback(migrationResult: MigrationResult, migrationStartPosition: vscode.Position): Promise<void> {
+  console.log("showMigrationFeedback called with:", {
+    hasCurrentModel: !!currentModel,
+    migrationId: migrationResult.migrationId,
+    hasOriginalCode: !!migrationResult.originalCode,
+    hasMigratedCode: !!migrationResult.migratedCode
+  });
+
+  if (!currentModel) {
+    console.log("No current model selected, skipping feedback");
+    return; // Can't provide feedback without model
+  }
+
+  const serviceApi = await getServiceApi();
+  console.log("Service API feedback enabled:", serviceApi.enableFeedback);
+  
+  if (!serviceApi.enableFeedback) {
+    console.log("Feedback not enabled for this service, skipping feedback");
+    return; // Feedback not enabled for this service
+  }
+
+  // Use the same CodeLens feedback system as normal completions
+  console.log("Adding migration feedback CodeLens");
+
+  // Add CodeLens with thumbs up/down icons above the migrated code
+  await addPromptFeedbackCodeLens(
+    currentModel!._id,
+    migrationResult.migrationId, // Use migration_id as prompt_id equivalent  
+    migrationStartPosition, // Position where the migration started
+    migrationResult.originalCode, // input
+    migrationResult.migratedCode  // output
+  );
+
+  // Trigger CodeLens refresh to show the feedback icons
+  vscode.commands.executeCommand('vscode.executeCodeLensProvider');
+}
+
+function migrationCompletionMsg(migrationResult: MigrationResult | null, isFullDoc: boolean) {
+  if (!migrationResult || !migrationResult.migratedCode) {
+    return isFullDoc ? "No code was found in the document that needed to be migrated" : "No code was found in the selected lines that needed to be migrated"
   } else {
     return isFullDoc ? "Document successfully migrated" : "Selected code successfully migrated";
   }
@@ -21,7 +61,7 @@ async function handler(): Promise<void> {
   }
 
   isRunning = true;
-  setLoadingStatus();
+  setLoadingStatus('connecting');
 
   const selection = editor.selection;
   let firstLine: vscode.TextLine;
@@ -51,74 +91,47 @@ async function handler(): Promise<void> {
   }
 
   try {
-    const notificationTitle = `Migrating the ${selection.isEmpty ? "document" : "selected"} code`;
-
-    let end = lastLine.range.end;
-    let migratedText = await vscode.window.withProgress({
-      location: vscode.ProgressLocation.Notification,
-      cancellable: false,
-      title: notificationTitle
-    }, async (progress):Promise<string> => {
+    setLoadingStatus('connecting');
+    
+    const migrationResult = await (async (): Promise<MigrationResult | null> => {
+      setLoadingStatus('generating');
       
-      progress.report({  increment: 10, message: "Please wait..." });
+      let result = await migrateCode(text);
 
-      let t = ""
-      let responseData = migrateCode(text);
-      let step = 0;
-      for await (let chunk of responseData) {
-        if ((chunk as unknown as {error: string})?.error) {
-          throw Error((chunk as unknown as {error: string})?.error)
-        }
+      setLoadingStatus('processing');
 
-        // update notidication message based on streaming data progress
-        if (chunk.plan_steps && step < 1) {
-          progress.report({  message: "Planning migration...", increment: 25 });
-          step = 1;
-        }
-        if (chunk.final_thoughts && step < 2) {
-          progress.report({  message: "Reviewing migration...", increment: 25 });
-          step = 2;
-        }
-        if (chunk.migrated_code && step < 3) {
-          progress.report({  message: "Returning response...", increment: 25 });
-          step = 3;
-        }
+      if (text.trim() === result.migratedCode.trim()) {
+        return null; 
 
-        if (step == 3) {
-          t += chunk.migrated_code
-
-          // calculate the new text range for the additional
-          // streaming data to be inserted into document
-          const migratedLines = t.split("\n");
-          const newLastLine = firstLine.lineNumber + migratedLines.length - 1;
-          const lastChar = migratedLines[migratedLines.length - 1].length + 1;
-          const lastPosition = new vscode.Position(newLastLine, lastChar);
-          const textRange = new vscode.Range(firstLine.range.start, end);
-
-          end = lastPosition;
-
-          editor.edit(editBuilder => {
-            editBuilder.replace(textRange, t);
-          });
-        }
       }
 
-      progress.report({ increment: 100 });
-      return t;
-    });
+      return result;
+    })();
 
-    if (text.trim() == migratedText.trim()) {
-      migratedText = ""
-    }
-
-    const infoMsg = migrationCompletionMsg(migratedText, fullDocMigration)
-    if (!migratedText) {
+    const infoMsg = migrationCompletionMsg(migrationResult, fullDocMigration)
+    if (!migrationResult || !migrationResult.migratedCode) {
       vscode.window.showInformationMessage(infoMsg);
       return;
     }
 
-    editor.selection = new vscode.Selection(firstLine.range.start, end);
+    editor.edit(editBuilder => {
+      editBuilder.replace(textRange, migrationResult.migratedCode);
+    });
+    const migratedLines = migrationResult.migratedCode.split("\n");
+    const newLastLine = firstLine.lineNumber + migratedLines.length - 1;
+    const lastChar = migratedLines[migratedLines.length - 1].length + 1;
+    const lastPosition = new vscode.Position(newLastLine, lastChar);
+    
+    editor.selection = new vscode.Selection(firstLine.range.start, lastPosition);
     vscode.window.showInformationMessage(infoMsg);
+
+    // Show feedback options after successful migration
+    try {
+      await showMigrationFeedback(migrationResult, firstLine.range.start);
+    } catch (feedbackError) {
+      console.error("Error showing migration feedback:", feedbackError);
+      // Don't throw the error, just log it so migration success isn't affected
+    }
   } catch(error) {
     throw error;
   } finally {
