@@ -67,6 +67,8 @@ interface ModelPromptResponse {
 }
 
 interface MigrationResponse {
+  model_id: string,
+  migration_id: string,
   migrated_code: string,
   plan_steps?: string[],
   final_thoughts?: string,
