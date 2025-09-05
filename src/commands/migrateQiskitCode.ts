@@ -2,9 +2,7 @@ import vscode from "vscode";
 import { migrateCode } from "../services/qiskitMigration";
 import { setDefaultStatus, setLoadingStatus } from "../statusBar/statusBar";
 import { getServiceApi } from "../services/common";
-import { DISMISS, FEEDBACK_RESPONSE_MSG, PROVIDE_FEEDBACK } from "../globals/consts";
-
-const MIGRATION_FEEDBACK_MSG = "Please share any detailed feedback you have about the Qiskit Code Assistant Migration. The details of your migration as well as this message will be sent to the Qiskit Code Assistant team in order to improve the service.";
+import { DISMISS, FEEDBACK_RESPONSE_MSG, PROVIDE_FEEDBACK, MIGRATION_FEEDBACK_MSG } from "../globals/consts";
 
 let isRunning = false;
 
@@ -66,7 +64,7 @@ async function handler(): Promise<void> {
       
       progress.report({  increment: 10, message: "Please wait..." });
 
-      let t = "", g = "", m = ""
+      let migratedCode = "", migrationId = "", modelId = ""
       let responseData = migrateCode(text);
       let step = 0;
       for await (let chunk of responseData) {
@@ -74,11 +72,11 @@ async function handler(): Promise<void> {
           throw Error((chunk as unknown as {error: string})?.error)
         }
 
-        if (!m) {
-          m = chunk.model_id
+        if (!modelId) {
+          modelId = chunk.model_id
         }
-        if (!g) {
-          g = chunk.migration_id
+        if (!migrationId) {
+          migrationId = chunk.migration_id
         }
 
         // update notidication message based on streaming data progress
@@ -96,11 +94,11 @@ async function handler(): Promise<void> {
         }
 
         if (step == 3) {
-          t += chunk.migrated_code
+          migratedCode += chunk.migrated_code
 
           // calculate the new text range for the additional
           // streaming data to be inserted into document
-          const migratedLines = t.split("\n");
+          const migratedLines = migratedCode.split("\n");
           const newLastLine = firstLine.lineNumber + migratedLines.length - 1;
           const lastChar = migratedLines[migratedLines.length - 1].length + 1;
           const lastPosition = new vscode.Position(newLastLine, lastChar);
@@ -109,7 +107,7 @@ async function handler(): Promise<void> {
           end = lastPosition;
 
           editor.edit(editBuilder => {
-            editBuilder.replace(textRange, t);
+            editBuilder.replace(textRange, migratedCode);
           });
         }
       }
@@ -117,9 +115,9 @@ async function handler(): Promise<void> {
       progress.report({ increment: 100 });
       return {
         input: text,
-        migrated_code: t,
-        migration_id: g,
-        model_id: m
+        migrated_code: migratedCode,
+        migration_id: migrationId,
+        model_id: modelId
       }
     });
 
