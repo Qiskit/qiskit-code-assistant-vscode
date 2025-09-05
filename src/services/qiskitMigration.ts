@@ -1,3 +1,4 @@
+import vscode from "vscode";
 import { getExtensionContext } from "../globals/extensionContext";
 import { currentModel } from "../commands/selectModel";
 import ServiceAPI from "./serviceApi";
@@ -42,18 +43,91 @@ export async function migrateCode(
   // POST /migrate
   setLoadingStatus('streaming');
   const endpoint = `/model/${currentModel?._id}/migrate`;
-  const apiToken = await getApiToken()
+  const apiToken = await getApiToken();
+  
+  // Check if streaming is enabled
+  const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
+  const streamingEnabled = config.get<boolean>("enableStreaming") as boolean;
+  
   const options = {
     'method': 'POST',
     'headers': ServiceAPI.getHeaders(apiToken),
-    
     'body': JSON.stringify({
       code,
       version_from: fromVersion,
-      version_to: toVersion
+      version_to: toVersion,
+      stream: streamingEnabled
     })
   };
 
+  if (streamingEnabled) {
+    // Handle streaming response - similar to how completions work
+    const response = ServiceAPI.runFetchStreaming(endpoint, options);
+    let migratedCode = '';
+    let migrationId: string | undefined;
+    let promptId: string | undefined;
+    const STREAM_DATA_PREFIX = 'data: ';
+    
+    try {
+      for await (let chunk of response) {
+        setLoadingStatus('streaming');
+        const lines = chunk.split('\n');
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (line.startsWith(STREAM_DATA_PREFIX)) {
+            try {
+              // remove 'data: ' prefix and parse remaining string
+              const jsonChunk = JSON.parse(line.substring(STREAM_DATA_PREFIX.length)) as { 
+                migrated_code?: string,
+                generated_text?: string, // Some models might use this field
+                migration_id?: string, 
+                prompt_id?: string,
+                delta?: string, // for incremental streaming chunks
+                results?: Array<{ generated_text?: string }> // Alternative response format
+              };
+              
+              console.log("Migration stream chunk:", jsonChunk);
+              
+              // Handle different response formats
+              if (jsonChunk.migrated_code) {
+                migratedCode = jsonChunk.migrated_code;
+              } else if (jsonChunk.generated_text) {
+                migratedCode = jsonChunk.generated_text;
+              } else if (jsonChunk.results?.[0]?.generated_text) {
+                migratedCode = jsonChunk.results[0].generated_text;
+              } else if (jsonChunk.delta) {
+                migratedCode += jsonChunk.delta;
+              }
+              
+              if (jsonChunk.migration_id) {
+                migrationId = jsonChunk.migration_id;
+              }
+              if (jsonChunk.prompt_id) {
+                promptId = jsonChunk.prompt_id;
+              }
+            } catch (error) {
+              // JSON parsing errors
+              console.error(`Error parsing migration stream JSON: ${error}`);
+              console.log("Problematic line:", line);
+            }
+          }
+        }
+      }
+      
+      setLoadingStatus('processing');
+      return {
+        migratedCode: migratedCode || '', // Ensure we don't return undefined
+        migrationId: migrationId || promptId,
+        originalCode: code
+      };
+    } catch (streamError) {
+      console.error("Migration streaming error:", streamError);
+      // Fall back to non-streaming if streaming fails
+      console.log("Falling back to non-streaming migration...");
+    }
+  }
+  
+  // Handle regular non-streaming response (either when streaming is disabled or fallback)
   const response = await ServiceAPI.runFetch(endpoint, options);
 
   if (response.ok) {

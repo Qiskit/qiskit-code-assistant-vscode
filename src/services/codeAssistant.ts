@@ -4,7 +4,6 @@ import ServiceAPI from "./serviceApi";
 import { getExtensionContext } from "../globals/extensionContext";
 import { requiresToken } from "../utilities/guards";
 
-const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
 const SERVICE_NAME = "qiskit-code-assistant";
 const STREAM_DATA_PREFIX = 'data: ';
 
@@ -104,7 +103,13 @@ export default class CodeAssistantService extends ServiceAPI {
     // POST /model/{modelId}/prompt
     const endpoint = `/model/${modelId}/prompt`;
     const apiToken = await this.getApiToken()
+    
+    // Get fresh config each time to ensure settings changes are picked up
+    const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
     const streamingEnabled = config.get<boolean>("enableStreaming") as boolean;
+    
+    console.log("Completion streaming enabled:", streamingEnabled);
+    
     const options = {
       "method": "POST",
       "headers": ServiceAPI.getHeaders(apiToken),
@@ -115,29 +120,53 @@ export default class CodeAssistantService extends ServiceAPI {
     };
   
     if (streamingEnabled) {
+      console.log("Starting streaming completion for model:", modelId);
       const response = ServiceAPI.runFetchStreaming(endpoint, options);
   
-      for await (let chunk of response) {
-        // parse & transform the streaming data chunk
-        const lines = chunk.split('\n');
-        for (let i = 0; i < lines.length; i++) {
-          const line = lines[i].trim();
-          if (line.startsWith(STREAM_DATA_PREFIX)) {
-            try {
-              // remove 'data: ' prefix and parse remaining string
-              const jsonChunk = JSON.parse(line.substring(STREAM_DATA_PREFIX.length)) as ModelPromptResponse;
-              yield jsonChunk;
-            } catch (error) {
-              // JSON parsing errors
-              console.error(`Error parsing JSON: ${error}`);
-              console.log(line)
+      try {
+        for await (let chunk of response) {
+          console.log("Received completion chunk:", chunk.substring(0, 200) + "...");
+          
+          // parse & transform the streaming data chunk
+          const lines = chunk.split('\n');
+          for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (line.startsWith(STREAM_DATA_PREFIX)) {
+              try {
+                // remove 'data: ' prefix and parse remaining string
+                const jsonStr = line.substring(STREAM_DATA_PREFIX.length);
+                console.log("Parsing completion JSON:", jsonStr);
+                
+                const jsonChunk = JSON.parse(jsonStr) as ModelPromptResponse;
+                console.log("Parsed completion chunk:", jsonChunk);
+                
+                yield jsonChunk;
+              } catch (error) {
+                // JSON parsing errors
+                console.error(`Error parsing completion JSON: ${error}`);
+                console.log("Problematic completion line:", line);
+              }
+            } else if (line.trim() === '') {
+              // Empty lines are normal in streaming, skip them
+              continue;
+            } else if (line.startsWith('[DONE]') || line === 'data: [DONE]') {
+              // End of stream marker
+              console.log("Completion stream finished");
+              break;
+            } else {
+              console.log("Non-data completion line:", line);
             }
           }
         }
+      } catch (streamError) {
+        console.error("Completion streaming error:", streamError);
+        throw streamError;
       }
     } else {
+      console.log("Using non-streaming completion for model:", modelId);
       const response = await ServiceAPI.runFetch(endpoint, options)
       const promptResponse = (await response.json()) as ModelPromptResponse;
+      console.log("Non-streaming completion response:", promptResponse);
       yield promptResponse;
     }
   }
@@ -151,6 +180,8 @@ export default class CodeAssistantService extends ServiceAPI {
       return { success: false }
     }
   
+    // Get fresh config each time
+    const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
     const telemetryEnabled = config.get<boolean>("enableTelemetry") as boolean;
     if (!telemetryEnabled) {
       // Qiskit Code Assistant telemetry is disabled

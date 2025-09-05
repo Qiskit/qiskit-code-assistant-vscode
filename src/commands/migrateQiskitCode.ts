@@ -3,10 +3,11 @@ import { migrateCode, MigrationResult } from "../services/qiskitMigration";
 import { setDefaultStatus, setLoadingStatus } from "../statusBar/statusBar";
 import { currentModel } from "./selectModel";
 import { getServiceApi } from "../services/common";
+import { addPromptFeedbackCodeLens } from "../codelens/FeedbackCodelensProvider";
 
 let isRunning = false;
 
-async function showMigrationFeedback(migrationResult: MigrationResult): Promise<void> {
+async function showMigrationFeedback(migrationResult: MigrationResult, migrationStartPosition: vscode.Position): Promise<void> {
   console.log("showMigrationFeedback called with:", {
     hasCurrentModel: !!currentModel,
     migrationId: migrationResult.migrationId,
@@ -27,109 +28,20 @@ async function showMigrationFeedback(migrationResult: MigrationResult): Promise<
     return; // Feedback not enabled for this service
   }
 
-  // Show feedback even without migration ID - we can still collect general feedback
-  console.log("Showing migration feedback dialog");
+  // Use the same CodeLens feedback system as normal completions
+  console.log("Adding migration feedback CodeLens");
 
-  // Show feedback options after a short delay to let user see the result
-  setTimeout(async () => {
-    const feedbackChoice = await vscode.window.showInformationMessage(
-      "How was the migration result?",
-      "Helpful",
-      "Not helpful",
-      "Provide detailed feedback",
-      "✕ Dismiss"
-    );
+  // Add CodeLens with thumbs up/down icons above the migrated code
+  await addPromptFeedbackCodeLens(
+    currentModel!._id,
+    migrationResult.migrationId, // Use migration_id as prompt_id equivalent  
+    migrationStartPosition, // Position where the migration started
+    migrationResult.originalCode, // input
+    migrationResult.migratedCode  // output
+  );
 
-    if (feedbackChoice === "✕ Dismiss") {
-      return;
-    }
-
-    let positiveFeedback: boolean | undefined = undefined;
-    let comment: string | undefined = undefined;
-
-    if (feedbackChoice === "Helpful") {
-      positiveFeedback = true;
-    } else if (feedbackChoice === "Not helpful") {
-      positiveFeedback = false;
-    }
-
-    if (feedbackChoice === "Provide detailed feedback" || positiveFeedback !== undefined) {
-      const promptMessage = positiveFeedback === undefined 
-        ? "Please share your feedback about the migration result:"
-        : `Thank you for your ${positiveFeedback ? 'positive' : 'negative'} feedback! Would you like to provide additional details?`;
-      
-      comment = await vscode.window.showInputBox({
-        prompt: promptMessage,
-        placeHolder: "Your feedback helps improve the migration service..."
-      });
-
-      // If user cancelled the input but had given thumbs up/down, still send that feedback
-      if (!comment && positiveFeedback === undefined) {
-        return;
-      }
-    }
-
-    try {
-      // Show progress while submitting feedback
-      await vscode.window.withProgress({
-        location: vscode.ProgressLocation.Notification,
-        title: "Submitting feedback...",
-        cancellable: false
-      }, async (progress) => {
-        progress.report({ increment: 0, message: "Sending feedback to Qiskit Code Assistant service" });
-        
-        await serviceApi.postFeedback(
-          currentModel!._id, // We already checked for null above
-          migrationResult.migrationId || undefined, // Allow undefined migration ID
-          positiveFeedback,
-          comment,
-          migrationResult.originalCode,
-          migrationResult.migratedCode
-        );
-        
-        progress.report({ increment: 100, message: "Feedback submitted successfully" });
-      });
-
-      vscode.window.showInformationMessage("Thank you for your feedback!");
-    } catch (error) {
-      console.error("Failed to submit migration feedback:", error);
-      
-      // Provide more detailed error information to user
-      let errorMessage = "Failed to submit feedback. ";
-      if (error instanceof Error) {
-        console.log("Error details:", {
-          message: error.message,
-          stack: error.stack,
-          name: error.name
-        });
-        
-        if (error.message.includes("network") || error.message.includes("fetch")) {
-          errorMessage += "Please check your internet connection and try again.";
-        } else if (error.message.includes("401") || error.message.includes("403")) {
-          errorMessage += "Authentication failed. Please check your API token.";
-        } else if (error.message.includes("404")) {
-          errorMessage += "Feedback service not found. Please try again later.";
-        } else if (error.message.includes("429")) {
-          errorMessage += "Too many requests. Please wait a moment and try again.";
-        } else if (error.message.includes("500") || error.message.includes("Internal Server Error")) {
-          errorMessage += "Server error. The service may be temporarily unavailable.";
-        } else if (error.message.includes("API Token")) {
-          errorMessage += "Please check your API token configuration.";
-        } else {
-          errorMessage += `Error: ${error.message}`;
-        }
-      } else {
-        errorMessage += "An unexpected error occurred. Please try again later.";
-      }
-      
-      vscode.window.showErrorMessage(errorMessage, "Retry", "Cancel").then(async (selection) => {
-        if (selection === "Retry") {
-          // Retry the feedback submission
-          setTimeout(() => showMigrationFeedback(migrationResult), 500);
-        }
-      });
-    }
-  }, 1000); // 1 second delay
+  // Trigger CodeLens refresh to show the feedback icons
+  vscode.commands.executeCommand('vscode.executeCodeLensProvider');
 }
 
 function migrationCompletionMsg(migrationResult: MigrationResult | null, isFullDoc: boolean) {
@@ -215,7 +127,7 @@ async function handler(): Promise<void> {
 
     // Show feedback options after successful migration
     try {
-      await showMigrationFeedback(migrationResult);
+      await showMigrationFeedback(migrationResult, firstLine.range.start);
     } catch (feedbackError) {
       console.error("Error showing migration feedback:", feedbackError);
       // Don't throw the error, just log it so migration success isn't affected

@@ -79,35 +79,53 @@ export default async function* runCompletion(
     let responseData = null;
     try {
       setLoadingStatus('streaming');
+      console.log("Starting completion for model:", currentModel._id, "with input length:", inputs.length);
+      
       responseData = apiService.postModelPrompt(currentModel._id, inputs);
+      let accumulatedText = ''; // This will build up the complete response from stream deltas
+      
       for await (let chunk of responseData) {
         setLoadingStatus('processing');
+        console.log(`Processing completion chunk:`, chunk);
+        
         if ((chunk as unknown as {error: string})?.error) {
           throw Error((chunk as unknown as {error: string})?.error)
         }
-        const generatedTextRaw = getGeneratedText(chunk);
+        
+        // Handle both streaming and non-streaming responses
+        let finalGeneratedText: string;
 
-        promptId = chunk.prompt_id
-
-        let generatedText = generatedTextRaw;
-        if (generatedText.slice(0, inputs.length) === inputs) {
-          generatedText = generatedText.slice(inputs.length);
+        if (chunk.delta) {
+          // Streaming response: accumulate delta chunks
+          accumulatedText += chunk.delta;
+          finalGeneratedText = accumulatedText;
+        } else {
+          // Non-streaming response: use the complete text from results
+          const completeText = getGeneratedText(chunk);
+          finalGeneratedText = completeText;
+          accumulatedText = completeText; // Keep accumulator in sync
         }
 
-        // Only log empty completions to console, don't show user notification
-        if (generatedText == "") {
-          console.warn("The model returned an empty completion");
+        promptId = chunk.prompt_id;
+
+        // The rest of the logic remains the same, operating on `finalGeneratedText`
+        if (finalGeneratedText.slice(0, inputs.length) === inputs) {
+          finalGeneratedText = finalGeneratedText.slice(inputs.length);
+        }
+
+        if (finalGeneratedText === "") {
+          console.warn("The model returned an empty or unchanged completion");
         }
 
         const completionMetadata: CompletionMetadata = {
           model_id: currentModel._id,
           prompt_id: promptId,
           input: inputs,
-          output: generatedText
+          output: finalGeneratedText
         }
 
         const resultEntry: ResultEntry = {
-          new_prefix: generatedText,
+          new_prefix: finalGeneratedText,
           old_suffix: "",
           new_suffix: "",
           completion_metadata: completionMetadata
@@ -146,7 +164,19 @@ export default async function* runCompletion(
 }
 
 function getGeneratedText(json: any): string {
-  return json?.generated_text ?? json?.results[0].generated_text ?? "";
+  // This function handles complete (non-delta) response formats
+  if (json?.results?.[0]?.generated_text) {
+    return json.results[0].generated_text;
+  } else if (json?.generated_text) {
+    return json.generated_text;
+  } else if (json?.choices?.[0]?.text) {
+    return json.choices[0].text;
+  } else if (json?.text) {
+    return json.text;
+  }
+
+  console.warn("Unknown response format for generated text:", json);
+  return "";
 }
 
 export type KnownLanguageType = keyof typeof languages;
