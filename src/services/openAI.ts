@@ -18,7 +18,6 @@ type OpenAIPromptResponse = {
   choices: OpenAIChoice[]
 }
 
-const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
 const OPENAI_API_VERSION = "v1";
 const SERVICE_NAME = "open-ai";
 
@@ -84,6 +83,9 @@ export default class OpenAIService extends ServiceAPI {
   ): AsyncGenerator<ModelPromptResponse> {
     // POST /v1/completions
     const endpoint = `/${OPENAI_API_VERSION}/completions`;
+    
+    // Get fresh config each time
+    const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
     const streamingEnabled = config.get<boolean>("enableStreaming") as boolean;
     const options = {
       "method": "POST",

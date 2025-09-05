@@ -24,7 +24,9 @@ export default class ServiceAPI {
     let msg = "An unknown error has occurred";
     if (!response.ok) {
       try {
-        const jsonMsg = await response.json() as {detail: string};
+        // Clone the response to avoid consuming the original body
+        const responseClone = response.clone();
+        const jsonMsg = await responseClone.json() as {detail: string};
         msg = jsonMsg?.detail || response.statusText;
         console.log(response.status, msg);
   
@@ -32,7 +34,13 @@ export default class ServiceAPI {
           msg = `API Token is not authorized or is incorrect: ${msg}`
         }
       } catch (err) {
-        msg = await response.text();
+        try {
+          // If JSON parsing fails, try text - clone again to be safe
+          const responseClone = response.clone();
+          msg = await responseClone.text();
+        } catch (textErr) {
+          msg = response.statusText || "Unknown error";
+        }
       }
     }
     return msg;
@@ -73,28 +81,77 @@ export default class ServiceAPI {
 
     if (!response.ok) {
       console.error(`Error response for ${urlPath}:`, response.status, response.statusText);
-      throw Error(await ServiceAPI.getErrorMessage(response));
+      const errorMessage = await ServiceAPI.getErrorMessage(response);
+      throw Error(errorMessage);
     }
 
     return response;
   }
 
   static async *runFetchStreaming(urlPath: string, options: RequestInit) {
+    console.log("Starting streaming fetch for:", urlPath);
+    
     const response = await ServiceAPI.runFetch(urlPath, options);
 
     if (!response.body) {
       throw Error("Fetch failed. No response body returned.");
     }
 
+    console.log("Streaming response headers:", {
+      contentType: response.headers.get('content-type'),
+      transferEncoding: response.headers.get('transfer-encoding'),
+      status: response.status
+    });
+
+    // Verify the response is actually set up for streaming
+    if (response.status !== 200) {
+      console.error("Non-200 response for streaming:", response.status);
+      throw new Error(`Streaming request failed with status: ${response.status}`);
+    }
+
     // get body reader
     const reader = response.body.getReader();
-    while (true) {
-      // wait for next encoded chunk
-      const { done, value } = await reader.read();
-      // check if stream is done
-      if (done) break;
-      // decode chunk and yield it
-      yield (new TextDecoder().decode(value));
+    const decoder = new TextDecoder();
+    let buffer = ''; // Buffer for incomplete chunks
+    
+    try {
+      while (true) {
+        // wait for next encoded chunk
+        const { done, value } = await reader.read();
+        
+        // check if stream is done
+        if (done) {
+          console.log("Stream finished");
+          // Process any remaining data in buffer
+          if (buffer.trim()) {
+            console.log("Final buffer content:", buffer);
+            yield buffer;
+          }
+          break;
+        }
+        
+        // decode chunk and add to buffer
+        const chunk = decoder.decode(value, { stream: true });
+        buffer += chunk;
+        
+        // Process complete lines from buffer
+        const lines = buffer.split('\n');
+        // Keep the last line in buffer (might be incomplete)
+        buffer = lines.pop() || '';
+        
+        // Yield complete lines
+        for (const line of lines) {
+          if (line.trim()) {
+            console.log("Streaming line:", line.substring(0, 100) + (line.length > 100 ? '...' : ''));
+            yield line + '\n';
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Streaming read error:", error);
+      throw error;
+    } finally {
+      reader.releaseLock();
     }
   }
 

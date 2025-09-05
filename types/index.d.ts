@@ -63,7 +63,8 @@ interface ModelPromptResults {
 interface ModelPromptResponse {
   results: ModelPromptResults[],
   prompt_id: string,
-  created_at?: string
+  created_at?: string,
+  delta?: string
 }
 
 interface MigrationResponse {
