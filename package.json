@@ -1,7 +1,7 @@
 {
   "publisher": "Qiskit",
   "name": "qiskit-vscode",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "license": "Apache-2.0",
   "displayName": "Qiskit Code Assistant (Beta)",
   "description": "Write and optimize Qiskit code with a generative AI code assistant powered by IBM watsonx",
