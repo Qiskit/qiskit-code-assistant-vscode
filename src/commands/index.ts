@@ -1,4 +1,4 @@
-import acceptDisclaimer from "./acceptDisclaimer";
+import acceptDisclaimer, { migrationDisclaimerAcceptance } from "./acceptDisclaimer";
 import { acceptSuggestionCommand, dismissSuggestionCommand} from "./acceptSuggestion";
 import selectModel from "./selectModel";
 import handleGetCompletion from "./handleGetCompletion";
@@ -15,6 +15,7 @@ const commands: CommandModule[] = [
   handleClearCodelens,
   handleGetCompletion,
   migrateQiskitCode,
+  migrationDisclaimerAcceptance,
   handleProvideFeedbackStatusBar,
   handleProvideFeedback,
   selectModel,

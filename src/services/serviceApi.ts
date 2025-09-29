@@ -1,6 +1,7 @@
 import vscode from "vscode";
 
 import { normalizeURL, normalizeURLPath } from "../utilities/utils";
+import { DISCLAIMER_ERROR_MSG } from "../globals/consts";
 
 const config = vscode.workspace.getConfiguration("qiskitCodeAssistant")
 const SERVICE_URL = config.get<string>("url") as string;
@@ -30,6 +31,9 @@ export default class ServiceAPI {
   
         if (AUTH_ERROR_CODES.includes(response.status)) {
           msg = `API Token is not authorized or is incorrect: ${msg}`
+          if (response.status === 403 && msg.toLowerCase().includes("disclaimer")) {
+            msg = DISCLAIMER_ERROR_MSG
+          }
         }
       } catch (err) {
         msg = await response.text();
