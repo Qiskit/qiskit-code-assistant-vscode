@@ -108,7 +108,7 @@ async function migrationDisclaimerHandler(): Promise<void> {
         disclaimerState.panel?.dispose();
         return;
       default:
-        console.log("Unknown dislaimer webview message: ", m);
+        console.log("Unknown disclaimer webview message: ", m);
     }
   });
   disclaimerState.panel.onDidDispose(() => {
