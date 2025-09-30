@@ -8,7 +8,7 @@ let isRunning = false;
 
 function migrationCompletionMsg(outputText: string, isFullDoc: boolean) {
   if (!outputText) {
-    return isFullDoc ? "No code was found in the document that needed to be migrated" : "No code was found in the selected lines that needed to be migrataed"
+    return isFullDoc ? "No code was found in the document that needed to be migrated" : "No code was found in the selected lines that needed to be migrated"
   } else {
     return isFullDoc ? "Document successfully migrated" : "Selected code successfully migrated";
   }
