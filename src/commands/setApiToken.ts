@@ -47,6 +47,8 @@ async function handler(): Promise<void> {
     await context?.secrets.store("apiToken", input);
     vscode.window.showInformationMessage(`IBM Quantum API Token was successfully saved`);
   }
+
+  vscode.commands.executeCommand("setContext", "qiskit-vscode.api-token-set", !!input);
 }
 
 const command: CommandModule = {
