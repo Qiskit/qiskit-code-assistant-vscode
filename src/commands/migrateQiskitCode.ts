@@ -1,4 +1,4 @@
-import vscode from "vscode";
+import * as vscode from "vscode";
 import { migrateCode } from "../services/qiskitMigration";
 import { setDefaultStatus, setLoadingStatus } from "../statusBar/statusBar";
 import { getServiceApi } from "../services/common";
