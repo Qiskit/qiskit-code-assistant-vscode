@@ -1,4 +1,4 @@
-import vscode from "vscode";
+import * as vscode from "vscode";
 import setApiToken from "../commands/setApiToken";
 import { getExtensionContext } from "../globals/extensionContext";
 
