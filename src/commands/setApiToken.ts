@@ -1,4 +1,5 @@
-import vscode, { ExtensionContext } from "vscode";
+import * as vscode from "vscode";
+import type { ExtensionContext } from "vscode";
 import { promises as fs } from "fs";
 import * as os from "os";
 import * as path from "path";
@@ -11,15 +12,19 @@ async function getTokenFromJson(): Promise<string | undefined> {
   let data = undefined;
   try {
     data = await fs.readFile(QISKIT_JSON_FILE_PATH);
-  } catch(err) {
+  } catch (err) {
     console.log(`Unable to read saved Qiskit account: ${err}`);
   }
 
   if (data) {
     try {
       const accounts = JSON.parse(data.toString("utf8")) as QiskitAccountJson;
-      return accounts["qiskit-code-assistant"]?.token || accounts["default-ibm-quantum-platform"]?.token || accounts["default-ibm-quantum"]?.token;
-    } catch(err) {
+      return (
+        accounts["qiskit-code-assistant"]?.token ||
+        accounts["default-ibm-quantum-platform"]?.token ||
+        accounts["default-ibm-quantum"]?.token
+      );
+    } catch (err) {
       console.log(`Unable to parse saved Qiskit account: ${err}`);
     }
   }
