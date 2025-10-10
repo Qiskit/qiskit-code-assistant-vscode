@@ -1,4 +1,5 @@
-import vscode from "vscode";
+import * as vscode from "vscode";
+
 
 function handler(): void {
   // Hide previous completions before triggering a new completion

@@ -1,4 +1,5 @@
-import vscode, { ExtensionContext } from "vscode";
+import * as vscode from "vscode";
+import type { ExtensionContext } from "vscode";
 
 import { getExtensionContext } from "../globals/extensionContext";
 import { getServiceApi } from "../services/common";
@@ -11,7 +12,7 @@ export let currentModel: ModelInfo | undefined = undefined;
 export function setAsCurrentModel(model: ModelInfo): void {
   currentModel = model;
   if (modelsList?.length > 0) {
-    const index = modelsList.findIndex((m) => m._id == model._id)
+    const index = modelsList.findIndex((m) => m._id == model._id);
     if (index > -1) modelsList[index] = model;
   }
 }

@@ -1,4 +1,4 @@
-import vscode from "vscode";
+import * as vscode from "vscode";
 
 import selectModel from './selectModel';
 import { handleProvideFeedback } from "./handleFeedback";

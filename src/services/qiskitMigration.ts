@@ -1,4 +1,4 @@
-import vscode from "vscode";
+import * as vscode from "vscode";
 
 import { getExtensionContext } from "../globals/extensionContext";
 import ServiceAPI from "./serviceApi";
@@ -112,5 +112,4 @@ export async function postMigrationDisclaimerAcceptance(
 
   return disclaimerData;
 }
-
 

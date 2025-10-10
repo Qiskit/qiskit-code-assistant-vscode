@@ -1,4 +1,4 @@
-import vscode from "vscode";
+import * as vscode from "vscode";
 
 import { updateUserAcceptance } from "../utilities/runCompletion";
 import { handleClearCodelens } from "./handleFeedback";

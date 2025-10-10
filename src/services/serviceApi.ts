@@ -1,4 +1,4 @@
-import vscode from "vscode";
+import * as vscode from "vscode";
 
 import { normalizeURL, normalizeURLPath } from "../utilities/utils";
 import { DISCLAIMER_ERROR_MSG } from "../globals/consts";
