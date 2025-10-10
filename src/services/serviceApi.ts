@@ -25,10 +25,20 @@ export default class ServiceAPI {
     let msg = "An unknown error has occurred";
     if (!response.ok) {
       try {
-        const jsonMsg = await response.json() as {detail: string};
-        msg = jsonMsg?.detail || response.statusText;
+        // Read the body as text ONCE to avoid "Body already read" error
+        const responseText = await response.text();
+
+        // Try to parse it as JSON
+        try {
+          const jsonMsg = JSON.parse(responseText) as {detail: string};
+          msg = jsonMsg?.detail || response.statusText;
+        } catch {
+          // If not JSON, use the text directly
+          msg = responseText || response.statusText;
+        }
+
         console.log(response.status, msg);
-  
+
         if (AUTH_ERROR_CODES.includes(response.status)) {
           msg = `API Token is not authorized or is incorrect: ${msg}`
           if (response.status === 403 && msg.toLowerCase().includes("disclaimer")) {
@@ -36,7 +46,8 @@ export default class ServiceAPI {
           }
         }
       } catch (err) {
-        msg = await response.text();
+        console.error('Error reading response body:', err);
+        msg = response.statusText || "An unknown error has occurred";
       }
     }
     return msg;
