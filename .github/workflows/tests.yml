@@ -31,10 +31,21 @@ jobs:
     - name: Run tests (Linux)
       if: runner.os == 'Linux'
       run: xvfb-run -a npm test
+      env:
+        VSCODE_TEST_TIMEOUT: 120000
 
-    - name: Run tests (macOS/Windows)
-      if: runner.os != 'Linux'
+    - name: Run tests (macOS)
+      if: runner.os == 'macOS'
       run: npm test
+      env:
+        VSCODE_TEST_TIMEOUT: 120000
+
+    - name: Run tests (Windows)
+      if: runner.os == 'Windows'
+      run: npm test
+      timeout-minutes: 10
+      env:
+        VSCODE_TEST_TIMEOUT: 120000
 
   lint:
     runs-on: ubuntu-latest
