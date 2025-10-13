@@ -8,30 +8,40 @@ import { setAsCurrentModel } from "./selectModel";
 import { getMigrationDisclaimer, postMigrationDisclaimerAcceptance } from "../services/qiskitMigration";
 
 export interface DisclaimerState {
-  panel: vscode.WebviewPanel | undefined,
-  model: ModelInfo | undefined,
-  acceptFlag: boolean | false
-};
+  panel: vscode.WebviewPanel | undefined;
+  model: ModelInfo | undefined;
+  acceptFlag: boolean;
+}
 
-export const disclaimerState: DisclaimerState = {
+// Separate state for model and migration disclaimers to prevent corruption
+const modelDisclaimerState: DisclaimerState = {
   panel: undefined,
   model: undefined,
   acceptFlag: false
 };
 
+const migrationDisclaimerState: DisclaimerState = {
+  panel: undefined,
+  model: undefined,  // Always undefined for migration, but kept for interface consistency
+  acceptFlag: false
+};
+
+// Exported for backward compatibility (references model disclaimer state)
+export const disclaimerState: DisclaimerState = modelDisclaimerState;
+
 async function handler(model: ModelInfo): Promise<void> {
   const context = getExtensionContext();
   if (!context) return;
 
-  if (disclaimerState.panel) {
-    disclaimerState.panel.dispose();
-  }
-
-  disclaimerState.acceptFlag = model?.disclaimer?.accepted || false;
-  disclaimerState.model = model;
-
+  // Early validation before touching state
   if (!model || model.disclaimer?.accepted) return;
 
+  // Dispose existing panel if any
+  if (modelDisclaimerState.panel) {
+    modelDisclaimerState.panel.dispose();
+  }
+
+  // Fetch disclaimer first, before setting state
   const apiService = await getServiceApi();
   let disclaimer = null;
   try {
@@ -44,44 +54,53 @@ async function handler(model: ModelInfo): Promise<void> {
     setDefaultStatus();
   }
 
-  disclaimerState.panel = vscode.window.createWebviewPanel(
-    'autocompleteModelDisclaimer',
+  // Now set state only when we're sure we'll create the panel
+  modelDisclaimerState.acceptFlag = false;
+  modelDisclaimerState.model = model;
+
+  modelDisclaimerState.panel = vscode.window.createWebviewPanel(
+    'modelDisclaimer',
     'Qiskit Code Assistant Model Disclaimer for ' + model.display_name,
     vscode.ViewColumn.Two,
-    { "enableScripts": true }
+    {
+      enableScripts: true,
+      retainContextWhenHidden: false
+    }
   );
 
-  disclaimerState.panel.webview.html = modelDisclaimerHTML(model, disclaimer)
-  disclaimerState.panel.webview.onDidReceiveMessage(async (m) => {
+  modelDisclaimerState.panel.webview.html = modelDisclaimerHTML(model, disclaimer)
+  modelDisclaimerState.panel.webview.onDidReceiveMessage(async (m) => {
     switch (m.command) {
       case "accept":
         await apiService.postDisclaimerAcceptance(model._id, disclaimer._id, true);
-        disclaimerState.acceptFlag = true;
+        modelDisclaimerState.acceptFlag = true;
         model.disclaimer!.accepted = true;
         setAsCurrentModel(model)
-        disclaimerState.panel?.dispose();
+        modelDisclaimerState.panel?.dispose();
         return;
       default:
         console.log("Unknown disclaimer webview message: ", m);
     }
   });
-  disclaimerState.panel.onDidDispose(() => {
-    disclaimerState.panel = undefined;
-    disclaimerState.model = undefined;
-    disclaimerState.acceptFlag = false;
+  modelDisclaimerState.panel.onDidDispose(() => {
+    modelDisclaimerState.panel = undefined;
+    modelDisclaimerState.model = undefined;
+    modelDisclaimerState.acceptFlag = false;
   }, null, context.subscriptions);
 
-  disclaimerState.panel.reveal();
+  modelDisclaimerState.panel.reveal();
 }
 
 async function migrationDisclaimerHandler(): Promise<void> {
   const context = getExtensionContext();
   if (!context) return;
 
-  if (disclaimerState.panel) {
-    disclaimerState.panel.dispose();
+  // Dispose existing panel if any
+  if (migrationDisclaimerState.panel) {
+    migrationDisclaimerState.panel.dispose();
   }
 
+  // Fetch disclaimer first
   let disclaimer = null;
   try {
     setLoadingStatus();
@@ -93,30 +112,37 @@ async function migrationDisclaimerHandler(): Promise<void> {
     setDefaultStatus();
   }
 
-  disclaimerState.panel = vscode.window.createWebviewPanel(
-    'autocompleteModelDisclaimer',
+  // Set state only when we're sure we'll create the panel
+  migrationDisclaimerState.acceptFlag = false;
+
+  migrationDisclaimerState.panel = vscode.window.createWebviewPanel(
+    'migrationDisclaimer',
     'Qiskit Code Assistant Migration Disclaimer',
     vscode.ViewColumn.Two,
-    { "enableScripts": true }
+    {
+      enableScripts: true,
+      retainContextWhenHidden: false
+    }
   );
 
-  disclaimerState.panel.webview.html = migrationDisclaimerHTML(disclaimer)
-  disclaimerState.panel.webview.onDidReceiveMessage(async (m) => {
+  migrationDisclaimerState.panel.webview.html = migrationDisclaimerHTML(disclaimer)
+  migrationDisclaimerState.panel.webview.onDidReceiveMessage(async (m) => {
     switch (m.command) {
       case "accept":
         await postMigrationDisclaimerAcceptance(true);
-        disclaimerState.panel?.dispose();
+        migrationDisclaimerState.panel?.dispose();
         return;
       default:
         console.log("Unknown disclaimer webview message: ", m);
     }
   });
-  disclaimerState.panel.onDidDispose(() => {
-    disclaimerState.panel = undefined;
-    disclaimerState.model = undefined;
+  migrationDisclaimerState.panel.onDidDispose(() => {
+    migrationDisclaimerState.panel = undefined;
+    migrationDisclaimerState.model = undefined;
+    migrationDisclaimerState.acceptFlag = false;
   }, null, context.subscriptions);
 
-  disclaimerState.panel.reveal();
+  migrationDisclaimerState.panel.reveal();
 }
 
 const disclaimerAcceptance: CommandModule = {
