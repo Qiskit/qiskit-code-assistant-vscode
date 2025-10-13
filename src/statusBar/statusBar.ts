@@ -11,6 +11,8 @@ const SPINNER = "$(sync~spin)";
 
 let mainStatusBar: StatusBarItem | undefined;
 let feedbackStatusBar: StatusBarItem | undefined;
+let originalStatusText: string | undefined;
+let loadingCount = 0;  // Track number of concurrent loading operations
 
 export async function registerStatusBar(context: ExtensionContext): Promise<void> {
   const serviceApi = await getServiceApi();
@@ -41,22 +43,33 @@ export function setDefaultStatus(): void {
     return;
   }
 
-  if (currentModel) {
-    mainStatusBar.text = "Qiskit Code Assistant: " + currentModel.display_name;
-    mainStatusBar.backgroundColor = undefined;
+  // Decrement loading counter
+  if (loadingCount > 0) {
+    loadingCount--;
+  }
 
-    if (feedbackStatusBar) {
-      feedbackStatusBar.command = {
-        title: "qiskit-code-assistant-provide-feedback-status-bar",
-        command: handleProvideFeedbackStatusBar.identifier,
-        arguments: [currentModel?._id]
+  // Only remove spinner if no more loading operations
+  if (loadingCount === 0) {
+    if (currentModel) {
+      mainStatusBar.text = "Qiskit Code Assistant: " + currentModel.display_name;
+      mainStatusBar.backgroundColor = undefined;
+
+      if (feedbackStatusBar) {
+        feedbackStatusBar.command = {
+          title: "qiskit-code-assistant-provide-feedback-status-bar",
+          command: handleProvideFeedbackStatusBar.identifier,
+          arguments: [currentModel?._id]
+        }
       }
+      vscode.commands.executeCommand("setContext", "qiskit-vscode.model-selected", true);
+    } else {
+      mainStatusBar.text = "Qiskit Code Assistant: No Model Selected";
+      mainStatusBar.backgroundColor = new ThemeColor("statusBarItem.warningBackground");
+      vscode.commands.executeCommand("setContext", "qiskit-vscode.model-selected", false);
     }
-    vscode.commands.executeCommand("setContext", "qiskit-vscode.model-selected", true);
-  } else {
-    mainStatusBar.text = "Qiskit Code Assistant: No Model Selected";
-    mainStatusBar.backgroundColor = new ThemeColor("statusBarItem.warningBackground");
-    vscode.commands.executeCommand("setContext", "qiskit-vscode.model-selected", false);
+
+    // Store the text for restoring after loading
+    originalStatusText = mainStatusBar.text;
   }
 }
 
@@ -65,5 +78,16 @@ export function setLoadingStatus(): void {
     return;
   }
 
-  mainStatusBar.text = mainStatusBar.text + " " + SPINNER;
+  // Increment loading counter
+  loadingCount++;
+
+  // Store original text if not already stored (first loading call)
+  if (!originalStatusText || loadingCount === 1) {
+    originalStatusText = mainStatusBar.text.replace(SPINNER, "").trim();
+  }
+
+  // Only add spinner if not already present
+  if (!mainStatusBar.text.includes(SPINNER)) {
+    mainStatusBar.text = originalStatusText + " " + SPINNER;
+  }
 }
