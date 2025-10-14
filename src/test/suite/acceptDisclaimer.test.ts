@@ -226,23 +226,29 @@ suite('Disclaimer State Isolation Test Suite', () => {
       const handler = (acceptDisclaimerModule as any).default.handler;
       const model = createMockModel('model-123', 'Test Model');
 
-      // Make the API call slow to simulate concurrent execution
+      // Track API call count
+      let apiCallCount = 0;
       let resolveDisclaimer: any;
-      const disclaimerPromise = new Promise((resolve) => {
-        resolveDisclaimer = resolve;
+      mockApiService.getModelDisclaimer.callsFake(() => {
+        apiCallCount++;
+        return new Promise((resolve) => {
+          resolveDisclaimer = resolve;
+        });
       });
-      mockApiService.getModelDisclaimer.returns(disclaimerPromise);
 
       // Start first call (will be waiting on API)
       const firstCall = handler(model);
 
-      // Immediately try second call (should be rejected due to isLoading)
-      const consoleWarnStub = sandbox.stub(console, 'warn');
-      await handler(model);
+      // Give first call a moment to start and set isLoading flag
+      await new Promise(resolve => setImmediate(resolve));
 
-      // Verify second call was rejected
-      expect(consoleWarnStub.calledWith('Model disclaimer handler already in progress')).to.be.true;
-      expect(createWebviewPanelStub.called).to.be.false;
+      // Try second call while first is still loading
+      const secondCall = handler(model);
+      await secondCall;
+
+      // Second call should have been rejected immediately without calling API again
+      expect(apiCallCount).to.equal(1); // Only first call should have reached API
+      expect(createWebviewPanelStub.called).to.be.false; // No panel created yet
 
       // Complete first call
       resolveDisclaimer({
@@ -256,6 +262,7 @@ suite('Disclaimer State Isolation Test Suite', () => {
 
       // Verify first call succeeded
       expect(createWebviewPanelStub.calledOnce).to.be.true;
+      expect(apiCallCount).to.equal(1); // Still only one API call
     });
 
     test('Should reset isLoading flag after error', async () => {
