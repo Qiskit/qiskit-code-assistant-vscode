@@ -3,8 +3,6 @@ import * as vscode from "vscode";
 import { normalizeURL, normalizeURLPath } from "../utilities/utils";
 import { DISCLAIMER_ERROR_MSG } from "../globals/consts";
 
-const config = vscode.workspace.getConfiguration("qiskitCodeAssistant")
-const SERVICE_URL = config.get<string>("url") as string;
 const AUTH_ERROR_CODES = [401, 403];
 
 type APIHeader = {
@@ -54,8 +52,10 @@ export default class ServiceAPI {
   }
 
   static getServiceBaseUrl() {
-    if (SERVICE_URL) {
-      return normalizeURL(SERVICE_URL);
+    const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
+    const serviceUrl = config.get<string>("url") as string;
+    if (serviceUrl) {
+      return normalizeURL(serviceUrl);
     } else {
       throw Error("Missing service URL. Check Qiskit Code Assistant settings.")
     }
