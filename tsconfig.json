@@ -16,7 +16,11 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "noFallthroughCasesInSwitch": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
-  "exclude": ["node_modules", "src/test/fixture"]
+  "include": ["src/**/*", "types/**/*"],
+  "exclude": ["node_modules", "src/test/fixture", "out"]
 }
