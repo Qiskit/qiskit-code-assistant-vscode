@@ -17,6 +17,16 @@ export function setAsCurrentModel(model: ModelInfo): void {
   }
 }
 
+/**
+ * Invalidates the current model selection and clears the models list.
+ * Call this when the service API changes to prevent "model not found" errors.
+ */
+export function invalidateCurrentModel(): void {
+  currentModel = undefined;
+  modelsList = [];
+  setDefaultStatus();
+}
+
 export async function initModels(context: ExtensionContext | null): Promise<void> {
   if (!context) return;
 
