@@ -97,6 +97,16 @@ suite('Disclaimer State Isolation Test Suite', () => {
 
   teardown(() => {
     sandbox.restore();
+
+    // Clean up disclaimer state between tests
+    // Since disclaimerState is a reference to the internal state, we need to reset it
+    if (disclaimerState.panel) {
+      disclaimerState.panel = undefined;
+    }
+    disclaimerState.model = undefined;
+    disclaimerState.acceptFlag = false;
+    // Reset isLoading flag if it exists on the internal state
+    (disclaimerState as any).isLoading = false;
   });
 
   suite('Model Disclaimer State Management', () => {
@@ -210,6 +220,70 @@ suite('Disclaimer State Isolation Test Suite', () => {
       expect(showOptions).to.equal(vscode.ViewColumn.Two);
       expect(options.enableScripts).to.be.true;
       expect(options.retainContextWhenHidden).to.be.false;
+    });
+
+    test('Should prevent concurrent handler executions', async () => {
+      const handler = (acceptDisclaimerModule as any).default.handler;
+      const model = createMockModel('model-123', 'Test Model');
+
+      // Make the API call slow to simulate concurrent execution
+      let resolveDisclaimer: any;
+      const disclaimerPromise = new Promise((resolve) => {
+        resolveDisclaimer = resolve;
+      });
+      mockApiService.getModelDisclaimer.returns(disclaimerPromise);
+
+      // Start first call (will be waiting on API)
+      const firstCall = handler(model);
+
+      // Immediately try second call (should be rejected due to isLoading)
+      const consoleWarnStub = sandbox.stub(console, 'warn');
+      await handler(model);
+
+      // Verify second call was rejected
+      expect(consoleWarnStub.calledWith('Model disclaimer handler already in progress')).to.be.true;
+      expect(createWebviewPanelStub.called).to.be.false;
+
+      // Complete first call
+      resolveDisclaimer({
+        _id: 'disclaimer-123',
+        version: '1.0',
+        title: 'Test Disclaimer',
+        body: 'Test disclaimer content',
+        accepted: false
+      });
+      await firstCall;
+
+      // Verify first call succeeded
+      expect(createWebviewPanelStub.calledOnce).to.be.true;
+    });
+
+    test('Should reset isLoading flag after error', async () => {
+      const handler = (acceptDisclaimerModule as any).default.handler;
+      const model = createMockModel('model-123', 'Test Model');
+
+      // Make first call fail
+      mockApiService.getModelDisclaimer.rejects(new Error('API Error'));
+      sandbox.stub(vscode.window, 'showErrorMessage');
+
+      await handler(model);
+
+      // Verify isLoading was reset
+      expect((disclaimerState as any).isLoading).to.be.false;
+
+      // Now try again with success - should work
+      mockApiService.getModelDisclaimer.resolves({
+        _id: 'disclaimer-123',
+        version: '1.0',
+        title: 'Test Disclaimer',
+        body: 'Test disclaimer content',
+        accepted: false
+      });
+
+      await handler(model);
+
+      // Verify second call succeeded
+      expect(disclaimerState.panel).to.not.be.undefined;
     });
   });
 
