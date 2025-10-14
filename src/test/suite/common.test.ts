@@ -6,6 +6,7 @@ import ServiceAPI from '../../services/serviceApi';
 import CodeAssistantService from '../../services/codeAssistant';
 import OpenAIService from '../../services/openAI';
 import { createMockResponse, createMockConfiguration } from '../mocks/vscode.mock';
+import * as selectModel from '../../commands/selectModel';
 
 suite('Common Service API Singleton Test Suite', () => {
   let workspaceStub: sinon.SinonStub;
@@ -66,6 +67,20 @@ suite('Common Service API Singleton Test Suite', () => {
 
       // Verify runFetch was called twice (once for each initialization)
       expect(runFetchStub.callCount).to.equal(2);
+    });
+
+    test('should clear current model selection when invalidating service API', () => {
+      // Stub invalidateCurrentModel
+      const invalidateCurrentModelStub = sinon.stub(selectModel, 'invalidateCurrentModel');
+
+      // Call invalidateServiceApi
+      invalidateServiceApi();
+
+      // Verify invalidateCurrentModel was called
+      expect(invalidateCurrentModelStub.calledOnce).to.be.true;
+
+      // Restore stub
+      invalidateCurrentModelStub.restore();
     });
   });
 

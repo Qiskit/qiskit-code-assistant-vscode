@@ -2,19 +2,21 @@ import * as vscode from "vscode";
 import CodeAssistantService from "./codeAssistant"
 import OpenAIService from "./openAI"
 import ServiceAPI from "./serviceApi";
+import { invalidateCurrentModel } from "../commands/selectModel";
 
 let activeService: ServiceAPI | undefined;
 let lastServiceUrl: string | undefined;
 let initializationPromise: Promise<ServiceAPI> | undefined;
 
 /**
- * Invalidates the cached service API instance.
+ * Invalidates the cached service API instance and clears the current model selection.
  * Call this when service URL changes or on errors that require re-initialization.
  */
 export function invalidateServiceApi(): void {
   activeService = undefined;
   lastServiceUrl = undefined;
   initializationPromise = undefined;
+  invalidateCurrentModel();
 }
 
 export async function getServiceApi(): Promise<ServiceAPI> {
