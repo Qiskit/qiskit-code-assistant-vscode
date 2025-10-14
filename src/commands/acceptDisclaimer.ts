@@ -13,20 +13,27 @@ export interface DisclaimerState {
   acceptFlag: boolean;
 }
 
+interface InternalDisclaimerState extends DisclaimerState {
+  isLoading: boolean;
+}
+
 // Separate state for model and migration disclaimers to prevent corruption
-const modelDisclaimerState: DisclaimerState = {
+const modelDisclaimerState: InternalDisclaimerState = {
   panel: undefined,
   model: undefined,
-  acceptFlag: false
+  acceptFlag: false,
+  isLoading: false
 };
 
-const migrationDisclaimerState: DisclaimerState = {
+const migrationDisclaimerState: InternalDisclaimerState = {
   panel: undefined,
   model: undefined,  // Always undefined for migration, but kept for interface consistency
-  acceptFlag: false
+  acceptFlag: false,
+  isLoading: false
 };
 
-// Exported for backward compatibility (references model disclaimer state)
+// Exported for testing purposes only - provides read-only access to model disclaimer state
+// WARNING: Do not mutate this object directly
 export const disclaimerState: DisclaimerState = modelDisclaimerState;
 
 async function handler(model: ModelInfo): Promise<void> {
@@ -36,27 +43,36 @@ async function handler(model: ModelInfo): Promise<void> {
   // Early validation before touching state
   if (!model || model.disclaimer?.accepted) return;
 
-  // Dispose existing panel if any
-  if (modelDisclaimerState.panel) {
-    modelDisclaimerState.panel.dispose();
-  }
-
-  // Fetch disclaimer first, before setting state
-  const apiService = await getServiceApi();
-  let disclaimer = null;
-  try {
-    setLoadingStatus();
-    disclaimer = await apiService.getModelDisclaimer(model._id);
-  } catch (err) {
-    vscode.window.showErrorMessage((err as Error).message);
+  // Prevent concurrent executions
+  if (modelDisclaimerState.isLoading) {
+    console.warn('Model disclaimer handler already in progress');
     return;
-  } finally {
-    setDefaultStatus();
   }
 
-  // Now set state only when we're sure we'll create the panel
-  modelDisclaimerState.acceptFlag = false;
-  modelDisclaimerState.model = model;
+  modelDisclaimerState.isLoading = true;
+
+  try {
+    // Dispose existing panel if any
+    if (modelDisclaimerState.panel) {
+      modelDisclaimerState.panel.dispose();
+    }
+
+    // Fetch disclaimer first, before setting state
+    const apiService = await getServiceApi();
+    let disclaimer = null;
+    try {
+      setLoadingStatus();
+      disclaimer = await apiService.getModelDisclaimer(model._id);
+    } catch (err) {
+      vscode.window.showErrorMessage((err as Error).message);
+      return;
+    } finally {
+      setDefaultStatus();
+    }
+
+    // Now set state only when we're sure we'll create the panel
+    modelDisclaimerState.acceptFlag = false;
+    modelDisclaimerState.model = model;
 
   modelDisclaimerState.panel = vscode.window.createWebviewPanel(
     'modelDisclaimer',
@@ -68,52 +84,64 @@ async function handler(model: ModelInfo): Promise<void> {
     }
   );
 
-  modelDisclaimerState.panel.webview.html = modelDisclaimerHTML(model, disclaimer)
+  modelDisclaimerState.panel.webview.html = modelDisclaimerHTML(model, disclaimer);
   modelDisclaimerState.panel.webview.onDidReceiveMessage(async (m) => {
     switch (m.command) {
       case "accept":
         await apiService.postDisclaimerAcceptance(model._id, disclaimer._id, true);
         modelDisclaimerState.acceptFlag = true;
         model.disclaimer!.accepted = true;
-        setAsCurrentModel(model)
+        setAsCurrentModel(model);
         modelDisclaimerState.panel?.dispose();
         return;
       default:
         console.log("Unknown disclaimer webview message: ", m);
     }
   });
-  modelDisclaimerState.panel.onDidDispose(() => {
-    modelDisclaimerState.panel = undefined;
-    modelDisclaimerState.model = undefined;
-    modelDisclaimerState.acceptFlag = false;
-  }, null, context.subscriptions);
+    modelDisclaimerState.panel.onDidDispose(() => {
+      modelDisclaimerState.panel = undefined;
+      modelDisclaimerState.model = undefined;
+      modelDisclaimerState.acceptFlag = false;
+    }, null, context.subscriptions);
 
-  modelDisclaimerState.panel.reveal();
+    modelDisclaimerState.panel.reveal();
+  } finally {
+    modelDisclaimerState.isLoading = false;
+  }
 }
 
 async function migrationDisclaimerHandler(): Promise<void> {
   const context = getExtensionContext();
   if (!context) return;
 
-  // Dispose existing panel if any
-  if (migrationDisclaimerState.panel) {
-    migrationDisclaimerState.panel.dispose();
-  }
-
-  // Fetch disclaimer first
-  let disclaimer = null;
-  try {
-    setLoadingStatus();
-    disclaimer = await getMigrationDisclaimer();
-  } catch (err) {
-    vscode.window.showErrorMessage((err as Error).message);
+  // Prevent concurrent executions
+  if (migrationDisclaimerState.isLoading) {
+    console.warn('Migration disclaimer handler already in progress');
     return;
-  } finally {
-    setDefaultStatus();
   }
 
-  // Set state only when we're sure we'll create the panel
-  migrationDisclaimerState.acceptFlag = false;
+  migrationDisclaimerState.isLoading = true;
+
+  try {
+    // Dispose existing panel if any
+    if (migrationDisclaimerState.panel) {
+      migrationDisclaimerState.panel.dispose();
+    }
+
+    // Fetch disclaimer first
+    let disclaimer = null;
+    try {
+      setLoadingStatus();
+      disclaimer = await getMigrationDisclaimer();
+    } catch (err) {
+      vscode.window.showErrorMessage((err as Error).message);
+      return;
+    } finally {
+      setDefaultStatus();
+    }
+
+    // Set state only when we're sure we'll create the panel
+    migrationDisclaimerState.acceptFlag = false;
 
   migrationDisclaimerState.panel = vscode.window.createWebviewPanel(
     'migrationDisclaimer',
@@ -125,7 +153,7 @@ async function migrationDisclaimerHandler(): Promise<void> {
     }
   );
 
-  migrationDisclaimerState.panel.webview.html = migrationDisclaimerHTML(disclaimer)
+  migrationDisclaimerState.panel.webview.html = migrationDisclaimerHTML(disclaimer);
   migrationDisclaimerState.panel.webview.onDidReceiveMessage(async (m) => {
     switch (m.command) {
       case "accept":
@@ -136,13 +164,16 @@ async function migrationDisclaimerHandler(): Promise<void> {
         console.log("Unknown disclaimer webview message: ", m);
     }
   });
-  migrationDisclaimerState.panel.onDidDispose(() => {
-    migrationDisclaimerState.panel = undefined;
-    migrationDisclaimerState.model = undefined;
-    migrationDisclaimerState.acceptFlag = false;
-  }, null, context.subscriptions);
+    migrationDisclaimerState.panel.onDidDispose(() => {
+      migrationDisclaimerState.panel = undefined;
+      migrationDisclaimerState.model = undefined;
+      migrationDisclaimerState.acceptFlag = false;
+    }, null, context.subscriptions);
 
-  migrationDisclaimerState.panel.reveal();
+    migrationDisclaimerState.panel.reveal();
+  } finally {
+    migrationDisclaimerState.isLoading = false;
+  }
 }
 
 const disclaimerAcceptance: CommandModule = {
