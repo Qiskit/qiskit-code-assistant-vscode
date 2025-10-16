@@ -1,4 +1,4 @@
-import { Disposable, languages } from "vscode";
+import { Disposable, languages, window } from "vscode";
 
 import { Capability, isCapabilityEnabled } from "../capabilities/capabilities";
 import enableProposed from "../globals/proposedAPI";
@@ -7,7 +7,7 @@ import {
   isInlineSuggestionReleasedApiSupported,
 } from "../globals/versions";
 import { QcaInlineCompletionItemProvider } from "./provideInlineCompletionItems";
-import { FeedbackCodelensProvider } from "../codelens/FeedbackCodelensProvider";
+import { FeedbackCodelensProvider, clearPromptFeedbackCodeLens } from "../codelens/FeedbackCodelensProvider";
 
 
 async function isDefaultAPIEnabled(): Promise<boolean> {
@@ -42,6 +42,16 @@ export default async function registerInlineHandlers(
         inlineCompletionsProvider
       )
     );
+
+    // Clear feedback when active editor changes
+    subscriptions.push(
+      window.onDidChangeActiveTextEditor(() => {
+        clearPromptFeedbackCodeLens().catch(err =>
+          console.error('Failed to clear feedback on editor change:', err)
+        );
+      })
+    );
+
     return subscriptions;
   }
 

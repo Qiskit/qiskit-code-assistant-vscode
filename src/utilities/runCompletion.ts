@@ -9,6 +9,7 @@ import { currentModel } from "../commands/selectModel";
 import { sleep } from "./utils";
 import acceptDisclaimer from "../commands/acceptDisclaimer";
 import { getServiceApi } from "../services/common";
+import { clearPromptFeedbackCodeLens } from "../codelens/FeedbackCodelensProvider";
 
 let cancelCompletion: AbortController | null = null;
 let promptId: string | undefined = undefined;
@@ -32,6 +33,9 @@ export default async function* runCompletion(
   // This lets the js event loop turn once, processing the cancelCompletion.abort()
   // which resets the loading status, before we start a new request.
   await sleep(0);
+
+  // Clear any existing feedback from previous completions
+  await clearPromptFeedbackCodeLens();
 
   try {
     setLoadingStatus();

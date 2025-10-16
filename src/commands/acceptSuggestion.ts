@@ -5,7 +5,7 @@ import { handleClearCodelens } from "./handleFeedback";
 
 async function acceptSuggestionHandler(): Promise<void> {
   await updateUserAcceptance(true);
-  // vscode.commands.executeCommand(handleClearCodelens.identifier);
+  vscode.commands.executeCommand(handleClearCodelens.identifier);
   vscode.commands.executeCommand("editor.action.inlineSuggest.commit");
 };
 
