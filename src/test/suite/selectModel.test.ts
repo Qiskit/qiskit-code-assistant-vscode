@@ -186,6 +186,9 @@ suite('SelectModel Test Suite', () => {
 
       // Verify that status was updated
       expect(setDefaultStatusStub.calledOnce).to.be.true;
+
+      // Cleanup stubs to prevent conflicts with other tests
+      sinon.restore();
     });
   });
 
