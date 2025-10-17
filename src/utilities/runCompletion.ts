@@ -77,6 +77,10 @@ export default async function* runCompletion(
       return null;
     }
 
+    // Reset promptId at the start of a NEW completion attempt
+    // This ensures we don't send telemetry for old prompts
+    promptId = undefined;
+
     let responseData = null;
     try {
       responseData = apiService.postModelPrompt(currentModel._id, inputs);
@@ -118,7 +122,9 @@ export default async function* runCompletion(
           is_locked: false,
         }
 
-        if (cancelCompletion.signal.aborted) return null;
+        if (cancelCompletion.signal.aborted) {
+          return null;
+        }
 
         yield result;
       }
