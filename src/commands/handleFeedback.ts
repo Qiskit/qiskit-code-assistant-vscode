@@ -22,7 +22,7 @@ async function provideFeedbackHandler(
   if (positiveFeedback != undefined) {
     const identifier = (positiveFeedback ? acceptSuggestionCommand : dismissSuggestionCommand).identifier;
     await vscode.commands.executeCommand(identifier);
-    await clearFeedbackCodelensHandler();
+    // Note: Feedback is already cleared by acceptSuggestionCommand or dismissSuggestionCommand
 
     moreFeedback = await vscode.window.showInformationMessage(
       FEEDBACK_RESPONSE_MSG,
