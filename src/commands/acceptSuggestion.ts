@@ -14,7 +14,7 @@
 
 import * as vscode from "vscode";
 
-import { updateUserAcceptance } from "../utilities/runCompletion";
+import { updateUserAcceptance, cancelCurrentCompletion } from "../utilities/runCompletion";
 import { handleClearCodelens } from "./handleFeedback";
 
 async function acceptSuggestionHandler(): Promise<void> {
@@ -29,6 +29,9 @@ export const acceptSuggestionCommand: CommandModule = {
 };
 
 async function dismissSuggestionHandler(): Promise<void> {
+  // Cancel the underlying streaming request to stop spinner
+  cancelCurrentCompletion();
+
   await updateUserAcceptance(false);
   vscode.commands.executeCommand(handleClearCodelens.identifier);
   vscode.commands.executeCommand("editor.action.inlineSuggest.hide");
