@@ -15,6 +15,10 @@
 import * as vscode from "vscode";
 
 import ServiceAPI from "./serviceApi";
+import { SSEParser, StreamingPipeline } from "../utilities/streamingPipeline";
+import { streamingStatusBar, StreamingTelemetry } from "../utilities/streamingStatusBar";
+import { isRetryableError } from "../utilities/errorUtils";
+import { getCircuitBreaker } from "../utilities/circuitBreaker";
 
 type OpenAIModelInfo = {
   id: string
@@ -32,7 +36,6 @@ type OpenAIPromptResponse = {
   choices: OpenAIChoice[]
 }
 
-const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
 const OPENAI_API_VERSION = "v1";
 const SERVICE_NAME = "open-ai";
 
@@ -94,11 +97,25 @@ export default class OpenAIService extends ServiceAPI {
 
   async *postModelPrompt(
     modelId: string,
-    input: string
+    input: string,
+    signal?: AbortSignal,
+    retryCount: number = 0
   ): AsyncGenerator<ModelPromptResponse> {
     // POST /v1/completions
     const endpoint = `/${OPENAI_API_VERSION}/completions`;
-    const streamingEnabled = config.get<boolean>("enableStreaming") as boolean;
+
+    // Fetch config at runtime for hot-reload support
+    const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
+    const streamingEnabled = config.get<boolean>("enableStreaming") ?? false;
+    const enableMetrics = config.get<boolean>("enableTelemetry") ?? false;
+    const bufferSize = config.get<number>("streamingBufferSize") ?? 1;
+    const maxRetries = config.get<number>("streamingRetryAttempts") ?? 2;
+    const retryDelay = config.get<number>("streamingRetryDelay") ?? 1000;
+    const timeout = config.get<number>("streamingTimeout") ?? 30000;
+    const circuitBreakerEnabled = config.get<boolean>("circuitBreakerEnabled") ?? true;
+    const circuitBreakerThreshold = config.get<number>("circuitBreakerThreshold") ?? 3;
+    const circuitBreakerResetTimeout = config.get<number>("circuitBreakerResetTimeout") ?? 60000;
+
     const options = {
       "method": "POST",
       "headers": ServiceAPI.getHeaders(),
@@ -108,15 +125,176 @@ export default class OpenAIService extends ServiceAPI {
         stream: streamingEnabled
       })
     };
-  
+
     if (streamingEnabled) {
-      const response = ServiceAPI.runFetchStreaming(endpoint, options);
-  
-      for await (let chunk of response) {
-        // parse & transform the streaming data chunk
-        const openAIChunk = JSON.parse(chunk.trim().replace("data: {", "{")) as OpenAIPromptResponse;
-        const promptResponseChunk = toModelPromptResponse(openAIChunk)
-        yield promptResponseChunk
+      // Get circuit breaker instance
+      const circuitBreaker = circuitBreakerEnabled
+        ? getCircuitBreaker(SERVICE_NAME, {
+            failureThreshold: circuitBreakerThreshold,
+            resetTimeout: circuitBreakerResetTimeout,
+            successThreshold: 2
+          })
+        : null;
+
+      try {
+        // Check circuit breaker before request
+        if (circuitBreaker) {
+          await circuitBreaker.beforeRequest();
+        }
+
+        // Log streaming start
+        if (enableMetrics && retryCount === 0) {
+          StreamingTelemetry.logStart('postModelPrompt', {
+            modelId,
+            service: SERVICE_NAME,
+            streamingEnabled: true,
+            bufferSize,
+            timeout
+          });
+        }
+
+        // Start streaming status indicator
+        if (retryCount === 0) {
+          streamingStatusBar.start("Generating completion");
+        } else {
+          streamingStatusBar.start(`Retrying... (${retryCount}/${maxRetries})`);
+        }
+
+        // Create timeout signal if configured
+        let timeoutId: NodeJS.Timeout | undefined;
+        let abortController: AbortController | undefined;
+        let effectiveSignal = signal;
+
+        if (timeout > 0) {
+          abortController = new AbortController();
+          timeoutId = setTimeout(() => {
+            abortController!.abort();
+          }, timeout);
+
+          // Combine external signal with timeout signal
+          if (signal) {
+            signal.addEventListener('abort', () => {
+              abortController!.abort();
+            });
+          }
+
+          effectiveSignal = abortController.signal;
+        }
+
+        try {
+          // Execute streaming request
+          const streamGenerator = async function* (): AsyncGenerator<ModelPromptResponse> {
+            // Get raw streaming response
+            const rawStream = ServiceAPI.runFetchStreaming(endpoint, options);
+
+            // Parse SSE format with unified parser (OpenAI uses "data: " prefix)
+            const parser = new SSEParser<OpenAIPromptResponse>('data: ');
+            const parsedStream = parser.parse(rawStream);
+
+            // Transform OpenAI format to ModelPromptResponse
+            async function* transformStream(stream: AsyncGenerator<OpenAIPromptResponse>): AsyncGenerator<ModelPromptResponse> {
+              for await (const openAIChunk of stream) {
+                yield toModelPromptResponse(openAIChunk);
+              }
+            }
+
+            const transformedStream = transformStream(parsedStream);
+
+            // Wrap in streaming pipeline for metrics and monitoring
+            const pipeline = new StreamingPipeline(transformedStream, {
+              signal: effectiveSignal,
+              enableMetrics,
+              bufferSize,
+              onComplete: (metrics) => {
+                streamingStatusBar.complete(metrics);
+                if (enableMetrics) {
+                  StreamingTelemetry.logMetrics('postModelPrompt', metrics, {
+                    modelId,
+                    service: SERVICE_NAME,
+                    retryCount
+                  });
+                }
+              },
+              onError: (error) => {
+                streamingStatusBar.error('Streaming failed');
+                if (enableMetrics) {
+                  StreamingTelemetry.logError('postModelPrompt', error as Error, {
+                    modelId,
+                    service: SERVICE_NAME,
+                    retryCount
+                  });
+                }
+              }
+            });
+
+            // Yield chunks from pipeline
+            for await (const chunk of pipeline.process()) {
+              yield chunk;
+            }
+          };
+
+          // Yield from the stream generator
+          for await (const chunk of streamGenerator()) {
+            yield chunk;
+          }
+
+          // Record success with circuit breaker
+          if (circuitBreaker) {
+            circuitBreaker.onSuccess();
+          }
+        } finally {
+          // Clean up timeout
+          if (timeoutId) {
+            clearTimeout(timeoutId);
+          }
+        }
+      } catch (error) {
+        // Record failure with circuit breaker
+        if (circuitBreaker && error instanceof Error) {
+          circuitBreaker.onFailure(error);
+        }
+
+        // Check for timeout
+        if (signal?.aborted || error instanceof Error && error.name === 'AbortError') {
+          if (enableMetrics) {
+            StreamingTelemetry.logTimeout('postModelPrompt', timeout, {
+              modelId,
+              service: SERVICE_NAME,
+              retryCount
+            });
+          }
+          // Status bar already cleaned up by onError callback
+          throw new Error('Streaming request timed out');
+        }
+
+        // Check if error is retryable (network errors, 5xx status codes)
+        const isRetryable = isRetryableError(error);
+
+        if (isRetryable && retryCount < maxRetries) {
+          const delayMs = retryDelay * Math.pow(2, retryCount);
+
+          if (enableMetrics) {
+            StreamingTelemetry.logRetry('postModelPrompt', retryCount + 1, maxRetries, delayMs, {
+              modelId,
+              service: SERVICE_NAME,
+              error: error instanceof Error ? error.message : String(error)
+            });
+          }
+
+          console.log(`Retrying streaming request (attempt ${retryCount + 1}/${maxRetries})...`);
+          vscode.window.showWarningMessage(
+            `Connection issue detected. Retrying... (${retryCount + 1}/${maxRetries})`
+          );
+
+          // Wait with exponential backoff
+          await new Promise(resolve => setTimeout(resolve, delayMs));
+
+          // Retry by recursively calling the function with incremented counter
+          yield* this.postModelPrompt(modelId, input, signal, retryCount + 1);
+        } else {
+          // Status bar already cleaned up by onError callback
+          throw error;
+        }
       }
     } else {
       const response = await ServiceAPI.runFetch(endpoint, options);

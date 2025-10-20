@@ -153,7 +153,9 @@ export default class ServiceAPI {
 
   async *postModelPrompt(
     modelId: string,
-    input: string
+    input: string,
+    signal?: AbortSignal,
+    retryCount?: number
   ): AsyncGenerator<ModelPromptResponse> {
     yield ({} as ModelPromptResponse)
   }
