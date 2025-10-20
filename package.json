@@ -127,7 +127,7 @@
         },
         "qiskitCodeAssistant.enableStreaming": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "markdownDescription": "Enable streaming of completions data for real-time code generation",
           "tags": [
             "streaming"

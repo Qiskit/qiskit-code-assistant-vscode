@@ -6,19 +6,23 @@ The Qiskit Code Assistant supports **real-time streaming** for code completions,
 
 Streaming allows you to see code suggestions appear in real-time as they're being generated, similar to how modern AI chat interfaces work. This provides a more interactive and responsive experience compared to waiting for the entire completion.
 
-## Enabling Streaming
+## Streaming Status
 
-Streaming is **disabled by default**. To enable it:
+Streaming is **enabled by default** starting with this version, providing the best user experience with real-time code generation.
+
+### Disabling Streaming
+
+If you prefer to receive complete code suggestions all at once, you can disable streaming:
 
 1. Open VSCode Settings (`Cmd+,` on Mac or `Ctrl+,` on Windows/Linux)
 2. Search for "Qiskit Code Assistant"
-3. Check the box for **"Enable Streaming"**
+3. Uncheck the box for **"Enable Streaming"**
 
 Alternatively, add this to your `settings.json`:
 
 ```json
 {
-  "qiskitCodeAssistant.enableStreaming": true
+  "qiskitCodeAssistant.enableStreaming": false
 }
 ```
 
@@ -29,7 +33,7 @@ Alternatively, add this to your `settings.json`:
 #### Enable Streaming
 - **Setting**: `qiskitCodeAssistant.enableStreaming`
 - **Type**: Boolean
-- **Default**: `false`
+- **Default**: `true`
 - **Description**: Enable real-time streaming of code completions
 
 ### Advanced Settings
