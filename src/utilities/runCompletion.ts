@@ -29,6 +29,17 @@ import { StreamingPipeline } from "./streamingPipeline";
 let cancelCompletion: AbortController | null = null;
 let promptId: string | undefined = undefined;
 
+/**
+ * Cancel the current completion request
+ * Used when user accepts a completion early or manually cancels
+ */
+export function cancelCurrentCompletion(): void {
+  if (cancelCompletion) {
+    cancelCompletion.abort();
+    cancelCompletion = null;
+  }
+}
+
 export default async function* runCompletion(
   document: TextDocument,
   position: Position,

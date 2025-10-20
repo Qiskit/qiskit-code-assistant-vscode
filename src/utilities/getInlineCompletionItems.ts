@@ -15,7 +15,7 @@
 import CodeAssistantInlineCompletionItem from "../inlineSuggestions/inlineCompletionItem";
 import { createDecorationType, extractCompletionParts, toCompletionItem } from "./utils";
 import handleGetCompletion from "../commands/handleGetCompletion";
-import runCompletion from "./runCompletion";
+import runCompletion, { cancelCurrentCompletion } from "./runCompletion";
 import * as vscode from "vscode";
 import * as os from 'os';
 import { clearPromptFeedbackCodeLens } from "../codelens/FeedbackCodelensProvider";
@@ -86,7 +86,11 @@ export default async function getInlineCompletionItems(
 
     // loop through streaming data
     for await (let chunk of completionGenerator) {
-      if (cancelled) return;
+      if (cancelled) {
+        // Cancel the underlying stream to stop spinner and clean up resources
+        cancelCurrentCompletion();
+        return;
+      }
       const result = chunk?.results[0]
       if (!result) return;
       accumulated += result.new_prefix;
