@@ -18,7 +18,6 @@ import handleGetCompletion from "../commands/handleGetCompletion";
 import runCompletion, { cancelCurrentCompletion } from "./runCompletion";
 import * as vscode from "vscode";
 import * as os from 'os';
-import { clearPromptFeedbackCodeLens } from "../codelens/FeedbackCodelensProvider";
 
 const INLINE_REQUEST_TIMEOUT = 3000;
 
@@ -52,17 +51,13 @@ export default async function getInlineCompletionItems(
     vscode.workspace.onDidChangeTextDocument(e => {
       if (e.document === document) {
         cancelled = true;
-        clearPromptFeedbackCodeLens().catch(err =>
-          console.error('Failed to clear feedback on document change:', err)
-        );
+        // Don't clear feedback here - let it persist for post-acceptance feedback
       }
     })
     : vscode.window.onDidChangeTextEditorSelection(e => {
       if (e.textEditor.document === document) {
         cancelled = true;
-        clearPromptFeedbackCodeLens().catch(err =>
-          console.error('Failed to clear feedback on selection change:', err)
-        );
+        // Don't clear feedback here - let it persist for post-acceptance feedback
       }
     });
   
