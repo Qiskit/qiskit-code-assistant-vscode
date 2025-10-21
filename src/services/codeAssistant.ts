@@ -173,11 +173,7 @@ export default class CodeAssistantService extends ServiceAPI {
         }
 
         // Start streaming status indicator
-        if (retryCount === 0) {
-          streamingStatusBar.start("Generating completion");
-        } else {
-          streamingStatusBar.start(`Retrying... (${retryCount}/${maxRetries})`);
-        }
+        streamingStatusBar.start();
 
         // Create timeout signal if configured
         let timeoutId: NodeJS.Timeout | undefined;

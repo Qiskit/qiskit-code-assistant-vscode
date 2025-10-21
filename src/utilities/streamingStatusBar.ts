@@ -27,7 +27,7 @@ class StreamingStatusBarManager {
    * Start showing streaming progress
    * Uses the existing main status bar with spinner
    */
-  start(_label: string = "Generating"): void {
+  start(): void {
     // Only call setLoadingStatus if not already active to prevent flickering
     if (!this.isActive) {
       this.isActive = true;
@@ -41,7 +41,7 @@ class StreamingStatusBarManager {
    * Update streaming progress with character count
    * This is informational only - the main status bar shows the spinner
    */
-  updateProgress(_chars: number, _label: string = "Generating"): void {
+  updateProgress(_chars: number): void {
     if (!this.isActive) return;
     // The main status bar continues showing the spinner
     // We don't need to update it every chunk - it already shows progress
