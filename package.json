@@ -127,8 +127,84 @@
         },
         "qiskitCodeAssistant.enableStreaming": {
           "type": "boolean",
+          "default": true,
+          "markdownDescription": "Enable streaming of completions data for real-time code generation",
+          "tags": [
+            "streaming"
+          ]
+        },
+        "qiskitCodeAssistant.streamingBufferSize": {
+          "type": "number",
+          "default": 1,
+          "minimum": 1,
+          "maximum": 10,
+          "markdownDescription": "Number of chunks to buffer before yielding (higher values may improve performance but increase latency)",
+          "tags": [
+            "streaming"
+          ]
+        },
+        "qiskitCodeAssistant.streamingRetryAttempts": {
+          "type": "number",
+          "default": 2,
+          "minimum": 0,
+          "maximum": 5,
+          "markdownDescription": "Number of retry attempts for failed streaming requests",
+          "tags": [
+            "streaming"
+          ]
+        },
+        "qiskitCodeAssistant.streamingRetryDelay": {
+          "type": "number",
+          "default": 1000,
+          "minimum": 100,
+          "maximum": 5000,
+          "markdownDescription": "Base delay in milliseconds between retry attempts (uses exponential backoff)",
+          "tags": [
+            "streaming"
+          ]
+        },
+        "qiskitCodeAssistant.streamingTimeout": {
+          "type": "number",
+          "default": 30000,
+          "minimum": 5000,
+          "maximum": 120000,
+          "markdownDescription": "Timeout in milliseconds for streaming requests (0 = no timeout)",
+          "tags": [
+            "streaming"
+          ]
+        },
+        "qiskitCodeAssistant.streamingDebug": {
+          "type": "boolean",
           "default": false,
-          "markdownDescription": "Enable streaming of completions data",
+          "markdownDescription": "Enable detailed debug logging for streaming operations (shows chunk counts, bytes, parse errors)",
+          "tags": [
+            "streaming"
+          ]
+        },
+        "qiskitCodeAssistant.circuitBreakerEnabled": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Enable circuit breaker to temporarily disable streaming after repeated failures",
+          "tags": [
+            "streaming"
+          ]
+        },
+        "qiskitCodeAssistant.circuitBreakerThreshold": {
+          "type": "number",
+          "default": 3,
+          "minimum": 1,
+          "maximum": 10,
+          "markdownDescription": "Number of consecutive failures before circuit breaker opens",
+          "tags": [
+            "streaming"
+          ]
+        },
+        "qiskitCodeAssistant.circuitBreakerResetTimeout": {
+          "type": "number",
+          "default": 60000,
+          "minimum": 10000,
+          "maximum": 300000,
+          "markdownDescription": "Time in milliseconds to wait before attempting recovery after circuit opens",
           "tags": [
             "streaming"
           ]

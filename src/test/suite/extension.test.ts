@@ -87,7 +87,7 @@ suite('Extension Integration Test Suite', () => {
 
     expect(url).to.equal('https://qiskit-code-assistant.quantum.ibm.com');
     expect(enableTelemetry).to.be.true;
-    expect(enableStreaming).to.be.false;
+    expect(enableStreaming).to.be.true;
   });
 
   test('Extension should work in Test mode', async function() {

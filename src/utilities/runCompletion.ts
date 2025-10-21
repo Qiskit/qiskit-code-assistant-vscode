@@ -24,9 +24,23 @@ import { sleep } from "./utils";
 import acceptDisclaimer from "../commands/acceptDisclaimer";
 import { getServiceApi } from "../services/common";
 import { clearPromptFeedbackCodeLens } from "../codelens/FeedbackCodelensProvider";
+import { StreamingPipeline } from "./streamingPipeline";
 
 let cancelCompletion: AbortController | null = null;
 let promptId: string | undefined = undefined;
+
+/**
+ * Cancel the current completion request
+ * Used when user accepts a completion early or manually cancels
+ */
+export function cancelCurrentCompletion(): void {
+  if (cancelCompletion) {
+    cancelCompletion.abort();
+    cancelCompletion = null;
+    // Immediately stop the spinner - don't wait for generator cleanup
+    setDefaultStatus();
+  }
+}
 
 export default async function* runCompletion(
   document: TextDocument,
@@ -97,11 +111,23 @@ export default async function* runCompletion(
 
     let responseData = null;
     try {
-      responseData = apiService.postModelPrompt(currentModel._id, inputs);
-      for await (let chunk of responseData) {
-        if ((chunk as unknown as {error: string})?.error) {
-          throw Error((chunk as unknown as {error: string})?.error)
+      // Store reference to avoid race conditions with cancelCompletion being set to null
+      const currentCancellation = cancelCompletion;
+
+      responseData = apiService.postModelPrompt(currentModel._id, inputs, currentCancellation?.signal);
+
+      // Wrap the response in a streaming pipeline for cancellation support
+      const pipeline = new StreamingPipeline(responseData, {
+        signal: currentCancellation?.signal,
+        enableMetrics: false, // Metrics already handled at service level
+      });
+
+      for await (let chunk of pipeline.process()) {
+        // Type-safe error checking
+        if (isErrorChunk(chunk)) {
+          throw Error(chunk.error)
         }
+
         const generatedTextRaw = getGeneratedText(chunk);
 
         promptId = chunk.prompt_id
@@ -136,7 +162,8 @@ export default async function* runCompletion(
           is_locked: false,
         }
 
-        if (cancelCompletion.signal.aborted) {
+        // Check if current cancellation is still valid and aborted
+        if (currentCancellation?.signal.aborted) {
           return null;
         }
 
@@ -156,6 +183,13 @@ export default async function* runCompletion(
     cancelCompletion = null;
     setDefaultStatus();
   }
+}
+
+/**
+ * Type guard to check if a chunk is an error response
+ */
+function isErrorChunk(chunk: any): chunk is { error: string } {
+  return chunk && typeof chunk === 'object' && 'error' in chunk && typeof chunk.error === 'string';
 }
 
 function getGeneratedText(json: any): string {

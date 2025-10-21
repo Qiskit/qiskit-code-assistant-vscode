@@ -15,10 +15,9 @@
 import CodeAssistantInlineCompletionItem from "../inlineSuggestions/inlineCompletionItem";
 import { createDecorationType, extractCompletionParts, toCompletionItem } from "./utils";
 import handleGetCompletion from "../commands/handleGetCompletion";
-import runCompletion from "./runCompletion";
+import runCompletion, { cancelCurrentCompletion } from "./runCompletion";
 import * as vscode from "vscode";
 import * as os from 'os';
-import { clearPromptFeedbackCodeLens } from "../codelens/FeedbackCodelensProvider";
 
 const INLINE_REQUEST_TIMEOUT = 3000;
 
@@ -52,17 +51,13 @@ export default async function getInlineCompletionItems(
     vscode.workspace.onDidChangeTextDocument(e => {
       if (e.document === document) {
         cancelled = true;
-        clearPromptFeedbackCodeLens().catch(err =>
-          console.error('Failed to clear feedback on document change:', err)
-        );
+        // Don't clear feedback here - let it persist for post-acceptance feedback
       }
     })
     : vscode.window.onDidChangeTextEditorSelection(e => {
       if (e.textEditor.document === document) {
         cancelled = true;
-        clearPromptFeedbackCodeLens().catch(err =>
-          console.error('Failed to clear feedback on selection change:', err)
-        );
+        // Don't clear feedback here - let it persist for post-acceptance feedback
       }
     });
   
@@ -86,9 +81,18 @@ export default async function getInlineCompletionItems(
 
     // loop through streaming data
     for await (let chunk of completionGenerator) {
-      if (cancelled) return;
+      if (cancelled) {
+        // Cancel the underlying stream and close generator to stop spinner
+        cancelCurrentCompletion();
+        await completionGenerator.return(undefined);
+        return;
+      }
       const result = chunk?.results[0]
-      if (!result) return;
+      if (!result) {
+        // Close generator to ensure finally block runs and spinner stops
+        await completionGenerator.return(undefined);
+        return;
+      }
       accumulated += result.new_prefix;
       
       const { before, after } = extractCompletionParts(accumulated);
@@ -116,7 +120,10 @@ export default async function getInlineCompletionItems(
           completionItem.insertText = before;
         }
         resolver(new vscode.InlineCompletionList([completionItem]));
-        setTimeout(handleGetCompletion.handler, 10);
+        // Only trigger next suggestion if not cancelled (to prevent triggering new completion after early acceptance)
+        if (!cancelled) {
+          setTimeout(handleGetCompletion.handler, 10);
+        }
       }
     }
   } catch (error) {
@@ -127,7 +134,10 @@ export default async function getInlineCompletionItems(
     if (completionItem) {
       completionItem.insertText = accumulated;
       resolver(new vscode.InlineCompletionList([completionItem]));
-      setTimeout(handleGetCompletion.handler, 10);
+      // Only trigger next suggestion if not cancelled (to prevent triggering new completion after early acceptance)
+      if (!cancelled) {
+        setTimeout(handleGetCompletion.handler, 10);
+      }
     } else {
       resolver(new vscode.InlineCompletionList([]));
     }

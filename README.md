@@ -74,6 +74,7 @@ Customize keyboard shortcuts in VS Code using the `Keyboard Shortcuts` editor. T
 | **Command**                | **Keybinding**                    | **Description**           |
 |:---------------------------|:----------------------------------------|:--------------------------|
 | `qiskit-vscode.accept-suggestion` | `Tab` | Accept the model-generated suggestion |
+| `qiskit-vscode.dismiss-suggestion` | `Esc` | Cancel/reject the model-generated suggestion |
 | `qiskit-vscode.handle-get-completion` | `Ctrl+.`                | Generate suggestions |
 
 ## Telemetry

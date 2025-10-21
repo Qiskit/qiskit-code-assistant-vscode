@@ -15,7 +15,7 @@
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import * as vscode from 'vscode';
-import runCompletion, { updateUserAcceptance } from '../../utilities/runCompletion';
+import runCompletion, { updateUserAcceptance, cancelCurrentCompletion } from '../../utilities/runCompletion';
 import { createMockTextDocument } from '../mocks/vscode.mock';
 import * as statusBar from '../../statusBar/statusBar';
 import * as extensionContext from '../../globals/extensionContext';
@@ -491,6 +491,154 @@ suite('runCompletion Test Suite', () => {
 
       // Check that default status was set in the finally block
       expect(setDefaultStatusStub.called).to.be.true;
+    });
+  });
+
+  /**
+   * Test suite for cancelCurrentCompletion function
+   *
+   * These tests verify that early acceptance of streaming completions
+   * properly cancels the underlying stream to stop the spinner.
+   */
+  suite('cancelCurrentCompletion', () => {
+    test('should abort ongoing completion when called', async () => {
+      const mockModel = createMockModel();
+      sandbox.stub(selectModel, 'currentModel').get(() => mockModel);
+
+      const mockApiService = createMockApiService();
+
+      // Create a generator that yields multiple chunks with delays
+      const asyncGenerator = (async function* () {
+        yield {
+          prompt_id: 'streaming-prompt',
+          generated_text: 'first chunk'
+        };
+        await new Promise(resolve => setTimeout(resolve, 50));
+        yield {
+          prompt_id: 'streaming-prompt',
+          generated_text: 'second chunk'
+        };
+        await new Promise(resolve => setTimeout(resolve, 50));
+        yield {
+          prompt_id: 'streaming-prompt',
+          generated_text: 'third chunk'
+        };
+      })();
+
+      mockApiService.postModelPrompt.returns(asyncGenerator);
+      getServiceApiStub.resolves(mockApiService);
+
+      const mockDocument = createTestDocument();
+      const position = new vscode.Position(0, 8);
+
+      // Start completion
+      const generator = runCompletion(mockDocument, position);
+
+      // Consume first chunk
+      const result1 = await generator.next();
+      expect(result1.value).to.not.be.null;
+      expect(result1.value?.results[0].completion_metadata?.prompt_id).to.equal('streaming-prompt');
+
+      // Simulate user accepting early by calling cancelCurrentCompletion
+      cancelCurrentCompletion();
+
+      // Try to get next chunk - should be aborted
+      await generator.next();
+
+      // The generator should have stopped due to abort signal
+      // The finally block should have been called, setting default status
+      expect(setDefaultStatusStub.called).to.be.true;
+    });
+
+    test('should handle cancellation when no completion is active', () => {
+      // Should not throw when called without active completion
+      expect(() => cancelCurrentCompletion()).to.not.throw();
+    });
+
+    test('should stop generator when cancelling streaming', async () => {
+      const mockModel = createMockModel();
+      sandbox.stub(selectModel, 'currentModel').get(() => mockModel);
+
+      const mockApiService = createMockApiService();
+
+      let chunksYielded = 0;
+      // Create a long-running generator
+      const asyncGenerator = (async function* () {
+        for (let i = 0; i < 10; i++) {
+          chunksYielded++;
+          yield {
+            prompt_id: 'long-streaming',
+            generated_text: `chunk ${i}`
+          };
+          await new Promise(resolve => setTimeout(resolve, 10));
+        }
+      })();
+
+      mockApiService.postModelPrompt.returns(asyncGenerator);
+      getServiceApiStub.resolves(mockApiService);
+
+      const mockDocument = createTestDocument();
+      const position = new vscode.Position(0, 8);
+
+      // Start completion
+      const generator = runCompletion(mockDocument, position);
+
+      // Consume first chunk
+      await generator.next();
+      expect(chunksYielded).to.equal(1);
+
+      // Cancel early
+      cancelCurrentCompletion();
+
+      // Try to continue - should stop due to abort signal
+      try {
+        await generator.next();
+      } catch (e) {
+        // Generator may throw when aborted, which is fine
+      }
+
+      // Should not have yielded all chunks (was cancelled early)
+      expect(chunksYielded).to.be.lessThan(10);
+    });
+
+    test('should allow new completion after cancellation', async () => {
+      const mockModel = createMockModel();
+      sandbox.stub(selectModel, 'currentModel').get(() => mockModel);
+
+      const mockApiService = createMockApiService();
+
+      // First generator that will be cancelled
+      const generator1 = (async function* () {
+        yield { prompt_id: 'cancelled', generated_text: 'cancelled' };
+        await new Promise(resolve => setTimeout(resolve, 100));
+        yield { prompt_id: 'cancelled', generated_text: 'should not see this' };
+      })();
+
+      // Second generator after cancellation
+      const generator2 = (async function* () {
+        yield { prompt_id: 'new', generated_text: 'new completion' };
+      })();
+
+      mockApiService.postModelPrompt.onFirstCall().returns(generator1);
+      mockApiService.postModelPrompt.onSecondCall().returns(generator2);
+      getServiceApiStub.resolves(mockApiService);
+
+      const mockDocument = createTestDocument();
+      const position = new vscode.Position(0, 8);
+
+      // Start first completion
+      const completion1 = runCompletion(mockDocument, position);
+      await completion1.next();
+
+      // Cancel it
+      cancelCurrentCompletion();
+
+      // Start new completion immediately
+      const completion2 = runCompletion(mockDocument, position);
+      const result = await completion2.next();
+
+      // Should get the new completion
+      expect(result.value?.results[0].completion_metadata?.prompt_id).to.equal('new');
     });
   });
 });
