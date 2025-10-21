@@ -37,6 +37,8 @@ export function cancelCurrentCompletion(): void {
   if (cancelCompletion) {
     cancelCompletion.abort();
     cancelCompletion = null;
+    // Immediately stop the spinner - don't wait for generator cleanup
+    setDefaultStatus();
   }
 }
 

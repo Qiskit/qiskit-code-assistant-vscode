@@ -88,7 +88,11 @@ export default async function getInlineCompletionItems(
         return;
       }
       const result = chunk?.results[0]
-      if (!result) return;
+      if (!result) {
+        // Close generator to ensure finally block runs and spinner stops
+        await completionGenerator.return(undefined);
+        return;
+      }
       accumulated += result.new_prefix;
       
       const { before, after } = extractCompletionParts(accumulated);
@@ -116,7 +120,10 @@ export default async function getInlineCompletionItems(
           completionItem.insertText = before;
         }
         resolver(new vscode.InlineCompletionList([completionItem]));
-        setTimeout(handleGetCompletion.handler, 10);
+        // Only trigger next suggestion if not cancelled (to prevent triggering new completion after early acceptance)
+        if (!cancelled) {
+          setTimeout(handleGetCompletion.handler, 10);
+        }
       }
     }
   } catch (error) {
@@ -127,7 +134,10 @@ export default async function getInlineCompletionItems(
     if (completionItem) {
       completionItem.insertText = accumulated;
       resolver(new vscode.InlineCompletionList([completionItem]));
-      setTimeout(handleGetCompletion.handler, 10);
+      // Only trigger next suggestion if not cancelled (to prevent triggering new completion after early acceptance)
+      if (!cancelled) {
+        setTimeout(handleGetCompletion.handler, 10);
+      }
     } else {
       resolver(new vscode.InlineCompletionList([]));
     }
