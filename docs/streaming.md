@@ -8,7 +8,7 @@ Streaming allows you to see code suggestions appear in real-time as they're bein
 
 ## Streaming Status
 
-Streaming is **enabled by default** starting with this version, providing the best user experience with real-time code generation.
+Streaming is **enabled by default** as of version 0.14.0, providing the best user experience with real-time code generation.
 
 ### Disabling Streaming
 
