@@ -18,6 +18,9 @@ import { updateUserAcceptance, cancelCurrentCompletion } from "../utilities/runC
 import { handleClearCodelens } from "./handleFeedback";
 
 async function acceptSuggestionHandler(): Promise<void> {
+  // Cancel the underlying streaming request to prevent continued streaming after acceptance
+  cancelCurrentCompletion();
+
   await updateUserAcceptance(true);
   vscode.commands.executeCommand(handleClearCodelens.identifier);
   vscode.commands.executeCommand("editor.action.inlineSuggest.commit");

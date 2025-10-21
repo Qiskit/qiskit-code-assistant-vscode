@@ -75,11 +75,18 @@ suite('Accept/Dismiss Suggestion Commands', () => {
       expect(updateUserAcceptanceStub.calledBefore(executeCommandStub)).to.be.true;
     });
 
-    test('should not cancel current completion', async () => {
+    test('should cancel current completion to stop streaming', async () => {
       await acceptSuggestionCommand.handler();
 
-      // Accept should not cancel - the completion is being accepted
-      expect(cancelCurrentCompletionStub.called).to.be.false;
+      // Accept should cancel streaming to prevent continued output after acceptance
+      expect(cancelCurrentCompletionStub.calledOnce).to.be.true;
+    });
+
+    test('should cancel streaming before committing suggestion', async () => {
+      await acceptSuggestionCommand.handler();
+
+      // Cancel should happen first to stop streaming before document changes
+      expect(cancelCurrentCompletionStub.calledBefore(executeCommandStub)).to.be.true;
     });
   });
 
@@ -197,12 +204,12 @@ suite('Accept/Dismiss Suggestion Commands', () => {
       expect(updateUserAcceptanceStub.secondCall.calledWith(false)).to.be.true;
     });
 
-    test('dismiss should cancel but accept should not', async () => {
+    test('both accept and dismiss should cancel streaming', async () => {
       await acceptSuggestionCommand.handler();
-      expect(cancelCurrentCompletionStub.called).to.be.false;
+      expect(cancelCurrentCompletionStub.calledOnce).to.be.true;
 
       await dismissSuggestionCommand.handler();
-      expect(cancelCurrentCompletionStub.calledOnce).to.be.true;
+      expect(cancelCurrentCompletionStub.callCount).to.equal(2);
     });
 
     test('both commands should clear codelens', async () => {

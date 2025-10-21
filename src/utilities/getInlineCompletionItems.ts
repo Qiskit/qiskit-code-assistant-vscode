@@ -82,8 +82,9 @@ export default async function getInlineCompletionItems(
     // loop through streaming data
     for await (let chunk of completionGenerator) {
       if (cancelled) {
-        // Cancel the underlying stream to stop spinner and clean up resources
+        // Cancel the underlying stream and close generator to stop spinner
         cancelCurrentCompletion();
+        await completionGenerator.return(undefined);
         return;
       }
       const result = chunk?.results[0]
