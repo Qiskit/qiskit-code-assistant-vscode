@@ -12,13 +12,13 @@ Increase quantum computing developer productivity and learn best practices for Q
 
 **************
 
-Make programming quantum computers even easier with Qiskit Code Assistant, a generative AI code assistant powered by IBM **watson<span style="color:blue;">x</span>**. Trained with approximately 370 million text tokens from Qiskit SDK v1.x, years of Qiskit code examples, and IBM Quantum features, Qiskit Code Assistant accelerates your quantum development workflow by offering LLM-generated suggestions based on [IBM Granite 3.3 8B](https://www.ibm.com/products/watsonx-ai/foundation-models) that incorporate the latest features and functionalities from IBM. And soon, Qiskit Code Assistant will be able to be used alongside Qiskit patterns building blocks for reusable code and workflow simplification.
+Make programming quantum computers even easier with Qiskit Code Assistant, a generative AI code assistant powered by IBM **watson<span style="color:blue;">x</span>**. Trained with approximately 370 million text tokens from Qiskit SDK v1.x, years of Qiskit code examples, and IBM Quantum features, Qiskit Code Assistant accelerates your quantum development workflow by offering LLM-generated suggestions based on [Mistral-Small-3.2-24B-Instruct-2506](https://huggingface.co/mistralai/Mistral-Small-3.2-24B-Instruct-2506) that incorporate the latest features and functionalities from IBM. And soon, Qiskit Code Assistant will be able to be used alongside Qiskit patterns building blocks for reusable code and workflow simplification.
 
 Qiskit is the open-source quantum SDK preferred by 69% of respondents to the Unitary Fund's Open Source Software Survey, with nearly 600,000 registered users to date. Now you can get the performance and stability of the Qiskit SDK with the added efficiency of Qiskit Code Assistant to streamline your workflow and optimize your quantum computing programs.
 
 ## Features
 
-* Accelerate Qiskit code generation by leveraging generative AI based on the `granite-3.3-8b-qiskit` model
+* Accelerate Qiskit code generation by leveraging generative AI based on the `mistral-small-3.2-24b-qiskit` model
 * Use abstract and specific prompts to generate recommendations
 * Manage code changes by reviewing, accepting, and rejecting suggestions
 * Supports Python code files
@@ -55,9 +55,9 @@ Paste your IBM Quantum API token in the pop-up dialog and press `Enter`.
 
 ### Accept the model disclaimer/EULA
 
-By default, the model you will use is `granite-3.3-8b-qiskit`. It will appear in the Model Picker in the bottom of the status bar.
+By default, the model you will use is `mistral-small-3.2-24b-qiskit`. It will appear in the Model Picker in the bottom of the status bar.
 
-The first time you use the `granite-3.3-8b-qiskit` model, a model disclaimer/EULA will appear with information about the model and links to documentation and the model's license. It will also list some restrictions that you should be aware of when using the model, including a restriction against using proprietary code. Clicking `Accept` will enable the new model during code generation.
+The first time you use the `mistral-small-3.2-24b-qiskit` model, a model disclaimer/EULA will appear with information about the model and links to documentation and the model's license. It will also list some restrictions that you should be aware of when using the model, including a restriction against using proprietary code. Clicking `Accept` will enable the new model during code generation.
 
 ### Generate code suggestions
 
