@@ -60,11 +60,11 @@ If the spinning icon disappears and the status bar remains with the "No Model Se
 
 ### Accepting the model disclaimer
 
-By default, the extension will use the `granite-3.3-8b-qiskit` model. It will appear in the Model Picker in the bottom status bar.
+By default, the extension will use the `mistral-small-3.2-24b-qiskit` model. It will appear in the Model Picker in the bottom status bar.
 
 ![selected model](docs/images/Selected_Model.png)
 
-The first time you use the `granite-3.3-8b-qiskit` model a model info view will open and explain a little about the model with links to documentation and the model's license. It will also list some major restrictions that you should be aware of when using the model. Clicking `Accept` will accept the model disclaimer and enable the model for code generation.
+The first time you use the `mistral-small-3.2-24b-qiskit` model a model info view will open and explain a little about the model with links to documentation and the model's license. It will also list some major restrictions that you should be aware of when using the model. Clicking `Accept` will accept the model disclaimer and enable the model for code generation.
 
 ![model disclaimer](docs/images/Model_Disclaimer.png)
 
