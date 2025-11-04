@@ -4,7 +4,7 @@ Get started with the Qiskit Code Assistant in under 5 minutes!
 
 ## Choose Your Setup
 
-### Option 2: IBM Quantum Cloud (Recoimmended)
+### Option 1: IBM Quantum Cloud (Recommended)
 
 Use IBM's hosted service with the latest models.
 
@@ -20,10 +20,13 @@ Use IBM's hosted service with the latest models.
    - Search for "Qiskit Code Assistant"
    - Click Install
 
-2. **Get Your API Token**
+2. **Create Your API Token (if you don't have one)**
    - Go to [IBM Quantum Platform](https://quantum.cloud.ibm.com/)
    - Login with your IBM Quantum account
-   - Copy your API token (upper right corner)
+   - Click `Create +` (upper-left in the API key section)
+   - Enter **Name**
+   - Click **Create**
+   - Copy the API key
 
 3. **Configure the Extension**
    - Press Cmd/Ctrl+Shift+P in VSCode
