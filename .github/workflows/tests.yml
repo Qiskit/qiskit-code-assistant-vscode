@@ -5,6 +5,9 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main, develop ]
+  schedule:
+    # Run weekly on Mondays at 00:00 UTC (for test_setup_script_full)
+    - cron: '0 0 * * 1'
 
 jobs:
   test:
@@ -65,3 +68,130 @@ jobs:
 
     - name: Check TypeScript compilation
       run: npm run compile-tests
+
+  test_setup_script:
+    name: Test Local Setup Script
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify script syntax
+        run: |
+          bash -n setup_local.sh
+          echo "✓ Script syntax is valid"
+
+      - name: Test --help flag
+        run: |
+          output=$(bash setup_local.sh --help 2>&1)
+          echo "$output" | grep -i "usage"
+          echo "$output" | grep -i "qiskit"
+          echo "✓ Help flag works"
+
+      - name: Test --list-models flag
+        run: |
+          output=$(bash setup_local.sh --list-models 2>&1)
+          echo "$output" | grep -i "qwen2.5-coder-14b"
+          echo "$output" | grep -i "mistral-small-24b"
+          echo "$output" | grep -i "granite-3.3-8b"
+          echo "✓ List models works"
+
+      - name: Test script functions are defined correctly
+        run: |
+          # Test that key functions exist
+          grep -q "detect_os()" setup_local.sh
+          grep -q "install_or_upgrade_extension()" setup_local.sh
+          grep -q "check_ollama()" setup_local.sh
+          grep -q "setup_model()" setup_local.sh
+          grep -q "configure_vscode()" setup_local.sh
+          echo "✓ Key functions are defined"
+
+  check_setup_script_changes:
+    name: Check if setup script changed
+    runs-on: ubuntu-latest
+    outputs:
+      setup_changed: ${{ steps.changes.outputs.setup_script }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check if setup script was modified
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            setup_script:
+              - 'setup_local.sh'
+
+  test_setup_script_full:
+    name: Test Full Setup (with Ollama model)
+    needs: check_setup_script_changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    # Only run if setup script changed, manually triggered, on release tags, or scheduled
+    if: |
+      needs.check_setup_script_changes.outputs.setup_changed == 'true' ||
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'schedule' ||
+      startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get Ollama model cache key
+        id: ollama-cache-key
+        run: |
+          # Cache key based on the default model name in setup_local.sh
+          MODEL=$(grep "DEFAULT_MODEL=" setup_local.sh | head -1 | cut -d'"' -f2)
+          echo "model=$MODEL" >> $GITHUB_OUTPUT
+          echo "cache-key=ollama-models-$MODEL" >> $GITHUB_OUTPUT
+
+      - name: Cache Ollama models
+        uses: actions/cache@v4
+        id: ollama-cache
+        with:
+          path: ~/.ollama
+          key: ${{ steps.ollama-cache-key.outputs.cache-key }}
+          restore-keys: |
+            ollama-models-
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+
+      - name: Start Ollama service
+        run: |
+          ollama serve &
+          sleep 5
+          curl http://localhost:11434
+
+      - name: Run full setup script
+        run: |
+          # Run the setup script in non-interactive mode
+          # The script will pull the model if not cached
+          bash setup_local.sh --non-interactive
+
+      - name: Verify Ollama model is installed
+        run: |
+          ollama list
+          # Check that the default model exists (lowercase version)
+          ollama list | grep -i "qwen2.5-coder-14b-qiskit-gguf"
+
+      - name: Test model inference
+        run: |
+          # Quick inference test
+          echo "from qiskit import QuantumCircuit" | ollama run qwen2.5-coder-14b-qiskit-gguf --verbose
+          echo "✓ Model inference works"
+
+      - name: Verify VSCode configuration
+        run: |
+          # Check config file was created
+          if [ -f "$HOME/.config/Code/User/settings.json" ]; then
+            cat "$HOME/.config/Code/User/settings.json"
+            # Verify serviceUrl is set to Ollama
+            grep -q "http://localhost:11434" "$HOME/.config/Code/User/settings.json"
+            echo "✓ Configuration is correct"
+          else
+            echo "⚠ VSCode config not found (expected in CI environment)"
+          fi

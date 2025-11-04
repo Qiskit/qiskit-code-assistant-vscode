@@ -1,0 +1,7 @@
+# Ignore build output
+out/
+dist/
+node_modules/
+
+# Ignore setup script (shell script, not JS/TS)
+setup_local.sh
