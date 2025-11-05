@@ -2,9 +2,7 @@
 
 Write and optimize Qiskit code with a generative AI code assistant powered by IBM **watson<span style="color:blue;">x</span>**.
 
-> This experimental feature is only available, as of today, to IBM Quantum premium users.
-  If you are not part IBM Quantum premium plan, you can still install this extension; however you will not be able to use the assistant.
-  The Qiskit Code Assistant is a beta release, subject to change.
+> This experimental feature is only available, as of today, to IBM Quantum premium plan users. If you are not part of an IBM Quantum premium plan, you can use the local version See [LOCAL_SETUP.md](LOCAL_SETUP.md) for instructions.
 
 **************
 
@@ -39,13 +37,15 @@ Use `Ctrl+.` with code to obtain specific model-generated suggestions for code c
 
 ![Example prompt for quasi-dists](https://raw.githubusercontent.com/Qiskit/qiskit-code-assistant-vscode/main/docs/gifs/coupling-map-svc.gif)
 
-## Get started
+## Get Started
 
-### Obtain your IBM Quantum Cloud Platform API token
+### Option 1: IBM Quantum Cloud (Recommended)
+
+#### Obtain your IBM Quantum Cloud Platform API token
 
 Open the [IBM Quantum Platform](https://quantum.cloud.ibm.com/) in your browser and log in with your IBM Quantum account. After logging in, an IBM Quantum API token is displayed on the upper right side of the web page.
 
-### Set the API token in VS Code
+#### Set the API token in VS Code
 
 Press `Cmd/Ctrl+Shift+P` to open the VS Code command palette.
 
@@ -53,11 +53,22 @@ Type `Qiskit Code Assistant: Set IBM Quantum API token`.
 
 Paste your IBM Quantum API token in the pop-up dialog and press `Enter`.
 
-### Accept the model disclaimer/EULA
+#### Accept the model disclaimer/EULA
 
 By default, the model you will use is `mistral-small-3.2-24b-qiskit`. It will appear in the Model Picker in the bottom of the status bar.
 
 The first time you use the `mistral-small-3.2-24b-qiskit` model, a model disclaimer/EULA will appear with information about the model and links to documentation and the model's license. It will also list some restrictions that you should be aware of when using the model, including a restriction against using proprietary code. Clicking `Accept` will enable the new model during code generation.
+
+### Option 2: Local Setup (For non-premium users)
+
+Run the one-line installer:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/Qiskit/qiskit-code-assistant-vscode/main/setup_local.sh)
+```
+
+See [LOCAL_SETUP.md](LOCAL_SETUP.md) for detailed instructions.
+
 
 ### Generate code suggestions
 
