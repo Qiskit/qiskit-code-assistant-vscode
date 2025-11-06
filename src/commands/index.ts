@@ -18,7 +18,7 @@ import selectModel from "./selectModel";
 import handleGetCompletion from "./handleGetCompletion";
 import { handleChangeModelStatusBar, handleProvideFeedbackStatusBar } from "./handleStatusBar";
 import { handleProvideFeedback, handleClearCodelens} from "./handleFeedback";
-import setApiToken from "./setApiToken";
+import setApiToken, { selectCredentialCommand } from "./setApiToken";
 import migrateQiskitCode from "./migrateQiskitCode";
 
 const commands: CommandModule[] = [
@@ -34,6 +34,7 @@ const commands: CommandModule[] = [
   handleProvideFeedback,
   selectModel,
   setApiToken,
+  selectCredentialCommand,
 ];
 
 export default commands.map((command) => ({
