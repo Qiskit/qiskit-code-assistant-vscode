@@ -292,6 +292,11 @@ suite('Select Credential Test Suite', () => {
       const extensionContextModule = require('../../globals/extensionContext');
       sandbox.stub(extensionContextModule, 'getExtensionContext').returns(mockContext);
 
+      // Stub selectModel functions (needed for credential validation)
+      const selectModelModule = require('../../commands/selectModel');
+      sandbox.stub(selectModelModule, 'invalidateCurrentModel');
+      sandbox.stub(selectModelModule, 'initModels').resolves();
+
       const setApiTokenModule = require('../../commands/setApiToken');
       selectCredentialHandler = setApiTokenModule.selectCredentialCommand.handler;
 
@@ -639,7 +644,7 @@ suite('Select Credential Test Suite', () => {
       await promptCredentialSelectionIfNeeded(mockContext);
 
       expect(showInformationMessageStub.calledOnce).to.be.true;
-      expect(showInformationMessageStub.firstCall.args[0]).to.include('Found 2 IBM Quantum credentials');
+      expect(showInformationMessageStub.firstCall.args[0]).to.include('found 2 IBM Quantum credentials');
     });
 
     test('should call select-credential command when user chooses "Select Credential"', async () => {
