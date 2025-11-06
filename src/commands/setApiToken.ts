@@ -19,8 +19,19 @@ import * as os from "os";
 import * as path from "path";
 
 import { getExtensionContext } from "../globals/extensionContext";
+import { invalidateCurrentModel, initModels } from "./selectModel";
 
+// Constants
 const QISKIT_JSON_FILE_PATH = path.join(os.homedir(), ".qiskit", "qiskit-ibm.json");
+const CONFIG_SECTION = "qiskitCodeAssistant";
+const CONFIG_KEY_SELECTED_CREDENTIAL = "selectedCredential";
+const STATE_KEY_HAS_PROMPTED = "qiskit.hasPromptedCredentialSelection";
+const STATE_KEY_NEVER_PROMPT = "qiskit.neverPromptCredentialSelection";
+const PRIORITY_CREDENTIAL_NAMES = [
+  "qiskit-code-assistant",
+  "default-ibm-quantum-platform",
+  "default-ibm-quantum"
+] as const;
 
 interface CredentialInfo {
   name: string;
@@ -28,37 +39,34 @@ interface CredentialInfo {
   displayName: string;
 }
 
+interface CredentialQuickPickItem extends vscode.QuickPickItem {
+  credentialName: string;
+  token: string;
+}
+
 async function getAllCredentials(): Promise<CredentialInfo[]> {
-  let data = undefined;
   try {
-    data = await fs.readFile(QISKIT_JSON_FILE_PATH);
+    const data = await fs.readFile(QISKIT_JSON_FILE_PATH);
+    const accounts = JSON.parse(data.toString("utf8")) as QiskitAccountJson;
+    const credentials: CredentialInfo[] = [];
+
+    // Iterate through all entries in the JSON file
+    for (const [accountName, accountData] of Object.entries(accounts)) {
+      if (accountData?.token) {
+        credentials.push({
+          name: accountName,
+          token: accountData.token,
+          displayName: formatDisplayName(accountName)
+        });
+      }
+    }
+
+    return credentials;
   } catch (err) {
-    console.log(`Unable to read saved Qiskit account: ${err}`);
+    // File might not exist or be invalid JSON - this is expected for new users
+    console.log(`Unable to read or parse Qiskit credentials file: ${err}`);
     return [];
   }
-
-  if (data) {
-    try {
-      const accounts = JSON.parse(data.toString("utf8")) as QiskitAccountJson;
-      const credentials: CredentialInfo[] = [];
-
-      // Iterate through all entries in the JSON file
-      for (const [accountName, accountData] of Object.entries(accounts)) {
-        if (accountData?.token) {
-          credentials.push({
-            name: accountName,
-            token: accountData.token,
-            displayName: formatDisplayName(accountName)
-          });
-        }
-      }
-
-      return credentials;
-    } catch (err) {
-      console.log(`Unable to parse saved Qiskit account: ${err}`);
-    }
-  }
-  return [];
 }
 
 function formatDisplayName(accountName: string): string {
@@ -76,24 +84,21 @@ async function getTokenFromJson(): Promise<string | undefined> {
   }
 
   // Check if user has a preferred credential
-  const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
-  const selectedCredential = config.get<string>("selectedCredential");
+  const config = vscode.workspace.getConfiguration(CONFIG_SECTION);
+  const selectedCredential = config.get<string>(CONFIG_KEY_SELECTED_CREDENTIAL);
 
   if (selectedCredential) {
     const credential = credentials.find(c => c.name === selectedCredential);
     if (credential) {
       return credential.token;
     }
+    // Selected credential no longer exists - clear the invalid selection
+    console.log(`Selected credential '${selectedCredential}' not found in qiskit-ibm.json, falling back to auto-selection`);
+    await config.update(CONFIG_KEY_SELECTED_CREDENTIAL, undefined, vscode.ConfigurationTarget.Global);
   }
 
   // Fall back to priority order (for backward compatibility)
-  const priorityOrder = [
-    "qiskit-code-assistant",
-    "default-ibm-quantum-platform",
-    "default-ibm-quantum"
-  ];
-
-  for (const priorityName of priorityOrder) {
+  for (const priorityName of PRIORITY_CREDENTIAL_NAMES) {
     const credential = credentials.find(c => c.name === priorityName);
     if (credential) {
       return credential.token;
@@ -110,7 +115,7 @@ export async function initApiToken(context: ExtensionContext | null): Promise<st
     token = await getTokenFromJson();
   }
   if (token && context) {
-    await context?.secrets.store("apiToken", token);
+    await context.secrets.store("apiToken", token);
   }
   return token;
 }
@@ -124,25 +129,25 @@ export async function initApiToken(context: ExtensionContext | null): Promise<st
  * This provides better UX by letting users choose upfront rather than
  * discovering issues after authentication failures.
  */
-export async function promptCredentialSelectionIfNeeded(context: ExtensionContext): Promise<void> {
+export async function promptCredentialSelectionIfNeeded(context: ExtensionContext): Promise<boolean> {
   try {
     // Check if user chose "Don't Ask Again" globally
-    const neverPrompt = context.globalState.get<boolean>('qiskit.neverPromptCredentialSelection', false);
+    const neverPrompt = context.globalState.get<boolean>(STATE_KEY_NEVER_PROMPT, false);
     if (neverPrompt) {
-      return;
+      return false;
     }
 
     // Check if we've already prompted in this workspace
-    const hasPrompted = context.workspaceState.get<boolean>('qiskit.hasPromptedCredentialSelection', false);
+    const hasPrompted = context.workspaceState.get<boolean>(STATE_KEY_HAS_PROMPTED, false);
     if (hasPrompted) {
-      return;
+      return false;
     }
 
     // Check if user already has a selection
-    const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
-    const selectedCredential = config.get<string>("selectedCredential");
+    const config = vscode.workspace.getConfiguration(CONFIG_SECTION);
+    const selectedCredential = config.get<string>(CONFIG_KEY_SELECTED_CREDENTIAL);
     if (selectedCredential) {
-      return;
+      return false;
     }
 
     // Get all available credentials
@@ -150,32 +155,40 @@ export async function promptCredentialSelectionIfNeeded(context: ExtensionContex
 
     // Only prompt if there are multiple credentials
     if (credentials.length <= 1) {
-      return;
+      return false;
     }
-
-    // Mark that we've prompted (do this before showing UI to avoid duplicate prompts)
-    await context.workspaceState.update('qiskit.hasPromptedCredentialSelection', true);
 
     // Show information message with action
     const choice = await vscode.window.showInformationMessage(
-      `Found ${credentials.length} IBM Quantum credentials. Would you like to choose which one to use?`,
+      `Qiskit Code Assistant found ${credentials.length} IBM Quantum credentials. Would you like to choose which one to use?`,
       'Select Credential',
-      'Use Default',
+      'Enter Token Manually',
       "Don't Ask Again"
     );
 
+    // Mark that we've prompted after user responds to avoid showing again
+    await context.workspaceState.update(STATE_KEY_HAS_PROMPTED, true);
+
     if (choice === 'Select Credential') {
-      // Run the credential selection command
+      // Run the credential selection command - this will call initModels internally
       await vscode.commands.executeCommand('qiskit-vscode.select-credential');
+      return true; // Indicate that credential was selected and models already initialized
+    } else if (choice === 'Enter Token Manually') {
+      // Run the manual token entry command
+      await vscode.commands.executeCommand('qiskit-vscode.api-token');
+      return false;
     } else if (choice === "Don't Ask Again") {
       // Store in global state to never ask again
-      await context.globalState.update('qiskit.neverPromptCredentialSelection', true);
+      await context.globalState.update(STATE_KEY_NEVER_PROMPT, true);
+      return false;
     }
-    // If 'Use Default' or dismissed, do nothing (will use automatic selection)
+    // If dismissed, do nothing (will use automatic selection)
+    return false;
 
   } catch (err) {
     // Silently fail - don't interrupt extension activation
     console.log(`Error in credential selection prompt: ${err}`);
+    return false;
   }
 }
 
@@ -185,8 +198,8 @@ async function handler(): Promise<void> {
     prompt: "Please enter your API token (find yours at quantum.cloud.ibm.com):",
     placeHolder: "Your token goes here ..."
   });
-  if (input !== undefined) {
-    await context?.secrets.store("apiToken", input);
+  if (input !== undefined && context) {
+    await context.secrets.store("apiToken", input);
     vscode.window.showInformationMessage(`IBM Quantum API Token was successfully saved`);
   }
 
@@ -195,6 +208,11 @@ async function handler(): Promise<void> {
 
 async function selectCredentialHandler(): Promise<void> {
   const context = getExtensionContext();
+  if (!context) {
+    vscode.window.showErrorMessage("Extension context not available");
+    return;
+  }
+
   const credentials = await getAllCredentials();
 
   if (credentials.length === 0) {
@@ -211,11 +229,11 @@ async function selectCredentialHandler(): Promise<void> {
     return;
   }
 
-  const config = vscode.workspace.getConfiguration("qiskitCodeAssistant");
-  const currentSelection = config.get<string>("selectedCredential");
+  const config = vscode.workspace.getConfiguration(CONFIG_SECTION);
+  const currentSelection = config.get<string>(CONFIG_KEY_SELECTED_CREDENTIAL);
 
   // Create quick pick items with current selection marked
-  const items = credentials.map(cred => ({
+  const items: CredentialQuickPickItem[] = credentials.map(cred => ({
     label: cred.displayName,
     description: cred.name === currentSelection ? "(Currently selected)" : "",
     detail: cred.name,
@@ -223,23 +241,69 @@ async function selectCredentialHandler(): Promise<void> {
     token: cred.token
   }));
 
-  const result = await vscode.window.showQuickPick(items, {
+  const result = await vscode.window.showQuickPick<CredentialQuickPickItem>(items, {
     title: "Select IBM Quantum Credential",
     placeHolder: "Choose which credential to use for authentication"
   });
 
   if (result) {
     // Update the configuration
-    await config.update("selectedCredential", result.credentialName, vscode.ConfigurationTarget.Global);
+    await config.update(CONFIG_KEY_SELECTED_CREDENTIAL, result.credentialName, vscode.ConfigurationTarget.Global);
 
     // Store the token in secrets
-    await context?.secrets.store("apiToken", result.token);
-
-    vscode.window.showInformationMessage(
-      `Credential switched to: ${result.label}`
-    );
+    await context.secrets.store("apiToken", result.token);
 
     vscode.commands.executeCommand("setContext", "qiskit-vscode.api-token-set", true);
+
+    // Invalidate and re-initialize models to validate the new credential
+    invalidateCurrentModel();
+
+    try {
+      await initModels(context);
+      // Only show success message if validation succeeded
+      vscode.window.showInformationMessage(
+        `Credential switched to: ${result.label}`
+      );
+    } catch (err) {
+      // initModels already shows the error message, so we just need to handle the exception
+      // to prevent it from propagating
+    }
+  }
+}
+
+async function resetCredentialSelectionHandler(): Promise<void> {
+  const context = getExtensionContext();
+  if (!context) {
+    vscode.window.showErrorMessage("Extension context not available");
+    return;
+  }
+
+  // Confirm with user before resetting
+  const confirm = await vscode.window.showWarningMessage(
+    "This will reset your credential selection and clear all related preferences. You'll be prompted to choose a credential again on next reload.",
+    { modal: true },
+    "Reset"
+  );
+
+  if (confirm === "Reset") {
+    // Clear the selected credential configuration
+    const config = vscode.workspace.getConfiguration(CONFIG_SECTION);
+    await config.update(CONFIG_KEY_SELECTED_CREDENTIAL, undefined, vscode.ConfigurationTarget.Global);
+
+    // Clear workspace state (hasPromptedCredentialSelection)
+    await context.workspaceState.update(STATE_KEY_HAS_PROMPTED, undefined);
+
+    // Clear global state (neverPromptCredentialSelection)
+    await context.globalState.update(STATE_KEY_NEVER_PROMPT, undefined);
+
+    vscode.window.showInformationMessage(
+      "Credential selection has been reset. Reload the window to be prompted again.",
+      "Reload Window"
+    ).then(choice => {
+      if (choice === "Reload Window") {
+        vscode.commands.executeCommand("workbench.action.reloadWindow");
+      }
+    });
   }
 }
 
@@ -251,6 +315,11 @@ const command: CommandModule = {
 export const selectCredentialCommand: CommandModule = {
   identifier: "qiskit-vscode.select-credential",
   handler: selectCredentialHandler,
+};
+
+export const resetCredentialSelectionCommand: CommandModule = {
+  identifier: "qiskit-vscode.reset-credential-selection",
+  handler: resetCredentialSelectionHandler,
 };
 
 export default command;

@@ -103,6 +103,10 @@
         "enablement": "qiskit-vscode.api-token-set"
       },
       {
+        "command": "qiskit-vscode.reset-credential-selection",
+        "title": "Qiskit Code Assistant: Reset Credential Selection"
+      },
+      {
         "command": "qiskit-vscode.migrate-code",
         "title": "Qiskit Code Assistant: Migrate code",
         "icon": "$(sparkle)",

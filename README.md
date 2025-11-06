@@ -53,6 +53,10 @@ Type `Qiskit Code Assistant: Set IBM Quantum API token`.
 
 Paste your IBM Quantum API token in the pop-up dialog and press `Enter`.
 
+#### Managing Multiple Credentials
+
+If you have multiple IBM Quantum credentials configured in your `~/.qiskit/qiskit-ibm.json` file (e.g., for different environments like production and development), the extension will automatically prompt you to select which credential to use when it starts. You can choose to select one from the file, enter a token manually, or dismiss the prompt to use automatic selection. See [credentials_selection.md](docs/credentials_selection.md) for detailed instructions.
+
 #### Accept the model disclaimer/EULA
 
 By default, the model you will use is `mistral-small-3.2-24b-qiskit`. It will appear in the Model Picker in the bottom of the status bar.

@@ -52,9 +52,13 @@ async function backgroundInit(context: vscode.ExtensionContext) {
 
   // Proactively prompt user to select credential if multiple exist
   // This happens after initApiToken so credentials are discovered first
-  await promptCredentialSelectionIfNeeded(context);
+  // Returns true if user selected a credential (which already called initModels)
+  const credentialWasSelected = await promptCredentialSelectionIfNeeded(context);
 
-  await initModels(context);
+  // Only init models if they weren't already initialized during credential selection
+  if (!credentialWasSelected) {
+    await initModels(context);
+  }
   await installAutocomplete(context);
 }
 
