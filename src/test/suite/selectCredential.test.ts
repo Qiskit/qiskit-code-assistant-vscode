@@ -97,17 +97,17 @@ suite('Select Credential Test Suite', () => {
       expect(credentials[0]).to.deep.include({
         name: 'my-production-account',
         token: 'prod-token-123',
-        displayName: 'My Production Account'
+        displayName: 'my-production-account'
       });
       expect(credentials[1]).to.deep.include({
         name: 'my-dev-account',
         token: 'dev-token-456',
-        displayName: 'My Dev Account'
+        displayName: 'my-dev-account'
       });
       expect(credentials[2]).to.deep.include({
         name: 'team-shared',
         token: 'shared-token-789',
-        displayName: 'Team Shared'
+        displayName: 'team-shared'
       });
     });
 
@@ -143,7 +143,7 @@ suite('Select Credential Test Suite', () => {
       expect(credentials[0].name).to.equal('valid-account');
     });
 
-    test('should format display names correctly', async () => {
+    test('should use raw credential names as display names', async () => {
       const mockData = {
         'kebab-case-name': { token: 'token1' },
         'snake_case_name': { token: 'token2' },
@@ -153,9 +153,9 @@ suite('Select Credential Test Suite', () => {
 
       const credentials = await getAllCredentials();
 
-      expect(credentials[0].displayName).to.equal('Kebab Case Name');
-      expect(credentials[1].displayName).to.equal('Snake Case Name');
-      expect(credentials[2].displayName).to.equal('MixedCase With Both');
+      expect(credentials[0].displayName).to.equal('kebab-case-name');
+      expect(credentials[1].displayName).to.equal('snake_case_name');
+      expect(credentials[2].displayName).to.equal('mixedCase_with-both');
     });
 
     test('should handle empty JSON object', async () => {

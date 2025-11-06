@@ -56,7 +56,7 @@ async function getAllCredentials(): Promise<CredentialInfo[]> {
         credentials.push({
           name: accountName,
           token: accountData.token,
-          displayName: formatDisplayName(accountName)
+          displayName: accountName
         });
       }
     }
@@ -67,14 +67,6 @@ async function getAllCredentials(): Promise<CredentialInfo[]> {
     console.log(`Unable to read or parse Qiskit credentials file: ${err}`);
     return [];
   }
-}
-
-function formatDisplayName(accountName: string): string {
-  // Convert kebab-case or snake_case to Title Case
-  return accountName
-    .split(/[-_]/)
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
 }
 
 async function getTokenFromJson(): Promise<string | undefined> {
@@ -236,7 +228,6 @@ async function selectCredentialHandler(): Promise<void> {
   const items: CredentialQuickPickItem[] = credentials.map(cred => ({
     label: cred.displayName,
     description: cred.name === currentSelection ? "(Currently selected)" : "",
-    detail: cred.name,
     credentialName: cred.name,
     token: cred.token
   }));
