@@ -98,6 +98,15 @@
         "title": "Qiskit Code Assistant: Set IBM Quantum API token"
       },
       {
+        "command": "qiskit-vscode.select-credential",
+        "title": "Qiskit Code Assistant: Select Credential",
+        "enablement": "qiskit-vscode.api-token-set"
+      },
+      {
+        "command": "qiskit-vscode.reset-credential-selection",
+        "title": "Qiskit Code Assistant: Reset Credential Selection"
+      },
+      {
         "command": "qiskit-vscode.migrate-code",
         "title": "Qiskit Code Assistant: Migrate code",
         "icon": "$(sparkle)",
@@ -115,6 +124,11 @@
           "tags": [
             "usesOnlineServices"
           ]
+        },
+        "qiskitCodeAssistant.selectedCredential": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "The selected credential name from qiskit-ibm.json to use for authentication. Leave empty to use automatic selection based on priority order. Use the 'Qiskit Code Assistant: Select Credential' command to choose from available credentials."
         },
         "qiskitCodeAssistant.enableTelemetry": {
           "type": "boolean",

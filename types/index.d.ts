@@ -118,13 +118,7 @@ interface ModelSpecialTokens {
 }
 
 interface QiskitAccountJson {
-  "qiskit-code-assistant"?: {
-    token?: string
-  },
-  "default-ibm-quantum-platform"?: {
-    token?: string
-  },
-  "default-ibm-quantum"?: {
+  [key: string]: {
     token?: string
   }
 }

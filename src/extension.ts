@@ -20,7 +20,7 @@ import installAutocomplete from "./utilities/autocompleteInstaller";
 import handlePluginInstalled from "./events/handlePluginInstalled";
 import commands from "./commands";
 import { initModels } from "./commands/selectModel";
-import { initApiToken } from "./commands/setApiToken";
+import { initApiToken, promptCredentialSelectionIfNeeded } from "./commands/setApiToken";
 
 export async function activate(
   context: vscode.ExtensionContext
@@ -49,7 +49,16 @@ async function backgroundInit(context: vscode.ExtensionContext) {
   );
 
   await initApiToken(context);
-  await initModels(context);
+
+  // Proactively prompt user to select credential if multiple exist
+  // This happens after initApiToken so credentials are discovered first
+  // Returns true if user selected a credential (which already called initModels)
+  const credentialWasSelected = await promptCredentialSelectionIfNeeded(context);
+
+  // Only init models if they weren't already initialized during credential selection
+  if (!credentialWasSelected) {
+    await initModels(context);
+  }
   await installAutocomplete(context);
 }
 
