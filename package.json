@@ -14,7 +14,7 @@
   "homepage": "",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/Qiskit/qiskit-code-assistant-vscode.git"
   },
   "engines": {
     "vscode": "^1.88.0"
