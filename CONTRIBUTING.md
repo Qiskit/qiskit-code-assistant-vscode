@@ -97,8 +97,8 @@ Once you have sent a pull request, the code contributors get notified, and there
 
 If you're a maintainer looking to publish a new release to the VSCode Marketplace, we have automated the process:
 
-- **[Release Checklist](.github/RELEASE_CHECKLIST.md)** - Quick reference guide for creating releases
-- **[Marketplace Publishing Guide](.github/MARKETPLACE_PUBLISHING.md)** - Complete setup and documentation
+- **[Release Checklist](docs/RELEASE_CHECKLIST.md)** - Quick reference guide for creating releases
+- **[Marketplace Publishing Guide](docs/MARKETPLACE_PUBLISHING.md)** - Complete setup and documentation
 
 The release process is automated through GitHub Actions. Simply create a new GitHub release with a properly formatted tag (e.g., `v0.15.0`), and the extension will be automatically built, tested, and published to the marketplace.
 
