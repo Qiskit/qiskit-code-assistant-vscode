@@ -93,6 +93,15 @@ When you think your work is done, [create a pull request](https://docs.github.co
 
 Once you have sent a pull request, the code contributors get notified, and there will be a code review. The repository also contains some automated checks for pull requests . For a pull request to be ready for merging it needs to pass automatic checks and have, at least, one accepted review.
 
+## Releasing
+
+If you're a maintainer looking to publish a new release to the VSCode Marketplace, we have automated the process:
+
+- **[Release Checklist](docs/RELEASE_CHECKLIST.md)** - Quick reference guide for creating releases
+- **[Marketplace Publishing Guide](docs/MARKETPLACE_PUBLISHING.md)** - Complete setup and documentation
+
+The release process is automated through GitHub Actions. Simply create a new GitHub release with a properly formatted tag (e.g., `v0.15.0`), and the extension will be automatically built, tested, and published to the marketplace.
+
 ## Final words
 
 Thank you for reading until the end of the document! Abiding by these guidelines you express your willingness in collaborating and contributing to the project in a healthy way. Thanks for that too!
