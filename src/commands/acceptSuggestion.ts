@@ -21,7 +21,12 @@ async function acceptSuggestionHandler(): Promise<void> {
   // Cancel the underlying streaming request to prevent continued streaming after acceptance
   cancelCurrentCompletion();
 
-  await updateUserAcceptance(true);
+  // Send telemetry asynchronously without blocking UI
+  // This ensures the suggestion is applied immediately
+  updateUserAcceptance(true).catch((error) => {
+    console.warn('Error updating user acceptance:', error);
+  });
+
   vscode.commands.executeCommand(handleClearCodelens.identifier);
   vscode.commands.executeCommand("editor.action.inlineSuggest.commit");
 };
@@ -35,7 +40,12 @@ async function dismissSuggestionHandler(): Promise<void> {
   // Cancel the underlying streaming request to stop spinner
   cancelCurrentCompletion();
 
-  await updateUserAcceptance(false);
+  // Send telemetry asynchronously without blocking UI
+  // This ensures the suggestion is dismissed immediately
+  updateUserAcceptance(false).catch((error) => {
+    console.warn('Error updating user acceptance:', error);
+  });
+
   vscode.commands.executeCommand(handleClearCodelens.identifier);
   vscode.commands.executeCommand("editor.action.inlineSuggest.hide");
 };

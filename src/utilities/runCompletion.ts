@@ -224,9 +224,15 @@ export async function updateUserAcceptance(accepted: boolean) {
   }
 
   if (promptId) {
-    const apiService = await getServiceApi();
-    await apiService.postPromptAcceptance(promptId, accepted);
-    // reset prompt_id
-    promptId = undefined
+    try {
+      const apiService = await getServiceApi();
+      await apiService.postPromptAcceptance(promptId, accepted);
+    } catch (error) {
+      // Telemetry errors should not block the user from accepting/dismissing suggestions
+      console.warn('Failed to send prompt acceptance telemetry:', error);
+    } finally {
+      // reset prompt_id
+      promptId = undefined
+    }
   }
 }
