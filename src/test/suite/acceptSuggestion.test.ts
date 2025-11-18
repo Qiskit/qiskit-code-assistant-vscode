@@ -144,14 +144,13 @@ suite('Accept/Dismiss Suggestion Commands', () => {
     test('should handle errors in updateUserAcceptance gracefully', async () => {
       updateUserAcceptanceStub.rejects(new Error('Telemetry error'));
 
-      try {
-        await dismissSuggestionCommand.handler();
-      } catch (error) {
-        expect(error).to.be.instanceOf(Error);
-      }
+      // Should not throw - telemetry errors are caught and logged
+      await dismissSuggestionCommand.handler();
 
-      // Cancel should still have been called
+      // All operations should still complete
       expect(cancelCurrentCompletionStub.called).to.be.true;
+      expect(updateUserAcceptanceStub.called).to.be.true;
+      expect(executeCommandStub.called).to.be.true;
     });
   });
 

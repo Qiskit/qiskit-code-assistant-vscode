@@ -163,17 +163,17 @@ suite('Feedback Clearing Test Suite', () => {
   });
 
   suite('Error Handling', () => {
-    test('Should propagate error if updateUserAcceptance fails', async () => {
+    test('Should not propagate error if updateUserAcceptance fails', async () => {
       const handler = (acceptSuggestionModule.acceptSuggestionCommand as any).handler;
 
       updateUserAcceptanceStub.rejects(new Error('Update failed'));
 
-      try {
-        await handler();
-        expect.fail('Should have thrown error from updateUserAcceptance');
-      } catch (error) {
-        expect((error as Error).message).to.equal('Update failed');
-      }
+      // Should not throw - telemetry errors should not block suggestion acceptance
+      await handler();
+
+      // Verify that the command still executed despite telemetry failure
+      expect(updateUserAcceptanceStub.calledOnce).to.be.true;
+      expect(executeCommandStub.called).to.be.true;
     });
 
     test('Should not propagate error if command execution fails', async () => {
