@@ -14,6 +14,29 @@ Make programming quantum computers even easier with Qiskit Code Assistant, a gen
 
 Qiskit is the open-source quantum SDK preferred by 69% of respondents to the Unitary Fund's Open Source Software Survey, with nearly 600,000 registered users to date. Now you can get the performance and stability of the Qiskit SDK with the added efficiency of Qiskit Code Assistant to streamline your workflow and optimize your quantum computing programs.
 
+## Installation
+
+The Qiskit Code Assistant extension is available on multiple platforms:
+
+- **VSCode**: Install from the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=Qiskit.qiskit-vscode)
+- **VSCode-Compatible Editors**: Install from [Open VSX](https://open-vsx.org/extension/Qiskit/qiskit-vscode)
+
+### Installing in VSCode
+
+1. Open VSCode
+2. Go to Extensions (Ctrl+Shift+X / Cmd+Shift+X)
+3. Search for "Qiskit Code Assistant"
+4. Click Install
+
+### Installing in VSCode-based IDEs
+
+> **Note**: IBM Bob, VSCodium, Windsurf, Cursor, and other VSCode-based editors can install the extension directly from the Open VSX marketplace.
+
+1. Open your editor
+2. Go to Extensions
+3. Search for "Qiskit Code Assistant"
+4. Click Install
+
 ## Features
 
 * Accelerate Qiskit code generation by leveraging generative AI based on the `mistral-small-3.2-24b-qiskit` model

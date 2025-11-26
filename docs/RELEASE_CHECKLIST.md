@@ -7,7 +7,9 @@ Quick reference guide for releasing a new version of the Qiskit VSCode extension
 - [ ] All features/fixes for the release are merged to `main`
 - [ ] All tests pass locally: `npm test`
 - [ ] Version number is decided (follow [Semantic Versioning](https://semver.org/))
-- [ ] `VSCE_PAT` secret is configured in GitHub repository settings
+- [ ] `VSCE_PAT` secret is configured in GitHub repository settings (see [MARKETPLACE_PUBLISHING.md](MARKETPLACE_PUBLISHING.md))
+- [ ] `OVSX_PAT` secret is configured in GitHub repository settings (see [OPEN_VSX_SETUP.md](OPEN_VSX_SETUP.md))
+- [ ] Both secrets are valid and not expired
 
 ## Release Process
 
@@ -36,12 +38,13 @@ Quick reference guide for releasing a new version of the Qiskit VSCode extension
    ```
    Go to: https://github.com/Qiskit/qiskit-code-assistant-vscode/actions
    ```
-   - Watch the "Publish to VSCode Marketplace" workflow
+   - Watch the "Publish to VSCode and OpenVSX Marketplaces" workflow
    - Should complete in a few minutes
 
 6. **Verify publication**
-   - Check the [marketplace page](https://marketplace.visualstudio.com/items?itemName=Qiskit.qiskit-vscode)
-   - Version should update within a few minutes
+   - Check the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=Qiskit.qiskit-vscode)
+   - Check the [Open VSX](https://open-vsx.org/extension/Qiskit/qiskit-vscode)
+   - Version should update within a few minutes on both marketplaces
    - VSIX file should be attached to the GitHub release
 
 ### Option B: Manual Release (Emergency Only)
@@ -74,8 +77,10 @@ npx vsce publish -p YOUR_VSCE_PAT
 
 ## Post-Release Checklist
 
-- [ ] Verify extension appears on [marketplace](https://marketplace.visualstudio.com/items?itemName=Qiskit.qiskit-vscode)
-- [ ] Test installation: `code --install-extension Qiskit.qiskit-vscode`
+- [ ] Verify extension appears on [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=Qiskit.qiskit-vscode)
+- [ ] Verify extension appears on [Open VSX](https://open-vsx.org/extension/Qiskit/qiskit-vscode)
+- [ ] Test installation from VSCode: `code --install-extension Qiskit.qiskit-vscode`
+- [ ] Test installation from IBM Bob, VSCodium, Cursor, Google Antigravity or others (if available)
 - [ ] Verify VSIX file is attached to GitHub release
 - [ ] Announce release (if applicable):
   - [ ] Team Slack/Discord
@@ -90,7 +95,7 @@ For urgent bug fixes that need to skip tests:
 
 2. **Use manual workflow dispatch**
    ```
-   Go to: Actions > Publish to VSCode Marketplace > Run workflow
+   Go to: Actions > Publish to VSCode and OpenVSX Marketplaces > Run workflow
    ```
 
 3. **Enable "Skip tests"**
@@ -102,16 +107,18 @@ For urgent bug fixes that need to skip tests:
 
 ## Troubleshooting
 
-### Workflow fails at "Publish to VSCode Marketplace"
+### Workflow fails at "Publish to VSCode and OpenVSX Marketplaces"
 
 **Likely causes:**
-- VSCE_PAT expired or invalid
+- `VSCE_PAT` or `OVSX_PAT` expired or invalid
 - Network timeout
 - Marketplace API issues
 
 **Solution:**
-1. Check if VSCE_PAT secret is set: Settings > Secrets > Actions
-2. Verify PAT has "Marketplace > Manage" scope
+1. Check if secrets are set: Settings > Secrets > Actions
+   - `VSCE_PAT` for VSCode Marketplace (see [MARKETPLACE_PUBLISHING.md](MARKETPLACE_PUBLISHING.md))
+   - `OVSX_PAT` for Open VSX (see [OPEN_VSX_SETUP.md](OPEN_VSX_SETUP.md))
+2. Verify PATs have correct scopes and haven't expired
 3. Re-run the workflow after fixing
 4. If persistent, use manual release process
 
@@ -167,13 +174,16 @@ code --install-extension qiskit-vscode-0.15.0.vsix
 
 ## Important Links
 
-- [Marketplace Page](https://marketplace.visualstudio.com/items?itemName=Qiskit.qiskit-vscode)
+- [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=Qiskit.qiskit-vscode)
+- [Open VSX](https://open-vsx.org/extension/Qiskit/qiskit-vscode)
 - [GitHub Actions](https://github.com/Qiskit/qiskit-code-assistant-vscode/actions)
 - [Releases](https://github.com/Qiskit/qiskit-code-assistant-vscode/releases)
-- [Full Documentation](MARKETPLACE_PUBLISHING.md)
+- [VSCode Marketplace Setup](MARKETPLACE_PUBLISHING.md)
+- [Open VSX Setup](OPEN_VSX_SETUP.md)
 
 ## Support
 
 Questions? Check:
-1. [MARKETPLACE_PUBLISHING.md](MARKETPLACE_PUBLISHING.md) - Full setup guide
+1. [MARKETPLACE_PUBLISHING.md](MARKETPLACE_PUBLISHING.md) - VSCode Marketplace setup
+2. [OPEN_VSX_SETUP.md](OPEN_VSX_SETUP.md) - Open VSX setup
 3. GitHub Actions logs - Detailed execution logs

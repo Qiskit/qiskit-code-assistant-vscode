@@ -95,12 +95,13 @@ Once you have sent a pull request, the code contributors get notified, and there
 
 ## Releasing
 
-If you're a maintainer looking to publish a new release to the VSCode Marketplace, we have automated the process:
+If you're a maintainer looking to publish a new release to the VSCode Marketplace or Open VSX, we have automated the process:
 
 - **[Release Checklist](docs/RELEASE_CHECKLIST.md)** - Quick reference guide for creating releases
 - **[Marketplace Publishing Guide](docs/MARKETPLACE_PUBLISHING.md)** - Complete setup and documentation
+- **[Open VSX Setup](docs/OPEN_VSX_SETUP.md)** - Open VSX specific setup
 
-The release process is automated through GitHub Actions. Simply create a new GitHub release with a properly formatted tag (e.g., `v0.15.0`), and the extension will be automatically built, tested, and published to the marketplace.
+The release process is automated through GitHub Actions. Simply create a new GitHub release with a properly formatted tag (e.g., `v0.15.0`), and the extension will be automatically built, tested, and published to both marketplaces.
 
 ## Final words
 
