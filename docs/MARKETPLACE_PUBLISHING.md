@@ -1,10 +1,10 @@
 # Automated Marketplace Publishing
 
-This repository is configured to automatically publish the VSCode extension to the marketplace when a new GitHub release is created.
+This repository is configured to automatically publish the VSCode extension to **both** the VSCode Marketplace and Open VSX when a new GitHub release is created.
 
 ## How It Works
 
-The [publish.yml](.github/workflows/publish.yml) workflow is triggered when you create a new GitHub release. It will:
+The [publish.yml](../.github/workflows/publish.yml) workflow is triggered when you create a new GitHub release. It will:
 
 1. Check out the code
 2. Install dependencies
@@ -12,8 +12,9 @@ The [publish.yml](.github/workflows/publish.yml) workflow is triggered when you 
 4. Extract the version from the release tag
 5. Update package.json with the version
 6. Build and package the extension
-7. Publish to the VSCode Marketplace
-8. Upload the .vsix file as a release asset
+7. Publish to the **VSCode Marketplace**
+8. Publish to **Open VSX**
+9. Upload the .vsix file as a release asset
 
 ## Setup Instructions
 
@@ -44,6 +45,8 @@ To publish to the VSCode Marketplace, you need a Personal Access Token from Azur
    - **Value**: Paste the Personal Access Token from Azure DevOps
 5. Click "Add secret"
 
+> **Note**: For Open VSX publishing setup, see [OPEN_VSX_SETUP.md](OPEN_VSX_SETUP.md).
+
 ### 3. Creating a Release
 
 To trigger the automated publishing:
@@ -62,13 +65,14 @@ To trigger the automated publishing:
    - Run tests (unless skipped)
    - Build the extension
    - Publish to the VSCode Marketplace
+   - Publish to Open VSX
    - Upload the .vsix file to the release assets
    - Create a summary report
 
 #### Manual Workflow Dispatch
 
 You can also trigger the workflow manually from the Actions tab:
-1. Go to Actions > "Publish to VSCode Marketplace"
+1. Go to Actions > "Publish to VSCode and OpenVSX Marketplaces"
 2. Click "Run workflow"
 3. Optional: Check "Skip tests" for urgent hotfixes (use with caution!)
 4. Click "Run workflow"
@@ -76,7 +80,7 @@ You can also trigger the workflow manually from the Actions tab:
 ### 4. Monitoring the Workflow
 
 - Go to the "Actions" tab in your GitHub repository
-- Look for the "Publish to VSCode Marketplace" workflow
+- Look for the "Publish to VSCode and OpenVSX Marketplaces" workflow
 - You can monitor the progress and check logs if something fails
 
 ## Troubleshooting
@@ -84,9 +88,14 @@ You can also trigger the workflow manually from the Actions tab:
 ### Authentication Failed
 
 If you see authentication errors:
+
+**For VSCode Marketplace:**
 - Verify that the `VSCE_PAT` secret is correctly set in GitHub
 - Check that the PAT hasn't expired
 - Ensure the PAT has the correct scope (Marketplace > Manage)
+
+**For Open VSX:**
+- See [OPEN_VSX_SETUP.md](OPEN_VSX_SETUP.md) for Open VSX troubleshooting
 
 ### Tests Failing
 
@@ -107,6 +116,7 @@ The workflow extracts the version from the git tag. Ensure:
 
 If you need to publish manually:
 
+**VSCode Marketplace:**
 ```bash
 # Install dependencies
 npm ci
@@ -121,6 +131,18 @@ npm run vsce:package
 npx vsce publish -p <your-personal-access-token>
 ```
 
+**Open VSX:**
+```bash
+# Use the same packaged VSIX file
+export OVSX_PAT=<your-ovsx-token>
+npm run ovsx:publish
+
+# Or specify the VSIX file directly
+npx ovsx publish qiskit-vscode-0.15.1.vsix --pat $OVSX_PAT
+```
+
+See [OPEN_VSX_SETUP.md](OPEN_VSX_SETUP.md) for Open VSX setup details.
+
 ## Workflow Features
 
 The automated publishing workflow includes several safety features:
@@ -128,10 +150,16 @@ The automated publishing workflow includes several safety features:
 - **Tag Validation**: Validates that release tags follow semantic versioning (v1.0.0 or v1.0.0-beta.1)
 - **Test Verification**: Runs full test suite before publishing (can be skipped for hotfixes)
 - **VSIX Verification**: Confirms the extension package was created successfully
+- **Dual Marketplace Publishing**: Publishes to both VSCode Marketplace and Open VSX with the same VSIX
 - **Error Reporting**: Provides clear summary of success or failure with actionable guidance
 - **Timeout Protection**: 30-minute timeout prevents indefinitely hanging workflows
 - **Manual Trigger**: Can be triggered manually from Actions tab for re-runs or hotfixes
 - **Release Asset Upload**: Automatically attaches the .vsix file to the GitHub release
+
+## Related Documentation
+
+- [OPEN_VSX_SETUP.md](OPEN_VSX_SETUP.md) - Open VSX Marketplace setup guide
+- [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) - Quick release reference
 
 ## Security Notes
 

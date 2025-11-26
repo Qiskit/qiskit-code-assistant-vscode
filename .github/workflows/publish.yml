@@ -1,4 +1,4 @@
-name: Publish to VSCode Marketplace
+name: Publish to VSCode and OpenVSX Marketplaces
 
 on:
   release:
@@ -78,12 +78,41 @@ jobs:
         echo "✓ VSIX created: $VSIX_FILE ($(du -h "$VSIX_FILE" | cut -f1))"
 
     - name: Publish to VSCode Marketplace
+      id: publish_vscode
       env:
         VSCE_PAT: ${{ secrets.VSCE_PAT }}
       run: |
         echo "Publishing extension to VSCode Marketplace..."
         npx vsce publish -p "$VSCE_PAT"
         echo "✓ Successfully published to marketplace"
+
+    - name: Report VSCode Marketplace failure
+      if: steps.publish_vscode.outcome == 'failure'
+      run: |
+        echo "::error::VSCode Marketplace publishing failed"
+        echo "❌ **VSCode Marketplace publishing failed** - The release process has stopped." >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Next steps:**" >> $GITHUB_STEP_SUMMARY
+        echo "1. Check the error logs above" >> $GITHUB_STEP_SUMMARY
+        echo "2. Verify VSCE_PAT secret is valid and not expired" >> $GITHUB_STEP_SUMMARY
+        echo "3. Fix the issue and re-run the workflow or publish manually" >> $GITHUB_STEP_SUMMARY
+        exit 1
+
+    - name: Publish to Open VSX
+      id: publish_ovsx
+      continue-on-error: true
+      env:
+        OVSX_PAT: ${{ secrets.OVSX_PAT }}
+      run: |
+        echo "Publishing extension to Open VSX Marketplace..."
+        npx ovsx publish qiskit-vscode-${{ steps.validate.outputs.version }}.vsix -p "$OVSX_PAT"
+        echo "✓ Successfully published to Open VSX"
+
+    - name: Report Open VSX failure
+      if: steps.publish_ovsx.outcome == 'failure'
+      run: |
+        echo "::warning::Open VSX publishing failed, but VSCode Marketplace succeeded"
+        echo "⚠️ **Open VSX publishing failed** - You may need to manually publish to Open VSX" >> $GITHUB_STEP_SUMMARY
 
     - name: Upload VSIX as release asset
       uses: shogo82148/actions-upload-release-asset@v1
@@ -96,16 +125,31 @@ jobs:
     - name: Create release summary
       if: success()
       run: |
-        cat << EOF >> $GITHUB_STEP_SUMMARY
+        if [ "${{ steps.publish_vscode.outcome }}" == "success" ]; then
+          VSCODE_STATUS="Published ✓"
+        else
+          VSCODE_STATUS="⚠️ Failed (manual publish needed)"
+        fi
+
+        if [ "${{ steps.publish_ovsx.outcome }}" == "success" ]; then
+          OVSX_STATUS="Published ✓"
+        else
+          OVSX_STATUS="⚠️ Failed (manual publish needed)"
+        fi
+
+        cat <<EOF >> $GITHUB_STEP_SUMMARY
         ## ✅ Release Published Successfully
 
         - **Version**: ${{ steps.validate.outputs.version }}
         - **Tag**: ${{ steps.validate.outputs.tag }}
         - **VSIX File**: qiskit-vscode-${{ steps.validate.outputs.version }}.vsix
-        - **Marketplace**: Published ✓
+        - **VSCode Marketplace**: $VSCODE_STATUS
+        - **Open VSX**: $OVSX_STATUS
         - **Release Asset**: Uploaded ✓
 
-        The extension is now available on the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=Qiskit.qiskit-vscode).
+        The extension is now available on:
+        - [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=Qiskit.qiskit-vscode)
+        - [Open VSX](https://open-vsx.org/extension/Qiskit/qiskit-vscode)
         EOF
 
     - name: Report failure
@@ -119,8 +163,17 @@ jobs:
 
         Please check the workflow logs for details and try again.
         You can manually publish using:
+
+        **VSCode Marketplace:**
         \`\`\`bash
         npm run vsce:package
-        npx vsce publish
+        npx vsce publish -p YOUR_VSCE_PAT
         \`\`\`
+
+        **Open VSX:**
+        \`\`\`bash
+        npx ovsx publish qiskit-vscode-${{ steps.validate.outputs.version }}.vsix -p YOUR_OVSX_PAT
+        \`\`\`
+
+        See [MARKETPLACE_PUBLISHING.md](docs/MARKETPLACE_PUBLISHING.md) and [OPEN_VSX_SETUP.md](docs/OPEN_VSX_SETUP.md) for details.
         EOF
