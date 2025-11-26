@@ -13,7 +13,7 @@ This file provides guidance to AI development assistants when working with code 
 
 ## Project Overview
 
-Qiskit Code Assistant is a VSCode extension that provides AI-powered code completion for quantum computing development using Qiskit. It integrates with LLM APIs (IBM Quantum Cloud or OpenAI-compatible endpoints) to provide intelligent, context-aware code suggestions for Python quantum programs.
+qiskit-code-assistant-vscode is a VSCode extension that provides AI-powered code completion for quantum computing development using Qiskit. It integrates with LLM APIs (IBM Quantum Cloud or OpenAI-compatible endpoints) to provide intelligent, context-aware code suggestions for Python quantum programs.
 
 ### Core Purpose
 - Accelerate Qiskit code development with AI-powered completions
