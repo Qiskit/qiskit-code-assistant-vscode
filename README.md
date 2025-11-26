@@ -127,7 +127,7 @@ We welcome contributions! If you'd like to contribute to Qiskit Code Assistant, 
 
 ### AI Development Assistant Support
 
-This repository includes AI-generated code and offers comprehensive guidance for AI coding assistants (like IBM Bob, Claude Code, GitHub Copilot, Cursor AI, and others) in [AGENTS.md](AGENTS.md). This helps AI assistants provide more accurate, context-aware suggestions when working with this codebase. See the [AI Development Assistant Support](CONTRIBUTING.md#ai-development-assistant-support) section in our Contributing Guide for more details.
+This repository includes AI-generated code and offers comprehensive guidance for AI coding assistants (like [IBM Bob](https://www.ibm.com/products/bob), Claude Code, GitHub Copilot, Cursor AI, and others) in [AGENTS.md](AGENTS.md). This helps AI assistants provide more accurate, context-aware suggestions when working with this codebase. See the [AI Development Assistant Support](CONTRIBUTING.md#ai-development-assistant-support) section in our Contributing Guide for more details.
 
 ## Terms of use
 
