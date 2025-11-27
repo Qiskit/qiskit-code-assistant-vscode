@@ -26,7 +26,7 @@ qiskit-code-assistant-vscode is a VSCode extension that provides AI-powered code
 - **Extension Platform**: VSCode Extension API (v1.88.0+)
 - **Language**: TypeScript (strict mode)
 - **LLM Integration**: IBM Quantum Cloud API, OpenAI-compatible APIs
-- **Model**: `mistral-small-3.2-24b-qiskit` (cloud) or local models via Ollama
+- **Model**: `mistral-small-3.2-24b-qiskit` (via cloud) or other Qiskit Code Assistant LLMs (available through https://huggingface.co/Qiskit/models) via Ollama.
 - **Streaming**: Server-Sent Events (SSE) with circuit breaker pattern
 - **Testing**: Mocha + Chai + Sinon
 
