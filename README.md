@@ -50,7 +50,7 @@ Improve your Qiskit code by reviewing, browsing, and accepting model-generated c
 
 ### Use abstract prompts to get started
 
-Provide abstract prompts to Qiskit Code Assistant using `#comments`. Type `Ctrl+.` following a `#comment` to obtain syntactically correct and contextually relevant content (up to 60 tokens) suited to your desired task.
+Provide abstract prompts to Qiskit Code Assistant using `#comments`. Type `Ctrl+.` following a `#comment` to obtain syntactically correct and contextually relevant content suited to your desired task.
 
 ![Example prompt to define a bell circuit and run it](https://raw.githubusercontent.com/Qiskit/qiskit-code-assistant-vscode/main/docs/gifs/define-bell-circ.gif)
 
