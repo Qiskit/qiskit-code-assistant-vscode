@@ -122,3 +122,28 @@ interface QiskitAccountJson {
     token?: string
   }
 }
+
+interface OpenAIModelInfo {
+  id: string
+}
+
+interface OpenAIModelList {
+  data: OpenAIModelInfo[]
+}
+
+interface OpenAIMessage {
+  role: string
+  content: string
+}
+
+interface OpenAIChoice {
+  index: number,
+  text?: string
+  message?: OpenAIMessage
+}
+
+interface OpenAIPromptResponse {
+  id: string,
+  created: number,
+  choices: OpenAIChoice[]
+}

@@ -19,48 +19,10 @@ import { SSEParser, StreamingPipeline } from "../utilities/streamingPipeline";
 import { streamingStatusBar, StreamingTelemetry } from "../utilities/streamingStatusBar";
 import { isRetryableError } from "../utilities/errorUtils";
 import { getCircuitBreaker } from "../utilities/circuitBreaker";
-
-type OpenAIModelInfo = {
-  id: string
-}
-type OpenAIModelList = {
-  data: OpenAIModelInfo[]
-}
-type OpenAIChoice = {
-  index: number,
-  text: string
-}
-type OpenAIPromptResponse = {
-  id: string,
-  created: number,
-  choices: OpenAIChoice[]
-}
+import { modelTransform, toModelPromptResponse } from "../utilities/utils";
 
 const OPENAI_API_VERSION = "v1";
 const SERVICE_NAME = "open-ai";
-
-function modelTransform (model: OpenAIModelInfo): ModelInfo {
-  return {
-    "_id": model.id,
-    "disclaimer": { accepted: true },
-    "display_name": model.id,
-    "doc_link": "",
-    "license": { name: "", link: "" },
-    "model_id": model.id
-  }
-}
-
-function toModelPromptResponse(jsonResponse: OpenAIPromptResponse): ModelPromptResponse {
-  const responseText = jsonResponse["choices"].map(c => {
-    return  { "generated_text": c.text };
-  });
-  const promptResponse: ModelPromptResponse = {
-    results: responseText,
-    prompt_id: jsonResponse["id"],
-    created_at: (new Date(jsonResponse["created"])).toISOString()
-  }
-  return promptResponse
-}
 
 export default class OpenAIService extends ServiceAPI {
   get name() { return SERVICE_NAME; }

@@ -21,7 +21,9 @@ import { SSEParser, StreamingPipeline } from "../utilities/streamingPipeline";
 import { streamingStatusBar, StreamingTelemetry } from "../utilities/streamingStatusBar";
 import { isRetryableError } from "../utilities/errorUtils";
 import { getCircuitBreaker } from "../utilities/circuitBreaker";
+import { modelTransform, toModelPromptResponse } from "../utilities/utils";
 
+const QCA_API_VERSION = "v1";
 const SERVICE_NAME = "qiskit-code-assistant";
 const STREAM_DATA_PREFIX = 'data: ';
 
@@ -46,8 +48,8 @@ export default class CodeAssistantService extends ServiceAPI {
   }
 
   async getModels(): Promise<ModelInfo[]> {
-    // GET /models
-    const endpoint = "/models";
+    // GET /v1/models
+    const endpoint = `/${QCA_API_VERSION}/models`;
     const apiToken = await this.getApiToken()
     const options = {
       "method": "GET",
@@ -55,15 +57,16 @@ export default class CodeAssistantService extends ServiceAPI {
     };
   
     const response = await ServiceAPI.runFetch(endpoint, options);
-    const jsonResponse = (await response.json()) as ModelsList;
-    const modelsData = jsonResponse["models"];
-
-    return modelsData;
+    const jsonResponse = (await response.json()) as OpenAIModelList;
+    const modelsData = jsonResponse["data"];
+    const updatedModelsData = modelsData.map(modelTransform);
+  
+    return updatedModelsData;
   }
 
   async getModel(modelId: string): Promise<ModelInfo> {
-    // GET /model/{modelId}
-    const endpoint = `/model/${modelId}`;
+    // GET /v1/models/{model_id}
+    const endpoint = `/${QCA_API_VERSION}/models/${modelId}`;
     const apiToken = await this.getApiToken()
     const options = {
       "method": "GET",
@@ -77,8 +80,8 @@ export default class CodeAssistantService extends ServiceAPI {
   }
   
   async getModelDisclaimer(modelId: string): Promise<ModelDisclaimer> {
-    // GET /model/{modelId}/disclaimer
-    const endpoint = `/model/${modelId}/disclaimer`;
+    // GET /v1/models/{modelId}/disclaimer
+    const endpoint = `/${QCA_API_VERSION}/models/${modelId}/disclaimer`;
     const apiToken = await this.getApiToken()
     const options = {
       "method": "GET",
@@ -96,14 +99,14 @@ export default class CodeAssistantService extends ServiceAPI {
     disclaimerId: string,
     accepted: boolean
   ): Promise<ResponseMessage> {
-    // POST /disclaimer/{disclaimerId}/acceptance
-    const endpoint = `/disclaimer/${disclaimerId}/acceptance`;
+    // POST /v1/models/{modelId}/disclaimer
+    const endpoint = `/${QCA_API_VERSION}/models/${modelId}/disclaimer`;
     const apiToken = await this.getApiToken()
     const options = {
       "method": "POST",
       "headers": ServiceAPI.getHeaders(apiToken),
       "body": JSON.stringify({
-        "model": modelId,
+        "disclaimer": disclaimerId,
         accepted
       })
     };
@@ -120,8 +123,8 @@ export default class CodeAssistantService extends ServiceAPI {
     signal?: AbortSignal,
     retryCount: number = 0
   ): AsyncGenerator<ModelPromptResponse> {
-    // POST /model/{modelId}/prompt
-    const endpoint = `/model/${modelId}/prompt`;
+    // POST /v1/completions
+    const endpoint = `/${QCA_API_VERSION}/chat/completions`;
     const apiToken = await this.getApiToken()
 
     // Fetch config at runtime for hot-reload support
@@ -140,7 +143,11 @@ export default class CodeAssistantService extends ServiceAPI {
       "method": "POST",
       "headers": ServiceAPI.getHeaders(apiToken),
       "body": JSON.stringify({
-        input,
+        model: modelId,
+        messages: [{
+          role: "user",
+          content: input
+        }],
         stream: streamingEnabled
       })
     };
@@ -203,11 +210,20 @@ export default class CodeAssistantService extends ServiceAPI {
             const rawStream = ServiceAPI.runFetchStreaming(endpoint, options);
 
             // Parse SSE format with unified parser
-            const parser = new SSEParser<ModelPromptResponse>(STREAM_DATA_PREFIX);
+            const parser = new SSEParser<OpenAIPromptResponse>(STREAM_DATA_PREFIX);
             const parsedStream = parser.parse(rawStream);
 
+            // Transform OpenAI format to ModelPromptResponse
+            async function* transformStream(stream: AsyncGenerator<OpenAIPromptResponse>): AsyncGenerator<ModelPromptResponse> {
+              for await (const openAIChunk of stream) {
+                yield toModelPromptResponse(openAIChunk);
+              }
+            }
+
+            const transformedStream = transformStream(parsedStream);
+
             // Wrap in streaming pipeline for metrics and monitoring
-            const pipeline = new StreamingPipeline(parsedStream, {
+            const pipeline = new StreamingPipeline(transformedStream, {
               signal: effectiveSignal,
               enableMetrics,
               bufferSize,
@@ -304,7 +320,8 @@ export default class CodeAssistantService extends ServiceAPI {
       }
     } else {
       const response = await ServiceAPI.runFetch(endpoint, options)
-      const promptResponse = (await response.json()) as ModelPromptResponse;
+      const jsonResponse = (await response.json()) as OpenAIPromptResponse;
+      const promptResponse = toModelPromptResponse(jsonResponse)
       yield promptResponse;
     }
   }
@@ -325,13 +342,14 @@ export default class CodeAssistantService extends ServiceAPI {
       return { success: false }
     }
     
-    // POST /prompt/{promptId}/acceptance
-    const endpoint = `/prompt/${promptId}/acceptance`;
+    // POST /v1/completion/acceptance
+    const endpoint = `/${QCA_API_VERSION}/completion/acceptance`;
     const apiToken = await this.getApiToken()
     const options = {
       "method": "POST",
       "headers": ServiceAPI.getHeaders(apiToken),
       "body": JSON.stringify({
+        completion: promptId,
         accepted
       })
     };
