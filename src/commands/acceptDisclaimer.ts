@@ -84,41 +84,49 @@ async function handler(model: ModelInfo): Promise<void> {
       setDefaultStatus();
     }
 
-    // Now set state only when we're sure we'll create the panel
-    modelDisclaimerState.acceptFlag = false;
-    modelDisclaimerState.model = model;
-
-  modelDisclaimerState.panel = vscode.window.createWebviewPanel(
-    'modelDisclaimer',
-    'Qiskit Code Assistant Model Disclaimer for ' + model.display_name,
-    vscode.ViewColumn.Two,
-    {
-      enableScripts: true,
-      retainContextWhenHidden: false
-    }
-  );
-
-  modelDisclaimerState.panel.webview.html = modelDisclaimerHTML(model, disclaimer);
-  modelDisclaimerState.panel.webview.onDidReceiveMessage(async (m) => {
-    switch (m.command) {
-      case "accept":
-        await apiService.postDisclaimerAcceptance(model._id, disclaimer._id, true);
-        modelDisclaimerState.acceptFlag = true;
-        model.disclaimer!.accepted = true;
-        setAsCurrentModel(model);
-        modelDisclaimerState.panel?.dispose();
-        return;
-      default:
-        console.log("Unknown disclaimer webview message: ", m);
-    }
-  });
-    modelDisclaimerState.panel.onDidDispose(() => {
+    if (disclaimer.accepted) {
+      // disclaimer has already been accepted
       modelDisclaimerState.panel = undefined;
       modelDisclaimerState.model = undefined;
       modelDisclaimerState.acceptFlag = false;
-    }, null, context.subscriptions);
+      model.disclaimer!.accepted = true;
+    } else {
+      // Now set state only when we're sure we'll create the panel
+      modelDisclaimerState.acceptFlag = false;
+      modelDisclaimerState.model = model;
 
-    modelDisclaimerState.panel.reveal();
+      modelDisclaimerState.panel = vscode.window.createWebviewPanel(
+        'modelDisclaimer',
+        'Qiskit Code Assistant Model Disclaimer for ' + model.display_name,
+        vscode.ViewColumn.Two,
+        {
+          enableScripts: true,
+          retainContextWhenHidden: false
+        }
+      );
+
+      modelDisclaimerState.panel.webview.html = modelDisclaimerHTML(model, disclaimer);
+      modelDisclaimerState.panel.webview.onDidReceiveMessage(async (m) => {
+        switch (m.command) {
+          case "accept":
+            await apiService.postDisclaimerAcceptance(model._id, disclaimer.id, true);
+            modelDisclaimerState.acceptFlag = true;
+            model.disclaimer!.accepted = true;
+            setAsCurrentModel(model);
+            modelDisclaimerState.panel?.dispose();
+            return;
+          default:
+            console.log("Unknown disclaimer webview message: ", m);
+        }
+      });
+        modelDisclaimerState.panel.onDidDispose(() => {
+          modelDisclaimerState.panel = undefined;
+          modelDisclaimerState.model = undefined;
+          modelDisclaimerState.acceptFlag = false;
+        }, null, context.subscriptions);
+
+        modelDisclaimerState.panel.reveal();
+      }
   } finally {
     modelDisclaimerState.isLoading = false;
   }

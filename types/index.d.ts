@@ -55,7 +55,7 @@ interface ModelPromptAcceptance {
 }
 
 interface ModelDisclaimer extends ModelDisclaimerAcceptance {
-  _id: string,
+  id: string,
   version: string,
   title: string,
   body: string,

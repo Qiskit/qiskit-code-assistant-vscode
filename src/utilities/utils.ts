@@ -140,10 +140,17 @@ export function toModelPromptResponse(jsonResponse: OpenAIPromptResponse): Model
   return promptResponse
 }
 
-export function modelTransform (model: OpenAIModelInfo): ModelInfo {
-  return {
+export function modelTransform (model: OpenAIModelInfo, isOpenAI: boolean): ModelInfo {
+  return isOpenAI ? {
     "_id": model.id,
     "disclaimer": { accepted: true },
+    "display_name": model.id,
+    "doc_link": "",
+    "license": { name: "", link: "" },
+    "model_id": model.id
+  } : {
+    "_id": model.id,
+    "disclaimer": { accepted: false },  // force checking of disclaimer
     "display_name": model.id,
     "doc_link": "",
     "license": { name: "", link: "" },

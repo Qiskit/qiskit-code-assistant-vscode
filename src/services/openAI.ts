@@ -38,7 +38,7 @@ export default class OpenAIService extends ServiceAPI {
     const response = await ServiceAPI.runFetch(endpoint, options);
     const jsonResponse = (await response.json()) as OpenAIModelList;
     const modelsData = jsonResponse["data"];
-    const updatedModelsData = modelsData.map(modelTransform);
+    const updatedModelsData = modelsData.map((model) => modelTransform(model, true));
   
     return updatedModelsData;
   }
@@ -52,9 +52,10 @@ export default class OpenAIService extends ServiceAPI {
     };
   
     const response = await ServiceAPI.runFetch(endpoint, options);
-    const modelData = (await response.json()) as ModelInfo;
-  
-    return modelData;
+    const modelData = (await response.json()) as OpenAIModelInfo;
+    const updatedModelsData = modelTransform(modelData, false)
+
+    return updatedModelsData;
   }
 
   async *postModelPrompt(
