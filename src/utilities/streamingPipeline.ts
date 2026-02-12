@@ -184,10 +184,10 @@ export class SSEParser<T = any> {
   private buffer: string = '';
   private hasShownWarning: boolean = false;
 
-  constructor(private readonly dataPrefix: string = 'data: ') {}
+  constructor(private readonly dataPrefix: string = 'data: ', private readonly doneMarker: string = '[DONE]') {}
 
   /**
-   * Parse SSE chunks with proper handling of partial messages
+   * Parse SSE chunks with proper handling of partial messages and done marker
    */
   async *parse(streamGenerator: AsyncGenerator<string>): AsyncGenerator<T> {
     debugLog('SSEParser started', { dataPrefix: this.dataPrefix });
@@ -219,10 +219,17 @@ export class SSEParser<T = any> {
         }
 
         if (trimmedLine.startsWith(this.dataPrefix)) {
+          const dataContent = trimmedLine.substring(this.dataPrefix.length);
+          
+          // Check for done marker (signals end of stream)
+          if (dataContent === this.doneMarker) {
+            debugLog(`SSEParser received done marker (i.e., ${this.doneMarker}), ending stream`);
+            return;
+          }
+
           try {
-            const jsonStr = trimmedLine.substring(this.dataPrefix.length);
-            debugLog('Parsing SSE JSON', { length: jsonStr.length });
-            const parsed = JSON.parse(jsonStr) as T;
+            debugLog('Parsing SSE JSON', { length: dataContent.length });
+            const parsed = JSON.parse(dataContent) as T;
             yield parsed;
           } catch (error) {
             debugLog('SSE parse error', {
@@ -253,9 +260,17 @@ export class SSEParser<T = any> {
     if (this.buffer.trim()) {
       const trimmedBuffer = this.buffer.trim();
       if (trimmedBuffer.startsWith(this.dataPrefix)) {
+        const dataContent = trimmedBuffer.substring(this.dataPrefix.length);
+        
+        // Check for done marker in final buffer
+        if (dataContent === this.doneMarker) {
+          debugLog(`SSEParser received done marker (i.e., ${this.doneMarker}) in final buffer, ending stream`);
+          this.buffer = '';
+          return;
+        }
+
         try {
-          const jsonStr = trimmedBuffer.substring(this.dataPrefix.length);
-          const parsed = JSON.parse(jsonStr) as T;
+          const parsed = JSON.parse(dataContent) as T;
           yield parsed;
         } catch (error) {
           console.warn('Incomplete final chunk in buffer:', trimmedBuffer);
