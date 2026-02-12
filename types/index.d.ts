@@ -140,6 +140,7 @@ interface OpenAIChoice {
   index: number,
   text?: string
   message?: OpenAIMessage
+  delta?: OpenAIMessage
 }
 
 interface OpenAIPromptResponse {

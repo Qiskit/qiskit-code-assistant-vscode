@@ -130,7 +130,7 @@ export function toCompletionItem(
 
 export function toModelPromptResponse(jsonResponse: OpenAIPromptResponse): ModelPromptResponse {
   const responseText = jsonResponse["choices"].map(c => {
-    return  { "generated_text": c.text ?? c.message?.content };
+    return  { "generated_text": c.text ?? c.message?.content ?? c.delta?.content };
   });
   const promptResponse: ModelPromptResponse = {
     results: responseText,
