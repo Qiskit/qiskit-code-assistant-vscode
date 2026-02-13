@@ -55,7 +55,7 @@ interface ModelPromptAcceptance {
 }
 
 interface ModelDisclaimer extends ModelDisclaimerAcceptance {
-  _id: string,
+  id: string,
   version: string,
   title: string,
   body: string,
@@ -121,4 +121,30 @@ interface QiskitAccountJson {
   [key: string]: {
     token?: string
   }
+}
+
+interface OpenAIModelInfo {
+  id: string
+}
+
+interface OpenAIModelList {
+  data: OpenAIModelInfo[]
+}
+
+interface OpenAIMessage {
+  role: string
+  content: string
+}
+
+interface OpenAIChoice {
+  index: number,
+  text?: string
+  message?: OpenAIMessage
+  delta?: OpenAIMessage
+}
+
+interface OpenAIPromptResponse {
+  id: string,
+  created: number,
+  choices: OpenAIChoice[]
 }

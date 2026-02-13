@@ -83,7 +83,7 @@ suite('Disclaimer State Isolation Test Suite', () => {
 
     // Stub migration service
     sandbox.stub(qiskitMigration, 'getMigrationDisclaimer').resolves({
-      _id: 'migration-disclaimer-123',
+      id: 'migration-disclaimer-123',
       version: '1.0',
       title: 'Migration Disclaimer',
       body: 'Migration disclaimer content',

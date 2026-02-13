@@ -297,6 +297,73 @@ suite('SSEParser', () => {
     expect(results).to.deep.equal([{ final: true }]);
   });
 
+  test('should handle [DONE] marker and stop streaming', async () => {
+    async function* testStream() {
+      yield 'data: {"value": 1}\n\n';
+      yield 'data: {"value": 2}\n\n';
+      yield 'data: [DONE]\n\n';
+      yield 'data: {"value": 3}\n\n'; // Should not be processed
+    }
+
+    const parser = new SSEParser();
+    const results: any[] = [];
+
+    for await (const chunk of parser.parse(testStream())) {
+      results.push(chunk);
+    }
+
+    // Should only get first two chunks before [DONE]
+    expect(results).to.deep.equal([{ value: 1 }, { value: 2 }]);
+  });
+
+  test('should handle [DONE] marker without newlines', async () => {
+    async function* testStream() {
+      yield 'data: {"value": 1}\n\n';
+      yield 'data: [DONE]';
+    }
+
+    const parser = new SSEParser();
+    const results: any[] = [];
+
+    for await (const chunk of parser.parse(testStream())) {
+      results.push(chunk);
+    }
+
+    expect(results).to.deep.equal([{ value: 1 }]);
+  });
+
+  test('should handle [DONE] marker in middle of chunk', async () => {
+    async function* testStream() {
+      yield 'data: {"value": 1}\n\ndata: [DONE]\n\ndata: {"value": 2}\n\n';
+    }
+
+    const parser = new SSEParser();
+    const results: any[] = [];
+
+    for await (const chunk of parser.parse(testStream())) {
+      results.push(chunk);
+    }
+
+    // Should stop at [DONE]
+    expect(results).to.deep.equal([{ value: 1 }]);
+  });
+
+  test('should handle [DONE] as only content', async () => {
+    async function* testStream() {
+      yield 'data: [DONE]\n\n';
+    }
+
+    const parser = new SSEParser();
+    const results: any[] = [];
+
+    for await (const chunk of parser.parse(testStream())) {
+      results.push(chunk);
+    }
+
+    // Should yield nothing, just end stream
+    expect(results).to.deep.equal([]);
+  });
+
   test('should reset buffer state', async () => {
     async function* testStream() {
       yield 'data: {"value": 1}\n\n';

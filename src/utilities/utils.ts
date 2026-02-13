@@ -75,7 +75,6 @@ export function normalizeURLPath(urlPath: string): string {
   return urlPath;
 }
 
-
 export function createDecorationType(): vscode.TextEditorDecorationType {
   return vscode.window.createTextEditorDecorationType({
     after: {
@@ -127,4 +126,34 @@ export function toCompletionItem(
     resultEntry.completion_metadata?.is_cached,
     resultEntry.completion_metadata?.snippet_context
   )
+}
+
+export function toModelPromptResponse(jsonResponse: OpenAIPromptResponse): ModelPromptResponse {
+  const responseText = jsonResponse["choices"].map(c => {
+    return  { "generated_text": c.text ?? c.message?.content ?? c.delta?.content };
+  });
+  const promptResponse: ModelPromptResponse = {
+    results: responseText,
+    prompt_id: jsonResponse["id"],
+    created_at: (new Date(jsonResponse["created"])).toISOString()
+  }
+  return promptResponse
+}
+
+export function modelTransform (model: OpenAIModelInfo, isOpenAI: boolean): ModelInfo {
+  return isOpenAI ? {
+    "_id": model.id,
+    "disclaimer": { accepted: true },
+    "display_name": model.id,
+    "doc_link": "",
+    "license": { name: "", link: "" },
+    "model_id": model.id
+  } : {
+    "_id": model.id,
+    "disclaimer": { accepted: false },  // force checking of disclaimer
+    "display_name": model.id,
+    "doc_link": "",
+    "license": { name: "", link: "" },
+    "model_id": model.id
+  }
 }
