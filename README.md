@@ -1,5 +1,8 @@
 # Qiskit Code Assistant (Beta)
 
+> [!IMPORTANT]
+> After the [discontinuation of the Qiskit Code Assistant service](https://quantum.cloud.ibm.com/announcements/en/product-updates/2026-04-28-qiskit-code-assistant-service-to-sunset), this repository is no longer maintained and may contain errors. Contributions to this repo are no longer accepted.
+
 Write and optimize Qiskit code with a generative AI code assistant powered by IBM **watson<span style="color:blue;">x</span>**.
 
 > This experimental feature is only available, as of today, to IBM Quantum premium plan users. If you are not part of an IBM Quantum premium plan, you can use the local version See [LOCAL_SETUP.md](LOCAL_SETUP.md) for instructions.
